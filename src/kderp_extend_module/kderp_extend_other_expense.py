@@ -107,7 +107,7 @@ class kderp_other_expense(osv.osv):
                     'order_id':o['id'], # For KDVN,
                     'project_id':o['project_id'][0],
                     'description':new_description#po_term['name'] + "\n"+  o['notes']
-                    }
+                    } 
                 #raise osv.except_osv("E",payment)
                 kdvn_rop_id = self.pool.get('kdvn.request.of.payment').create(cr, uid, payment)
                 self.write(cr, uid, ids, {'state':'delivered','exp_status':'waiting'})
