@@ -3,7 +3,7 @@ from openerp.osv import fields, osv
 class kderp_supplier_payment_expense(osv.osv):
     _name = 'kderp.supplier.payment.expense'
     _inherit= 'kderp.supplier.payment.expense'      
-    
+
     def _get_payment_type(self, cr, uid, context={}):
         if not context:
             context={}
