@@ -111,6 +111,7 @@ class kderp_other_expense(osv.osv):
         return result.keys()
     
     _columns = {
+                'allocated_date':fields.date('Allocated Date', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]},
                                                 help="""Expense: Allocated direct to Job/General have payment\nRecognize Expense: Recognize allocated to Job/General from Fixed Asset, Prepaid without payment\nPrepaid, Fixed Asset for management and don't allocated"""),
                 'allocated_to':fields.selection(_get_allocated_selection, 'Allocate To', required = True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),

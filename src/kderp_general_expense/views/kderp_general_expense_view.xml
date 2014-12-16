@@ -56,6 +56,7 @@
 							<field name='allocated_to' colspan="1"/>
                         	<field name="account_analytic_id" string='Job/G.E' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" default_focus="1"/>                        	
 	                        <field name="date" colspan="1"/>
+	                        <field name="allocated_date" colspan="1"/>
 	                        <field name='section_incharge_id' colspan="1"/>
 	                        <!-- <field name='' attrs="{'invisible':[('expense_type','!=','monthly_expense')]}" colspan="1"/> -->
 	                        <field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}"/>                       
