@@ -58,7 +58,7 @@
 	                        <field name="date" colspan="1"/>
 	                        <field name="allocated_date" colspan="1"/>
 	                        <field name='section_incharge_id' colspan="1"/>
-	                        <!-- <field name='' attrs="{'invisible':[('expense_type','!=','monthly_expense')]}" colspan="1"/> -->
+	                        <!-- <field name=''attrs="{'invisible':[('expense_type','!=','monthly_expense')]}" colspan="1"/> -->
 	                        <field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}"/>                       
 	                    </group>
 	                    <notebook>
