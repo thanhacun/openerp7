@@ -86,7 +86,7 @@ class kderp_other_expense(osv.osv):
                     new_description = ""
                 cr.execute("""SELECT uid
                               FROM res_groups_users_rel 
-                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Read Only Bankstransfer')
+                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Expense Read Only Bankstransfer')
                             and uid =%s
                             """%(uid))
                 if cr.rowcount !=0:  
