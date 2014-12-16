@@ -1,0 +1,215 @@
+﻿-- ####################### NHO KIEM TRA SU TRUNG LAP CUA DU LIEU TAXXXXXXXXXXX
+-- #### IMPORT OTHER EXPENSE
+-- ALTER table kderp_other_expense add column curr_state varchar(16);
+-- 
+-- Insert into kderp_other_expense
+-- 	(id,
+-- 	create_uid,
+-- 	create_date,
+-- 	write_date,
+-- 	write_uid,
+-- 	account_analytic_id,
+-- 	name,
+-- 	date,
+-- 	partner_id,
+-- 	address_id,
+-- 	description,
+-- 	currency_id,
+-- 	curr_state,
+-- 	state)
+-- Select
+-- 	exp.id,
+-- 	exp.create_uid,
+-- 	exp.create_date,
+-- 	exp.write_date,
+-- 	exp.write_uid,
+-- 	exp.project_id as account_analytic_id,
+-- 	exp.name,
+-- 	exp.date,
+-- 	exp.partner_id,
+-- 	rpa.id as address_id,
+-- 	description,
+-- 	rc.id as currency_id,
+-- 	case when exp_status='waiting' then 'waiting_for_payment' else exp_status end as exp_status,
+-- 	'cancel' as state
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		po.id,
+-- 		po.create_uid,
+-- 		po.create_date,
+-- 		po.write_date,
+-- 		po.write_uid,
+-- 		po.project_id,
+-- 		po.name,
+-- 		po.date_order,
+-- 		partner_id,
+-- 		partner_address_id,
+-- 		notes,
+-- 		kpc.name as curr_name,
+-- 		exp_status
+-- 	from 
+-- 		purchase_order po 
+-- 	left join
+-- 		purchase_typeoforder pt on typeoforder=pt.id
+-- 	left join
+-- 		kdvn_purchase_currency kpc on currency_id=kpc.id
+-- 	where pt.code=''e''')
+-- as exp(
+-- 	id int,
+-- 	create_uid int,
+-- 	create_date date,
+-- 	write_date date,
+-- 	write_uid int,
+-- 	project_id int,
+-- 	name varchar(64),
+-- 	date date,
+-- 	partner_id int,
+-- 	partner_address_id int,
+-- 	description varchar(512),
+-- 	curr_name varchar(3),
+-- 	exp_status varchar(32))
+-- left join
+-- 	res_partner rpa on partner_address_id=rpa.address_id
+-- left join
+-- 	res_currency rc on curr_name=rc.name
+
+-- Select max(id) from kderp_other_expense --26453
+-- alter SEQUENCE kderp_other_expense_id_seq RESTART with 26454
+
+
+-- ###########IMPORT PURCHASE
+-- ## IMPORT TAX
+-- select max(id) from account_tax ;
+-- alter table purchase_order drop column amount_tax --Please check before delete
+-- ALTER SEQUENCE account_tax_id_seq RESTART 1849
+-- BASE CODE Taxeable: 20, Deducte Amount Received Tax: 21
+-- Tax 133100 23 (Co the sua thanh thue nhap khau)
+-- Insert into account_tax 
+--   	(company_id,sequence,account_collected_id,account_paid_id,base_code_id,ref_base_code_id,tax_code_id,ref_tax_code_id,type,type_tax_use,applicable_type,active,name,description,amount,res_id,res_model)
+-- Select
+-- 	1,1,23,23,20,20,21,21,'fixed','purchase',true,true,'For ' || po_number,po_number,amount,res_id,'kderp.other.expense' as res_model
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		po.name as po_number,
+-- 		tax_amount as amount,
+-- 		po.id as res_id
+-- 	from 
+-- 		purchase_order po
+-- 	left join
+-- 		purchase_typeoforder pt on typeoforder=pt.id
+-- 	left join 
+-- 		kdvn_purchase_currency kpc on po.currency_id=kpc.id
+-- 	where
+-- 		pt.code=''e'' and
+-- 		(
+-- 			(
+-- 				((kpc.name=''VND'' and round((tax_per*amount_total2/100.0)::numeric,0)<>tax_amount) or kpc.name<>''VND'') 
+-- 			and
+-- 				case when coalesce(amount_total2,0)=0 then 0 else tax_amount/amount_total2 end not in (0,0.1,0.05)
+-- 			)
+-- 
+-- 		or 
+-- 			(coalesce(amount_Total2,0)=0 and coalesce(tax_amount)<>0)
+-- 		)')
+-- as po_tax(
+-- 	po_number varchar(64),
+-- 	amount numeric,
+-- 	res_id int
+-- 	)
+
+	-- IMPORT PURCHASE TAX
+-- 
+-- Insert into other_expense_vat_tax
+-- 	(
+-- 	other_expense_vat_id,
+-- 	tax_id
+-- 	)
+-- Select
+-- 	po.id as order_id,
+-- 	at.id
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		po.id,
+-- 		po.name,
+-- 		case when coalesce(amount_total2,0)=0 then 0 else tax_amount/amount_total2 end as tax_per,
+-- 		case when round((tax_per*amount_total2/100.0)::numeric,case when Kpc.name=''VND'' THEN 0 ELSE 2 END)=tax_amount then tax_per/100.0 else 0 end as tax_per_round
+-- 	from 
+-- 		purchase_order po 
+-- 	left join
+-- 		kdvn_purchase_currency kpc on po.currency_id=kpc.id
+-- 	left join
+-- 		purchase_typeoforder pt on typeoforder=pt.id
+-- 	where pt.code=''e'' and coalesce(tax_amount,0)<>0')
+-- as po(
+-- 	id int,
+-- 	name varchar(64),
+-- 	tax_per numeric,
+-- 	tax_per_rounded numeric)
+-- left join
+-- 	account_tax at on 
+-- 	((tax_per=at.amount or (res_id=po.id and res_model='kderp.other.expense')) and type_tax_use='purchase') or (tax_per_rounded=at.amount and at.amount>0 and type_tax_use='purchase')
+-- where coalesce(at.id,0)>0 and coalesce(at.amount,0)>0;
+
+
+
+	-- #### IMPORT EXPENSE LINE
+-- Insert into kderp_other_expense_line
+-- 	(id,
+-- 	expense_id,
+-- 	account_analytic_id,
+-- 	budget_id,
+-- 	name,
+-- 	amount)
+-- Select
+-- 	pol_id,
+-- 	expense_id,
+-- 	account_analytic_id,
+-- 	budget_id,
+-- 	name,
+-- 	amount
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		pol.id,
+-- 		order_id as exp_id,
+-- 		kdvn_budget_id,
+-- 		pol.project_id as account_analytic_id,
+-- 		pol.name,
+-- 		price_unit
+-- 	from 
+-- 		purchase_order_line pol
+-- 	left join
+-- 		purchase_order po on order_id = po.id
+-- 	left join
+-- 		product_product pp on product_id=pp.id
+-- 	left join
+-- 		purchase_typeoforder pt on typeoforder=pt.id
+-- 	where pt.code=''e''')
+-- as exp_l(
+-- 	pol_id int,
+-- 	expense_id int,
+-- 	budget_id int, 
+-- 	account_analytic_id int,
+-- 	name varchar(128),
+-- 	amount numeric)
+-- where coalesce(account_analytic_id,0)>0;
+
+-- Select max(id) from kderp_other_expense_line --106021
+-- alter SEQUENCE kderp_other_expense_line_id_seq RESTART with 106022
+--array_to_string(array_agg(employee), ',')
+
+-- #### Update
+-- select
+-- 	budget_id,
+-- 	trim(array_to_string(array_agg(koel.id::text), '  '))
+-- from
+-- 	kderp_other_expense_line koel
+-- left join
+-- 	kderp_other_expense koe on expense_id=koe.id
+-- inner join
+-- 	(Select 
+-- 		max(koel.id) as max_id
+-- 	from
+-- 		kderp_other_expense_line koel
+-- 	group by
+-- 		expense_id) vwtemp on koel.id=max_id where coalesce(budgets,'')=''
+-- group by budget_id

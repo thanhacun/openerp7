@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="wizard_book_discount_form">
+            <field name="name">wizard.wizard.update.discount.of.books.form</field>
+            <field name="model">wizard.update.discount.of.books</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Discount Books">
+                    <field name="book_id"/>  
+                    <!-- <newline/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <newline/> -->
+                    <field name="discount"/>
+                    <group colspan="4">
+                        <button icon="gtk-cancel" special="cancel"
+                                type="object" string="Cancel"/>
+                        <button icon="gtk-ok" name="update_discount_of_books"
+                                string="Update discount" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+ 
+        <record id="action_wizard_books_discount" model="ir.actions.act_window">
+            <field name="name">Discount Book Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.update.discount.of.books</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_wizard_books_discount"
+                  id="menu_discount_books"
+                  parent="menu_kderp_note_book"
+                  sequence="35"/>
+    </data>
+</openerp>

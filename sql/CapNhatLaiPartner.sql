@@ -1,0 +1,94 @@
+﻿-- Begin;
+-- Update account_move_line set partner_id=(Select id from res_partner where code='C0468') where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- Update account_invoice set partner_id=(Select id from res_partner where code='C0468') where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- rollback;
+-- Select * from account_move_line where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- Select * from account_invoice where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- delete from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468'
+
+-- Begin;
+-- -- Quotation
+-- Update sale_order set partner_id=(Select id from res_partner where code='C0468') where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update sale_order set partner_address_id=(Select id from res_partner where code='C0468') where partner_address_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update sale_order set partner_invoice_id=(Select id from res_partner where code='C0468') where partner_invoice_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update sale_order set owner_id=(Select id from res_partner where code='C0468') where owner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- --Job
+-- Update account_analytic_account set owner_id=(Select id from res_partner where code='C0468') where owner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update account_analytic_account set partner_id=(Select id from res_partner where code='C0468') where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update account_analytic_account set address_id=(Select id from res_partner where code='C0468') where address_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update account_analytic_account set invoice_address_id=(Select id from res_partner where code='C0468') where invoice_address_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- --Contract
+-- Update kderp_contract_client set owner_id=(Select id from res_partner where code='C0468') where owner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update kderp_contract_client set client_id=(Select id from res_partner where code='C0468') where client_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update kderp_contract_client set address_id=(Select id from res_partner where code='C0468') where address_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update kderp_contract_client set invoice_address_id=(Select id from res_partner where code='C0468') where invoice_address_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- --Invoice
+-- Update account_invoice set owner_id=(Select id from res_partner where code='C0468') where owner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update account_invoice set partner_id=(Select id from res_partner where code='C0468') where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update account_invoice set address_id=(Select id from res_partner where code='C0468') where address_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- Update account_invoice set invoice_address_id=(Select id from res_partner where code='C0468') where invoice_address_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- --Account move Line
+-- Update account_move_line set partner_id=(Select id from res_partner where code='C0468') where partner_id in (Select id from res_partner where name ilike 'NIPPON EXPRESS%'  and id<>3435 and coalesce(code,'')<>'C0468');
+-- 
+-- 
+-- Rollback;
+
+-- 
+-- Begin;
+-- -- Quotation
+-- Update sale_order set partner_id=(Select id from res_partner where code='C0216') where partner_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update sale_order set partner_address_id=5340 where partner_address_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update sale_order set partner_invoice_id=5340 where partner_invoice_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update sale_order set owner_id=(Select id from res_partner where code='C0216') where owner_id=(Select id from res_partner where code='C0465');
+-- 
+-- --Job
+-- Update account_analytic_account set owner_id=(Select id from res_partner where code='C0216') where owner_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update account_analytic_account set partner_id=(Select id from res_partner where code='C0216') where partner_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update account_analytic_account set address_id=5340 where address_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update account_analytic_account set invoice_address_id=5340 where invoice_address_id=(Select id from res_partner where code='C0465');
+-- 
+-- --Contract
+-- Update kderp_contract_client set owner_id=(Select id from res_partner where code='C0216') where owner_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update kderp_contract_client set client_id=(Select id from res_partner where code='C0216') where client_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update kderp_contract_client set address_id=5340 where address_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update kderp_contract_client set invoice_address_id=5340 where invoice_address_id=(Select id from res_partner where code='C0465');
+-- 
+-- --Invoice
+-- Update account_invoice set owner_id=(Select id from res_partner where code='C0216') where owner_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update account_invoice set partner_id=(Select id from res_partner where code='C0216') where partner_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update account_invoice set address_id=5340 where address_id=(Select id from res_partner where code='C0465');
+-- 
+-- Update account_invoice set invoice_address_id=5340 where invoice_address_id=(Select id from res_partner where code='C0465');
+-- 
+-- --Account move Line
+-- Update account_move_line set partner_id=(Select id from res_partner where code='C0216') where partner_id=(Select id from res_partner where code='C0465');
+-- 
+-- 
+-- Rollback;

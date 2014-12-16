@@ -1,0 +1,162 @@
+﻿-- -- --* from ir_attachment --
+-- Insert into ir_attachment
+-- 	(id,
+-- 	create_uid,
+-- 	create_date,
+-- 	write_date,
+-- 	write_uid ,
+-- 	res_model ,
+-- 	res_id ,
+-- 	description ,
+-- 	q_attached_bm ,
+-- 	q_attached_jm ,
+-- 	q_attached ,
+-- 	q_attached_je ,
+-- 	q_attached_be ,
+-- 	q_attached_qcombine,
+-- 	q_attached_jcombine ,
+-- 	file_type ,
+-- 	file_size  ,
+-- 	partner_id ,
+-- 	user_id ,
+-- 	parent_id ,
+-- 	store_fname ,
+-- 	index_content ,
+-- 	-- Contract Client
+-- 	attached_contract_sent ,
+-- 	attached_contract_received ,
+-- 	attached_approved_quotation ,
+-- 	-- Client Payment
+-- 	attached_progress_received ,
+-- 	attached_progress_sent ,
+-- 	--PO
+-- 	quotation_attached ,
+-- 	roa_comaprison_attached ,
+-- 	contract_attached ,
+-- 	name ,
+-- 	datas_fname ,
+-- 	type)
+-- Select
+-- 	id,
+-- 	create_uid,
+-- 	create_date,
+-- 	write_date,
+-- 	write_uid ,
+-- 	res_model ,
+-- 	res_id ,
+-- 	description ,
+-- 	q_attached_bm ,
+-- 	q_attached_jm ,
+-- 	q_attached ,
+-- 	q_attached_je ,
+-- 	q_attached_be ,
+-- 	q_attached_qcombine,
+-- 	q_attached_jcombine ,
+-- 	file_type ,
+-- 	file_size  ,
+-- 	partner_id ,
+-- 	user_id ,
+-- 	parent_id ,
+-- 	store_fname ,
+-- 	index_content ,
+-- 	-- Contract Client
+-- 	attached_contract_sent ,
+-- 	attached_contract_received ,
+-- 	attached_approved_quotation ,
+-- 	-- Client Payment
+-- 	attached_progress_received ,
+-- 	attached_progress_sent ,
+-- 	--PO
+-- 	quotation_attached ,
+-- 	roa_comaprison_attached ,
+-- 	contract_attached ,
+-- 	name ,
+-- 	datas_fname ,
+-- 	type
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		id,
+-- 		create_uid,
+-- 		create_date,
+-- 		write_date,
+-- 		write_uid,
+-- 		case 
+-- 			when res_model=''kdvn.payment.from.client'' then ''account.invoice''
+-- 			when res_model=''kdvn.request.of.payment'' then ''kderp.supplier.payment''
+-- 			when res_model=''kdvn.project'' then ''account.analytic.account''
+-- 			when res_model=''kdvn.contract.client'' then ''kderp.contract.client''
+-- 		else
+-- 			res_model end as res_model,
+-- 		
+-- 		res_id,
+-- 		description,
+-- 		q_attached_bm,
+-- 		q_attached_jm,
+-- 		q_attached,
+-- 		q_attached_je,
+-- 		q_attached_be,
+-- 		q_attached_qcombine,
+-- 		q_attached_jcombine,
+-- 		file_type ,
+-- 		file_size  ,
+-- 		partner_id,
+-- 		user_id,
+-- 		parent_id,
+-- 		store_fname ,
+-- 		index_content,
+-- 		-- Contract Client
+-- 		kdvn_contract_contract_sent as attached_contract_sent,
+-- 		kdvn_contract_contract_received as attached_contract_received,
+-- 		kdvn_contract_approved_quotation as attached_approved_quotation,
+-- 		-- Client Payment
+-- 		kdvn_pfc_progress_received as attached_progress_received,
+-- 		kdvn_pfc_progress_sent as attached_progress_sent,
+-- 		--PO
+-- 		po_quotation_attached as quotation_attached,
+-- 		po_roa_comparison_attached as roa_comaprison_attached,
+-- 		po_contract_attached as contract_attached,
+-- 		name,
+-- 		datas_fname,
+-- 		''binary'' as type
+-- 	from 
+-- 		ir_attachment')
+-- as ia(
+-- 	id int,
+-- 	create_uid int,
+-- 	create_date date,
+-- 	write_date date,
+-- 	write_uid int,
+-- 	res_model varchar,
+-- 	res_id int,
+-- 	description text,
+-- 	q_attached_bm boolean,
+-- 	q_attached_jm boolean,
+-- 	q_attached boolean,
+-- 	q_attached_je boolean,
+-- 	q_attached_be boolean,
+-- 	q_attached_qcombine boolean,
+-- 	q_attached_jcombine boolean,
+-- 	file_type varchar(32),
+-- 	file_size  int,
+-- 	partner_id int,
+-- 	user_id int,
+-- 	parent_id int,
+-- 	store_fname varchar,
+-- 	index_content text,
+-- 	-- Contract Client
+-- 	attached_contract_sent boolean,
+-- 	attached_contract_received boolean,
+-- 	attached_approved_quotation boolean,
+-- 	-- Client Payment
+-- 	attached_progress_received boolean,
+-- 	attached_progress_sent boolean,
+-- 	--PO
+-- 	quotation_attached boolean,
+-- 	roa_comaprison_attached boolean,
+-- 	contract_attached boolean,
+-- 	name varchar,
+-- 	datas_fname varchar,
+-- 	type varchar(16))
+-- Select max(id) from ir_attachment  --25139
+-- alter SEQUENCE ir_attachment_id_seq RESTART with 25140
+-- 

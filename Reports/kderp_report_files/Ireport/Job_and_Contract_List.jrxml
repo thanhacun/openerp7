@@ -1,0 +1,1505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Job Number and Contract List" language="groovy" printOrder="Horizontal" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1176" leftMargin="14" rightMargin="0" topMargin="17" bottomMargin="20" isFloatColumnFooter="true">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="935"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.layers" value="##Wed Apr 27 09:53:06 ICT 2011\nlayer.1.name=Static Text\nlayer.1.visible=true\nlayer.1.id=1\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
+	<property name="OPENERP_RELATIONS" value="[&apos;contract_ids/quotation_ids/contract_id/client_payment_ids&apos;]"/>
+	<parameter name="SR_DATA_SOURCE" class="java.lang.Object"/>
+	<parameter name="REWIND" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_DATA_SOURCE}.moveFirst()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ParentID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\dtthuy\\Desktop\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="ParentID" class="java.lang.Integer">
+		<fieldDescription><![CDATA[/data/record/id]]></fieldDescription>
+	</field>
+	<field name="Job_No" class="java.lang.String">
+		<fieldDescription><![CDATA[code]]></fieldDescription>
+	</field>
+	<field name="Job_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[job_type]]></fieldDescription>
+	</field>
+	<field name="Client_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[partner_id/name]]></fieldDescription>
+	</field>
+	<field name="Job_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[name]]></fieldDescription>
+	</field>
+	<field name="Project Manager" class="java.lang.String">
+		<fieldDescription><![CDATA[user_id/name]]></fieldDescription>
+	</field>
+	<field name="Contract_No" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/code]]></fieldDescription>
+	</field>
+	<field name="QuotationNo" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/name]]></fieldDescription>
+	</field>
+	<field name="InvoicieNo" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/contract_id/client_payment_ids/number]]></fieldDescription>
+	</field>
+	<field name="Desc.-description" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Contracts-contract_ids/Quotations-quotation_ids/Desc.-description]]></fieldDescription>
+	</field>
+	<field name="SubmitAmount" class="java.lang.Double">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/quotation_submit_line/subtotal]]></fieldDescription>
+	</field>
+	<field name="App_e" class="java.lang.Double">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/order_line/price_subtotal]]></fieldDescription>
+	</field>
+	<field name="App_m" class="java.lang.Double">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/order_line_m/price_subtotal]]></fieldDescription>
+	</field>
+	<field name="job_e" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/job_e_id/code]]></fieldDescription>
+	</field>
+	<field name="job_m" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/job_m_id/code]]></fieldDescription>
+	</field>
+	<field name="InvoicieDate" class="java.util.Date">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/contract_id/client_payment_ids/date_invoice]]></fieldDescription>
+	</field>
+	<field name="amount_currency" class="java.lang.Double">
+		<fieldDescription><![CDATA[contract_ids/contract_job_summary_ids/amount_currency]]></fieldDescription>
+	</field>
+	<field name="JobContract" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/contract_job_summary_ids/account_analytic_id/code]]></fieldDescription>
+	</field>
+	<field name="Cur_name" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/contract_job_summary_ids/currency_id/name]]></fieldDescription>
+	</field>
+	<field name="TCA" class="java.lang.Double">
+		<fieldDescription><![CDATA[contract_ids/contract_summary_currency_ids/amount]]></fieldDescription>
+	</field>
+	<field name="JobTypeContract" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/contract_job_summary_ids/account_analytic_id/job_type]]></fieldDescription>
+	</field>
+	<field name="job_e_type" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/job_e_id/job_type]]></fieldDescription>
+	</field>
+	<field name="job_m_type" class="java.lang.String">
+		<fieldDescription><![CDATA[contract_ids/quotation_ids/job_m_id/job_type]]></fieldDescription>
+	</field>
+	<field name="contract_rate" class="java.lang.Double">
+		<fieldDescription><![CDATA[/data/record/Contracts-contract_ids/Currency_System-contract_currency_ids/rate]]></fieldDescription>
+	</field>
+	<sortField name="Job_No" order="Descending"/>
+	<sortField name="Contract_No"/>
+	<sortField name="QuotationNo"/>
+	<variable name="ApprovAmount" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{job_e}==$F{Job_No}?$F{App_e}:$F{App_m}]]></variableExpression>
+	</variable>
+	<variable name="ContractAmount" class="java.lang.Double">
+		<variableExpression><![CDATA[($F{JobContract}==$F{Job_No})?($F{amount_currency}==null?0:$F{amount_currency}):($F{TCA}==null?0:$F{TCA})-($F{amount_currency}==null?0:$F{amount_currency})]]></variableExpression>
+	</variable>
+	<variable name="ContractAmount_USD" class="java.lang.Double">
+		<variableExpression><![CDATA[($F{Cur_name}=="USD")?$V{ContractAmount}:0]]></variableExpression>
+	</variable>
+	<variable name="ContractAmount_VND" class="java.lang.Double">
+		<variableExpression><![CDATA[($F{Cur_name}=="VND")?$V{ContractAmount}:0]]></variableExpression>
+	</variable>
+	<variable name="ContractAmount_to_VND" class="java.lang.Double">
+		<variableExpression><![CDATA[($F{Cur_name}=="USD")?$V{ContractAmount}*($F{contract_rate}==null?0:$F{contract_rate}):$V{ContractAmount_VND}]]></variableExpression>
+	</variable>
+	<group name="Group Job" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{Job_No}]]></groupExpression>
+		<groupHeader>
+			<band height="130">
+				<elementGroup>
+					<textField>
+						<reportElement mode="Opaque" x="4" y="44" width="69" height="20" backcolor="#CCCCCC"/>
+						<box leftPadding="2" bottomPadding="3" rightPadding="0">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="0.75"/>
+							<leftPen lineWidth="1.0"/>
+							<bottomPen lineWidth="1.0"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6"/>
+						</textElement>
+						<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_No}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="2" y="104" width="69" height="23"/>
+						<box bottomPadding="2"/>
+						<textElement verticalAlignment="Bottom">
+							<font size="7" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Project Manager:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="317" y="74" width="57" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="0.75"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="0.75"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Contracted Amount
+(VND)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="227" y="107" width="27" height="20"/>
+						<box bottomPadding="2"/>
+						<textElement verticalAlignment="Bottom">
+							<font size="5" isBold="true" pdfFontName="Times-Bold"/>
+						</textElement>
+						<text><![CDATA[TOTAL]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="374" y="74" width="72" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="0.75"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Contract Amount
+(equivalent to VND)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="654" y="74" width="43" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="1.0"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="0.75"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[ROP Amount
+(USD)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="873" y="74" width="76" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="0.75"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="0.75"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Received Amount (VND)]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="134" y="25" width="143" height="20"/>
+						<box leftPadding="5" rightPadding="0">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="0.0"/>
+							<leftPen lineWidth="0.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="0.0"/>
+						</box>
+						<textElement verticalAlignment="Middle">
+							<font size="6"/>
+						</textElement>
+						<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_Name}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="134" y="44" width="143" height="20"/>
+						<box leftPadding="5" rightPadding="0">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="0.0"/>
+							<leftPen lineWidth="0.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="0.0"/>
+						</box>
+						<textElement verticalAlignment="Middle">
+							<font size="6"/>
+						</textElement>
+						<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Name}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement mode="Opaque" x="254" y="74" width="63" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="1.0"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="0.75"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Contracted Amount
+(USD)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="697" y="74" width="53" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="0.75"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[ROP Amount
+(VND)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="949" y="74" width="55" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="0.75"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Total Equivalent to VND]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="4" y="25" width="69" height="19"/>
+						<box>
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="1.0"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="1.0"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="7" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Job No.]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="28" y="0" width="346" height="20"/>
+						<textElement>
+							<font size="14" isBold="true" isItalic="false" pdfFontName="Times-Bold"/>
+						</textElement>
+						<text><![CDATA[SELECTED JOB AND CONTRACT LIST]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="73" y="25" width="61" height="20"/>
+						<box leftPadding="5" rightPadding="0">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="0.0"/>
+							<leftPen lineWidth="0.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="0.0"/>
+						</box>
+						<textElement verticalAlignment="Middle">
+							<font size="7" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Client Name:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="73" y="45" width="61" height="19"/>
+						<box leftPadding="5" rightPadding="0">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="0.0"/>
+							<leftPen lineWidth="0.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="0.0"/>
+						</box>
+						<textElement verticalAlignment="Middle">
+							<font size="7" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Job Name:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement mode="Opaque" x="829" y="74" width="44" height="33" backcolor="#CCCCCC"/>
+						<box topPadding="5">
+							<pen lineWidth="0.75"/>
+							<topPen lineWidth="1.0"/>
+							<leftPen lineWidth="1.0"/>
+							<bottomPen lineWidth="0.75"/>
+							<rightPen lineWidth="0.75"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Top">
+							<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+						</textElement>
+						<text><![CDATA[Received
+Amount (USD)]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="71" y="104" width="151" height="23"/>
+						<box bottomPadding="2"/>
+						<textElement verticalAlignment="Bottom">
+							<font size="7" isBold="false" isItalic="false" pdfFontName="Times-Roman"/>
+						</textElement>
+						<textFieldExpression class="java.lang.String"><![CDATA[$F{Project Manager}]]></textFieldExpression>
+					</textField>
+				</elementGroup>
+				<staticText>
+					<reportElement x="1002" y="25" width="84" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<text><![CDATA[Date of Report : ]]></text>
+				</staticText>
+				<textField pattern="dd-MMM-yyyy">
+					<reportElement x="1086" y="25" width="70" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Colum header">
+		<groupExpression><![CDATA[1]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<staticText>
+					<reportElement x="548" y="7" width="246" height="10"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[REQUEST OF PAYMENT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="794" y="7" width="254" height="10"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[RECEIVED]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="27" y="7" width="193" height="10"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[QUOTATION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1048" y="7" width="110" height="10"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="7" width="27" height="10"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="220" y="7" width="328" height="10"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[CONTRACT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="17" width="27" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Contract No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="27" y="17" width="46" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Quotation No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="73" y="17" width="53" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Work descriptions]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="126" y="17" width="46" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Submitted amount (negotiating)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="220" y="17" width="32" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Contract currency]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="252" y="17" width="63" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Contracted Amount
+ (USD)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="315" y="17" width="57" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Contracted Amount
+(VND)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="372" y="17" width="72" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Contract Amount
+(equivalent to VND)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="444" y="17" width="52" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[T.C.A (USD)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="496" y="17" width="52" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[T.C.A (VND)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="548" y="17" width="35" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Job No.
+ (for ref.)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="794" y="17" width="33" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="827" y="17" width="44" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Amount (USD)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="871" y="17" width="76" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Amount (VND)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="947" y="17" width="55" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Equivalent to VND]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="1048" y="17" width="40" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Term of payment]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="1002" y="17" width="46" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" isStrikeThrough="false" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Total amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="1123" y="17" width="35" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Completion Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="1088" y="17" width="35" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Start Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="652" y="17" width="43" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Amount (USD)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="748" y="17" width="46" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" isStrikeThrough="false" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Total amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="172" y="17" width="48" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Approved Amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="583" y="17" width="33" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[ROP No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="695" y="17" width="53" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[Amount (VND)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="616" y="17" width="36" height="33" backcolor="#CCCCCC"/>
+					<box topPadding="5">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="5" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic"/>
+					</textElement>
+					<text><![CDATA[ROP Date]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Contract Group">
+		<groupExpression><![CDATA[$F{Contract_No}]]></groupExpression>
+		<groupFooter>
+			<band height="21">
+				<printWhenExpression><![CDATA[$F{Contract_No}!=null & $F{Contract_No}!=""]]></printWhenExpression>
+				<textField>
+					<reportElement x="0" y="0" width="27" height="21"/>
+					<box bottomPadding="2">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Contract_No}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="27" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="27" y="0" width="46" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="73" y="0" width="53" height="21"/>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="126" y="0" width="46" height="21"/>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="172" y="0" width="48" height="21"/>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1048" y="0" width="40" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="548" y="0" width="35" height="21"/>
+					<box>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="583" y="0" width="33" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="616" y="0" width="36" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="827" y="0" width="44" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="748" y="0" width="46" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1002" y="0" width="46" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="652" y="0" width="43" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="794" y="0" width="33" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="871" y="0" width="76" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="947" y="0" width="55" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="695" y="0" width="53" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="220" y="0" width="32" height="21"/>
+					<box bottomPadding="2">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Cur_name}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0">
+					<reportElement x="315" y="0" width="57" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box bottomPadding="2" rightPadding="2">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{ContractAmount_VND}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="252" y="0" width="63" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box bottomPadding="2" rightPadding="2">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{ContractAmount_USD}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0">
+					<reportElement x="372" y="0" width="72" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box bottomPadding="2" rightPadding="2">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{ContractAmount_to_VND}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0">
+					<reportElement x="496" y="0" width="52" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box bottomPadding="2" rightPadding="2">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Cur_name}=="VND"?($F{TCA}==null?0:$F{TCA}):0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="444" y="0" width="52" height="21">
+						<property name="ireport.layer" value="1"/>
+					</reportElement>
+					<box bottomPadding="2" rightPadding="2">
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Cur_name}=="USD"?($F{TCA}==null?0:$F{TCA}):0]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Quotation Group">
+		<groupExpression><![CDATA[$F{QuotationNo}]]></groupExpression>
+	</group>
+	<group name="Invoice Group">
+		<groupExpression><![CDATA[$F{InvoicieNo}]]></groupExpression>
+	</group>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<printWhenExpression><![CDATA[$V{Quotation Group_COUNT}==1||$V{Invoice Group_COUNT}==1]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="0" width="27" height="20"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="27" height="20">
+					<property name="ireport.layer" value="1"/>
+					<printWhenExpression><![CDATA[$F{Contract_No}==null | $F{Contract_No}==""]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="1158" height="0">
+					<printWhenExpression><![CDATA[$F{Contract_No}==null || $F{Contract_No}==""]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="73" y="0" width="53" height="20"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="0" width="46" height="20"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="27" y="0" width="46" height="19"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{QuotationNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="27" y="0" width="46" height="20"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="126" y="0" width="46" height="20"/>
+				<box bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{SubmitAmount}==null?0:$F{SubmitAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="73" y="0" width="53" height="20"/>
+				<box leftPadding="2" bottomPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Desc.-description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="548" y="0" width="35" height="20"/>
+				<box bottomPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{job_e_type}!=$F{Job_Type}?$F{job_e}:($F{job_m_type}!=$F{Job_Type}?$F{job_m}:"")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="583" y="0" width="33" height="20">
+					<property name="ireport.layer" value="1"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{InvoicieNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="583" y="0" width="33" height="20">
+					<property name="ireport.layer" value="1"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="616" y="0" width="36" height="20">
+					<property name="ireport.layer" value="1"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="616" y="0" width="36" height="20">
+					<property name="ireport.layer" value="1"/>
+				</reportElement>
+				<box bottomPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{InvoicieDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="220" y="0" width="32" height="20"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="548" y="0" width="35" height="20">
+					<property name="ireport.layer" value="1"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="73" y="0" width="53" height="20"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="0" width="46" height="20"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="172" y="0" width="48" height="20"/>
+				<box bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{ApprovAmount}==null?0:$V{ApprovAmount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="172" y="0" width="48" height="20"/>
+				<box>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="252" y="0" width="63" height="20"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="315" y="0" width="57" height="20"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="372" y="0" width="72" height="20"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="444" y="0" width="52" height="20"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="496" y="0" width="52" height="20"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band>
+			<staticText>
+				<reportElement x="0" y="0" width="1158" height="0"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>
