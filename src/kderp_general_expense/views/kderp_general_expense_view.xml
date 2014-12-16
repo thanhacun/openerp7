@@ -10,7 +10,7 @@
             	<tree string="G.E. &amp; Expense" colors="blue:state == 'draft';gray:state == 'cancel';green:state == 'waiting_for_payment'">
             		<field name="name"/>
             		<field name="date"/>
-            		<field name="account_analytic_id" string='Job/GE'/>
+            		<field name="account_analytic_id" string='Job/G.E'/>
             		<field name="expense_type"/>
             		<field name="partner_id" string="Supplier" invisible="'partner_id' in context.get('group_by',[])"/>
             		<field name="budgets"/>
@@ -54,11 +54,11 @@
 		                </div>
 	                    <group colspan="4" col="4">
 							<field name='allocated_to' colspan="1"/>
-                        	<field name="account_analytic_id" string='Job/General' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" default_focus="1"/>                        	
+                        	<field name="account_analytic_id" string='Job/G.E' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" default_focus="1"/>                        	
 	                        <field name="date" colspan="1"/>
 	                        <field name='section_incharge_id' colspan="1"/>
 	                        <!-- <field name='' attrs="{'invisible':[('expense_type','!=','monthly_expense')]}" colspan="1"/> -->
-	                        <field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}"/>	                        
+	                        <field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}"/>                       
 	                    </group>
 	                    <notebook>
 	                        <page string="Expense Details">
@@ -72,10 +72,10 @@
 	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
-	            						<field name='budget_id' string='Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
-	                                    <field name="section_id"/>
+	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="belong_expense_id"/>
-	                                    <field name="amount" sum='Sub-total'/>
+	                                    <field name="amount" sum='Sub-total'/> 
 	                                </tree>
 	                            </field>
 	                            <group class="oe_subtotal_footer oe_right">
