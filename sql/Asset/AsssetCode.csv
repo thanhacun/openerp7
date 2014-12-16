@@ -1,0 +1,124 @@
+code,parent_id,name
+0101,01,Laptop
+0102,01,Desktop
+0103,01,Monitor
+0104,01,Ups
+0105,01,"Hard Disk Drive"
+0106,01,Case Pc
+0201,02,Zip Driver
+0202,02,Cd Re-Write Drive
+0203,02,Flash Disk
+0204,02,Pci Card
+0205,02,Tools For Pc
+0206,02,Ram
+0301,03,Firewall
+0302,03,Windows
+0303,03,Office
+0304,03,Access
+0305,03,Fineprint
+0306,03,Lacviet License
+0307,03,Acrobat Professional
+0308,03,Project Professional
+0309,03,Visio Professional
+0310,03,Auto Cad-Lt
+0311,03,Auto Cad-Full
+0401,04,Book Shelf
+0402,04,Steel Table
+0403,04,Wood Table
+0404,04,Glass Table / Coffee Table
+0405,04,Meeting Table
+0406,04,Chairman Of Chair
+0407,04,Locker
+0408,04,Cabinet
+0409,04,Shelf For Safety Helmet And Shoes
+0410,04,Telephone
+0411,04,Iron Filing Cabinet
+0412,04,(Tel Installation Fee For V-Dor)
+0413,04,Drawing Board
+0501,05,Printer Machines
+0502,05,Photomachine
+0503,05,Paper Shredder
+0504,05,Time Recorder
+0505,05,Projector
+0506,05,Scanner
+0507,05,Fax Machine
+0508,05,Laminator Machine
+0509,05,Camera
+0510,05,Binoculars
+0511,05,Carry Car
+0512,05,Lamp
+0513,05,Public Conference Equipment
+0601,06,Fax/Modem
+0602,06,Cable
+0701,07,Generator
+0702,07,Gas Leakage Meter
+0703,07,Water Pump
+0704,07,Welding Machine
+0705,07,Driller
+0706,07,Grinder
+0707,07,Automatic Level
+0708,07,Leveler
+0709,07,Blood Pressure Measuring
+0710,07,Tepra Machine
+0711,07,Heat Blower Machine
+0712,07,Laser Measurement Machine
+0713,07,Laser Measuring
+0714,07,Max Letatwin/ May In Dau Cos
+0715,07,Laser Point
+0716,07,Drier Machines
+0801,08,Avr 1Kva/On Ap Lioa
+0802,08,"Calculator"
+0803,08,Compact Flash Card
+0804,08,Wiring Device
+0806,08,Cartridge Of Photo Machine
+0807,08,Miscellaneous
+0901,09,Container
+0902,09,Warehouse & Storage
+1001,10,Car
+1002,10,Bicycle
+1003,10,Measure Wheel
+1004,10,Pager
+1101,11,Walky Talky
+1102,11,Mobile Phone
+1103,11,Pabx
+1104,11,Voice Trek
+1201,12,Safety Box
+1202,12,Motorbike Helmet
+1203,12,Tool Box
+1301,13,Washing Machine
+1302,13,Sofa
+1303,13,Tv
+1304,13,Fridge
+1305,13,Microwave Oven
+1306,13,Rice-Cooker
+1307,13,Vaccum Cleaner
+1308,13,Hot & Cold Water Dispenser
+1309,13,Blanket
+1310,13,Wardrobe
+1311,13,Fan Heat-Cool
+1312,13,Mattress
+1401,14,Torque Tools
+1402,14,Technical Ruler
+1403,14,Nivo/Horizontal Receptacle
+1501,15,Elec. Meter
+1502,15,Assman Psychrometer
+1503,15,Sound Level Meter
+1504,15,Anemo Metter
+1505,15,Amperemeter
+1506,15,Clamp On Power Hitester
+1507,15,"Current Leakage Clamp"
+1508,15,Phase Indicator
+1509,15,Megohmmeter
+1510,15,Digital Light Meter
+1511,15,Digital Multimeter
+1512,15,Digital Insulation-Continuity Tester
+1513,15,Heavy-Duty Digital Hot Wire Thermoanemometer
+1514,15,"Tester"
+1601,16,Air-Conditioner
+1801,18,Ladder
+1802,18,Pain Well/But Phun Son
+1803,18,Duct Measure For Air Duct & Water Pipe
+1804,18,Heat & Smoke Detector
+,,
+,,
+,,

@@ -1,0 +1,159 @@
+﻿--CREATE EXTENSION dblink;
+--3849
+--alter SEQUENCE res_partner_id_seq RESTART with 3850
+--kderp_budget_category_id_seq 
+--Select parent_id,customer,supplier,type,* from res_partner where id in (7,8);Select phone,	email from res_partner
+--#Insert Partner with Adress
+
+-- Insert into res_partner
+-- 	(id,
+-- 	address_id,
+-- 	code,
+-- 	name,
+-- 	vat_code,
+-- 	lang,
+-- 	customer ,
+-- 	supplier ,
+-- 	trade_name ,
+-- 	street ,
+-- 	street2 ,
+-- 	city,
+-- 	type,
+-- 	phone,
+-- 	fax,
+-- 	mobile,
+-- 	email,
+-- 	parent_id,
+-- 	is_company,
+-- 	active,
+-- 	notification_email_send,
+-- 	display_name,
+-- 	country_id)
+-- Select 
+-- 	rp.id,
+-- 	address_id,
+-- 	ref as code,
+-- 	rp.name,
+-- 	vat_code,
+-- 	lang,
+-- 	customer ,
+-- 	supplier ,
+-- 	trade_name ,
+-- 	street ,
+-- 	street2 ,
+-- 	city,
+-- 	type,
+-- 	phone,
+-- 	fax,
+-- 	mobile,
+-- 	email,
+-- 	parent_id,
+-- 	is_company,
+-- 	True as active,
+-- 	'comment' as notification_email_send,
+-- 	rc.name as display_name,
+-- 	rc.id as c_id
+-- from dblink('dbname=KDVN_Data_HCM user=openerp password=admin host=192.168.1.11',
+-- 'Select fip.*,rc.code as rc_code from for_import_partner fip left join res_country rc on country_id=rc.id') as rp(id int,
+-- 	address_id int,
+-- 	ref varchar(64),
+-- 	name varchar(128),
+-- 	vat_code varchar(32),
+-- 	lang varchar(64),
+-- 	customer boolean,
+-- 	supplier boolean,
+-- 	trade_name varchar(25),
+-- 	street varchar(128),
+-- 	street2 varchar(128),
+-- 	city varchar(128),
+-- 	country_id int,
+-- 	type varchar,
+-- 	phone varchar(64),
+-- 	fax varchar(64),
+-- 	mobile varchar(64),
+-- 	email varchar(240),
+-- 	parent_id int,
+-- 	is_company boolean,
+-- 	rc_code varchar(2))
+-- left join
+-- 	res_country rc on rc_code=rc.code
+-- where coalesce(rp.id,0)>0 and rp.id<>1
+
+----######################################
+--delete from res_partner where id not in (1,3,4,6)
+--Select max(id) from res_partner
+--alter SEQUENCE res_partner_id_seq RESTART with 5551
+--Insert address
+
+-- Insert into res_partner
+-- 	(
+-- 	address_id,
+-- 	code,
+-- 	name,
+-- 	vat_code,
+-- 	lang,
+-- 	customer ,
+-- 	supplier ,
+-- 	trade_name ,
+-- 	street ,
+-- 	street2 ,
+-- 	city,
+-- 	type,
+-- 	phone,
+-- 	fax,
+-- 	mobile,
+-- 	email,
+-- 	parent_id,
+-- 	is_company,
+-- 	active,
+-- 	notification_email_send,
+-- 	display_name,
+-- 	country_id)
+-- Select
+-- 	address_id,
+-- 	null as code,
+-- 	rp.name,
+-- 	vat_code,
+-- 	lang,
+-- 	customer ,
+-- 	supplier ,
+-- 	trade_name ,
+-- 	street ,
+-- 	street2 ,
+-- 	city,
+-- 	type,
+-- 	phone,
+-- 	fax,
+-- 	mobile,
+-- 	email,
+-- 	parent_id,
+-- 	is_company,
+-- 	True as active,
+-- 	'comment' as notification_email_send,
+-- 	rp.name as display_name,
+-- 	rc.id as country_id
+-- from dblink('dbname=KDVN_Data_HCM user=openerp password=admin host=192.168.1.11',
+-- 'Select fip.*,rc.code from for_import_partner fip left join res_country rc on country_id=rc.id') as rp(id int,
+-- 	address_id int,
+-- 	ref varchar(64),
+-- 	name varchar(128),
+-- 	vat_code varchar(32),
+-- 	lang varchar(64),
+-- 	customer boolean,
+-- 	supplier boolean,
+-- 	trade_name varchar(25),
+-- 	street varchar(128),
+-- 	street2 varchar(128),
+-- 	city varchar(128),
+-- 	country_id int,
+-- 	type varchar,
+-- 	phone varchar(64),
+-- 	fax varchar(64),
+-- 	mobile varchar(64),
+-- 	email varchar(240),
+-- 	parent_id int,
+-- 	is_company boolean,
+-- 	rc_code varchar(2))
+-- left join
+-- 	res_country rc on rc_code=rc.code
+-- where coalesce(rp.id,0)=0

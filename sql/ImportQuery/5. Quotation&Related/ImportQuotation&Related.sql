@@ -1,0 +1,331 @@
+﻿-- alter SEQUENCE kderp_quotation_contract_project_line_id_seq RESTART with 1
+
+-- ######################## Sale Order 
+-- Insert into 
+-- 	sale_order 
+-- 	(id,
+-- 	create_uid,
+-- 	create_date,
+-- 	write_date,
+-- 	write_uid,
+-- 	name,
+-- 	dateofregistration,
+-- 	state,
+-- 	partner_id,
+-- 	partner_address_id,
+-- 	partner_invoice_id,
+-- 	contract_id,
+-- 	completion_date,
+-- 	owner_id,
+-- 	location_id,
+-- 	project_name,
+-- 	registered_by,
+-- 	estimation_e_manager_j,
+-- 	estimation_m_manager_j,
+-- 	estimation_e_manager_v,
+-- 	estimation_m_manager_v,
+-- 	project_manager_id,
+-- 	project_manager_m_id,
+-- 	site_manager_e_id,
+-- 	site_manager_m_id,
+-- 	description,
+-- 	remarks,
+-- 	q_attached,
+-- 	q_attached_qcombine,
+-- 	q_attached_be,
+-- 	q_attached_bm,
+-- 	quotation_type,
+-- 	date_order,
+-- 	job_e_id,
+-- 	q_budget_no_e,
+-- 	q_exrate_e,
+-- 	q_prj_budget_amount_e,
+-- 	budget_state_e,
+-- 	temp_percentage_e,
+-- 	job_m_id,
+-- 	q_budget_no_m,
+-- 	q_exrate_m,
+-- 	q_prj_budget_amount_m,
+-- 	budget_state_m,
+-- 	temp_percentage_m,
+-- 	q_attached_je,
+-- 	q_attached_jm,
+-- 	q_attached_jcombine)
+-- 
+-- Select
+-- 	so.id,
+-- 	so.create_uid,
+-- 	so.create_date,
+-- 	so.write_date,
+-- 	so.write_uid,
+-- 	so.name,
+-- 	so.dateofregistration,
+-- 	so.state,
+-- 	so.client_id as partner_id,
+-- 	rpa.id as partner_address_id,
+-- 	rpai.id as partner_invoice_id,
+-- 	contract_id,
+-- 	completion_date,
+-- 	owner_id,
+-- 	rpal.id as location_id,
+-- 	project_name,
+-- 	registered_by,
+-- 	estimation_e_manager_j,
+-- 	estimation_m_manager_j,
+-- 	estimation_e_manager_v,
+-- 	estimation_m_manager_v,
+-- 	project_manager_id,
+-- 	project_manager_m_id,
+-- 	site_manager_e_id,
+-- 	site_manager_m_id,
+-- 	description,
+-- 	remarks,
+-- 	q_attached,
+-- 	q_attached_qcombine,
+-- 	q_attached_be,
+-- 	q_attached_bm,
+-- 	quotation_type,
+-- 	date_order,
+-- 	job_e_id,
+-- 	q_budget_no_e,
+-- 	q_exrate_e,
+-- 	q_prj_budget_amount_e,
+-- 	budget_state_e,
+-- 	temp_percentage_e,
+-- 	job_m_id,
+-- 	q_budget_no_m,
+-- 	q_exrate_m,
+-- 	q_prj_budget_amount_m,
+-- 	budget_state_m,
+-- 	temp_percentage_m,
+-- 	q_attached_je,
+-- 	q_attached_jm,
+-- 	q_attached_jcombine
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		id,
+-- 		create_uid,
+-- 		create_date,
+-- 		write_date,
+-- 		write_uid,
+-- 		name,
+-- 		dateofregistration,
+-- 		state,
+-- 		partner_id as client_id,
+-- 		partner_order_id as partner_address_id,
+-- 		partner_invoice_id,
+-- 		contract_id,
+-- 		completion_date,
+-- 		owner_id,
+-- 		location as location_id,
+-- 		project_name,
+-- 		registered_by,
+-- 		estimation_e_manager_j,
+-- 		estimation_m_manager_j,
+-- 		estimation_e_manager_v,
+-- 		estimation_m_manager_v,
+-- 		project_manager_id,
+-- 		project_manager_m_id,
+-- 		site_manager_e_id,
+-- 		site_manager_m_id,
+-- 		description,
+-- 		remarks,
+-- 		q_attached,
+-- 		q_attached_qcombine,
+-- 		q_attached_be,
+-- 		q_attached_bm,
+-- 		quotation_type,
+-- 		dateofsubmit as date_order,
+-- 		project_e_id as job_e_id,
+-- 		q_budget_no_e,
+-- 		q_exrate_e,
+-- 		q_prj_budget_amount_e,
+-- 		budget_state_e,
+-- 		temp_percentage_e,
+-- 		project_m_id as job_m_id,
+-- 		q_budget_no_m,
+-- 		q_exrate_m,
+-- 		q_prj_budget_amount_m,
+-- 		budget_state_m,
+-- 		temp_percentage_m,
+-- 		q_attached_je,
+-- 		q_attached_jm,
+-- 		q_attached_jcombine
+-- 	from
+-- 		sale_order') 
+-- as so(	
+-- 	id int,
+-- 	create_uid int,
+-- 	create_date date,
+-- 	write_date date,
+-- 	write_uid int,
+-- 	name varchar(32),
+-- 	dateofregistration date,
+-- 	state varchar(16),
+-- 	client_id int,
+-- 	partner_address_id int,
+-- 	partner_invoice_id int,
+-- 	contract_id int,
+-- 	completion_date date,
+-- 	owner_id int,
+-- 	location_id int, --partner_address
+-- 	project_name varchar(512),
+-- 	registered_by int,
+-- 	estimation_e_manager_j int,
+-- 	estimation_m_manager_j int,
+-- 	estimation_e_manager_v int,
+-- 	estimation_m_manager_v int,
+-- 	project_manager_id int,
+-- 	project_manager_m_id int,
+-- 	site_manager_e_id int,
+-- 	site_manager_m_id int,
+-- 	description varchar(512),
+-- 	remarks varchar(512),
+-- 	q_attached boolean,
+-- 	q_attached_qcombine boolean,
+-- 	q_attached_be boolean,
+-- 	q_attached_bm boolean,
+-- 	quotation_type varchar(8),
+-- 	date_order date,
+-- 	job_e_id int,
+-- 	q_budget_no_e varchar(32),
+-- 	q_exrate_e numeric,
+-- 	q_prj_budget_amount_e numeric,
+-- 	budget_state_e varchar(32),
+-- 	temp_percentage_e numeric,
+-- 	job_m_id int,
+-- 	q_budget_no_m varchar(32),
+-- 	q_exrate_m numeric,
+-- 	q_prj_budget_amount_m numeric,
+-- 	budget_state_m varchar(32),
+-- 	temp_percentage_m numeric,
+-- 	q_attached_je boolean,
+-- 	q_attached_jm boolean,
+-- 	q_attached_jcombine boolean)
+-- left join
+-- 	res_partner rpa on so.partner_address_id = rpa.address_id
+-- left join
+-- 	res_partner rpai on so.partner_invoice_id = rpai.address_id
+-- left join
+-- 	res_partner rpal on so.location_id = rpal.address_id
+
+-- Select max(id) from sale_order --12038
+-- alter SEQUENCE sale_order_id_seq RESTART with 12359
+
+
+-- ######################## Sale Order - Submit Info
+-- alter table kderp_sale_order_submit_line add column tax_per numeric
+-- Insert into kderp_sale_order_submit_line
+-- 	(order_id,
+-- 	currency_id,
+-- 	amount,
+-- 	tax_per)
+-- Select
+-- 	so.id as so_id,
+-- 	rc.id as currency_id,
+-- 	submit_amount,
+-- 	tax
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		so.id,
+-- 		rc.name as curr_name,
+-- 		amount as submit_amount,
+-- 		taxes_percent as tax
+--  	from
+--  		sale_order so
+--  	left join
+-- 		res_currency rc on so.currency_id=rc.id') 
+-- as so(	
+-- 	id int,
+-- 	name varchar(3),
+-- 	submit_amount numeric,
+-- 	tax integer)
+-- left join
+-- 	res_currency rc on so.name=rc.name
+
+-- Select max(id) from kderp_sale_order_submit_line --8480
+-- alter SEQUENCE kderp_sale_order_submit_line_id_seq RESTART with 8481
+
+
+-- ###################TAX SUBMIT
+
+--Import Tax
+
+-- Insert into kderp_sale_order_submit_tax 
+-- 	(order_line_id,tax_id) 
+-- Select
+-- 	ksos.id as contract_currency_id,
+-- 	at.id as tax_id
+-- from 
+-- 	kderp_sale_order_submit_line ksos
+-- left join
+-- 	account_tax at on type='percent' and tax_per/100.0-at.amount=0 and type_tax_use='sale'
+
+
+
+-- IMPORT SUBMIT LINE ELECTRICAL
+-- alter SEQUENCE sale_order_id_seq RESTART with 1
+-- 
+-- Insert into sale_order_line
+-- 	(order_id,
+-- 	currency_id,
+-- 	price_unit,
+-- 	discount,
+-- 	job_type)
+-- Select
+-- 	so.id as so_id,
+-- 	rc.id as currency_id,
+-- 	price_unit,
+-- 	discount,
+-- 	'E' as job_type
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		so.id,
+-- 		rc.name as curr_name,
+-- 		q_amount_e as price_unit,
+-- 		q_amount_e_discount as discount
+--  	from
+--  		sale_order so
+--  	left join
+-- 		res_currency rc on so.currency_id=rc.id
+-- 	where
+-- 		coalesce(q_amount_e)<>0 or coalesce(q_amount_e_discount,0)<>0')
+-- as so(	
+-- 	id int,
+-- 	curr_name varchar(3),
+-- 	price_unit numeric,
+-- 	discount integer)
+-- left join
+-- 	res_currency rc on so.curr_name=rc.name;
+
+-- Insert into sale_order_line
+-- 	(order_id,
+-- 	currency_id,
+-- 	price_unit,
+-- 	discount,
+-- 	job_type)
+-- Select
+-- 	so.id as so_id,
+-- 	rc.id AScurrency_id,
+-- 	price_unit,
+-- 	discount,
+-- 	'M' as job_type
+-- from dblink('dbname=KDVN_Data user=openerp password=!@#Admin1120 host=172.16.10.192',
+-- 	'Select 
+-- 		so.id,
+-- 		rc.name as curr_name,
+-- 		q_amount_m as price_unit,
+-- 		q_amount_m_discount as discount
+--  	from
+--  		sale_order so
+--  	left join
+-- 		res_currency rc on so.currency_id=rc.id
+-- 	where
+-- 		coalesce(q_amount_m)<>0 or coalesce(q_amount_m_discount,0)<>0')
+-- as so(	
+-- 	id int,
+-- 	curr_name varchar(3),
+-- 	price_unit numeric,
+-- 	discount integer)
+-- left join
+-- 	res_currency rc on so.curr_name=rc.name;

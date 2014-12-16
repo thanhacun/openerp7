@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		
+		<record id="view_kderp_general_expense_form_add_advance_inherit" model="ir.ui.view">
+            <field name="name">general.expense.form.kderp.other.add.advance</field>
+            <field name="model">kderp.advance.payment</field>
+            <field name="inherit_id" ref='kderp_advance_payment.view_kderp_advance_payment_form'/>
+            <field name="arch" type="xml">
+            	<field name="other_expense_ids" position="after">   
+            		<separator string="General Expense"/>         		
+					<field name="general_expense_id" string="GE No."/>
+	            </field>
+            </field>
+        </record> 
+	
+	</data>
+</openerp>

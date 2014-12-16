@@ -1,0 +1,423 @@
+﻿--#####################RUNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN$#
+--Update date
+-- Update 
+-- 	"U_DataAsset" ud 
+-- set 
+-- 	purchasedate =po_date from  (Select assetnumber,min(usedtime) po_date from u_dataassetusage where assetnumber in (Select assetnumber from "U_DataAsset" where purchasedate is null) and usedtime is  not null group by assetnumber) vwtemp
+-- where
+-- 	ud.assetnumber=vwtemp.assetnumber
+-- 
+-- Select * from "U_DataAsset" where coalesce(price,0)>0 and coalesce(price,0)<1000000 ;
+-- delete from newcode_convert 
+-- ################## UPDATE ASSET ###################################
+-- Delete from kderp_asset_management_usage;
+-- Delete from kderp_asset_management;
+-- Select max(id) from kderp_asset_management; 1017
+-- alter SEQUENCE kderp_asset_management_id_seq RESTART 1
+-- 
+-- Insert into kderp_asset_management
+-- 	(code,
+-- 	old_code,
+-- 	name,
+-- 	asset_code_id,
+-- 	type_asset_acc_id,
+-- 	quantity,
+-- 	price,
+-- 	refcode,
+-- 	makername,
+-- 	brandname,
+-- 	dateofinvoice,
+-- 	usefullife,
+-- 	state)
+-- Select 
+-- 		AssetNumber,
+-- 		AssetNumber,
+-- 		ud.description,
+-- 		kac.id as assset_code_id,
+-- 		case 
+-- 			when coalesce(Intangible,0)=5 and coalesce(price,0)>=30000000 then 5 else
+-- 			case when coalesce(price,0)>=30000000 then Greater30m else --Price is zero
+-- 			case when coalesce(price,0) between 15000000 and 30000000 then Between15and30
+-- 			-- else case when coalesce(price,0) between 1000000 and 15000000 then Less15m else 7 end --Tangible
+-- 			else 7 end --Included 0 and greater than 1m and 15m
+-- 			end end as type_asset_acc_id,
+-- 		quantity,
+-- 		price,
+-- 		refeqno,
+-- 		makername,
+-- 		brandname,
+-- 		purchasedate,
+-- 		estimatedusefulllife,
+-- 		case 
+-- 			when coalesce(inused,False)=True then 'inused'
+-- 			when coalesce(liquidated,False)=True then 'liquidated'
+-- 			else 'outofdate' end as state
+-- 	from 
+-- 		"U_DataAsset" ud 
+-- 	inner join
+-- 		newcode_convert nc on assetcode=nc.oldcode
+-- 	left join
+-- 		kderp_asset_code kac on nc.newcode=kac.code 
+-- 	where assetnumber<>'EQ0334-1';
+
+-- 	
+--Update kderp_asset_management set active=true;
+-- Select * from kderp_asset_management where dateofinvoice is null; 68 220 900
+-- 
+-- 
+-- Select * from kderp_type_of_asset 
+-- 
+-- Delete from kderp_asset_management_usage;
+-- ALTER SEQUENCE kderp_asset_management_usage_id_seq RESTART 1
+-- Insert into
+-- 	kderp_asset_management_usage
+-- 	(asset_management_id,usedtime,endtime,manager_id,user_id,job_id,remarks)
+-- Select 
+-- 	distinct
+-- 	kam.id as asset_management_id,
+-- 	udu.usedtime,
+-- 	endtime,
+-- 	hem.id as manager_id,
+-- 	heu.id as user_id,
+-- 	kj.id as job_id,
+-- 	udu.remarks
+-- from 
+-- 	u_dataassetusage udu
+-- left join
+-- 	hr_employee hem on upper(udu.managernumber)=upper(hem.staffno)
+-- left join
+-- 	hr_employee heu on upper(udu.staffnumber)=upper(heu.staffno)
+-- left join
+-- 	kderp_job kj on upper(jobnumber)=upper(kj.code)
+-- left join
+-- 	kderp_asset_management kam on udu.assetnumber=kam.old_code;
+
+
+--Insert into ir_translation Select nextval('ir_translation_id_seq'::regclass) as id, 'vi_VN' as lang,kac.name as src,'kderp.asset.code,name',kac.id as res_id,null as module,'translated' as state, vietnam as value, 'model' as type,null as comment from newassetcode nc left join kderp_asset_code kac on nc.code=kac.code where coalesce(vietnam,'')<>'';
+
+-- Alter table kderp_asset_management DROP COLUMN fixed_asset ;
+
+
+
+-- ##### UPDATE CODE-- 
+-- insert into kderp_asset_code_accounting  (id, create_uid, create_date, write_date, write_uid, typeofasset_id,code,type, name)
+-- Select id, create_uid, create_date, write_date, write_uid, typeofasset_id,code,type, name
+--  from dblink('dbname=KDVN_Data_HN user=openerp_read password=290797pr host=172.16.10.192',
+-- 	'Select 
+-- 		   id, 1, create_date, write_date, 1, typeofasset_id,code,type, name
+-- 	from 
+-- 		kderp_asset_code_accounting') 
+-- as kri(	
+-- 	id int,
+-- 	create_uid int,
+-- 	create_date date,
+-- 	write_date date,
+-- 	write_uid int,
+-- 	typeofasset_id int,	
+-- 	code varchar(128),
+-- 	type varchar(2),	
+-- 	name varchar(128)); 
+-- select max(id) from kderp_asset_code_accounting 7
+-- ALTER SEQUENCE kderp_asset_code_accounting_id_seq RESTART 8
+
+-- 
+-- Insert into kderp_asset_code  (id, create_uid, create_date,write_date,write_uid,name,parent_id,code)
+-- Select id, create_uid, create_date,write_date,write_uid,name,parent_id,code
+--  from dblink('dbname=KDVN_Data_HN user=openerp_read password=290797pr host=172.16.10.192',
+-- 	'Select 
+-- 		   id, 1, create_date,write_date,1,name,parent_id,code
+-- 	from 
+-- 		kderp_asset_code') 
+-- as kri(	
+-- 	id int,
+-- 	create_uid int,
+-- 	create_date date,
+-- 	write_date date,
+-- 	write_uid int,	
+-- 	name varchar(128),
+-- 	parent_id int,
+-- 	code varchar(32))
+-- select max(id) from kderp_asset_code 739
+-- ALTER SEQUENCE kderp_asset_code_id_seq RESTART 745
+
+-- ALTER SEQUENCE kderp_asset_code_accounting_id_seq RESTART 
+-- 
+-- Select max(id) from ir_translation 
+-- alter SEQUENCE ir_translation_id_seq RESTART 931818
+-- Insert into 
+-- 	ir_translation 
+-- Select 
+-- 	nextval('ir_translation_id_seq'::regclass) as id,
+-- 	lang,
+-- 	src,
+-- 	name,
+-- 	 res_id,
+-- 	 module,
+-- 	 state, 
+-- 	 value, 
+-- 	 type,
+-- 	 comments
+--  from dblink('dbname=KDVN_Data_HN user=openerp_read password=290797pr host=172.16.10.192',
+-- 	'Select 
+-- 		lang,
+-- 		src,
+-- 		name,
+-- 		res_id,
+-- 		module,
+-- 		state,
+-- 		value,
+-- 		type,
+-- 		comments
+-- 	from 
+-- 		ir_translation
+-- 	where
+-- 		name =''kderp.asset.code,name'' and lang=''vi_VN''') 
+-- as kri(lang varchar,
+-- 	src text,
+-- 	name text,
+-- 	res_id int,
+-- 	module text,
+-- 	state text,
+-- 	value text,
+-- 	type text,
+-- 	comments text)
+--alter table kderp_asset_code DROP COLUMN full_name
+
+-- Insert into kderp_asset_management  (id ,
+--   create_uid ,
+--   create_date ,
+--   write_date ,
+--   write_uid ,
+--   dateofinput , 
+--   code  ,
+--   name , 
+--   usefullife , 
+--   price ,
+--   asset_code , 
+--   makername , 
+--   state , 
+--   brandname , 
+--   dateofpurchase , 
+--   quantity , 
+--   asset_code_id  ,
+--   warranty_time , 
+--   remarks , 
+--   supplier , 
+--   refcode,
+--   old_code ,
+--   type_asset_id, 
+--   current_user_id , 
+--   dateofliquidated ,
+--   dateofinvoice , 
+--   active , 
+--   physical_location_id , 
+--   current_remark , 
+--   parent_id , 
+--   asset_state , 
+--   current_job_id,
+--   dateofbeginning ,
+--   type_asset_acc_id )
+-- Select id ,
+--   create_uid ,
+--   create_date ,
+--   write_date ,
+--   write_uid ,
+--   dateofinput , 
+--   code  ,
+--   name , 
+--   usefullife , 
+--   price ,
+--   asset_code , 
+--   makername , 
+--   state , 
+--   brandname , 
+--   dateofpurchase , 
+--   quantity , 
+--   asset_code_id  ,
+--   warranty_time , 
+--   remarks , 
+--   supplier , 
+--   refcode,
+--   old_code ,
+--   type_asset_id, 
+--   current_user_id , 
+--   dateofliquidated ,
+--   dateofinvoice , 
+--   active , 
+--   physical_location_id , 
+--   current_remark , 
+--   parent_id , 
+--   asset_state , 
+--   current_job_id,
+--   dateofbeginning ,
+--   type_asset_acc_id 
+--  from dblink('dbname=HANOI_Develop user=openerp password=openerpdemo host=192.168.0.91',
+-- 	'Select 
+-- 		  id ,
+--   create_uid ,
+--   create_date ,
+--   write_date ,
+--   write_uid ,
+--   dateofinput , 
+--   code  ,
+--   name , 
+--   usefullife , 
+--   price ,
+--   asset_code , 
+--   makername , 
+--   state , 
+--   brandname , 
+--   dateofpurchase , 
+--   quantity , 
+--   asset_code_id  ,
+--   warranty_time , 
+--   remarks , 
+--   supplier , 
+--   refcode,
+--   old_code ,
+--   type_asset_id, 
+--   current_user_id , 
+--   dateofliquidated ,
+--   dateofinvoice , 
+--   active , 
+--   physical_location_id , 
+--   current_remark , 
+--   parent_id , 
+--   asset_state , 
+--   current_job_id,
+--   dateofbeginning ,
+--   type_asset_acc_id 
+-- 	from 
+-- 		kderp_asset_management') 
+-- as kam(	
+-- 	id int ,
+--   create_uid int,
+--   create_date date,
+--   write_date date,
+--   write_uid int,
+--   dateofinput date, 
+--   code varchar(32) ,
+--   name text, 
+--   usefullife int, 
+--   price numeric,
+--   asset_code int, --
+--   makername varchar(128), 
+--   state varchar, 
+--   brandname varchar(128), 
+--   dateofpurchase date, 
+--   quantity numeric, 
+--   asset_code_id int ,
+--   warranty_time int, 
+--   remarks text, 
+--   supplier varchar(128), 
+--   refcode varchar(32),
+--   old_code varchar(32),
+--   type_asset_id int, 
+--   current_user_id int, 
+--   dateofliquidated date,
+--   dateofinvoice date, 
+--   active boolean, 
+--   physical_location_id int, 
+--   current_remark varchar(256), 
+--   parent_id int, 
+--   asset_state varchar, 
+--   current_job_id int,
+--   dateofbeginning date,
+--   type_asset_acc_id int)
+-- Select max(id) from kderp_asset_management  1017
+-- alter SEQUENCE kderp_asset_management_id_seq RESTART 1018
+
+-- -- 
+--delete from kderp_asset_management_usage-- 
+-- Insert into 
+-- 	kderp_asset_management_usage (id ,
+-- 		create_uid ,
+-- 		create_date,
+-- 		write_date ,
+-- 		write_uid,
+-- 		user_id , 
+-- 		job_id , 
+-- 		asset_management_id ,
+-- 		endtime , 
+-- 		usedtime , 
+-- 		manager_id , 
+-- 		remarks, 
+-- 		physical_location_id )
+-- Select
+-- 		kamu.id ,
+-- 		kamu.create_uid ,
+-- 		kamu.create_date,
+-- 		kamu.write_date ,
+-- 		kamu.write_uid,
+-- 		he.id as user_id , 
+-- 		kj.id as job_id , 
+-- 		asset_management_id ,
+-- 		endtime , 
+-- 		usedtime , 
+-- 		hem.id as manager_id , 
+-- 		remarks, 
+-- 		physical_location_id 
+-- from dblink('dbname=HANOI_Develop user=openerp password=openerpdemo host=192.168.0.91',
+--  	'Select
+-- 		kamu.id ,
+-- 		kamu.create_uid ,
+-- 		kamu.create_date,
+-- 		kamu.write_date ,
+-- 		kamu.write_uid,
+-- 		he.staffno as staffnumber, 
+-- 		kj.code as jobcode, 
+-- 		asset_management_id ,
+-- 		endtime , 
+-- 		usedtime , 
+-- 		hem.staffno as mnumber, 
+-- 		remarks, 
+-- 		physical_location_id 
+-- from 
+-- 		kderp_asset_management_usage kamu 
+-- left join
+-- 		hr_employee he on user_id=he.id
+-- left join
+-- 		hr_employee hem on manager_id=hem.id
+-- left join
+-- 		kderp_job kj on kamu.job_id=kj.id') 
+-- as kamu(id int,
+--   create_uid int,
+--   create_date date,
+--   write_date date,
+--   write_uid int,
+--   usercode varchar(8), 
+--   jobcode varchar(32), 
+--   asset_management_id int,
+--   endtime date, 
+--   usedtime date, 
+--   managercode varchar(8), 
+--   remarks varchar(256), 
+--   physical_location_id int)
+-- left join
+-- 	kderp_job kj on code=jobcode
+-- left join
+-- 	hr_employee he on usercode=he.staffno
+-- left join
+-- 	hr_employee hem on managercode=hem.staffno
+-- Select max(id) from kderp_asset_management_usage ;
+-- alter SEQUENCE kderp_asset_management_usage_id_seq RESTART 7510
+--Select * from hr_employee where id=3296
+
+-- -- 
+-- Select 
+-- 	old_Code,staffnumber,code,u.jobnumber,kamu.id
+-- Into tempassetjob
+-- from 
+-- 	kderp_asset_management_usage  kamu
+-- left join
+-- 	kderp_asset_management kam on kamu.asset_management_id=kam.id
+-- left join
+-- 	u_dataassetusage u on old_code=assetnumber and kamu.usedtime=u.usedtime
+-- where 
+-- 	coalesce(job_id,0)=0 and coalesce(kam.id,0)>0 and jobnumber is not null;
+-- UPdate kderp_asset_management_usage kamu SET job_id =vwtemp.job_id from
+-- (Select tmp.id as kamuid,kj.id as job_id
+-- 	from 
+-- tempassetjob tmp
+-- left join
+-- kderp_job kj on trim(upper(jobnumber))=trim(upper(kj.code)))vwtemp where kamu.id=kamuid
