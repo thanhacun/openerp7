@@ -3,7 +3,19 @@ from openerp.osv import fields, osv
 class kderp_supplier_payment(osv.osv):
     _name = 'kderp.supplier.payment'
     _inherit= 'kderp.supplier.payment'      
-    
+    def _get_payment_type(self, cr, uid, context={}):
+        if not context:
+            context={}
+        cr.execute("""SELECT uid
+                              FROM res_groups_users_rel 
+                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Read Only Bankstransfer')
+                            and uid =%s
+                            """%(uid))
+        if cr.rowcount !=0:  
+            payment_type='cash'     
+        else:
+            payment_type='bank'   
+        return payment_type
     def _check_cash(self, cr, uid, ids, context=None):
         """
         Kiem tra VAT Invoice khi o trang thai Cash Payment
@@ -32,17 +44,17 @@ class kderp_supplier_payment(osv.osv):
                 cr.execute("""SELECT uid
                               FROM res_groups_users_rel 
                                   where gid in( select id from res_groups where name ='KDERP - Supplier Payment Read Only Bankstransfer')
-                            """)
-                for user in cr.fetchall():
-                    if uid in user :
-                        raise osv.except_osv("KDERP Warning",'Cannot change Payment Type')
+                            and uid =%s
+                            """%(uid))
+                if cr.rowcount !=0:                    
+                    raise osv.except_osv("KDERP Warning",'Cannot change Payment Type')
             return True
     _constraints = [ (_check_cash, 'Error Input', ['payment_type', 'kderp_vat_invoice_ids', 'date_apply', 'cash_limit_active'])]
-    _constraints = [ (_onchange_banktransfer, 'Error Input',['payment_type','usesr_id'])]
+    _constraints = [ (_onchange_banktransfer, 'Error Input',['payment_type'])]
    
     _defaults = {  
             
-                'payment_type':lambda *a: 'cash',
+                'payment_type':_get_payment_type
                 
                 }
 kderp_supplier_payment()

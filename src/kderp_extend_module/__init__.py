@@ -34,5 +34,6 @@ import kderp_extend_contract
 import kderp_extend_base
 import kderp_extend_supplier_payment
 import kderp_extend_supplier_payment_expense
+import kderp_extend_other_expense
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
