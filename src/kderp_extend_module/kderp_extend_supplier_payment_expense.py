@@ -4,20 +4,6 @@ class kderp_supplier_payment_expense(osv.osv):
     _name = 'kderp.supplier.payment.expense'
     _inherit= 'kderp.supplier.payment.expense'      
     
-#     def _get_payment_type(self, cr, uid, context={}):
-#         if not context:
-#             context={}
-#         cr.execute("""SELECT uid
-#                               FROM res_groups_users_rel 
-#                                   where gid in( select id from res_groups where name ='KDERP - Supplier Payment Expense Read Only Bankstransfer')
-#                             and uid =%s
-#                             """%(uid))
-#         if cr.rowcount !=0:  
-#             payment_type='cash'     
-#         else:
-#             payment_type='na'   
-#         return payment_type
-#     
     def _onchange_payment_type(self, cr, uid, ids, context=None):
         """    
             Kiem tra user co trong nhom KDERP - Supplier Payment Expense Read Only Bankstransfer, neu trong nhom do thi khong dc doi payment type khac cash
@@ -35,12 +21,6 @@ class kderp_supplier_payment_expense(osv.osv):
             return True
         
     _constraints = [ (_onchange_payment_type, 'Error Input', ['payment_type'])]
-   
-    _defaults = {  
-            
-#                 'payment_type':_get_payment_type
-                
-                }
     
 kderp_supplier_payment_expense()
 
