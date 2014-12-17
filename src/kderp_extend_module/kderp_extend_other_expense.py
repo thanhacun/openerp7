@@ -42,7 +42,7 @@ class kderp_other_expense(osv.osv):
             if cr.rowcount !=0:  
                 payment_type='cash'     
             else:
-                payment_type='bank' 
+                payment_type='na' 
             payment = {
                 'amount':koe.amount_untaxed,
                 'taxes_id': [[6, False, tax_ids]],

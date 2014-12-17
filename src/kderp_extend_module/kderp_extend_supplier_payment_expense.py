@@ -15,7 +15,7 @@ class kderp_supplier_payment_expense(osv.osv):
         if cr.rowcount !=0:  
             payment_type='cash'     
         else:
-            payment_type='bank'   
+            payment_type='na'   
         return payment_type
     def _onchange_payment_type(self, cr, uid, ids, context=None):
         """    
