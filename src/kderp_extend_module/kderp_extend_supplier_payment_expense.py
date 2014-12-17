@@ -17,6 +17,7 @@ class kderp_supplier_payment_expense(osv.osv):
         else:
             payment_type='na'   
         return payment_type
+    
     def _onchange_payment_type(self, cr, uid, ids, context=None):
         """    
             Kiem tra user co trong nhom KDERP - Supplier Payment Expense Read Only Bankstransfer, neu trong nhom do thi khong dc doi payment type khac cash
@@ -32,7 +33,9 @@ class kderp_supplier_payment_expense(osv.osv):
                 if cr.rowcount !=0:                    
                     raise osv.except_osv("KDERP Warning",'Cannot change Payment Type')
             return True
+        
     _constraints = [ (_onchange_payment_type, 'Error Input', ['payment_type'])]
+   
     _defaults = {  
             
                 'payment_type':_get_payment_type

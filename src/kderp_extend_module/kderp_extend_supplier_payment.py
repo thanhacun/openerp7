@@ -2,7 +2,8 @@ from openerp.osv import fields, osv
 
 class kderp_supplier_payment(osv.osv):
     _name = 'kderp.supplier.payment'
-    _inherit= 'kderp.supplier.payment'      
+    _inherit= 'kderp.supplier.payment'    
+      
     def _get_payment_type(self, cr, uid, context={}):
         if not context:
             context={}
@@ -16,6 +17,7 @@ class kderp_supplier_payment(osv.osv):
         else:
             payment_type='bank'   
         return payment_type
+    
     def _check_cash(self, cr, uid, ids, context=None):
         """
         Kiem tra VAT Invoice khi o trang thai Cash Payment
@@ -34,6 +36,7 @@ class kderp_supplier_payment(osv.osv):
                         if var.equivalent_vnd > payment_bycash_limit and var.date > date_apply:
                             raise osv.except_osv("KDERP Warning",'Please check VAT Amount, Total Amount exceeded %s'  %("{:,}".format(int(payment_bycash_limit))))
         return True
+    
     def _onchange_banktransfer(self, cr, uid, ids, context=None):
         """
           Kiem tra user co trong nhom KDERP - Supplier Payment Read Only Bankstransfer, neu trong nhom do thi khong dc doi payment type khac cash
@@ -49,6 +52,7 @@ class kderp_supplier_payment(osv.osv):
                 if cr.rowcount !=0:                    
                     raise osv.except_osv("KDERP Warning",'Cannot change Payment Type')
             return True
+        
     _constraints = [ (_check_cash, 'Error Input', ['payment_type', 'kderp_vat_invoice_ids', 'date_apply', 'cash_limit_active'])]
     _constraints = [ (_onchange_banktransfer, 'Error Input',['payment_type'])]
    
@@ -57,5 +61,6 @@ class kderp_supplier_payment(osv.osv):
                 'payment_type':_get_payment_type
                 
                 }
+    
 kderp_supplier_payment()
 

@@ -7,6 +7,7 @@
 			 <field name="users" eval="[(4, ref('base.user_root'))]"/>
 	         <field name="category_id" ref="kderp_supplier_payment.module_category_kderp_supplier_payment_expense"/>
 		</record>
+		
 	    <record model="ir.rule" id="kderp_rule_payment_expense_haiphong_cash">
 			<field name="name">KDERP Payment Expense - Hai Phong Cash</field>
 			<field name="model_id" ref="kderp_supplier_payment.model_kderp_supplier_payment_expense"/>
