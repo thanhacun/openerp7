@@ -73,7 +73,6 @@ class kderp_other_expense(osv.osv):
             payment = {
                 'amount':koe.amount_untaxed,
                 'taxes_id': [[6, False, tax_ids]],
-                'payment_type':'na',
                 'currency_id': koe.currency_id.id,
                 'payment_line': payment_details,
                 'expense_id':koe.id, 
