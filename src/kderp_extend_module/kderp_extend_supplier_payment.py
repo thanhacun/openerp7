@@ -4,19 +4,19 @@ class kderp_supplier_payment(osv.osv):
     _name = 'kderp.supplier.payment'
     _inherit= 'kderp.supplier.payment'    
       
-    def _get_payment_type(self, cr, uid, context={}):
-        if not context:
-            context={}
-        cr.execute("""SELECT uid
-                              FROM res_groups_users_rel 
-                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Read Only Bankstransfer')
-                            and uid =%s
-                            """%(uid))
-        if cr.rowcount !=0:  
-            payment_type='cash'     
-        else:
-            payment_type='bank'   
-        return payment_type
+#     def _get_payment_type(self, cr, uid, context={}):
+#         if not context:
+#             context={}
+#         cr.execute("""SELECT uid
+#                               FROM res_groups_users_rel 
+#                                   where gid in( select id from res_groups where name ='KDERP - Supplier Payment Read Only Bankstransfer')
+#                             and uid =%s
+#                             """%(uid))
+#         if cr.rowcount !=0:  
+#             payment_type='cash'     
+#         else:
+#             payment_type='bank'   
+#         return payment_type
     
     def _check_cash(self, cr, uid, ids, context=None):
         """
@@ -58,7 +58,7 @@ class kderp_supplier_payment(osv.osv):
    
     _defaults = {  
             
-                'payment_type':_get_payment_type
+#                 'payment_type':_get_payment_type
                 
                 }
     
