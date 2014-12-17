@@ -34,19 +34,9 @@ class kderp_other_expense(osv.osv):
             tax_ids=[]
             for tax_id in koe.taxes_id:
                 tax_ids.append(tax_id.id)
-            cr.execute("""SELECT uid
-                              FROM res_groups_users_rel 
-                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Expense Read Only Bankstransfer')
-                            and uid =%s
-                            """%(uid))
-            if cr.rowcount !=0:  
-                payment_type='cash'     
-            else:
-                payment_type='na' 
             payment = {
                 'amount':koe.amount_untaxed,
                 'taxes_id': [[6, False, tax_ids]],
-                'payment_type':payment_type,
                 'currency_id': koe.currency_id.id,
                 'payment_line': payment_details,
                 'expense_id':koe.id, 

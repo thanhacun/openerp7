@@ -100,20 +100,10 @@ class purchase_order(osv.osv):
                 for tax_id in po.taxes_id:
                     if (tax_id.type=='percent' or po_term.value_amount==100) and po_term.type=='p':
                         tax_ids.append(tax_id.id)
-           
-                cr.execute("""SELECT uid
-                              FROM res_groups_users_rel 
-                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Read Only Bankstransfer')
-                            and uid =%s
-                            """%(uid))
-                if cr.rowcount !=0:  
-                    payment_type='cash'     
-                else:
-                    payment_type='bank'                                      
+                                                
                 payment = {
                     'amount':this_progress_amount,
                     'taxes_id':[[6, False, tax_ids]],
-                    'payment_type':payment_type,
                     'advanced_amount':this_adv_amount,
                     'retention_amount':this_retention_amount,
                     'currency_id': po.currency_id.id,
