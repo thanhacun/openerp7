@@ -110,7 +110,6 @@ class purchase_order(osv.osv):
                 payment = {
                     'amount':this_progress_amount,
                     'taxes_id':[[6, False, tax_ids]],
-                    'payment_type':'bank',
                     'advanced_amount':this_adv_amount,
                     'retention_amount':this_retention_amount,
                     'currency_id': po.currency_id.id,
