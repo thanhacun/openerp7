@@ -867,6 +867,20 @@ class kderp_supplier_payment_expense(osv.osv):
         if res:
             res=res[0]
         return res
+    def _get_payment_type(self, cr, uid, context={}):
+        if not context:
+            context={}
+        cr.execute("""SELECT uid
+                              FROM res_groups_users_rel 
+                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Expense Read Only Bankstransfer')
+                            and uid =%s
+                            """%(uid))
+        if cr.rowcount !=0:  
+            payment_type='cash'     
+        else:
+            payment_type='na'   
+        return payment_type
+    
     _order='year desc, number desc, name desc'
     _columns={
               #Code Filed Area
@@ -957,7 +971,8 @@ class kderp_supplier_payment_expense(osv.osv):
                 'journal_id':_get_journal,
                 'account_id':_get_default_account,
                 'expense_account_id':_default_expense_account_id,
-                'move_id':lambda *x: False
+                'move_id':lambda *x: False,
+                'payment_type': _get_payment_type
                 }
     #Onchange
     def on_changevalue(self, cr, uid, ids, amount, taxes_id, type='amt',currency_id=False):

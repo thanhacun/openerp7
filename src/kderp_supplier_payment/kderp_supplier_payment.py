@@ -958,6 +958,20 @@ class kderp_supplier_payment(osv.osv):
             res=res[0]
         return res
     
+    def _get_payment_type(self, cr, uid, context={}):
+        if not context:
+            context={}
+        cr.execute("""SELECT uid
+                              FROM res_groups_users_rel 
+                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment Read Only Bankstransfer')
+                            and uid =%s
+                            """%(uid))
+        if cr.rowcount !=0:  
+            payment_type='cash'     
+        else:
+            payment_type='bank'   
+        return payment_type
+    
     _order = 'year desc, number desc, name desc'
     
     _columns={
@@ -1075,7 +1089,7 @@ class kderp_supplier_payment(osv.osv):
     _defaults = {  
                 'user_create_id':lambda obj,cr,uid,context: uid,
                 'user_applicant_id':lambda obj,cr,uid,context: uid,
-                'payment_type':lambda *a: 'bank',
+                'payment_type':_get_payment_type,
                 'state': lambda *a: 'draft',
                 'journal_id':_get_journal,
                 'account_id':_get_default_account,
