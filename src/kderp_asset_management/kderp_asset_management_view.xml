@@ -274,7 +274,7 @@
 									<field name="job_id"/>
 									<field name="physical_location_id"/>
 									<field name="user_id" required="1"/>
-									<field name="manager_id" required="1"/>
+									<field name="manager_id"/>
 									<field name="usedtime" required="1"/>
 									<field name="endtime"/>
 									<field name="remarks"/>
