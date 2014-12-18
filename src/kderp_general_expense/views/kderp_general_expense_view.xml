@@ -77,7 +77,6 @@
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="belong_expense_id"/>
 	                                    <field name="amount" sum='Sub-total'/> 
-	                                    <!-- <field name="asset_id"/> -->
 	                                </tree>
 	                            </field>
 	                            <group class="oe_subtotal_footer oe_right">
