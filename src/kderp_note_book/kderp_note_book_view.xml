@@ -16,7 +16,7 @@
             <field name="model">book.publisher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Book Publisher" >
+                <tree string="Book Publisher " >
                     <field name="name"/>                 
                     <field name="address"/>
 				</tree>
