@@ -102,7 +102,15 @@
 	                            <div class="oe_clear"/>
 	                        </page>
 	                        <page string='Related Expense' attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}">
-	                        	<field name='related_expense_ids' nolabel='1' colspan="4"/>
+	                        	<field name='related_expense_ids' nolabel='1' colspan="4">
+	                        		<tree string='Related Expense'>
+		                        		<field name='expense_id' string='Expense No.'/>
+										<field name='account_analytic_id' string='Job/GE' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
+	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name="section_id" string="Allocated Section"/>
+	                                    <field name="amount" sum='Sub-total'/>
+	                        		</tree>
+	                        	</field>
 	                        </page>
 	                        <page string='Payment &amp; VAT Invoices' attrs="{'invisible':[('expense_type','=','monthly_expense')]}">
 		            			<field name="supplier_payment_expense_ids" readonly="0" colspan="4">
