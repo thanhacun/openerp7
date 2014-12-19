@@ -33,7 +33,7 @@
             	<field name='description' position='after'>
 					<button name='action_open_related_obj' type='object' icon='gtk-open' string='Open Expense' context="{'general_expense':context.get('general_expense',False)}"/>
 				</field>
-				<!-- <xpath expr="//field[@name='detail_budget']/tree" position="attributes">
+				<!-- <xpath expr="//field[@name='detail_budget']/tree" position='attributes'>
                     <attribute name="editable">top</attribute>
                 </xpath> -->
 			</field>
