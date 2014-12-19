@@ -50,7 +50,16 @@ class kderp_other_expense(osv.osv):
                     ('PE','Job Expense'),
                     ('GE','General Expense'),
                     ('PGE','Job & General Expense'))
-
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if not context:
+            context = {}
+        if context.get('general_expense', False) and not view_id:
+            views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','view.kderp.other.expense.ge.%s' % view_type)])
+            if views_ids:
+                view_id = views_ids[0]             
+        return super(kderp_other_expense, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+    
     def _get_allocated_selection(self, cr, uid, context):
         if not context:
             context = {}

@@ -101,7 +101,7 @@
 	                        </page>
 	                        <page string='Related Expense' attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}">
 	                        	<field name='related_expense_ids' nolabel='1' colspan="4">
-	                        		<tree string='Related Expense'>
+	                        		<tree string='Related Expense' editable='top'>
 		                        		<field name='expense_id' string='Expense No.'/>
 										<field name='account_analytic_id' string='Job/GE' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
@@ -145,8 +145,8 @@
         </record>
                 
         <!-- Other Expense Search View -->
-        <record id="view_kderp_other_expense_ge_filter" model="ir.ui.view">
-            <field name="name">kderp.other.expense.ge.filter</field>
+        <record id="view_kderp_other_expense_ge_search" model="ir.ui.view">
+            <field name="name">kderp.other.expense.ge.search</field>
             <field name="model">kderp.other.expense</field>
             <field name="priority" eval="30"/>
             <field name="arch" type="xml">
@@ -188,7 +188,7 @@
 			<field name="domain">[('allocated_to','!=','PE')]</field>
 			<field name="view_id" ref="view_kderp_other_expense_ge_tree"/>
             <field name="context">{'show_full_name':True,'show_field':['code'],'search_default_working':1,'general_expense':True}</field>
-            <field name="search_view_id" ref="view_kderp_other_expense_ge_filter"/>
+            <field name="search_view_id" ref="view_kderp_other_expense_ge_search"/>
         </record>
         <!-- Link view to action -->
 		<record id="action_window_view_other_general_expense_form" model="ir.actions.act_window.view">
