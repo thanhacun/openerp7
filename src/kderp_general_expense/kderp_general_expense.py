@@ -68,6 +68,7 @@ class kderp_other_expense(osv.osv):
             return filter(lambda x: x[0] <> 'PE', self.ALLOCATE_SELECTION)
         else:
             return filter(lambda x: x[0] <> 'GE', self.ALLOCATE_SELECTION)
+        
     #Get defaults values
     def _get_job(self, cr, uid, context={}):
         if not context:
@@ -113,12 +114,27 @@ class kderp_other_expense(osv.osv):
             res[exp.id]=", ".join(sections)
         return res
     
+    def _get_state(self, cr, uid, ids, name, arg, context = {}):
+        if not context:
+            context = {}
+        res = {}
+        for koe in self.browse(cr, uid, ids, context):
+            res[koe.id] = {'state_depend':koe.state,
+                           'state_recognize':koe.state}
+        return res
+    
     def _get_expense_from_detail(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('kderp.other.expense.line').browse(cr, uid, ids, context=context):
             result[line.expense_id.id] = True
         return result.keys()
     
+    STATE_SELECTION=[('draft','Draft'),
+                   ('waiting_for_payment','Waiting for Payment'),
+                   ('paid','Paid'),
+                   ('done','Completed'),
+                   ('revising','Expense Revising'),
+                   ('cancel','Expense Canceled')]
     _columns = {
                 'allocated_date':fields.date('Allocated Date', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]},
@@ -135,6 +151,9 @@ class kderp_other_expense(osv.osv):
                                           store={
                                                   'kderp.other.expense.line': (_get_expense_from_detail, ['section_id'], 10)
                                                  }),
+                'state':fields.selection(STATE_SELECTION,'Exp. Status',readonly=True,select=1),
+                'state_depend':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state"),
+                'state_recognize':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state")
                 }
 
     _defaults = {
