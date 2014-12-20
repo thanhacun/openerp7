@@ -20,6 +20,7 @@
 ##############################################################################
 import kderp_general_expense
 import kderp_supplier_payment_general_expense
+import kderp_other_expense
 
 import kderp_expense_budget_line
 import kderp_human_resources
