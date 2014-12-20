@@ -94,3 +94,34 @@ class kderp_expense_budget_line(osv.osv):
                 pol_link_dicts[str(expense_budget_line['expense_id'])+str(expense_budget_line['account_analytic_id'])+str(expense_budget_line['budget_id'])]=expense_budget_line_id
             
         return pol_link_dicts
+    
+    
+    def action_open_related_obj(self, cr, uid, ids, *args):
+        context = filter(lambda arg: type(arg) == type({}), args)
+        if not context:
+            context = {}
+        else:
+            context = context[0]
+
+        obj_id=False
+        obj=''
+        dict_name={'purchase.order':'Purchase Order',
+                   'kderp.other.expense':'Other Expense'}        
+        
+        for object in self.browse(cr, uid, ids):
+            obj_id = [object.expense_id]
+            obj = object.expense_obj
+            
+        interface_string = 'General Expense' if context.get('general_expense', False) else dict_name[obj]
+        if obj_id:            
+            return {
+            'type': 'ir.actions.act_window',
+            'name': interface_string,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context': context,
+            'res_model': obj,
+            'domain': "[('id','in',%s)]" % obj_id
+            }
+        else:
+            return True

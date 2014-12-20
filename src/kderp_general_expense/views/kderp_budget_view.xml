@@ -24,5 +24,20 @@
         
         <menuitem action="kderp_open_budget_post_ge_form" id="menu_kderp_open_budget_post_ge_form" parent="menu_kderp_general_exepense_config_menu" sequence="15"/>
         
+        <!-- Disable click on Expense in Budget Detail -->
+        <record id="kderp_view_budget_data_form_inherit_open" model="ir.ui.view">
+            <field name="name">kderp.view.account.budget.data.form.inherit.open</field>
+            <field name="model">kderp.budget.data</field>
+            <field name='inherit_id' ref='kderp_job_summary.kderp_view_budget_data_form'/>
+            <field name='arch' type='xml'>
+            	<field name='description' position='after'>
+					<button name='action_open_related_obj' type='object' icon='gtk-open' string='Open Expense' context="{'general_expense':context.get('general_expense',False)}"/>
+				</field>
+				<!-- <xpath expr="//field[@name='detail_budget']/tree" position='attributes'>
+                    <attribute name="editable">top</attribute>
+                </xpath> -->
+			</field>
+		</record>
+        
 	</data>
 </openerp>

@@ -61,7 +61,7 @@
 										<field name='paid_amount' string='Payment' sum='Sub-Total'/>
 										<field name='balance_per' sum='Sub-Total'/>
 										<field name='over'/>
-										<button name="open_budget_detail" icon="gtk-zoom-fit" type="object"/>
+										<button name="open_budget_detail" icon="gtk-zoom-fit" type="object" context="{'general_expense':True}"/>
 		            				</tree>
 		            			</field>		            			
 		            		</page>		            		

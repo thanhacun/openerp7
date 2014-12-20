@@ -26,8 +26,36 @@ class hr_department(osv.osv):
     _name = "hr.department"
     _inherit = "hr.department"
     
+    def _get_parent_hr(self, cr, uid, hr_ids, context=None):
+        res = []
+        for hr_obj in self.browse(cr, uid, hr_ids):
+            res.append(hr_obj.id)
+            child_ids_list =[]
+            for child_obj in hr_obj.child_ids:
+                child_ids_list.append(child_obj.id)
+            if child_ids_list:
+                child_ids = self._get_parent_hr(cr, uid, child_ids_list)
+                for child_id in child_ids:
+                    res.append(child_id)
+        return res
+
+    def _get_expense_ids(self, cr, uid, ids, name, arg, context={}):
+        if not context:
+            context = {}
+        res = {}
+        koet_obj = self.pool.get('kderp.other.expense.line')
+        for id in ids:
+            section_ids = tuple(set(self._get_parent_hr(cr, uid, [id], context)))
+            res[id] = koet_obj.search(cr, uid, [('section_id','in', section_ids)]) 
+            
+        return res
+        
+            
     _columns={
               'general_incharge':fields.boolean('G.E. In Charges'),
-              'expense_ids':fields.one2many('kderp.other.expense.line','section_id','Expenses')
+              #'expense_ids':fields.one2many('kderp.other.expense.line','section_id','Expenses'),
+              'expense_ids':fields.function(_get_expense_ids, type='one2many', relation='kderp.other.expense.line',
+                                            string='Expenses'),
+              
               }
 hr_department()
