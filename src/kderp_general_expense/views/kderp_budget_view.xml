@@ -38,6 +38,18 @@
                 </xpath> -->
 			</field>
 		</record>
+		
+		<!-- Them Category vao tree view -->
+		<record model="ir.ui.view" id="kderp_view_budget_tree_inherit_add_ge">
+			<field name="name">kderp.view.account.budget.tree.inherit.add.ge</field>
+			<field name="model">account.budget.post</field>
+			<field name="inherit_id" ref="kderp_budget.kderp_view_budget_tree"/>
+			<field name="arch" type="xml">
+				<field name="name" position='after'>
+					<field name='budget_categ_id'/>
+				</field>
+			</field>
+		</record>
         
 	</data>
 </openerp>
