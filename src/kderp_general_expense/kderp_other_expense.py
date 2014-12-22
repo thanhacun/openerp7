@@ -71,7 +71,9 @@ class kderp_other_expense(osv.osv):
             koe_list_mark_done = []
             koe_list_mark_paid = []
             for koe in self.browse(cr, uid, ids, context):
-                if koe.expense_type != 'monthly_expense':
+                if koe.expense_type == 'monthly_expense':
+                    koe_list_mark_done.append(koe.id)
+                else:
                     check_type = koe.expense_type not in ('prepaid','fixed_asset')
                     check_state =  koe.state=='waiting_for_payment'
                     check_amount = koe.total_request_amount==koe.total_vat_amount and koe.total_vat_amount==koe.total_payment_amount and koe.total_payment_amount==koe.amount_total 
@@ -143,19 +145,20 @@ class kderp_other_expense(osv.osv):
                 #Percentage of payment TotalRequestAmountINVND/(TotalRequstAMOUNT+TotalReamainAmountInVND)
                 payment_percentage = subtotal_request_amount_company_cur/subtotal_koe_amount_company_curr if subtotal_koe_amount_company_curr else 0
             #Check if payment DONE ==> Mark PO Done
-            check_type = koe.expense_type not in ('prepaid','fixed_asset') 
-            check_state =  koe.state=='waiting_for_payment'
-            check_amount = total_request_amount == total_vat_amount and total_vat_amount == total_payment_amount and total_payment_amount==koe.amount_total
-            not_monthly_expense = koe.expense_type != 'monthly_expense'
-            if check_amount and check_state and check_type and not_monthly_expense:
-                result = self.write(cr, uid, [koe.id], {'state':'done'})
-            elif  check_amount and not check_state and check_type and not_monthly_expense:
-                result = self.write(cr, uid, [koe.id], {'state':'paid'})
+#             check_type = koe.expense_type not in ('prepaid','fixed_asset') 
+#             check_state =  koe.state=='waiting_for_payment'
+#             check_amount = total_request_amount == total_vat_amount and total_vat_amount == total_payment_amount and total_payment_amount==koe.amount_total
+#             not_monthly_expense = koe.expense_type != 'monthly_expense'
+#             if check_amount and check_state and check_type and not_monthly_expense:
+#                 result = self.write(cr, uid, [koe.id], {'state':'done'})
+#             elif  check_amount and not check_state and check_type and not_monthly_expense:
+#                 result = self.write(cr, uid, [koe.id], {'state':'paid'})
                 
             res[koe.id]={'total_request_amount':total_request_amount,
                         'total_vat_amount':total_vat_amount,
                         'total_payment_amount':total_payment_amount,
                         'payment_percentage':payment_percentage}
+        self.check_and_make_koe_done(cr, uid, ids, context)
         return res
     
     def _get_order_from_supplier_payment(self, cr, uid, ids, context=None):

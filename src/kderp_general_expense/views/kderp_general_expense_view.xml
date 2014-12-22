@@ -38,7 +38,7 @@
 						
 						<button icon='gtk-convert' name='action_done_revising' states='done,paid' type="object" string='Open' groups='kderp_other_expense.group_kderp_other_expense_open'/>
 	               		<button icon='gtk-apply' name='action_revising_done' type="object" string='Close' states='revising' groups='kderp_other_expense.group_kderp_other_expense_open'/>
-	               		<button icon='gtk-new' name='action_create_asset' type="object" string='Create Asset' attrs="{'invisible':[('link_asset_id','!=',False),('expense_type','not in',('expense','fixed_asset'))]}"/>
+	               		<button icon='gtk-new' name='action_create_asset' type="object" string='Create Asset' attrs="{'invisible':['|',('link_asset_id','!=',False),('expense_type','not in',('expense','fixed_asset'))]}"/>
 	               		<button attrs="{'invisible':['|','|',('supplier_payment_expense_ids','!=',[]),('state','not in',('revising','waiting_for_payment')),('expense_type','=','monthly_expense')]}" icon='gtk-new' type='object' string='Create Payment' name='action_expense_create_supplier_payment_expense'/>
 	               		<field name="state_depend" statusbar_visible="draft,waiting_for_payment,done,paid" widget="statusbar" attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}"/>
 	               		<field name="state_recognize" statusbar_visible="draft,done" widget="statusbar" attrs="{'invisible':[('expense_type','!=','monthly_expense')]}"/>
