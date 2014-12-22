@@ -67,7 +67,7 @@ class kderp_other_expense(osv.osv):
         if context.get('general_expense', False):
             return filter(lambda x: x[0] <> 'PE', self.ALLOCATE_SELECTION)
         else:
-            return filter(lambda x: x[0] <> 'GE', self.ALLOCATE_SELECTION)
+            return self.ALLOCATE_SELECTION
         
     #Get defaults values
     def _get_job(self, cr, uid, context={}):
@@ -98,8 +98,8 @@ class kderp_other_expense(osv.osv):
         koel_obj = self.pool.get('kderp.other.expense.line')
         res = {}
         for id in ids:
-            koel_ids = koel_obj.search(cr, uid, [('belong_expense_id','=',id)])
-            related_ids = set(koel_ids)            
+            koel_ids = koel_obj.search(cr, uid, [('belong_expense_id','=',id),('expense_id.state','not in',('draft','cancel'))])
+            related_ids = set(koel_ids)
             res[id] = list(related_ids)
         return res
     
@@ -129,6 +129,41 @@ class kderp_other_expense(osv.osv):
             result[line.expense_id.id] = True
         return result.keys()
     
+    #Get remaining
+    def _get_remaining_amount(self, cr, uid, ids, name, args, context = {}):
+        if not context:
+            context = {}
+        res = {}
+        for koe in self.browse(cr, uid, ids, context = {}):
+            recognized_amount = 0
+            for re_exp in koe.related_expense_ids:
+                recognized_amount += re_exp.amount if re_exp.expense_id.state not in ('draft', 'cancel') else 0
+            res[koe.id] = {'recognized_amount': recognized_amount,
+                           'remaining_amount': koe.amount_untaxed - recognized_amount
+                           }
+        return res
+    
+    def _get_expense_remaining(self, cr, uid, ids, context = {}):
+        if not context:
+            context = {}
+        res = {}
+        for koe in self.browse(cr, uid, ids, context = {}):
+            res[koe.id] = True
+            for koel in koe.expense_line:
+                if koel.belong_expense_id:
+                    res[koel.belong_expense_id.id] = True
+        return res.keys()
+        
+    def _get_expense_from_expl(self, cr, uid, ids, context = {}):
+        if not context:
+            context = {}
+        res = {}
+        for koel in self.browse(cr, uid, ids, context = {}):
+            res[koel.expense_id.id] = True
+            if koel.belong_expense_id:
+                res[koel.belong_expense_id.id] = True
+        return res.keys()
+    
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_payment','Waiting for Payment'),
                    ('paid','Paid'),
@@ -155,7 +190,19 @@ class kderp_other_expense(osv.osv):
                 'state_depend':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state"),
                 'state_recognize':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state"),
                 
-                'expense_line_pending':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]})
+                'expense_line_pending':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'expense_line_ge':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                
+                'recognized_amount':fields.function(_get_remaining_amount,type='float',string='Recognized Amount',method=True,multi='_get_remaining',
+                                                    store={
+                                                           'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date','currency_id'], 15),
+                                                           'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
+                                                           }),
+                'remaining_amount':fields.function(_get_remaining_amount,type='float',string='Remaining Amount',method=True,multi='_get_remaining',
+                                                    store={
+                                                           'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date','currency_id'], 15),
+                                                           'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
+                                                           }),
                 }
 
     _defaults = {
@@ -218,3 +265,27 @@ class kderp_other_expense_line(osv.osv):
                 return False
         return True
     _constraints = [(_check_job_budget, 'Please check you Job and Budget you have just modify (No Budget Job) !', ['account_analytic_id','budget_id'])]
+    
+    def action_open_related_exp(self, cr, uid, ids, *args):
+        context = filter(lambda arg: type(arg) == type({}), args)
+        if not context:
+            context = {}
+        else:
+            context = context[0]
+        context['general_expense'] = True                
+        
+        expense_id = self.browse(cr, uid, ids[0]).expense_id.id            
+            
+        interface_string = 'General Expense'
+        if expense_id:            
+            return {
+            'type': 'ir.actions.act_window',
+            'name': interface_string,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context': context,
+            'res_model': 'kderp.other.expense',
+            'domain': "[('id','=',%s)]" % expense_id
+            }
+        else:
+            return True

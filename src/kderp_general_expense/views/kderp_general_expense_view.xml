@@ -10,6 +10,7 @@
             	<tree string="G.E. &amp; Expense" colors="blue:state == 'draft';gray:state == 'cancel';green:state == 'waiting_for_payment'">
             		<field name="name"/>
             		<field name="date"/>
+            		<field name="description" string='Desc.'/>
             		<field name="account_analytic_id" string='Job/G.E'/>
             		<field name="expense_type"/>
             		<field name="partner_id" string="Supplier" invisible="'partner_id' in context.get('group_by',[])"/>
@@ -38,7 +39,7 @@
 						
 						<button icon='gtk-convert' name='action_done_revising' states='done,paid' type="object" string='Open' groups='kderp_other_expense.group_kderp_other_expense_open'/>
 	               		<button icon='gtk-apply' name='action_revising_done' type="object" string='Close' states='revising' groups='kderp_other_expense.group_kderp_other_expense_open'/>
-	               		<button icon='gtk-new' name='action_create_asset' type="object" string='Create Asset' attrs="{'invisible':['|',('link_asset_id','!=',False),('expense_type','not in',('expense','fixed_asset'))]}"/>
+	               		<!-- <button icon='gtk-new' name='action_create_asset' type="object" string='Create Asset' attrs="{'invisible':['|',('link_asset_id','!=',False),('expense_type','not in',('expense','fixed_asset'))]}"/> -->
 	               		<button attrs="{'invisible':['|','|',('supplier_payment_expense_ids','!=',[]),('state','not in',('revising','waiting_for_payment')),('expense_type','=','monthly_expense')]}" icon='gtk-new' type='object' string='Create Payment' name='action_expense_create_supplier_payment_expense'/>
 	               		<field name="state_depend" statusbar_visible="draft,waiting_for_payment,done,paid" widget="statusbar" attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}"/>
 	               		<field name="state_recognize" statusbar_visible="draft,done" widget="statusbar" attrs="{'invisible':[('expense_type','!=','monthly_expense')]}"/>
@@ -60,7 +61,7 @@
 	                        <field name="date" colspan="1"/>
 	                        <field name="allocated_date" colspan="1"/>
 	                        <field name='section_incharge_id' colspan="1"/>
-	                        <field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}"/>                       
+	                        <field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}" context="{'partner_id':partner_id,'description':description}"/>                       
 	                    </group>
 	                    <notebook>
 	                        <page string="Expense Details">
@@ -71,7 +72,7 @@
 	                        		<field name='currency_id'/>
 	                        		<field name='exrate'/>
 	                        	</group>	                        	
-	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('expense_type','in',('prepaid','fixed_asset'))]}">
+	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
@@ -79,7 +80,15 @@
 	                                    <field name="amount" sum='Sub-total'/>
 	                                </tree>
 	                            </field>
-	                            <field name="expense_line_pending" attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}" context="{'id':active_id,'account_analytic_id':account_analytic_id}">
+	                            <field name="expense_line_ge" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('expense_type','not in',('fixed_asset','prepaid'))]}">
+	                                <tree string="Expense Details" editable="bottom">
+	                                    <field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
+	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name="section_id" string="Allocated Section"/>	                                    
+	                                    <field name="amount" sum='Sub-total'/>
+	                                </tree>
+	                            </field>
+	                            <field name="expense_line_pending" attrs="{'invisible':[('expense_type','!=','monthly_expense')]}" context="{'id':active_id,'account_analytic_id':account_analytic_id}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
@@ -117,8 +126,13 @@
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="amount" sum='Sub-total' string="Amount"/>
+	                                    <button name='action_open_related_exp' type="object" string='Open' icon='gtk-open'/>
 	                        		</tree>
 	                        	</field>
+	                        	<group col="4">
+	                        		<field name='recognized_amount'/>
+	                        		<field name='remaining_amount'/>
+	                        	</group>
 	                        </page>
 	                        <page string='Payment &amp; VAT Invoices' attrs="{'invisible':[('expense_type','=','monthly_expense')]}">
 		            			<field name="supplier_payment_expense_ids" readonly="0" colspan="4">

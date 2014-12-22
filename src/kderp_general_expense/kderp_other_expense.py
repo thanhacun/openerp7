@@ -32,6 +32,20 @@ class kderp_other_expense(osv.osv):
     _name = "kderp.other.expense"
     _inherit = 'kderp.other.expense'
     
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.description:
+                full_name = '%s- %s' % (record.name,record.description)
+            else:
+                full_name = record.name   
+            res.append((record.id, full_name))
+        return res
+    
     def action_revising_done(self, cr, uid, ids, context=None):
         return self.check_and_make_koe_done(cr, uid, ids, context)
     
@@ -71,7 +85,7 @@ class kderp_other_expense(osv.osv):
             koe_list_mark_done = []
             koe_list_mark_paid = []
             for koe in self.browse(cr, uid, ids, context):
-                if koe.expense_type == 'monthly_expense':
+                if koe.expense_type == 'monthly_expense' and koe.state not in ('draft','cancel','revising'):
                     koe_list_mark_done.append(koe.id)
                 else:
                     check_type = koe.expense_type not in ('prepaid','fixed_asset')

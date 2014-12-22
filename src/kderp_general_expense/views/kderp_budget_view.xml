@@ -31,6 +31,7 @@
             <field name='inherit_id' ref='kderp_job_summary.kderp_view_budget_data_form'/>
             <field name='arch' type='xml'>
             	<field name='description' position='after'>
+            		<field name='section_id'/>
 					<button name='action_open_related_obj' type='object' icon='gtk-open' string='Open Expense' context="{'general_expense':context.get('general_expense',False)}"/>
 				</field>
 				<!-- <xpath expr="//field[@name='detail_budget']/tree" position='attributes'>
