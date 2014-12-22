@@ -104,7 +104,7 @@
         			id="kderp_menu_other_expense_asset_action" 
         			parent="kderp_other_expense.kderp_working_other_expense_action" sequence="30"/>
         			
-    	<record id="view_kderp_other_expense_inherit_form" model="ir.ui.view">
+    	<!-- <record id="view_kderp_other_expense_inherit_form" model="ir.ui.view">
 			<field name="name">view.kderp.other.expense.form.inherit.add.ot</field>
 			<field name="model">kderp.other.expense</field>
 			<field name="inherit_id" ref="kderp_other_expense.view_kderp_other_expense_form"/>
@@ -114,6 +114,47 @@
     			</field>
     		</field>
     	</record>
+    	 -->
+    	<!-- <record id="view_kderp_other_expense_inherit_form_add_asset_ot_ge" model="ir.ui.view">
+			<field name="name">view.kderp.other.expense.form.inherit.add.ot.ge</field>
+			<field name="model">kderp.other.expense</field>
+			<field name="inherit_id" ref="kderp_general_payment.view_kderp_other_expense_inherit_add_ge_form"/>
+			<field name="arch" type="xml">
+    			
+    		</field>
+    	</record>
+    	 -->
+    	<record id="view_kderp_other_expense_inherit_form_add_asset_ge_ge" model="ir.ui.view">
+			<field name="name">view.kderp.other.expense.form.inherit.add.ge.ge</field>
+			<field name="model">kderp.other.expense</field>
+			<field name="inherit_id" ref="kderp_general_expense.view_kderp_other_expense_inherit_add_ge_form"/>
+			<field name="arch" type="xml">
+				<field name='amount' position='before'>
+    				<field name='asset_id' readonly="1"/>
+    			</field>
+				<xpath expr="//field[@name='expense_line_ge']/tree/field[@name='amount']" position='before'>				
+                    <field name='asset_id' readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='expense_line_pending']/tree/field[@name='amount']" position='before'>				
+                    <field name='asset_id' readonly="1"/>
+                </xpath>
+    		</field>
+    	</record>
+    	
+    	<record id="view_kderp_other_expense_inherit_form_add_asset_ge" model="ir.ui.view">
+			<field name="name">view.kderp.other.expense.form.inherit.add.asset.ge</field>
+			<field name="model">kderp.other.expense</field>
+			<field name="inherit_id" ref="kderp_general_expense.view_kderp_other_expense_ge_form"/>
+			<field name="arch" type="xml">
+    			<xpath expr="//field[@name='expense_line']/tree/field[@name='amount']" position='before'>
+                    <field name='asset_id'/>
+                </xpath>
+                <xpath expr="//field[@name='expense_line_pending']/tree/field[@name='amount']" position='before'>                
+                    <field name='asset_id'/>
+                </xpath>
+    		</field>
+    	</record>
+    	  
     	    				
     	<!-- Them Link Page Asset Depreciation vao view Kderp Asset Managagerment sau page Remarks-->
 		<record id="kderp_asset_depereciation_view" model="ir.ui.view">
