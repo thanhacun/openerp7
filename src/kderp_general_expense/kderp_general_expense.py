@@ -153,7 +153,9 @@ class kderp_other_expense(osv.osv):
                                                  }),
                 'state':fields.selection(STATE_SELECTION,'Exp. Status',readonly=True,select=1),
                 'state_depend':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state"),
-                'state_recognize':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state")
+                'state_recognize':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state"),
+                
+                'expense_line_pending':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]})
                 }
 
     _defaults = {

@@ -30,7 +30,7 @@
             <field name="inherit_id" ref='kderp_general_expense.view_kderp_other_expense_ge_form'/>
             <field name="arch" type="xml">
             	<field name="exrate" position="after">            		
-					<field name="advance_payment_id" string="Advance No."/>
+					<field name="advance_payment_id" string="Advance No." attrs="{'invisible':[('expense_type','=','monthly_expense')]}"/>
 	            </field>
             </field>
         </record>
