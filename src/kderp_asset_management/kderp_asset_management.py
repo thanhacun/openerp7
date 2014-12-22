@@ -497,6 +497,15 @@ class kderp_asset_management(Model):
                 res.append(kamu.asset_management_id.id)
         return list(set(res))
     
+    def _get_supplier(self, cr, uid, context={}):
+        if not context:
+            context = {}
+        rp_id = context.get('partner_id', False)
+        res = False
+        if rp_id:
+            rp_obj = self.pool.get('res.partner')
+            res = rp_obj.browse(cr, uid, rp_id).name
+        return res
    
     STATE_SELECTION=[('draft','Processing'),
                     ('inused', 'In Use'),
@@ -569,7 +578,9 @@ class kderp_asset_management(Model):
                'state':lambda *x:'draft',
                'dateofinput': lambda *a: time.strftime('%Y-%m-%d'),
                'asset_code_id':lambda *a:False,
-               'quantity':lambda *a:1
+               'quantity':lambda *a:1,
+               'name':lambda self,cr, uid, context = {}: context.get('description',''),
+               'supplier':_get_supplier,
                }
     
     _sql_constraints = [('asset_code_unique',"unique(code)","KDERP Error: The Asset Code must be unique !")]

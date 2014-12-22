@@ -50,7 +50,17 @@ class hr_department(osv.osv):
             
         return res
         
-            
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):            
+            full_name = '%s - %s' % (record.code,record.name)            
+            res.append((record.id, full_name))
+        return res
+    
     _columns={
               'general_incharge':fields.boolean('G.E. In Charges'),
               #'expense_ids':fields.one2many('kderp.other.expense.line','section_id','Expenses'),

@@ -128,6 +128,34 @@ class kderp_expense_budget_line(osv.osv):
             }
         else:
             return True
+        
+    def _get_section(self, cr, uid, ids, name, args, context):
+        if not context:
+            context = {}
+        res = {}
+        kebl_ids = []
+        expl_obj = self.pool.get('kderp.other.expense.line')
+        for kebl in self.browse(cr, uid, ids, context):
+            if kebl.expense_obj == 'kderp.other.expense':
+                kebl_ids.append(kebl.id)                                
+            else:
+                res[kebl.id] = False
+        kebl_ids = ','.join(map(str, kebl_ids))
+        cr.execute("""Select kebl.id,
+                            kotel.section_id
+                        from
+                            kderp_expense_budget_line kebl
+                        left join
+                            kderp_other_expense_line kotel on kebl.id = expense_budget_line
+                        where
+                            kebl.id in (%s)""" % kebl_ids)
+        for id, sect_id in cr.fetchall():
+            res[id] = sect_id 
+        return res
+    
+    _columns = {
+                "section_id":fields.function(_get_section,type='many2one', relation='hr.department', string='Section') 
+                }
 # 
 #     def _get_amount_from_line_and_payment(self, cr, uid, ids, name, args,context={}):
 #         if not context:
