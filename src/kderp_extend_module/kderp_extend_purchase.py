@@ -21,6 +21,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import time
 
 class purchase_order(osv.osv):
     _name = 'purchase.order'
@@ -40,14 +41,26 @@ class purchase_order(osv.osv):
             for id,delivery_location_id in cr.fetchall():
                 res[id]=delivery_location_id
         return res
-               
+    
+    #Thay doi Date Order theo Revision No
+    def onchange_revision_date(self, cr, uid, ids, revision_no):
+        value={}
+        if ids:
+            for po in self.browse(cr, uid, ids, context=None):
+                if po.revision_no != revision_no :
+                    date_order = time.strftime('%Y-%m-%d')
+                else :
+                    date_order = po.date_order
+            value = {'date_order':date_order}
+        return {'value':value}
+    
     _columns={
                 'revision_no':fields.integer('Revision No.',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'receiver_id': fields.many2one('hr.employee', 'Receiver', select=1,ondelete='restrict'),
                 #'general_contract_no':fields.char('G.C. No.',size=16),
                 #'general_contract_date':fields.date('G.C. Date'),
                 #'delivery_location_id':fields.function(_get_address_project_location, type='many2one', relation='kderp.project.location',method=True,string='Delivery Location'),
-                'delivery_location_id':fields.many2one('kderp.project.location','Delivery Location',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),                                      
+                'delivery_location_id':fields.many2one('kderp.project.location','Delivery Location',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),                                
              }
     
     _defaults={
