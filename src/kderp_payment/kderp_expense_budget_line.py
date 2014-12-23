@@ -309,7 +309,7 @@ class kderp_expense_budget_line(osv.osv):
             for pol in ksp.order_id.order_line:
                 if pol.expense_budget_line: 
                     result[pol.expense_budget_line.id]=True
-        result=list(set(result.keys()))
+        result = result.keys()
         return result
     
     def _get_budget_line_from_supplier_payment_line(self, cr, uid, ids, context=None):
