@@ -1621,6 +1621,10 @@ setTimeout(function(){
 //	$(".oe_footer").append(footerInfo)
 	
 	//Temporary notification - replace the logo position 243x88 | 249x94
+	$(document).ready( function(){
+		$.fn.snow();
+	});
+	
 	tempNoti = "";
 	tempPic =""; //http link of a picture - dropbox?
 	if(tempPic!=""){ //Kiem tra bien rong hay khong
@@ -1628,7 +1632,7 @@ setTimeout(function(){
 		$(".oe_logo img").css({"width":"243px","height":"88px","margin":"0px"}); //format lai cho dep - margin
 	};
 
-},5000);
+},2000);
 
 //var tree_ready = function(current_list){
 //	return true;
