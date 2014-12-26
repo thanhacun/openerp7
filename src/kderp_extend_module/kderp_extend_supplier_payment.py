@@ -18,10 +18,11 @@ class kderp_supplier_payment(osv.osv):
             context={}
         if cash_limit_active:
             for ksp in self.browse(cr, uid, ids, context=context):
-                if  ksp.payment_type == 'cash':
-                    for var in ksp.kderp_vat_invoice_ids:
-                        if var.equivalent_vnd > payment_bycash_limit and var.date > date_apply:
-                            raise osv.except_osv("KDERP Warning",'Please check VAT Amount, Total Amount exceeded %s'  %("{:,}".format(int(payment_bycash_limit))))
+                if not ksp.state_budget:
+                    if  ksp.payment_type == 'cash':
+                        for var in ksp.kderp_vat_invoice_ids:
+                            if var.equivalent_vnd > payment_bycash_limit and var.date > date_apply:
+                                raise osv.except_osv("KDERP Warning",'Please check VAT Amount, Total Amount exceeded %s'  %("{:,}".format(int(payment_bycash_limit))))
         return True
     
     def _onchange_banktransfer(self, cr, uid, ids, context=None):
@@ -39,9 +40,19 @@ class kderp_supplier_payment(osv.osv):
                 if cr.rowcount !=0:                    
                     raise osv.except_osv("KDERP Warning",'Cannot change Payment Type')
             return True
-        
-    _constraints = [ (_check_cash, 'Error Input', ['payment_type', 'kderp_vat_invoice_ids', 'date_apply', 'cash_limit_active'])]
-    _constraints = [ (_onchange_banktransfer, 'Error Input',['payment_type'])]
+     
+    _columns = {
+                'state_budget' : fields.boolean("State Budget")
+                 }   
+     
+    _constraints = [ 
+                    (_check_cash, 'Error Input', ['payment_type', 'kderp_vat_invoice_ids', 'date_apply', 'cash_limit_active']),
+                    (_onchange_banktransfer, 'Error Input',['payment_type'])
+                    ]
+    
+    _default = {
+                'state_budget' : lambda *x: False
+                }
    
 kderp_supplier_payment()
 
