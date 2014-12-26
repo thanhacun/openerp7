@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Purchase Order&apos;s General Infomation" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.210000000000001"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.callouts" value="##Fri Mar 25 10:42:30 ICT 2011"/>
@@ -10,6 +10,7 @@
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.style.evaluation.time.enabled" value="true"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 	<style name="style1">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[($F{Currency-name}=="VND")&&($V{Total_Inv_Po}!=($F{Final_Price-final_price}==null?0:$F{Final_Price-final_price}))]]></conditionExpression>
@@ -194,8 +195,8 @@
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Final_Price-final_price}==null?0:$F{Final_Price-final_price}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToBandHeight" x="20" y="0" width="80" height="20"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="PoNo">
+					<reportElement style="style1" stretchType="RelativeToBandHeight" x="20" y="0" width="80" height="20"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -678,8 +679,8 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 			</textField>
-			<textField pattern="">
-				<reportElement stretchType="RelativeToBandHeight" x="20" y="0" width="80" height="20"/>
+			<textField evaluationTime="Group" evaluationGroup="PoNo" pattern="">
+				<reportElement style="style1" stretchType="RelativeToBandHeight" x="20" y="0" width="80" height="20"/>
 				<box>
 					<leftPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
