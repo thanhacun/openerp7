@@ -162,6 +162,9 @@
 			<field name="model">kderp.asset.management</field>
 			<field name="inherit_id" ref="kderp_asset_management.kderp_form_view_asset"/>
 			<field name="arch" type="xml">
+				<field name='supplier' position='before'>
+					<field name='expense_id'/>
+				</field>
             	<page string="Remarks" position='after'>
             		<page string="Asset Depreciation" attrs="{'invisible':[('fixed_asset','=',False)]}">
             			<field name="fixed_asset" invisible="1"/>
@@ -197,5 +200,15 @@
 			</field>
 		</record>
 		
+		<record id="view_kderp_other_expense_ge_form_inherit_add_asset" model="ir.ui.view">
+            <field name="name">view.kderp.other.expense.ge.form.inherit.add.asset</field>
+            <field name="model">kderp.other.expense</field>
+            <field name="inherit_id" ref='kderp_general_expense.view_kderp_other_expense_ge_form'/>
+            <field name="arch" type="xml">
+				<field name='section_incharge_id' position='after'>
+					<field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}" context="{'partner_id':partner_id,'description':description}"/>
+				</field>
+			</field>
+		</record>
 	</data>
 </openerp>

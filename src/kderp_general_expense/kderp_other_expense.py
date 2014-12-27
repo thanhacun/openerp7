@@ -32,6 +32,22 @@ class kderp_other_expense(osv.osv):
     _name = "kderp.other.expense"
     _inherit = 'kderp.other.expense'
     
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        #If want to set limit please sea search product
+        if not args:
+            args = []
+        if name:
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)                       
+            if not ids:
+                ids = self.search(cr, user, [('account_analytic_id',operator,name)]+ args, limit=limit, context=context)    
+            if not ids:
+                ids = self.search(cr, user, [('description', operator, name)]+ args, limit=limit, context=context)            
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context)
+        result = self.name_get(cr, user, ids, context=context)
+        return result
+
+    
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

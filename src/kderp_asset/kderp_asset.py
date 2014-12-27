@@ -163,7 +163,8 @@ class kderp_asset_management(osv.osv):
                                                                    'kderp.asset.code.accounting':(_get_asset_general_acc_code,['typeofasset_id'],15),
                                                                    'kderp.type.of.asset':(_get_asset_general_type_of_asset,['name'],15),
                                                                    }),
-               
+                'expense_id':fields.many2one('kderp.other.expense', 'Expense', domain=[('expense_type','in',('expense','fixed_asset')),('link_asset_id','=',False)],
+                                             context={'general_expense': True}, readonly=True, states={'draft':[('readonly',False)]})
               }
 kderp_asset_management()
 
@@ -227,3 +228,39 @@ class kderp_asset_depreciation(osv.osv):
                             where 
                                 koe.expense_type in ('expense','monthly_expense') and koe.state not in ('cancel','draft') and coalesce(asset_id,0)>0) vwcombine""")       
 kderp_asset_depreciation()
+
+class kderp_other_expense(osv.osv):
+    """
+    Link Expense ID in General Expense
+    """
+    _name = 'kderp.other.expense'
+    _inherit = 'kderp.other.expense'
+    
+    def _get_expense(self, cr, uid, ids, name, args, context):
+        res = {}
+        koe_ids = ",".join(map(str, ids))
+        cr.execute("""Select 
+                        koe.id,
+                        kam.id 
+                    from
+                        kderp_other_expense koe
+                    left join
+                        kderp_asset_management kam on koe.id = kam.expense_id
+                    where
+                        koe.id in (%s) """ % koe_ids)
+        for koe_id, kam_id in cr.fetchall():
+            res[koe_id] = kam_id            
+        return res
+    
+    def _get_expense_from_asset(self ,cr, uid, ids, context={}):
+        res = {}
+        for kam in self.pool.get('kderp.asset.management').browse(cr, uid, ids):
+            if kam.expense_id:
+                res[kam.expense_id.id] = True
+        return res.keys()
+    
+    _columns = {
+                'link_asset_id':fields.function(_get_expense,relation='kderp.asset.management', method = True, type='many2one', string='Asset',
+                                           store ={
+                                                   'kderp.asset.management':(_get_expense_from_asset, ['expense_id'], 10)})
+                }

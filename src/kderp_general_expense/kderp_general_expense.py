@@ -35,14 +35,14 @@ class account_analytic_account(osv.osv):
 
 class kderp_other_expense(osv.osv):
     """
-    Customize Other Expense suiteable with general expense
+    Customize Other Expense suitable with general expense
     """
     _name = 'kderp.other.expense'
     _inherit = 'kderp.other.expense'
 
     EXPENSE_TYPE_SELECTION =(
                     ('expense', 'Expense'),
-                    ('monthly_expense','Recognize Expense'),
+                    ('monthly_expense','Allocation Sheet'),
                     ('prepaid', 'Prepaid'),
                     ('fixed_asset', 'Fixed Asset (With Depreciation)'))
 
@@ -171,13 +171,13 @@ class kderp_other_expense(osv.osv):
                    ('revising','Expense Revising'),
                    ('cancel','Expense Canceled')]
     _columns = {
-                'allocated_date':fields.date('Allocated Date', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                #'allocated_date':fields.date('Allocated Date', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]},
                                                 help="""Expense: Allocated direct to Job/General have payment\nRecognize Expense: Recognize allocated to Job/General from Fixed Asset, Prepaid without payment\nPrepaid, Fixed Asset for management and don't allocated"""),
                 'allocated_to':fields.selection(_get_allocated_selection, 'Allocate To', required = True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
-                'link_asset_id':fields.many2one('kderp.asset.management', 'Asset', states={'done':[('readonly',True)]}),
-                #'belong_expense_id':fields.many2one('kderp.other.expense', 'Belong to', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]},
-                #                                    domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
+                
+                'link_asset_id':fields.many2one('kderp.asset.management', 'Asset', states={'done':[('readonly', True)], 'paid':[('readonly', True)]}),                
+                
                 'section_incharge_id':fields.many2one('hr.department','Section In Charges', domain=[('general_incharge','=',True)],  select = 1, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),#General Affair or General Coordination Section
                 'related_expense_ids':fields.function(_get_related,string='Related',type='one2many',relation='kderp.other.expense.line', readonly=True),
                 
@@ -244,7 +244,7 @@ class kderp_other_expense_line(osv.osv):
     
     _columns = {
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
-                'belong_expense_id':fields.many2one('kderp.other.expense', 'Belong to', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
+                'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
                 'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False)
                 }
     
