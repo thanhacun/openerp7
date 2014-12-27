@@ -125,8 +125,11 @@
 
 <!-- Ke thua UserMenu -->
 <t t-extend="UserMenu">
-	<t t-jquery="ul.oe_dropdown_menu" t-operation="replace">
-        <ul class="oe_dropdown_menu">
+	<t t-jquery="img.oe_topbar_avatar" t-operation="before">
+		<div id='weather'></div>
+	</t>
+	<t t-jquery="ul.oe_dropdown_menu" t-operation="replace">		
+        <ul class="oe_dropdown_menu">        	
             <li><a href="#" data-menu="settings">Preferences</a></li>
             <li><a href="#" data-menu="password">Change Password</a></li>
 <!--             <li><a href="#" data-menu="account">My OpenERP.com account</a></li> -->

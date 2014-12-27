@@ -26,7 +26,7 @@
 									flakeChar	: "&#10052;", 
 									minSize		: 10,
 									maxSize		: 20,
-									newOn		: 100,
+									newOn		: 800,
 									flakeColor	: ["#EBEBEB"],
 									durationMillis: null
 								},
