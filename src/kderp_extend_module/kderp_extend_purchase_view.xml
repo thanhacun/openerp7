@@ -6,16 +6,16 @@
             <field name="name">purchase.order.form.kderp.purchase.inherit.extend</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref='kderp_purchase.purchase_order_form_kderp_purchase'/>
-            <field name="arch" type="xml">
-				<field name="name" position='after'>
-					<label string=" " for='revision_no' class="oe_inline oe_edit_only"/>
-					<style>
-						.koe_po_revision:before {content: " ( rev.";}
-						.koe_po_revision:after {content: ")";}
-						.koe_po_revision {color:#FF9999; font-size:1em;}
-					</style>
-					<field name="revision_no" nolabel='1' class='spinner oe_inline koe_po_revision' on_change = "onchange_revision_date(revision_no)"/>
-				</field>
+            <field name="arch" type="xml">            
+            	<div class="oe_title" position='replace'>
+	                <h1 style='display:inline !important'>
+	                    <label for="name" string="PO Number:" class="oe_inline oe_edit_only"/>
+	                    <field name="name" class="oe_inline" on_change="new_code(account_analytic_id,typeoforder,name)"/>
+	                    <label for="revision_no" string="-" class="oe_inline"/>	                    
+						<label string=" " for='revision_no' class="oe_inline oe_edit_only"/>
+						<field name="revision_no" nolabel='1' class='spinner oe_inline koe_po_revision' on_change="onchange_revision_date(revision_no)"/>
+	                </h1>
+				</div>
 				<field name="country_of_origin" position='after'>
 					<field name="receiver_id"/>
 					<field name="delivery_location_id"/>
