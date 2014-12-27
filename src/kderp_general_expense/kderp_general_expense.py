@@ -242,11 +242,23 @@ class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
     _inherit = 'kderp.other.expense.line'
     
+    def _get_budget(self, cr, uid, context = {}):
+        res = False
+        bg_code = context.get('budget_code', False)
+        if bg_code:
+            bg_ids = self.pool.get('account.budget.post').search(cr, uid, [('code','=',bg_code)])
+            res = bg_ids[0] if bg_ids else False
+        return res
+    
     _columns = {
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
-                'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False)
+                'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False),
+                #'budget_id':fields.many2one("account.budget.post", "Budget",required=True,ondelete="restrict",context={'job_id':0}),
                 }
+    _defaults ={
+               'budget_id':_get_budget
+               }
     
     def _check_job_budget(self, cr, uid, ids, context=None):
         job_budget_list=[]

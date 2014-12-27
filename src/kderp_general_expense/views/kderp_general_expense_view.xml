@@ -78,11 +78,11 @@
 	                                    <field name="amount" sum='Sub-total'/>
 	                                </tree>
 	                            </field>
-	                            <field name="expense_line_ge" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('expense_type','not in',('fixed_asset','prepaid'))]}">
+	                            <field name="expense_line_ge" context="{'id':active_id,'account_analytic_id':account_analytic_id, 'budget_code':'A99'}" attrs="{'invisible':[('expense_type','not in',('fixed_asset','prepaid'))]}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" invisible="1" options='{"always_reload": True}'/>
-	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}"  invisible="1" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
-	                                    <field name="section_id" string="Allocated Section"/>	                                    
+	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' invisible="1"/>
+	                                    <field name="name" string="Desc."/>	                                    
 	                                    <field name="amount" sum='Sub-total'/>
 	                                </tree>
 	                            </field>
