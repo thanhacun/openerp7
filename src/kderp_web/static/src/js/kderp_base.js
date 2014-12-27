@@ -1968,5 +1968,14 @@ setTimeout(function(){
 		var result = old_compute_domain.apply(this, tmp);       
 		return result;
   	};
-
+  	
+  	
+  	session.web.UserMenu =  session.web.UserMenu.extend({
+  	    init: function(parent) {
+  	        this._super(parent);  	        
+		  	//Hien thoi tiet
+		  	setTimeout(function (){$(document).ready(function () {
+			  		getLocation(); })},2000)
+  	  }
+  	});
 };

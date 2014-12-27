@@ -26,6 +26,7 @@
 	$.fn.weatherfeed = function(locations, pos, options, fn) {
 		// Set plugin defaults
 		pos = pos.toString();
+		var display = false;
 		var defaults = {
 			city: true,
 			unit: 'c',
@@ -139,7 +140,6 @@
 				var $e = $(e);
 
 				// Check for invalid location
-				display = false;
 				if (feed.description != 'Yahoo! Weather Error') {
 					display = true;
 					// Format feed items
@@ -227,34 +227,29 @@
 
 })(jQuery);
 
+function showLocation(position) {
+	  var latitude = position.coords.latitude;
+	  var longitude = position.coords.longitude;
+	  POS = [latitude, longitude];
+	  $('#weather').weatherfeed([],POS);
+	}
 
-setTimeout(function (){$(document).ready(function () {	
-	var POS;
-	function showLocation(position) {
-		  var latitude = position.coords.latitude;
-		  var longitude = position.coords.longitude;
-		  POS = [latitude, longitude];
-		  $('#weather').weatherfeed([],POS);
-		}
+function errorHandler(err) {
+	  if(err.code == 1) {
+	    return;
+	  }else if( err.code == 2) {
+		return;
+	  }
+	}
 
-	function errorHandler(err) {
-		  if(err.code == 1) {
-		    alert("Error: Access is denied!");
-		  }else if( err.code == 2) {
-		    alert("Error: Position is unavailable!");
-		  }
-		}
-	function getLocation(){
-		   if(navigator.geolocation){
-		      // timeout at 60000 milliseconds (60 seconds)
-		      var options = {timeout:60000};
-		      navigator.geolocation.getCurrentPosition(showLocation, 
-		                                               errorHandler,
-		                                               options);
-		   }else{
-		      return
-		   }
-		}
-	getLocation();
-	
-})},2000)
+function getLocation(){
+	   if(navigator.geolocation){
+	      // timeout at 60000 milliseconds (60 seconds)
+	      var options = {timeout:60000};
+	      navigator.geolocation.getCurrentPosition(showLocation, 
+	                                               errorHandler,
+	                                               options);
+	   }else{
+	      return
+	   }
+	}
