@@ -1621,10 +1621,10 @@ setTimeout(function(){
 //	$(".oe_footer").append(footerInfo)
 	
 	//Temporary notification - replace the logo position 243x88 | 249x94
-	$(document).ready( function(){
-		$.fn.snow();
-	});
-	
+//	$(document).ready( function(){
+//		$.fn.snow();
+//	});
+//	
 	tempNoti = "";
 	tempPic =""; //http link of a picture - dropbox?
 	if(tempPic!=""){ //Kiem tra bien rong hay khong

@@ -16,7 +16,8 @@
  * @params durationMillis - stop effect after duration
  * @example $.fn.snow({ maxSize: 200, newOn: 1000 });
  */
-(function($){	
+
+/*(function($){	
 	$.fn.snow = function(options){
 	
 			var $flake 			= $('<div class="flake"/>').css({'position': 'absolute', 'top': '-50px'}),
@@ -75,4 +76,4 @@
 			}	
 	};
 	
-})(jQuery);
+})(jQuery);*/ 
