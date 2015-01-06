@@ -80,10 +80,14 @@
 									<lable/>
 									<field name="payment_voucher_no" attrs="{'invisible':[('advance_buying','=','cash')]}"/>
 								</group>
-								<field name='date_of_received_reimbursement' attrs="{'invisible': [('advance_buying','=','cash')]}" on_change="get_new_voucher(False,payment_voucher_no,date_of_received_reimbursement,receive_voucher_no,currency_id,advance_buying)"/>
-								<field name="receive_voucher_no" attrs="{'invisible':[('advance_buying','=','cash')]}"/>
-								<field name='date_acc_recv_doc'  string="Receive Request Adv." attrs="{'invisible': [('advance_buying','=','cash')]}"/>
-								<field name='date_acc_recv_cashbook'  string="Receive Cashbook" attrs="{'invisible': [('advance_buying','=','cash')]}"/>								
+									<field name='date_of_received_reimbursement' attrs="{'invisible': [('advance_buying','=','cash')]}" on_change="get_new_voucher(False,payment_voucher_no,date_of_received_reimbursement,receive_voucher_no,currency_id,advance_buying)"/>
+									<field name="receive_voucher_no" attrs="{'invisible':[('advance_buying','=','cash')]}"/>
+									<field name='date_acc_recv_doc'  string="Receive Request Adv." attrs="{'invisible': [('advance_buying','=','cash')]}"/>
+								<group colspan="2" col="4">
+									<label for='date_acc_recv_cashbook' string="Receive Cashbook" attrs="{'invisible': [('advance_buying','=','cash')]}"/>
+									<label for='date_acc_recv_cashbook' string="Acc. Date" attrs="{'invisible': [('advance_buying','!=','cash')]}"/>
+									<field name='date_acc_recv_cashbook' nolabel="1" class='oe_inline'/>
+								</group>
 	                        	<field name="user_input" widget="many2oneimage" options="{'model':'hr.employee','preview_image':'image_small'}"/>
 	                        </group>                            
 	                    </group>
