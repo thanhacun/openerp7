@@ -211,10 +211,10 @@ class kderp_other_expense(osv.osv):
     _order="date desc, name desc"
     _columns={
                 #String Fields
-                'name': fields.char('Expense No.', size=64, required=True, select=True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
-                'description':fields.text('Scope of Works',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'name': fields.char('Expense No.', size=64, required=True, select=True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'description':fields.text('Scope of Works',states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 #Date Fields
-                'date':fields.date('Expense Date', required=True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'date':fields.date('Expense Date', required=True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 #Function Fields
                 'exrate':fields.function(_get_exrate,help='Exchange rate from currency to company currency',multi='_get_exrate',
                                          method=True,string="Ex.Rate",type='float',digits_compute=dp.get_precision('Amount')),
@@ -243,15 +243,15 @@ class kderp_other_expense(osv.osv):
                                                         'kderp.other.expense.line': (_get_expense_from_detail, None, 10),
                                                        }),
                 #Relation Fields
-                'taxes_id': fields.many2many('account.tax', 'other_expense_vat_tax', 'other_expense_vat_id', 'tax_id', 'VAT (%)', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
-                'expense_line': fields.one2many('kderp.other.expense.line', 'expense_id', 'Expense Details',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'taxes_id': fields.many2many('account.tax', 'other_expense_vat_tax', 'other_expense_vat_id', 'tax_id', 'VAT (%)', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'expense_line': fields.one2many('kderp.other.expense.line', 'expense_id', 'Expense Details',states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'state':fields.selection(STATE_SELECTION,'Exp. Status',readonly=True,select=1),
                 'account_analytic_id':fields.many2one('account.analytic.account','Job',ondelete="restrict",
-                                                      states={'done':[('readonly',True)], 'cancel':[('readonly',True)]},required=True),
-                'partner_id':fields.many2one('res.partner', 'Supplier', required=True,states={'done':[('readonly',True)], 'cancel':[('readonly',True)]},change_default=True),
-                'address_id':fields.many2one('res.partner', 'Address',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                                                      states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},required=True),
+                'partner_id':fields.many2one('res.partner', 'Supplier', required=True,states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},change_default=True),
+                'address_id':fields.many2one('res.partner', 'Address',states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True, states={'draft':[('readonly',False)]}),
-                'currency_id': fields.many2one("res.currency", string="Currency", required=True,states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'currency_id': fields.many2one("res.currency", string="Currency", required=True,states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
               }
     _defaults={
                'currency_id':lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id,
