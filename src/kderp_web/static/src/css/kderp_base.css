@@ -178,7 +178,7 @@ div.oe_sidebar > div:nth-last-child(1) > ul:nth-last-child(1) > li:nth-last-chil
 .openerp .oe_searchview .oe_searchview_drawer{
  height: 600px;
  overflow-x:hidden;
- overflow-y:auto; 
+ overflow-y:auto;
 }
 
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom {

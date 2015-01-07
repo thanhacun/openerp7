@@ -171,14 +171,14 @@ class kderp_other_expense(osv.osv):
                    ('revising','Expense Revising'),
                    ('cancel','Expense Canceled')]
     _columns = {
-                #'allocated_date':fields.date('Allocated Date', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
-                'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]},
+                #'allocated_date':fields.date('Allocated Date', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},
                                                 help="""Expense: Allocated direct to Job/General have payment\nRecognize Expense: Recognize allocated to Job/General from Fixed Asset, Prepaid without payment\nPrepaid, Fixed Asset for management and don't allocated"""),
-                'allocated_to':fields.selection(_get_allocated_selection, 'Allocate To', required = True, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
+                'allocated_to':fields.selection(_get_allocated_selection, 'Allocate To', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
                 
                 'link_asset_id':fields.many2one('kderp.asset.management', 'Asset', states={'done':[('readonly', True)], 'paid':[('readonly', True)]}),                
                 
-                'section_incharge_id':fields.many2one('hr.department','Section In Charges', domain=[('general_incharge','=',True)],  select = 1, states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),#General Affair or General Coordination Section
+                'section_incharge_id':fields.many2one('hr.department','Section In Charges', domain=[('general_incharge','=',True)],  select = 1, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),#General Affair or General Coordination Section
                 'related_expense_ids':fields.function(_get_related,string='Related',type='one2many',relation='kderp.other.expense.line', readonly=True),
                 
                 'sections':fields.function(_get_sections,string='Sections',size=256
@@ -190,8 +190,8 @@ class kderp_other_expense(osv.osv):
                 'state_depend':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state"),
                 'state_recognize':fields.function(_get_state,selection=STATE_SELECTION,type='selection', string='Exp. Status',multi="_get_state"),
                 
-                'expense_line_pending':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
-                'expense_line_ge':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'expense_line_pending':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'expense_line_ge':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 
                 'recognized_amount':fields.function(_get_remaining_amount,type='float',string='Recognized Amount',method=True,multi='_get_remaining',
                                                     store={

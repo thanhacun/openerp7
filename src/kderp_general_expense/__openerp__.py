@@ -40,7 +40,8 @@
             "views/kderp_general_expense_view.xml",
             "views/kderp_supplier_payment_general_expense_view.xml",
             "views/kderp_other_expense_view.xml",
-            "views/kderp_departments_view.xml"
+            "views/kderp_departments_view.xml",
+            "data/kderp_check_update_exp.xml"
             ],
     'demo':[],
     'installable':True

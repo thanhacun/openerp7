@@ -49,7 +49,7 @@
   						<group colspan="4" col="4">
 							<field name="date" on_change="onchange_date(date,name)" default_focus="1"/>
 							<field name="due_date"/>
-							<field name="expense_id"/>
+							<field name="expense_id" context="{'general_expense': True}"/>
 							<field name="supplier_id"/>
 							<field name="payment_type"/>
 							<field name="user_applicant_id"/>
@@ -165,7 +165,7 @@
 		<field name="res_model">kderp.supplier.payment.expense</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form,calendar,graph</field>
-		<field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase','search_default_state_working':1, 'general_expense': 1}</field>
+		<field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase','search_default_state_working':1, 'general_expense': True}</field>
 		<field name="domain">[('allocated_to','!=','PE')]</field>	 
      	<field name="search_view_id" ref="view_kderp_supplier_payment_ge_filter"/>
      	<field name="view_id" ref="view_kderp_suppplier_payment_ge_tree"/>

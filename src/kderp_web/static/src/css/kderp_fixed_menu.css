@@ -157,8 +157,9 @@ body{
 /*SEARCH VIEW*/
 .openerp .oe_searchview{
   min-width: 400px;
-  max-width: 1200px;
-  white-space: nowrap;
+  max-width: 1800px;
+  max-height: 24px;
+  white-space: normal;
   width: auto !important;
   z-index: 3;
 }

@@ -56,7 +56,7 @@ class kderp_other_expense(osv.osv):
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             if record.description:
-                full_name = '%s- %s' % (record.name,record.description)
+                full_name = '%s - %s' % (record.name,record.description)
             else:
                 full_name = record.name   
             res.append((record.id, full_name))
@@ -96,28 +96,43 @@ class kderp_other_expense(osv.osv):
     def check_and_make_koe_done(self, cr, uid, ids, cron_mode=True, context=None):
         try:
             if not ids:
-                ids = self.search(cr, uid, [('state','=','waiting_for_payment')])
+                ids = self.search(cr, uid, [('state','in',('waiting_for_payment','paid'))])
             
             koe_list_mark_done = []
+            koe_list_mark_done_remain = []
             koe_list_mark_paid = []
+            check_ot_ids = []
+            
             for koe in self.browse(cr, uid, ids, context):
-                if koe.expense_type == 'monthly_expense' and koe.state not in ('draft','cancel','revising'):
+                if koe.expense_type == 'monthly_expense' and koe.state not in ('draft','cancel'):                    
                     koe_list_mark_done.append(koe.id)
+                    for koel in koe.expense_line:
+                        if koel.belong_expense_id:
+                            if koel.belong_expense_id.state in ('paid'):
+                                check_ot_ids.append(koel.belong_expense_id.id)                                            
                 else:
                     check_type = koe.expense_type not in ('prepaid','fixed_asset')
-                    check_state =  koe.state=='waiting_for_payment'
+                    check_state =  koe.state in ('waiting_for_payment','revising')              
                     check_amount = koe.total_request_amount==koe.total_vat_amount and koe.total_vat_amount==koe.total_payment_amount and koe.total_payment_amount==koe.amount_total 
                     if check_type and check_state and check_amount:
                         koe_list_mark_done.append(koe.id)
-                    elif not check_type and check_state and check_amount:
-                        koe_list_mark_paid.append(koe.id)
+                    elif not check_type and (check_state or koe.state=='paid') and check_amount:
+                        check_amount_remain = (koe.remaining_amount == 0 and koe.total_request_amount>0)
+                        if (not check_amount_remain and koe.state!='paid'):
+                            koe_list_mark_paid.append(koe.id)
+                        elif check_amount_remain and koe.state in ('paid','revising'):                        
+                            koe_list_mark_done_remain.append(koe.id)                            
                     else:
                         continue
-                
+                      
             if koe_list_mark_done:
-                self.write(cr, uid, koe_list_mark_done, {'state':'done'})
+                self.write(cr, uid, koe_list_mark_done, {'state':'done'})                
             if koe_list_mark_paid:
-                self.write(cr, uid, koe_list_mark_done, {'state':'paid'})
+                self.write(cr, uid, koe_list_mark_paid, {'state':'paid'})
+            if koe_list_mark_done_remain:
+                cr.execute("""Update kderp_other_expense set state='done' where id in (%s) """ % ",".join(map(str, koe_list_mark_done_remain)))
+            if check_ot_ids:
+                self.check_and_make_koe_done(cr, uid, check_ot_ids, context=context)
         except:
             raise            
         return True
