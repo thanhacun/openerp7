@@ -42,7 +42,9 @@
             "wizard/kderp_advance_report_view.xml",
             "wizard/kderp_cashonhand_report_view.xml",
             "kderp_batch_update_advance_view.xml",
-            "wizard/kderp_advance_wizard_form_report_view.xml"
+            "wizard/kderp_advance_wizard_form_report_view.xml",
+            "data/kderp_advance_cash_payment.xml",
+            "wizard/kderp_cash_payment_supplier_view.xml"
 #             "process/advance_payment_process.xml"
             ],
     'demo':[],
