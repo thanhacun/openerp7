@@ -191,7 +191,7 @@
                     <filter help="Cancelled Expense" name='cancel' domain="[('state','=','cancel')]"/>
                     <separator/>
                     <filter help="Expense" name='expense' domain="[('expense_type','=','expense')]"/>
-                    <filter help="Ricognize Expense" name='monthly_expense' domain="[('expense_type','=','monthly_expense')]"/>
+                    <filter help="Allocation Sheet" name='monthly_expense' domain="[('expense_type','=','monthly_expense')]"/>
                     <filter help="Prepaid &amp; Fixed Asset" name="prepaid_fixed_asset" domain="['|',('expense_type','=','prepaid'),('expense_type','=','fixed_asset')]"/>
                     <separator/>
                     <filter help="General Expense" name='GE' domain="[('allocated_to','=','GE')]"/>
