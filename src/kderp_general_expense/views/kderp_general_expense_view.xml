@@ -181,6 +181,7 @@
 					<field name="amount_untaxed" string="Sub Total" filter_domain="[('amount_untaxed','=',self)]"/>
                     <field name="budgets" string="Budgets" filter_domain="[('budgets','ilike',self)]"/>
                     <field name="expense_line" string="Details/Job/Amount" filter_domain="[('expense_line','ilike',self)]"/>
+                    <field name="date" string="Exp./Allocated Date" filter_domain="[('date','ilike',self)]"/>
                     
                     <filter help="Working Expense" name='working' domain="[('state','in',('draft','waiting_for_payment'))]"/>
                     <separator/>
@@ -188,7 +189,14 @@
                     <filter help="Waiting for Payment" name='waiting_for_payment' domain="[('state','=','waiting_for_payment')]"/>
                     <filter help="Completed Expense" name='done' domain="[('state','=','done')]"/>
                     <filter help="Cancelled Expense" name='cancel' domain="[('state','=','cancel')]"/>
-
+                    <separator/>
+                    <filter help="Expense" name='expense' domain="[('expense_type','=','expense')]"/>
+                    <filter help="Ricognize Expense" name='monthly_expense' domain="[('expense_type','=','monthly_expense')]"/>
+                    <filter help="Prepaid &amp; Fixed Asset" name="prepaid_fixed_asset" domain="['|',('expense_type','=','prepaid'),('expense_type','=','fixed_asset')]"/>
+                    <separator/>
+                    <filter help="General Expense" name='GE' domain="[('allocated_to','=','GE')]"/>
+                    <filter help="Job &amp; General Expense" name='PGE' domain="[('allocated_to','=','PGE')]"/>
+					
                     <group expand="0" string="Group By...">
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
