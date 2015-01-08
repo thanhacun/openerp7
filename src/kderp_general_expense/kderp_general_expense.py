@@ -136,10 +136,18 @@ class kderp_other_expense(osv.osv):
         res = {}
         for koe in self.browse(cr, uid, ids, context = {}):
             recognized_amount = 0
-            for re_exp in koe.related_expense_ids:
-                recognized_amount += re_exp.amount if re_exp.expense_id.state not in ('draft', 'cancel') else 0
+            allocated_date = False
+            if koe.expense_type in ('prepaid','fixed_asset'):
+                for re_exp in koe.related_expense_ids:
+                    recognized_amount += re_exp.amount if re_exp.expense_id.state not in ('draft', 'cancel') else 0
+                    if not allocated_date:                    
+                        allocated_date = re_exp.expense_id.date
+                    elif allocated_date < re_exp.expense_id.date:
+                        allocated_date = re_exp.expense_id.date
+                     
             res[koe.id] = {'recognized_amount': recognized_amount,
-                           'remaining_amount': koe.amount_untaxed - recognized_amount
+                           'remaining_amount': koe.amount_untaxed - recognized_amount,
+                           'current_allocated_date': allocated_date
                            }
         return res
     
@@ -148,10 +156,11 @@ class kderp_other_expense(osv.osv):
             context = {}
         res = {}
         for koe in self.browse(cr, uid, ids, context = {}):
-            res[koe.id] = True
-            for koel in koe.expense_line:
-                if koel.belong_expense_id:
-                    res[koel.belong_expense_id.id] = True
+            if koe.expense_type in ('prepaid','fixed_asset','monthly_expense'):
+                res[koe.id] = True
+                for koel in koe.expense_line:
+                    if koel.belong_expense_id:
+                        res[koel.belong_expense_id.id] = True
         return res.keys()
         
     def _get_expense_from_expl(self, cr, uid, ids, context = {}):
@@ -159,9 +168,10 @@ class kderp_other_expense(osv.osv):
             context = {}
         res = {}
         for koel in self.browse(cr, uid, ids, context = {}):
-            res[koel.expense_id.id] = True
-            if koel.belong_expense_id:
-                res[koel.belong_expense_id.id] = True
+            if koel.expense_id.expense_type in ('prepaid','fixed_asset','monthly_expense'):
+                res[koel.expense_id.id] = True
+                if koel.belong_expense_id:
+                    res[koel.belong_expense_id.id] = True
         return res.keys()
     
     STATE_SELECTION=[('draft','Draft'),
@@ -193,7 +203,7 @@ class kderp_other_expense(osv.osv):
                 'expense_line_pending':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'expense_line_ge':fields.one2many('kderp.other.expense.line','expense_id','Details', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 
-                'recognized_amount':fields.function(_get_remaining_amount,type='float',string='Recognized Amount',method=True,multi='_get_remaining',
+                'recognized_amount':fields.function(_get_remaining_amount,type='float',string='Allocated Amount',method=True,multi='_get_remaining',
                                                     store={
                                                            'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date','currency_id'], 15),
                                                            'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
@@ -203,6 +213,12 @@ class kderp_other_expense(osv.osv):
                                                            'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date','currency_id'], 15),
                                                            'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
                                                            }),
+                'current_allocated_date':fields.function(_get_remaining_amount,type='date',string='Allocated to date',method=True,multi='_get_remaining',
+                                                    store={
+                                                           'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date','currency_id','date'], 15),
+                                                           'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
+                                                           }),
+                'start_date_allocated':fields.date("Start Date Allocated", help='Beginning Date allocated', readonly=True),                
                 }
 
     _defaults = {
@@ -212,11 +228,13 @@ class kderp_other_expense(osv.osv):
                 'section_incharge_id': _get_section_incharge,
                 }
     
-    def onchange_expensetype(self, cr, uid, ids, type, partner_id):#Auto fill location when change Owner
-        res = {}
+    def onchange_expensetype(self, cr, uid, ids, type, partner_id, taxes_id):#Auto fill location when change Owner
+        value = {}
+        if type == 'monthly_expense' and taxes_id:
+            value['taxes_id'] = [] 
         if not partner_id and type=='monthly_expense':
-            res = {'partner_id': self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id}    
-        return {'value': res}
+            value.update({'partner_id': self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id})
+        return {'value': value}
     
     def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
         if not context:

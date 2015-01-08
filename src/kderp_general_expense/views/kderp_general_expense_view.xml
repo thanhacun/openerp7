@@ -52,7 +52,7 @@
 		                        <field name="name" style='width:auto !important'/>
 								<label for="expense_type" string="-" class="oe_inline"/>
 			                    <label for="expense_type" string="Type :" class="oe_inline oe_edit_only"/>
-			                 	<field name="expense_type" on_change="onchange_expensetype(expense_type, partner_id)" style='width:auto !important'/>			                 	
+			                 	<field name="expense_type" on_change="onchange_expensetype(expense_type, partner_id, taxes_id)" style='width:auto !important'/>			                 	
 	                 		</h1>		                    
 		                </div>
 	                    <group colspan="4" col="4">
@@ -128,7 +128,8 @@
 	                        		</tree>
 	                        	</field>
 	                        	<group col="4">
-	                        		<field name='recognized_amount'/>
+	                        		<field name='current_allocated_date'/>
+	                        		<field name='recognized_amount'/>	                        		
 	                        		<field name='remaining_amount'/>
 	                        	</group>
 	                        </page>
