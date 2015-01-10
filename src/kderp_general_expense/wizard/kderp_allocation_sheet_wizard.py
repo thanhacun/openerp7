@@ -89,11 +89,13 @@ class kderp_create_allocation_sheet(osv.osv_memory):
             number_of_month = obj.number_of_month #Tong so nam can chi chi phi
             current_allocated = ge.allocating_date #Da chi chi phi den ngay (ca trang thai draft)
             allocating_begin_date = obj.allocating_begin_date #Ngay bat dau chi chi phi
+            allocated = True
             
             if allocating_begin_date:
                 from datetime import datetime               
                 allocating_begin_date = datetime.strptime(allocating_begin_date, "%Y-%m-%d").date()
                 if not current_allocated:
+                    allocated = False
                     current_allocated = allocating_begin_date 
                 else:
                     current_allocated = datetime.strptime(current_allocated, "%Y-%m-%d").date()
@@ -103,7 +105,7 @@ class kderp_create_allocation_sheet(osv.osv_memory):
                 month_create = month if (month_allocated + month) <= number_of_month else number_of_month - month_allocated
                 exp = {}
                 new_related_ids = []
-                exp_date = (current_allocated + relativedelta(months=-1)) if current_allocated == allocating_begin_date else current_allocated 
+                exp_date = (current_allocated + relativedelta(months=-1)) if not allocated else current_allocated 
                 for m in range(1, month_create + 1):
                     exp['expense_type'] = 'monthly_expense'
                     exp['partner_id'] = 1
@@ -121,7 +123,7 @@ class kderp_create_allocation_sheet(osv.osv_memory):
                     for gel in ge.expense_line:
                         exp_line.append((0, False, 
                                          {'account_analytic_id': gel.account_analytic_id.id,
-                                          'budget_id': gel.budget_id.id,
+                                          'budget_id': obj.budget_id.id,
                                           'belong_expense_id': ge.id,
                                           'asset_id': ge.link_asset_id.id if ge.link_asset_id else False,
                                           'amount': 0,
