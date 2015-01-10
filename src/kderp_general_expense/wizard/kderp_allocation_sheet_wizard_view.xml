@@ -8,11 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Create Allocation Asset" version="7.0">
                 	<group string='Create Allocation Asset' col='4'>
-	                	<field name="start_date_allocated" colspan='4' attrs="{'readonly':[('startdate_default','=',True)]}"/>
+	                	<field name="allocating_begin_date" colspan='4' attrs="{'readonly':[('startdate_default','=',True)]}"/>
 	                	<field name="startdate_default" colspan='4'/>
 	                	<field name="number_of_month" colspan='4' attrs="{'readonly':[('startdate_default','=',True)]}"/>
+	                	<field name="section_id" colspan='4'/>
+	                	<field name="budget_id" colspan='4'/>
 	                	<field name="allocated_selection"/>
-	                	<field name="allocated_to_month" attrs="{'invisible':[('allocated_selection','!=',-1)],'required':[('allocated_selection','=',-1)]}" nolabel="1"/>
+	                	<field name="allocated_to_month" attrs="{'invisible':[('allocated_selection','!=',-1)],'required':[('allocated_selection','=',-1)]}" nolabel="1"/>	                	
                 	</group>
                     <footer>
                         <button name="create_allocation_sheet" string="Create Allocation Sheet" type="object" class="oe_highlight"/>

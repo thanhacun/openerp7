@@ -73,7 +73,6 @@ class kderp_other_expense(osv.osv):
     def _get_job(self, cr, uid, context={}):
         if not context:
             context={}
-
         if context.get('account_analytic_id', False):
             res = context.get('account_analytic_id',False)
         elif context.get('general_expense',False):
@@ -98,7 +97,7 @@ class kderp_other_expense(osv.osv):
         koel_obj = self.pool.get('kderp.other.expense.line')
         res = {}
         for id in ids:
-            koel_ids = koel_obj.search(cr, uid, [('belong_expense_id','=',id),('expense_id.state','not in',('draft','cancel'))])
+            koel_ids = koel_obj.search(cr, uid, [('belong_expense_id','=',id),('expense_id.state','!=','cancel')])
             related_ids = set(koel_ids)
             res[id] = list(related_ids)
         return res
@@ -137,24 +136,33 @@ class kderp_other_expense(osv.osv):
         for koe in self.browse(cr, uid, ids, context = {}):
             recognized_amount = 0
             allocated_date = False
-            start_date_allocated = False
+            allocating_date = False
+            allocating_begin_date = False
             if koe.expense_type in ('prepaid', 'fixed_asset'):
                 for re_exp in koe.related_expense_ids:
                     if re_exp.expense_id.state not in ('draft', 'cancel'):
                         recognized_amount += re_exp.amount
                         if not allocated_date:                    
                             allocated_date = re_exp.expense_id.date
-                            start_date_allocated = re_exp.expense_id.date
                         else:
                             if allocated_date < re_exp.expense_id.date:
                                 allocated_date = re_exp.expense_id.date
-                            if start_date_allocated > re_exp.expense_id.date:
-                                start_date_allocated = re_exp.expense_id.date
                                 
+                    elif re_exp.expense_id.state == 'draft':
+                        if not allocating_date:                    
+                            allocating_date = re_exp.expense_id.date
+                            allocating_begin_date = re_exp.expense_id.date
+                        else:
+                            if allocating_date < re_exp.expense_id.date:
+                                allocating_date = re_exp.expense_id.date
+                            if allocating_begin_date > re_exp.expense_id.date:
+                                allocating_begin_date = re_exp.expense_id.date
+                                                                                                                                     
             res[koe.id] = {'recognized_amount': recognized_amount,
                            'remaining_amount': koe.amount_untaxed - recognized_amount,
                            'current_allocated_date': allocated_date,
-                           'start_date_allocated': start_date_allocated
+                           'allocating_begin_date': allocating_begin_date,
+                           'allocating_date': allocating_date
                            }
         return res
     
@@ -223,7 +231,12 @@ class kderp_other_expense(osv.osv):
                                                            'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date'], 15),
                                                            'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
                                                            }),
-                'start_date_allocated':fields.function(_get_remaining_amount,type='date',string='Allocated to date',method=True,multi='_get_remaining',
+                'allocating_date':fields.function(_get_remaining_amount,type='date',string='Allocating to date',method=True,multi='_get_remaining',
+                                                    store={
+                                                           'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date'], 15),
+                                                           'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
+                                                           }),
+                'allocating_begin_date':fields.function(_get_remaining_amount,type='date',string='Allocated Start Date',method=True,multi='_get_remaining',
                                                     store={
                                                            'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date'], 15),
                                                            'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),

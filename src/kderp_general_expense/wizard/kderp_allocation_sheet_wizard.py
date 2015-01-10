@@ -20,14 +20,20 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from datetime import date
+from kderp_base.kderp_base import diff_month
 
 class kderp_create_allocation_sheet(osv.osv_memory):
     _name = 'kderp.create.allocation.sheet'
     _description = 'KDERP Wizard Create allocation Sheet'
     
     ALLOCATION_MONTH = [(1,'1 Month'),
-                        (0,'All Remaining Amount'),
+                        (2,'For End of this year'),
                         (-1,'Custom')]
+    
+    def _get_budget_default(self, cr, uid, context = {}):
+        budget = self.pool.get('account.budget.post').search(cr, uid, [('code','ilike','A31')])
+        return budget[0] if budget else False
     
     def _get_default_value(self, cr, uid, context = {}, field='number_of_month'):
         if not context:
@@ -35,48 +41,94 @@ class kderp_create_allocation_sheet(osv.osv_memory):
         ge_id = context.get('ge_id', False)
         if ge_id:
             ge_pool = self.pool.get('kderp.other.expense')
-            ge_obj = ge_pool.read(cr, uid, ge_id, [field])
-            return ge_obj[field] if ge_obj else ge_obj  
+            ge = ge_pool.read(cr, uid, ge_id, [field])
+            return ge[field] if ge else False  
         else:
             return False
     
     _columns = {
-                'start_date_allocated':fields.date('Start Date',required=True),
+                'allocating_begin_date':fields.date('Start Date',required=True),
                 'startdate_default':fields.boolean('Start Date Defaults',invisible=True),
                 'number_of_month':fields.integer("Number of month?", help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),                
                 'allocated_selection':fields.selection(ALLOCATION_MONTH,'Select', required = True),
-                'allocated_to_month':fields.integer("")
+                'allocated_to_month':fields.integer(""),
+                'section_id':fields.many2one('hr.department','Allocated to Section'),
+                'budget_id':fields.many2one('account.budget.post','Budget', required = True),
                 }
     _defaults={
                'allocated_selection':lambda *x:1,
                'number_of_month': _get_default_value,
-               'start_date_allocated':lambda self, cr, uid, context: self._get_default_value(cr, uid, context, 'start_date_allocated'),
-               'startdate_default': lambda self, cr, uid, context: True if self._get_default_value(cr, uid, context, 'start_date_allocated') else False,
+               'allocating_begin_date':lambda self, cr, uid, context: self._get_default_value(cr, uid, context, 'allocating_begin_date'),
+               'startdate_default': lambda self, cr, uid, context: True if self._get_default_value(cr, uid, context, 'allocating_begin_date') else False,
+               'budget_id':_get_budget_default
                }
     
     def create_allocation_sheet(self, cr, uid, ids, context={}):
-        pass
+        """
+        Create Allocation Sheet for Prepaid and Asset
+        """
+        if not context:
+            context = []
+        obj = self.browse(cr,  uid, ids[0], context)
+        ge_obj = self.pool.get('kderp.other.expense')
+        ge_id = context.get('ge_id', False)
+        if ge_id:
+            if not obj.startdate_default:
+                val = {'number_of_month': obj.number_of_month
+                       }
+                ge_obj.write(cr, uid, [ge_id], val)
+            ge = ge_obj.browse(cr, uid, ge_id)
+            #So thang can tao Allocation
+            if obj.allocated_selection == -1:
+                month = obj.allocated_to_month
+            elif obj.allocated_selection == -1:
+                month = 12
+            else:
+                month =1
+            
+            number_of_month = obj.number_of_month #Tong so nam can chi chi phi
+            current_allocated = ge.allocating_date #Da chi chi phi den ngay (ca trang thai draft)
+            allocating_begin_date = obj.allocating_begin_date #Ngay bat dau chi chi phi
+            
+            if allocating_begin_date:
+                from datetime import datetime               
+                allocating_begin_date = datetime.strptime(allocating_begin_date, "%Y-%m-%d").date()
+                if not current_allocated:
+                    current_allocated = allocating_begin_date 
+                else:
+                    current_allocated = datetime.strptime(current_allocated, "%Y-%m-%d").date()
+                month_allocated = diff_month(allocating_begin_date, current_allocated)
+            if month_allocated < number_of_month:
+                from dateutil.relativedelta import relativedelta
+                month_create = month if (month_allocated + month) <= number_of_month else number_of_month - month_allocated
+                exp = {}
+                new_related_ids = []
+                exp_date = (current_allocated + relativedelta(months=-1)) if current_allocated == allocating_begin_date else current_allocated 
+                for m in range(1, month_create + 1):
+                    exp['expense_type'] = 'monthly_expense'
+                    exp['partner_id'] = 1
+                    exp['address_id'] = 1                    
+                    exp['date'] = exp_date +  relativedelta(months=m)
+                    exp['taxes_ids'] = [[6, False, []]],
+                    exp['description'] = 'Allocated Expense %s%s' % (exp['date'].strftime("%b.%Y"), "\n" + ge.description if ge.description else "") 
+                    context['general_expense'] = True
+                    date_string = exp['date'].strftime("%Y-%m-%d")                    
+                    job_ids = self.pool.get('account.analytic.account').search(cr, uid, [('date_start','<=',date_string),('date','>=',date_string),('general_expense','=',True)])                    
+                    job_id = job_ids[-1] if job_ids else False
+                    exp['name'] = ge_obj.new_code(cr, uid, 0, job_id, 'E','')['value']['name']
+                    exp['account_analytic_id'] = job_id
+                    exp_line = []
+                    for gel in ge.expense_line:
+                        exp_line.append((0, False, 
+                                         {'account_analytic_id': gel.account_analytic_id.id,
+                                          'budget_id': gel.budget_id.id,
+                                          'belong_expense_id': ge.id,
+                                          'asset_id': ge.link_asset_id.id if ge.link_asset_id else False,
+                                          'amount': 0,
+                                          'section_id': obj.section_id.id if obj.section_id else False
+                                        }))
+                    exp['expense_line'] = exp_line
+                    new_related_ids.append(ge_obj.create(cr, uid, exp, context))
         return
-        state='draft'
-        quantity=self.read(cr, uid, ids,['quantity_to_create'])[0]['quantity_to_create']
-        list_ids=[]
-        asset_id=context.get('active_id',False) 
-        if asset_id:
-            asset_obj=self.pool.get('kderp.asset.management')
-            ass_list=asset_obj.copy_data(cr, uid, asset_id)
-            ass_list['asset_ids']=[]
-            ass_list['related_asset_ids']=[]
-            a=ass_list.pop('asset_usage_ids') if 'asset_usage_ids' in ass_list else False
-            a=ass_list.pop('sub_asset_ids') if 'sub_asset_ids' in ass_list else False
-            ass_list['state']=state
-            asset_code=ass_list['code']
-            for sub in range(1,quantity+1):
-                ass_list['code']=asset_code + "-" + str(sub).zfill(3)   
-                ass_list['parent_id']=asset_id
-#                list_to_create.append(ass_list)
-                list_ids.append(asset_obj.create(cr, uid, ass_list))
-        return list_ids
 
 kderp_create_allocation_sheet()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
