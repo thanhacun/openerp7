@@ -44,7 +44,7 @@ class kderp_create_allocation_sheet(osv.osv_memory):
             ge = ge_pool.read(cr, uid, ge_id, [field])
             return ge[field] if ge else False  
         else:
-            return False
+            return False    
     
     _columns = {
                 'allocating_begin_date':fields.date('Start Date',required=True),
@@ -81,7 +81,7 @@ class kderp_create_allocation_sheet(osv.osv_memory):
             #So thang can tao Allocation
             if obj.allocated_selection == -1:
                 month = obj.allocated_to_month
-            elif obj.allocated_selection == -1:
+            elif obj.allocated_selection == 2:
                 month = 12
             else:
                 month =1
@@ -98,8 +98,9 @@ class kderp_create_allocation_sheet(osv.osv_memory):
                     allocated = False
                     current_allocated = allocating_begin_date 
                 else:
-                    current_allocated = datetime.strptime(current_allocated, "%Y-%m-%d").date()
-                month_allocated = diff_month(allocating_begin_date, current_allocated)
+                    current_allocated = datetime.strptime(current_allocated, "%Y-%m-%d").date()                
+                month_allocated = diff_month(allocating_begin_date, current_allocated) + 1 if allocated else 0
+
             if month_allocated < number_of_month:
                 from dateutil.relativedelta import relativedelta
                 month_create = month if (month_allocated + month) <= number_of_month else number_of_month - month_allocated
@@ -111,26 +112,35 @@ class kderp_create_allocation_sheet(osv.osv_memory):
                     exp['partner_id'] = 1
                     exp['address_id'] = 1                    
                     exp['date'] = exp_date +  relativedelta(months=m)
-                    exp['taxes_ids'] = [[6, False, []]],
+                    exp['taxes_id'] = [(6, False, False)],
                     exp['description'] = 'Allocated Expense %s%s' % (exp['date'].strftime("%b.%Y"), "\n" + ge.description if ge.description else "") 
                     context['general_expense'] = True
                     date_string = exp['date'].strftime("%Y-%m-%d")                    
                     job_ids = self.pool.get('account.analytic.account').search(cr, uid, [('date_start','<=',date_string),('date','>=',date_string),('general_expense','=',True)])                    
-                    job_id = job_ids[-1] if job_ids else False
+                    
+                    if job_ids:
+                        job_id = job_ids[-1]
+                    else:
+                        continue
                     exp['name'] = ge_obj.new_code(cr, uid, 0, job_id, 'E','')['value']['name']
                     exp['account_analytic_id'] = job_id
                     exp_line = []
                     for gel in ge.expense_line:
+                        if m + month_allocated < number_of_month:
+                            allocated_amount = round(gel.amount / number_of_month)
+                        else:
+                            allocated_amount = gel.amount - round(gel.amount / number_of_month) * (number_of_month - 1)
                         exp_line.append((0, False, 
                                          {'account_analytic_id': gel.account_analytic_id.id,
                                           'budget_id': obj.budget_id.id,
                                           'belong_expense_id': ge.id,
                                           'asset_id': ge.link_asset_id.id if ge.link_asset_id else False,
-                                          'amount': 0,
+                                          'amount': allocated_amount,
                                           'section_id': obj.section_id.id if obj.section_id else False
                                         }))
                     exp['expense_line'] = exp_line
                     new_related_ids.append(ge_obj.create(cr, uid, exp, context))
+                #ge_obj.write(cr, uid, new_related_ids, {'taxes_id': False})
         return
 
 kderp_create_allocation_sheet()

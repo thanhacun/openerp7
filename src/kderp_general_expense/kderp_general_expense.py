@@ -51,6 +51,14 @@ class kderp_other_expense(osv.osv):
                     ('GE','General Expense'),
                     ('PGE','Job & General Expense'))
     
+    def check_and_submit_monthly_expense(self, cr, uid, ids, cron_mode=True, context=None):
+        if not context:
+            context = {}
+        if not ids:
+            ids = self.search(cr, uid, [('expense_type','=','monthly_expense'),('state','=','draft'),('date','<=', time.strftime('%Y-%m-%d'))])
+            self.action_draft_to_waiting_for_payment(cr, uid, ids, context = context)
+        return True
+    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
             context = {}
