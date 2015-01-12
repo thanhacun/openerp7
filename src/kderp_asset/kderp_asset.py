@@ -166,6 +166,18 @@ class kderp_asset_management(osv.osv):
                 'expense_id':fields.many2one('kderp.other.expense', 'Expense', domain=[('expense_type','in',('expense','fixed_asset')),('link_asset_id','=',False)],
                                              context={'general_expense': True}, readonly=True, states={'draft':[('readonly',False)]})
               }
+    def onchange_asset(self, cr, uid, ids, expense_id, desc, supplier, price):
+        value = {}
+        if expense_id:
+            exp_obj = self.pool.get('kderp.other.expense')
+            exp = exp_obj.browse(cr, uid, expense_id)
+            if not desc:
+                value['name'] = exp.description
+            if not supplier:
+                value['supplier'] = exp.partner_id.name
+            if not price:
+                value['price'] = exp.amount_untaxed
+        return {'value':value}
 kderp_asset_management()
 
 class kderp_asset_partial_liquidation(osv.osv):

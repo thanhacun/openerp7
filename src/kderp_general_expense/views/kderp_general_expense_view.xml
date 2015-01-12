@@ -121,6 +121,7 @@
 	                        		<tree string='Allocation Sheet' editable='top'>
 		                        		<field name='expense_id' string='Expense No.'/>
 										<field name='account_analytic_id' string='Job/GE' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
+										<field name='date'/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="amount" sum='Sub-total' string="Amount"/>
@@ -128,9 +129,13 @@
 	                        		</tree>
 	                        	</field>
 	                        	<group col="4">
+	                        		<field name="allocating_begin_date"/>
 	                        		<field name='current_allocated_date'/>
+	                        		<field name='number_of_month'/>
 	                        		<field name='recognized_amount'/>	                        		
 	                        		<field name='remaining_amount'/>
+	                        		<newline/>
+	                        		<button attrs="{'invisible':[('remaining_amount','&lt;=',0),('recognized_amount','>',0)]}" name="%(act_kderp_create_allocation)d" type='action' context="{'ge_id':active_id}" string='Create Allocation Sheet' icon='gtk-new'/>
 	                        	</group>
 	                        </page>
 	                        <page string='Payment &amp; VAT Invoices' attrs="{'invisible':[('expense_type','=','monthly_expense')]}">

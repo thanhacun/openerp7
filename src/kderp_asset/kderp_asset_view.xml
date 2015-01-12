@@ -163,7 +163,7 @@
 			<field name="inherit_id" ref="kderp_asset_management.kderp_form_view_asset"/>
 			<field name="arch" type="xml">
 				<field name='supplier' position='before'>
-					<field name='expense_id'/>
+					<field name='expense_id' on_change="onchange_asset(expense_id, name, supplier, price)"/>
 				</field>
             	<page string="Remarks" position='after'>
             		<page string="Asset Depreciation" attrs="{'invisible':[('fixed_asset','=',False)]}">
