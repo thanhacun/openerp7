@@ -74,7 +74,7 @@
 			<band height="13">
 				<printWhenExpression><![CDATA[($F{payment_no}!=null)]]></printWhenExpression>
 				<textField pattern="#,##0.00;(#,##0.00)">
-					<reportElement mode="Opaque" x="353" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="363" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.0"/>
@@ -90,7 +90,7 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($F{total}==null?0:$F{total}):
 new DecimalFormat("#,##0;(#,##0)").format($F{total}==null?0:$F{total})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="44" y="0" width="35" height="13" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="105" y="0" width="20" height="13" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.0"/>
@@ -104,7 +104,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{total}==null?0:$F{total})]]></textF
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{cur_name}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00;(#,##0.00)">
-					<reportElement mode="Opaque" x="278" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="303" y="0" width="60" height="13" backcolor="#CCCCCC"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.0"/>
@@ -120,7 +120,7 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($F{amount_tax}==null?0:$F{amount
 new DecimalFormat("#,##0;(#,##0)").format($F{amount_tax}==null?0:$F{amount_tax})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="0" y="0" width="44" height="13" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="61" y="0" width="44" height="13" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.0"/>
@@ -134,7 +134,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{amount_tax}==null?0:$F{amount_tax})
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{payment_no}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00;(#,##0.00)">
-					<reportElement mode="Opaque" x="127" y="0" width="76" height="13" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="173" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.0"/>
@@ -150,7 +150,7 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($F{InvAmt}==null?0:$F{InvAmt}):
 new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00;(#,##0.00)">
-					<reportElement mode="Opaque" x="203" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="238" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.0"/>
@@ -166,7 +166,7 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($F{sub_total}==null?0:$F{sub_tot
 new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="79" y="0" width="48" height="13" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="125" y="0" width="48" height="13" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.0"/>
@@ -184,7 +184,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 		<groupFooter>
 			<band>
 				<line>
-					<reportElement mode="Opaque" x="0" y="-1" width="428" height="1" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="61" y="-1" width="367" height="1" backcolor="#CCCCCC"/>
 					<graphicElement>
 						<pen lineWidth="0.75"/>
 					</graphicElement>
@@ -195,7 +195,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 	<title>
 		<band height="13">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="428" height="13" forecolor="#000000" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="61" y="0" width="367" height="13" forecolor="#000000" backcolor="#CCCCCC"/>
 				<box bottomPadding="2"/>
 				<textElement verticalAlignment="Bottom">
 					<font size="8"/>
@@ -210,7 +210,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 				<elementGroup/>
 			</elementGroup>
 			<staticText>
-				<reportElement mode="Opaque" x="79" y="0" width="48" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="125" y="0" width="48" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -224,7 +224,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 				<text><![CDATA[Inv No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="44" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="61" y="0" width="44" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -238,7 +238,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 				<text><![CDATA[ROP No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="203" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="238" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -252,7 +252,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 				<text><![CDATA[Cost Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="127" y="0" width="76" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="173" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -266,7 +266,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 				<text><![CDATA[Inv Amt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="278" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="303" y="0" width="60" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -280,7 +280,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 				<text><![CDATA[VAT Amt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="44" y="0" width="35" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="105" y="0" width="20" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -294,7 +294,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 				<text><![CDATA[Cur]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="353" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="363" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -313,7 +313,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{sub_total}==null?0:$F{sub_total})]]
 		<band height="13">
 			<printWhenExpression><![CDATA[$V{NumberOfInv}>1 &&$F{InvNo}!=null && $F{InvNo}!=""]]></printWhenExpression>
 			<textField pattern="#,##0.00;(#,##0.00)">
-				<reportElement mode="Opaque" x="127" y="0" width="76" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="173" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 				<box rightPadding="1">
 					<pen lineWidth="0.75"/>
 					<leftPen lineWidth="0.75"/>
@@ -328,7 +328,7 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($F{InvAmt}==null?0:$F{InvAmt}):
 new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="79" y="0" width="48" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="125" y="0" width="48" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -342,7 +342,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></tex
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{InvNo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="353" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="363" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<leftPen lineWidth="0.75"/>
 					<rightPen lineWidth="0.75"/>
@@ -353,7 +353,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></tex
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="278" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="303" y="0" width="60" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<leftPen lineWidth="0.75"/>
 					<rightPen lineWidth="0.75"/>
@@ -364,7 +364,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></tex
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="44" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="61" y="0" width="44" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<leftPen lineWidth="0.75"/>
 					<rightPen lineWidth="0.75"/>
@@ -375,7 +375,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></tex
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="44" y="0" width="35" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="105" y="0" width="20" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<leftPen lineWidth="0.75"/>
 					<rightPen lineWidth="0.75"/>
@@ -386,7 +386,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></tex
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="203" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="238" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<leftPen lineWidth="0.75"/>
 					<rightPen lineWidth="0.75"/>
@@ -401,22 +401,8 @@ new DecimalFormat("#,##0;(#,##0)").format($F{InvAmt}==null?0:$F{InvAmt})]]></tex
 	<summary>
 		<band height="26">
 			<elementGroup/>
-			<textField pattern="#,##0.00;(#,##0.00)">
-				<reportElement mode="Opaque" x="127" y="0" width="76" height="13" backcolor="#CCCCCC"/>
-				<box rightPadding="1">
-					<pen lineWidth="0.75"/>
-					<leftPen lineWidth="0.75"/>
-					<rightPen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cur_name}!="VND"?
-new DecimalFormat("#,##0.00;(#,##0.00)").format($V{TotalAmtInv}==null?0:$V{TotalAmtInv}):
-new DecimalFormat("#,##0;(#,##0)").format($V{TotalAmtInv}==null?0:$V{TotalAmtInv})]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="13" width="127" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="61" y="13" width="112" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -430,7 +416,7 @@ new DecimalFormat("#,##0;(#,##0)").format($V{TotalAmtInv}==null?0:$V{TotalAmtInv
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="127" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="61" y="0" width="112" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -444,7 +430,7 @@ new DecimalFormat("#,##0;(#,##0)").format($V{TotalAmtInv}==null?0:$V{TotalAmtInv
 				<text><![CDATA[Sub -Total]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;(#,##0.00)">
-				<reportElement mode="Opaque" x="353" y="0" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="363" y="0" width="65" height="13" backcolor="#CCCCCC"/>
 				<box rightPadding="1">
 					<pen lineWidth="0.75"/>
 					<leftPen lineWidth="0.75"/>
@@ -458,7 +444,7 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($V{SubTotal}==null?0:$V{SubTotal
 new DecimalFormat("#,##0;(#,##0)").format($V{SubTotal}==null?0:$V{SubTotal})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="127" y="13" width="226" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="173" y="13" width="190" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -472,7 +458,7 @@ new DecimalFormat("#,##0;(#,##0)").format($V{SubTotal}==null?0:$V{SubTotal})]]><
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="203" y="0" width="150" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="238" y="0" width="125" height="13" backcolor="#CCCCCC"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -486,7 +472,7 @@ new DecimalFormat("#,##0;(#,##0)").format($V{SubTotal}==null?0:$V{SubTotal})]]><
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;(#,##0.00)">
-				<reportElement mode="Opaque" x="353" y="13" width="75" height="13" backcolor="#CCCCCC"/>
+				<reportElement mode="Opaque" x="363" y="13" width="65" height="13" backcolor="#CCCCCC"/>
 				<box rightPadding="1">
 					<pen lineWidth="0.75"/>
 					<leftPen lineWidth="0.75"/>
@@ -498,6 +484,20 @@ new DecimalFormat("#,##0;(#,##0)").format($V{SubTotal}==null?0:$V{SubTotal})]]><
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{cur_name}!="VND"?
 new DecimalFormat("#,##0.00;(#,##0.00)").format($V{Balance}==null?0:$V{Balance}):
 new DecimalFormat("#,##0;(#,##0)").format($V{Balance}==null?0:$V{Balance})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)">
+				<reportElement mode="Opaque" x="173" y="0" width="65" height="13" backcolor="#CCCCCC"/>
+				<box rightPadding="1">
+					<pen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cur_name}!="VND"?
+new DecimalFormat("#,##0.00;(#,##0.00)").format($V{TotalAmtInv}==null?0:$V{TotalAmtInv}):
+new DecimalFormat("#,##0;(#,##0)").format($V{TotalAmtInv}==null?0:$V{TotalAmtInv})]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
