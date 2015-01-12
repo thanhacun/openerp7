@@ -17,7 +17,7 @@ class account_budget_post(osv.osv):
     _defaults = {
                 'general_expense': lambda self, cr, uid, context={}:context.get('general_expense',False),
                  }
-#
+
 class account_analytic_account(osv.osv):
     """
         Inherit Job (Account Analytic Account) add new some field, using for General Expense
