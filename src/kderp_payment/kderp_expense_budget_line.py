@@ -390,7 +390,7 @@ class kderp_expense_budget_line(osv.osv):
                                                         'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 20),
                                                         
                                                         'kderp.other.expense.line':(_get_other_expense_line_from_koel, ['amount_company_curr','amount'], 40),
-                                                        'kderp.other.expense':(_get_other_expense, ['date','state','currency_id','state','taxes_id'], 40),
+                                                        'kderp.other.expense':(_get_other_expense, ['date','currency_id','state','taxes_id'], 40),
                                                         #'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 40),
                                                         'kderp.supplier.payment.expense': (_get_budget_line_from_supplier_payment_expense, ['state','taxes_id','currency_id','date'], 40),
                                                         'kderp.supplier.payment.expense.line': (_get_budget_line_from_supplier_payment_expense_line, ['amount'], 40),
@@ -404,7 +404,7 @@ class kderp_expense_budget_line(osv.osv):
                                                         'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 20),
                                                         
                                                         'kderp.other.expense.line':(_get_other_expense_line_from_koel, ['amount_company_curr','amount'], 40),
-                                                        'kderp.other.expense':(_get_other_expense, ['date','state','currency_id','state','taxes_id'], 40),
+                                                        'kderp.other.expense':(_get_other_expense, ['date','currency_id','state','taxes_id'], 40),
                                                         #'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 40),
                                                         'kderp.supplier.payment.expense': (_get_budget_line_from_supplier_payment_expense, ['state','taxes_id','currency_id','date'], 40),
                                                         'kderp.supplier.payment.expense.line': (_get_budget_line_from_supplier_payment_expense_line, ['amount'], 40),
@@ -415,13 +415,13 @@ class kderp_expense_budget_line(osv.osv):
                                                 multi="_get_amount_from_line_and_payment",
                                                 store = {
                                                         'purchase.order.line':(_get_expense_line_from_pol, ['amount_company_curr','price_unit','plan_qty'], 40),
-                                                        'purchase.order':(_get_purchase_order, ['discount_amount','special_case','state','pricelist_id','state','taxes_id'], 40),
+                                                        'purchase.order':(_get_purchase_order, ['discount_amount','special_case','state','pricelist_id','taxes_id'], 40),
                                                         'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 40),
                                                         'kderp.supplier.payment': (_get_budget_line_from_supplier_payment, ['state','amount','advanced_amount','retention_amount','taxes_id','currency_id','date'], 40),
                                                         'kderp.supplier.payment.pay': (_get_budget_line_from_supplier_payment_pay, None, 40),
                                                         
                                                         'kderp.other.expense.line':(_get_other_expense_line_from_koel, ['amount_company_curr','amount'], 40),
-                                                        'kderp.other.expense':(_get_other_expense, ['date','state','currency_id','state','taxes_id'], 40),
+                                                        'kderp.other.expense':(_get_other_expense, ['date','state','currency_id','taxes_id'], 40),
                                                         #'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 40),
                                                         'kderp.supplier.payment.expense': (_get_budget_line_from_supplier_payment_expense, ['state','taxes_id','currency_id','date'], 40),
                                                         'kderp.supplier.payment.expense.line': (_get_budget_line_from_supplier_payment_expense_line, ['amount'], 40),
@@ -432,14 +432,14 @@ class kderp_expense_budget_line(osv.osv):
                                                 multi="_get_amount_from_line",
                                                   store = {
                                                         'purchase.order.line':(_get_expense_line_from_pol, ['amount_company_curr','price_unit','plan_qty'], 45),
-                                                        'purchase.order':(_get_purchase_order, ['discount_amount','special_case','state','pricelist_id','state','date_order','taxes_id'], 45),
+                                                        'purchase.order':(_get_purchase_order, ['discount_amount','special_case','state','pricelist_id','date_order','taxes_id'], 45),
                                                         'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 45),
                                                         'kderp.supplier.payment': (_get_budget_line_from_supplier_payment, ['state','amount','advanced_amount','retention_amount','taxes_id','currency_id','date','base_on_line','order_id'], 45),
                                                         'kderp.supplier.payment.line': (_get_budget_line_from_supplier_payment_line, None, 45),
                                                         'kderp.supplier.payment.pay': (_get_budget_line_from_supplier_payment_pay, None, 45),
                                                         
                                                         'kderp.other.expense.line':(_get_other_expense_line_from_koel, ['amount_company_curr','amount'], 45),
-                                                        'kderp.other.expense':(_get_other_expense, ['date','state','currency_id','state','taxes_id'], 45),
+                                                        'kderp.other.expense':(_get_other_expense, ['date','state','currency_id','taxes_id'], 45),
                                                         #'kderp.expense.budget.line': (lambda self, cr, uid, ids, c={}: ids,None, 40),
                                                         'kderp.supplier.payment.expense': (_get_budget_line_from_supplier_payment_expense, ['state','taxes_id','currency_id','date','expense_id'], 45),
                                                         'kderp.supplier.payment.expense.line': (_get_budget_line_from_supplier_payment_expense_line, ['amount'], 45),
