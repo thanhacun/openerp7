@@ -188,8 +188,8 @@
                     <field name="expense_line" string="Details/Job/Amount" filter_domain="[('expense_line','ilike',self)]"/>
                     <field name="date" string="Exp./Allocated Date" filter_domain="[('date','ilike',self)]"/>
                     
-                    <filter help="Working Expense" name="working" domain="[('state','in',('draft','waiting_for_payment')),('expense_type','=','monthly_expense')]"/>
-                    <filter help="Working Allocation Sheet" name="working" domain="[('state','=','draft'),('expense_type','=','monthly_expense')]"/>
+                    <filter help="Working Expense" name="working" domain="[('state','in',('draft','waiting_for_payment')),('expense_type','!=','monthly_expense')]"/>
+                    <filter help="Working Allocation Sheet" name="working_allocation_sheet" domain="[('state','=','draft'),('expense_type','=','monthly_expense')]"/>
                     <separator/>
                     <filter help="Draft Expense" name='draft' domain="[('state','=','draft')]"/>
                     <filter help="Waiting for Payment" name='waiting_for_payment' domain="[('state','=','waiting_for_payment')]"/>
