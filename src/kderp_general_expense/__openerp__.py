@@ -31,6 +31,8 @@
     - Customize Procedure
     - Customize Interface""",
     'data':[
+            "security/kderp_general_expense_group.xml",
+            "security/ir.model.access.csv",
             "wizard/kderp_allocation_sheet_wizard_view.xml",
             "data/kderp_general_exepense_code_sequence.xml",            
             "views/kderp_general_expense_menu.xml",
