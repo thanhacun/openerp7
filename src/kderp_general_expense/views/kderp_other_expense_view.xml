@@ -14,7 +14,7 @@
 							<field name="name" style='width:auto !important'/>
 							<label for="expense_type" string="-" class="oe_inline"/>
 	               			<label for="expense_type" string="Type :" class="oe_inline oe_edit_only"/>
-	            			<field name="expense_type" on_change="onchange_expensetype(expense_type, partner_id)" style='width:auto !important'/>			                 	
+	            			<field name="expense_type" on_change="onchange_expensetype(expense_type, partner_id, taxes_id)" style='width:auto !important'/>			                 	
           				</h1>		                    
 	                </div>
 				</div>		                
@@ -31,7 +31,6 @@
 							<tree string="Expense Details" editable="bottom">
 								<field name='account_analytic_id' string='Job/GE'/>
 								<field name='budget_id' string='Code' context="{'job_id':account_analytic_id}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
-								<field name="section_id"/>
 								<field name="amount" sum='Sub-total'/>
 							</tree>
 						</field>

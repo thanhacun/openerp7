@@ -132,9 +132,9 @@
 				<field name='amount' position='before'>
     				<field name='asset_id' readonly="1"/>
     			</field>
-				<xpath expr="//field[@name='expense_line_ge']/tree/field[@name='amount']" position='before'>				
+<!-- 				<xpath expr="//field[@name='expense_line_ge']/tree/field[@name='amount']" position='before'>				
                     <field name='asset_id' readonly="1"/>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='expense_line_pending']/tree/field[@name='amount']" position='before'>				
                     <field name='asset_id' readonly="1"/>
                 </xpath>
