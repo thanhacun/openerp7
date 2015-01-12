@@ -33,6 +33,7 @@ class account_analytic_account(osv.osv):
                  'code': lambda self, cr, uid, context={}:self.pool.get('ir.sequence').get(cr, uid, 'kderp.general.expense.code')[:-1] if context.get('general_expense',False) else ""
                  }
 
+
 class kderp_other_expense(osv.osv):
     """
     Customize Other Expense suitable with general expense
