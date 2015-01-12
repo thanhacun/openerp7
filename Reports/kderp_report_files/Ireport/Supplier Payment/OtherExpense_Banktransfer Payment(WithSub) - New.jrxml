@@ -128,7 +128,7 @@
 						<text><![CDATA[Before submission, You are required to be checked VAT Invoice by Accounting Dept]]></text>
 					</staticText>
 					<subreport>
-						<reportElement x="7" y="54" width="427" height="426">
+						<reportElement x="7" y="77" width="427" height="403">
 							<printWhenExpression><![CDATA[$V{NumberOfBudget}>1]]></printWhenExpression>
 						</reportElement>
 						<subreportParameter name="DATA_Source">

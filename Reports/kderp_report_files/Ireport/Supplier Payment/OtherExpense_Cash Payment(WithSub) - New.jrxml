@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Banktransfer Payment" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="62"/>
 	<property name="ireport.layers" value="##Thu Aug 04 15:48:37 ICT 2011\nlayer.1.name=Layer 1\nlayer.1.visible=true\nlayer.1.id=1\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;expense_id/expense_line&apos;]"/>
 	<parameter name="SUBREPORT_DS" class="java.lang.Object"/>
@@ -128,7 +128,7 @@
 						<text><![CDATA[Before submission, You are required to be checked VAT Invoice by Accounting Dept]]></text>
 					</staticText>
 					<subreport>
-						<reportElement x="9" y="70" width="418" height="402">
+						<reportElement x="9" y="77" width="418" height="395">
 							<printWhenExpression><![CDATA[$V{NumberOfBudget}>1]]></printWhenExpression>
 						</reportElement>
 						<subreportParameter name="DATA_Source">
