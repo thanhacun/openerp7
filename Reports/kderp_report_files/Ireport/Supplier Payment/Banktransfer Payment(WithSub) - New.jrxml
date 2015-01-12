@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Banktransfer Payment" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.3636363636363638"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="56"/>
+	<property name="ireport.y" value="0"/>
 	<property name="ireport.layers" value="##Thu Aug 04 15:48:37 ICT 2011\nlayer.1.name=Layer 1\nlayer.1.visible=true\nlayer.1.id=1\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;order_id/order_line&apos;]"/>
 	<parameter name="SUBREPORT_DS" class="java.lang.Object"/>
@@ -451,7 +451,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Description}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="458" y="130" width="192" height="16" forecolor="#000000"/>
+				<reportElement x="458" y="130" width="193" height="16" forecolor="#000000"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -916,7 +916,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{vat}==null?0:$F{vat})]]></textField
 				<text><![CDATA[Before submission, You are required to be checked VAT Invoice by Accounting Dept]]></text>
 			</staticText>
 			<subreport>
-				<reportElement x="8" y="108" width="420" height="1">
+				<reportElement x="8" y="130" width="420" height="1">
 					<printWhenExpression><![CDATA[($V{NumberOfBudget}>1)&&($F{base_on_line}!=true)]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="DATA_Source">
@@ -932,7 +932,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{vat}==null?0:$F{vat})]]></textField
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "transfer1_sub.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="8" y="114" width="420" height="1"/>
+				<reportElement positionType="Float" x="8" y="133" width="420" height="1"/>
 				<subreportParameter name="ParentID">
 					<subreportParameterExpression><![CDATA[$F{ParentID}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -947,7 +947,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{vat}==null?0:$F{vat})]]></textField
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "previous_invoice.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="8" y="108" width="420" height="1">
+				<reportElement x="8" y="130" width="420" height="1">
 					<printWhenExpression><![CDATA[$F{base_on_line}==true]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="CountBudget"/>
