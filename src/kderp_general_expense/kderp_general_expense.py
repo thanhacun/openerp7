@@ -42,10 +42,10 @@ class kderp_other_expense(osv.osv):
     _inherit = 'kderp.other.expense'
 
     EXPENSE_TYPE_SELECTION =(
-                    ('expense', 'Expense'),
-                    ('monthly_expense','Allocation Sheet'),
+                    ('expense', 'Expense'),                    
                     ('prepaid', 'Prepaid'),
-                    ('fixed_asset', 'Fixed Asset (With Depreciation)'))
+                    ('fixed_asset', 'Fixed Asset (With Depreciation)'),
+                    ('monthly_expense','---Allocated Expense---'),)
 
     ALLOCATE_SELECTION =(
                     ('PE','Job Expense'),
