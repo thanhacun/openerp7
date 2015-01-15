@@ -141,10 +141,7 @@
                     </div>
                     <field name="vat_code"/>
                     
-                    <div class="oe_edit_only">(<field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)</div>
-                    
-                    <label for="active"/>                    
-                    <field name="active"/>
+                    <div class="oe_edit_only">(<field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)</div>                    
             	</h1>
             	<field name="street2"  position='replace'>
             		<field name="street2" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
