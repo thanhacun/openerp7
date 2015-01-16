@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportAssetUser" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
-	<property name="ireport.zoom" value="1.4483218986834392"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="2.5657905911535335"/>
+	<property name="ireport.x" value="2"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
@@ -76,6 +76,10 @@
 	<variable name="ItemCode" class="java.lang.String">
 		<variableExpression><![CDATA[$F{Type-type}+" - "+$F{Description-name}['en_CA']+" / "+$F{Description-name}['vi_VN']]]></variableExpression>
 	</variable>
+	<variable name="No" class="java.lang.Integer" resetType="Group" resetGroup="grpStaffName" calculation="Count">
+		<variableExpression><![CDATA[$F{id}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
 	<group name="grpStaffName" isStartNewPage="true" footerPosition="StackAtBottom" keepTogether="true">
 		<groupExpression><![CDATA[$F{Staff_Number-staffno}+$F{StattName}]]></groupExpression>
 		<groupHeader>
@@ -124,7 +128,7 @@
 					<text><![CDATA[Asset Report - User]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="132" y="20" width="80" height="32"/>
+					<reportElement x="145" y="20" width="80" height="32"/>
 					<box leftPadding="2" rightPadding="2">
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -138,7 +142,7 @@
 					<text><![CDATA[Asset Code]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="20" width="45" height="32"/>
+					<reportElement x="13" y="20" width="45" height="32"/>
 					<box leftPadding="1" rightPadding="1">
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -152,7 +156,7 @@
 					<text><![CDATA[EquipmentNo]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="87" y="20" width="45" height="32"/>
+					<reportElement x="100" y="20" width="45" height="32"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -166,7 +170,7 @@
 					<text><![CDATA[Invoice Date]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="212" y="20" width="112" height="32"/>
+					<reportElement x="225" y="20" width="112" height="32"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -180,7 +184,7 @@
 					<text><![CDATA[Description]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="324" y="20" width="64" height="32"/>
+					<reportElement x="337" y="20" width="51" height="32"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -292,7 +296,7 @@
 					<text><![CDATA[Remarks]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="45" y="20" width="42" height="32"/>
+					<reportElement x="58" y="20" width="42" height="32"/>
 					<box leftPadding="1" rightPadding="1">
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
@@ -319,13 +323,27 @@
 					</textElement>
 					<text><![CDATA[Status Work]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="0" y="20" width="13" height="32"/>
+					<box leftPadding="1" rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<text><![CDATA[No.]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 	</group>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="132" y="0" width="80" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="145" y="0" width="80" height="20"/>
 				<box leftPadding="1">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -339,7 +357,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{ItemCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="45" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="13" y="0" width="45" height="20"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -353,7 +371,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Code-code}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="324" y="0" width="64" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="337" y="0" width="51" height="20"/>
 				<box rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -423,7 +441,7 @@
 				<textFieldExpression class="java.util.Date"><![CDATA[$F{Date_of_beginning-dateofbeginning}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="87" y="0" width="45" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="45" height="20"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -437,7 +455,7 @@
 				<textFieldExpression class="java.util.Date"><![CDATA[$F{Purchase_Date-dateofpurchase}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="212" y="0" width="112" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="225" y="0" width="112" height="20"/>
 				<box leftPadding="1">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -493,7 +511,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{management_staff}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="45" y="0" width="42" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="58" y="0" width="42" height="20"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -519,6 +537,17 @@
 					<font fontName="Arial" size="5"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="13" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{No}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
