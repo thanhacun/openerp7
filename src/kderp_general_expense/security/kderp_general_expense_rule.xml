@@ -41,7 +41,7 @@
 			<field name="name">KDERP General Expense Department</field>
 			<field name="model_id" ref="kderp_other_expense.model_kderp_other_expense"/>
 			<field name="global" eval="False"/>
-	    	<field name="domain_force">[('section_incharge_id','in',"(select hd.id  from hr_department hd left join kderp_other_expense koe  on  koe.section_incharge_id =hd.id left join hr_employee he on he.department_id = hd.id left join resource_resource  rr on rr.id = he.resource_id where rr.user_id = %s)")]</field>
+	    	<field name="domain_force">[('section_incharge_id','in',"(select hd.id  from hr_department hd  left join hr_employee he on he.department_id = hd.id left join resource_resource  rr on rr.id = he.resource_id where rr.user_id = %s)")]</field>
 	   		<field eval="[(6,0,[ref('group_kderp_general_expense_department')])]" name="groups"/>
 	    </record>
 	    
@@ -65,7 +65,7 @@
 			<field name="name">KDERP Supplier Payment General Expense Department</field>
 			<field name="model_id" ref="kderp_supplier_payment.model_kderp_supplier_payment_expense"/>
 			<field name="global" eval="False"/>
-	    	<field name="domain_force">[('expense_id.section_incharge_id','in',"(select hd.id from hr_department hd left join kderp_other_expense koe on koe.section_incharge_id =hd.id left join kderp_supplier_payment_expense kspe on koe.id =kspe.expense_id left join hr_employee he on he.department_id = hd.id left join resource_resource rr on rr.id = he.resource_id where rr.user_id = %s)")]</field>
+	    	<field name="domain_force">[('expense_id.section_incharge_id','in',"(select hd.id  from hr_department hd  left join hr_employee he on he.department_id = hd.id left join resource_resource  rr on rr.id = he.resource_id where rr.user_id = %s)")]</field>
 	   		<field eval="[(6,0,[ref('group_kderp_supplier_payment_general_expense_department')])]" name="groups"/>
 	    </record>
 	    
