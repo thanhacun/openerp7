@@ -73,7 +73,7 @@
 			<field name="name">KDERP Supplier Payment General Expense Job</field>
 			<field name="model_id" ref="kderp_supplier_payment.model_kderp_supplier_payment_expense"/>
 			<field name="global" eval="False"/>
-	    	<field name="domain_force">[('expense_id.allocated_to','=','PGE')]</field>
+	    	<field name="domain_force">[('allocated_to','=','PGE')]</field>
 	   		<field eval="[(6,0,[ref('group_kderp_supplier_payment_general_expense_job')])]" name="groups"/>
 	    </record>
 	    
