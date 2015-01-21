@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReceivingVoucher" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="2.415765000000001"/>
-	<property name="ireport.x" value="177"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="306"/>
+	<property name="ireport.y" value="864"/>
 	<queryString language="xPath">
 		<![CDATA[]]>
 	</queryString>
@@ -47,6 +47,9 @@
 	</field>
 	<field name="Name_login" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/User-User/Name-name]]></fieldDescription>
+	</field>
+	<field name="date_received" class="java.util.Date">
+		<fieldDescription><![CDATA[date_of_received_reimbursement]]></fieldDescription>
 	</field>
 	<variable name="Cur" class="java.lang.String">
 		<variableExpression><![CDATA[$F{Cur}=="VND"?"USD":"VND"]]></variableExpression>
@@ -174,7 +177,7 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["Ngày        "+
 " Tháng        "+
-" Năm "+String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format($F{date_receipt})).substring(6,10)]]></textFieldExpression>
+" Năm "+String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format($F{date_received})).substring(6,10)]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="400" y="168" width="47" height="15"/>
@@ -448,7 +451,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Arial" size="10" isItalic="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Ngày        "+" Tháng        " +" Năm "+String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format($F{date_receipt})).substring(6,10)]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Ngày        "+" Tháng        " +" Năm "+String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format($F{date_received})).substring(6,10)]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="400" y="0" width="47" height="15"/>
