@@ -27,73 +27,7 @@ from datetime import datetime
 
 class kderp_cash_fiscalyear(osv.osv):
     _name = "kderp.cash.fiscalyear"
-    _description = "Cash Fiscal Year"    
-    
-    def action_close(self, cr, uid, ids, context=None):
-        for kcf in self.browse(cr, uid, ids, context):
-            for kcfl in kcf.period_ids:
-                kcfl.write({'state':'done'})
-        self.write(cr, uid, ids, {'state':'done'})
-        return True
-    
-    def action_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'draft'})
-        return True
-    
-    def _get_ending_balance(self, cr, uid, ids, name, args, context={}):
-        res={}
-        for obj in self.browse(cr, uid, ids, context):            
-            res[obj.id] = {'closing_balance_vnd_hanoi': 0.0,
-                           'closing_balance_vnd_haiphong': 0.0,
-                           'closing_balance_usd_hanoi': 0.0,
-                           'closing_balance_usd_haiphong': 0.0,
-                           }
-            if obj.state <> 'draft':
-                date_start=obj.date_start
-                date_stop=obj.date_stop                
-                cr.execute("""
-                            Select
-                                sum(case when substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1)='H' and rc.name='VND' then
-                                    coalesce(debit,0)-coalesce(credit,0) else 0 end) + coalesce(pre_closing_balance_vnd_hanoi,0) as closing_balance_vnd_hanoi,
-                                sum(case when substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1)='P' and rc.name='VND' then
-                                    coalesce(debit,0)-coalesce(credit,0) else 0 end) + coalesce(pre_closing_balance_vnd_haiphong,0) as closing_balance_vnd_haiphong,
-                                sum(case when substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1)='H' and rc.name='USD' then
-                                    coalesce(debit,0)-coalesce(credit,0) else 0 end) + coalesce(pre_closing_balance_usd_hanoi,0) as closing_balance_usd_hanoi,
-                                sum(case when substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1)='P' and rc.name='USD' then
-                                    coalesce(debit,0)-coalesce(credit,0) else 0 end) + coalesce(pre_closing_balance_usd_haiphong,0) as closing_balance_usd_haiphong    
-                            from
-                                kderp_detail_cash_advance kdca
-                            left join
-                                res_currency rc on currency_id=rc.id
-                            left join
-                                (
-                                Select
-                                    case when state='draft' then 0 else closing_balance_vnd_hanoi end as pre_closing_balance_vnd_hanoi,
-                                    case when state='draft' then 0 else closing_balance_vnd_haiphong end as pre_closing_balance_vnd_haiphong,
-                                    case when state='draft' then 0 else closing_balance_usd_hanoi end as pre_closing_balance_usd_hanoi,
-                                    case when state='draft' then 0 else closing_balance_usd_haiphong end as pre_closing_balance_usd_haiphong
-                                from
-                                    kderp_cash_fiscalyear kcf
-                                where    
-                                    kcf.date_stop = (select 
-                                                max(date_stop) 
-                                               from 
-                                                kderp_cash_fiscalyear kcf 
-                                               where
-                                                date_stop<'%s')) vwprevious on 1=1
-                            where    
-                                kdca.date between '%s' and '%s'
-                            group by
-                                pre_closing_balance_vnd_hanoi,
-                                pre_closing_balance_vnd_haiphong,
-                                pre_closing_balance_usd_hanoi,
-                                pre_closing_balance_usd_haiphong""" % (
-                                                                       date_start,
-                                                                       date_start, date_stop))
-            result=cr.dictfetchone()
-            if result:
-                res[obj.id]=result                         
-        return res
+    _description = "Cash Fiscal Year"
     
     _columns = {
         'name': fields.char('Fiscal Year', size=64, required=True),
@@ -102,22 +36,6 @@ class kderp_cash_fiscalyear(osv.osv):
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('kderp.cash.period', 'kderp_cash_fiscalyear_id', 'Periods'),
         'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True),
-        'closing_balance_vnd_hanoi':fields.function(_get_ending_balance, type='float',method=True, multi='_get_ending_balance', store=
-                                                    {
-                                                     'kderp.cash.fiscalyear': (lambda self, cr, uid, ids, context:ids, None, 15),
-                                                     }),
-        'closing_balance_usd_hanoi':fields.function(_get_ending_balance, type='float',method=True, multi='_get_ending_balance', store=
-                                                    {
-                                                     'kderp.cash.fiscalyear': (lambda self, cr, uid, ids, context:ids, None, 15),
-                                                     }),
-        'closing_balance_vnd_haiphong':fields.function(_get_ending_balance, type='float',method=True, multi='_get_ending_balance', store=
-                                                    {
-                                                     'kderp.cash.fiscalyear': (lambda self, cr, uid, ids, context:ids, None, 15),
-                                                     }),
-        'closing_balance_usd_haiphong':fields.function(_get_ending_balance, type='float',method=True, multi='_get_ending_balance', store=
-                                                    {
-                                                     'kderp.cash.fiscalyear': (lambda self, cr, uid, ids, context:ids, None, 15),
-                                                     })
     }
     _defaults = {
         'state': 'draft'
@@ -195,7 +113,7 @@ class kderp_cash_fiscalyear(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
-    
+
 kderp_cash_fiscalyear()
 
 class kderp_cash_period(osv.osv):
@@ -321,7 +239,7 @@ class kderp_cash_period(osv.osv):
     _defaults = {
         'state': 'draft',
     }
-    _order = "kderp_cash_fiscalyear_id desc, date_start"
+    _order = "date_start, special desc"
     _sql_constraints = [
         ('name_period_cash_unique', 'unique(name, date_start)', 'The name of the period must be unique per company!'),
     ]

@@ -74,7 +74,7 @@ class kderp_cashonhand_report_wizard(osv.osv_memory):
     
     def _get_period(self, cr, uid, context=None):
         ctx = dict(context or {}, account_period_prefer_normal=True)
-        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev = False)
+        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev=True)
         if periods:
             return periods[0]
         return False
@@ -82,7 +82,7 @@ class kderp_cashonhand_report_wizard(osv.osv_memory):
     def _get_details_defaults(self, cr, uid, context=None):
         res=[]
         ctx = dict(context or {}, account_period_prefer_normal=True)
-        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev=False)
+        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev=True)
         if periods:
             currency_id=self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
             dates = self.pool.get('kderp.cash.period').read(cr, uid, periods[0],['date_start','date_stop'],context)
@@ -181,77 +181,37 @@ class kderp_cashonhand_report_wizard(osv.osv_memory):
                          'closing_balance':0}
             if obj.one_year:
                 new_condition="kdca.date>='%s' and kdca.date<'%s'" % (date_start[:4]+"-01-01",date_start)
-                condition_one_year = "date_stop<'%s'" % (date_start[:4]+"-01-01")
             else:
                 new_condition="kdca.date<'%s'" % date_start
-                condition_one_year = "False"
-            SQL = """
-                        Select                            
+                
+            cr.execute("""
+                        Select 
                             sum(coalesce(debit,0)-coalesce(credit,0)) as balance,
-                            sum(coalesce(debit,0)-coalesce(credit,0))+coalesce(opening_balance,0) + coalesce(closing_balance,0) as closing_balance,
-                            coalesce(opening_balance,0) + coalesce(closing_balance,0) as opening_balance
-                        from
-                            kderp_cashonhand_report kcrw
-                        left join 
-                            kderp_detail_cash_advance kdca on kdca.date between '%s' and '%s' and kcrw.currency_id = kdca.currency_id and
-                                                              substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1) ilike 
-                                                              case when kcrw.location='haiphong' then 'P' else case when kcrw.location='hanoi' then 'H' else '_' end end
+                            sum(coalesce(debit,0)-coalesce(credit,0))+coalesce(opening_balance,0) as closing_balance,
+                            coalesce(opening_balance,0) as opening_balance
+                        from 
+                            kderp_detail_cash_advance kdca
                         left join
-                            (Select
-                                case when upper('%s') = 'HANOI' then --HANOI
-                                    case when rc.name='VND' then
-                                        closing_balance_vnd_hanoi
-                                    else
-                                        closing_balance_usd_hanoi                                        
-                                    end
-                                else --HAIPHONG
-                                    case when rc.name='VND' then
-                                        closing_balance_vnd_haiphong
-                                    else
-                                        closing_balance_usd_haiphong
-                                    end                                
-                                end as closing_balance                                    
-                            from
-                                kderp_cash_fiscalyear kcf
-                            left join
-                                res_currency rc on rc.id=%s
-                            where    
-                                kcf.date_stop = (select 
-                                            max(date_stop) 
-                                           from 
-                                            kderp_cash_fiscalyear kcf 
-                                           where
-                                            %s )) vwsub_openning on 1 = 1
-                        left join
-                            (Select
+                            (Select 
                                 sum(coalesce(debit,0)-coalesce(credit,0)) as opening_balance
                             from 
-                                kderp_detail_cash_advance kdca                                
+                                kderp_detail_cash_advance kdca
                             left join
-                                res_currency rc on kdca.currency_id=rc.id
+                                res_currency rc on currency_id=rc.id
                             left join
                                 res_users ru on substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1) ilike case when location_user='haiphong' then 'P' else case when location_user='hanoi' then 'H' else '_' end end
                             where
-                                %s and
-                                currency_id=%s and 
-                                ru.id=%s
-                            ) vwopenning on 1=1
+                                %s and currency_id=%s and ru.id=%s) vwopenning on 1=1
                         left join
-                            res_currency rc on kcrw.currency_id=rc.id 
+                            res_currency rc on currency_id=rc.id
+                        left join
+                            res_users ru on substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1) ilike case when location_user='haiphong' then 'P' else case when location_user='hanoi' then 'H' else '_' end end
                         where
-                            kcrw.id = %s
+                            kdca.date between '%s' and '%s' and currency_id=%s and ru.id=%s and
+                            substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1) ilike case when '%s'='haiphong' then 'P' else case when '%s'='hanoi' then 'H' else 'S' end end
                         group by
-                            opening_balance,
-                            closing_balance""" % (date_start,date_stop,
-                                                  location,
-                                                  obj.currency_id.id,
-                                                  condition_one_year,
-                                                  new_condition,
-                                                  obj.currency_id.id,uid,
-                                                  obj.id)
-            cr.execute(SQL)
+                            opening_balance""" % (new_condition,obj.currency_id.id,uid,date_start,date_stop,obj.currency_id.id,uid,location,location))
             result=cr.dictfetchone()
-
             if result:
                 res[obj.id]=result                         
         return res
