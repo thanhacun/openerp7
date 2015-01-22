@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	
+    	<record id="view_kderp_supplier_payment_expense_filter_inherit" model="ir.ui.view">
+            <field name="name">kderp.supplier.payment.expense.list.select.inherit</field>
+            <field name="model">kderp.supplier.payment.expense</field>
+            <field name='inherit_id' ref='kderp_supplier_payment.view_kderp_supplier_payment_expense_filter'/>
+            <field name="arch" type="xml">                
+				<field name="supplier_id" position='replace'>
+					<field name="supplier_id" string="Supplier"/>
+				</field>
+			</field>
+		</record>    	    
+
+	</data>
+</openerp>
