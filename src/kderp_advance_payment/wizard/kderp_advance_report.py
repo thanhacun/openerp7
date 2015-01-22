@@ -97,7 +97,7 @@ class kderp_advance_report_wizard(osv.osv_memory):
     
     def _get_period(self, cr, uid, context=None):
         ctx = dict(context or {}, account_period_prefer_normal=True)
-        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev=True)
+        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev=False)
         if periods:
             return periods[0]
         return False
@@ -105,7 +105,7 @@ class kderp_advance_report_wizard(osv.osv_memory):
     def _get_details_defaults(self, cr, uid, context=None):
         res=[]
         ctx = dict(context or {}, account_period_prefer_normal=True)
-        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev=True)
+        periods = self.pool.get('kderp.cash.period').find(cr, uid, context=ctx,prev=False)
         if periods:
             dates = self.pool.get('kderp.cash.period').read(cr, uid, periods[0],['date_start','date_stop'],context)
             date_start=dates['date_start']

@@ -8,11 +8,14 @@
             <field name="model">kderp.cash.fiscalyear</field>
             <field name="arch" type="xml">
                 <form string="Fiscal year" version="7.0">
-                <header>
-                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_highlight"/>
-                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" nolabel="1" />
-                </header>
+	                <header>
+	                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_highlight"/>
+	                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_highlight"/>
+	                    <button name="action_close" states="draft" string="Close" type="object"/>
+	                    <button name="action_draft" states="done" string="Draft" type="object"/>
+	                    <field name="state" widget="statusbar" nolabel="1" />
+	                </header>
+	                <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -41,6 +44,7 @@
                             </group>
                         </form>
                     </field>
+                    </sheet>
                 </form>
             </field>
         </record>
