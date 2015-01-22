@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CashOnHand" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="32"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;detail_ids&apos;]"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
@@ -169,9 +169,9 @@
 					<text><![CDATA[(Diễn giải)]]></text>
 				</staticText>
 				<textField pattern="MMMMM yyyy">
-					<reportElement x="485" y="30" width="55" height="20"/>
+					<reportElement x="485" y="30" width="110" height="20"/>
 					<textElement verticalAlignment="Top">
-						<font fontName="Arial" size="6" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{Date-date}]]></textFieldExpression>
 				</textField>
