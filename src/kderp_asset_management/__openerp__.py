@@ -36,7 +36,8 @@
             "wizard/kderp_asset_wizard_view.xml",
             "kderp_asset_management_view.xml",
             "data/kderp_asset_management_data.xml",
-            "wizard/kderp_asset_report_report.xml"
+            "wizard/kderp_asset_report_report.xml",
+            "views/kderp_asset_import_view.xml"
             ],
     'demo':[],
     'installable':True

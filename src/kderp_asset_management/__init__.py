@@ -20,4 +20,6 @@
 ##############################################################################
 import kderp_asset_management
 import wizard
+
+import kderp_asset_import
 #import kderp_quotation_contract_project_line
