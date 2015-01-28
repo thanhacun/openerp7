@@ -87,16 +87,16 @@ class kderp_import_asset_detail(Model):
     _rec_name = 'asset_id'
     
     _columns={
-              'import_id':fields.many2one('kderp.asset.import','Import', required=True, ondelete='cascade'),
-              'asset_id':fields.many2one('kderp.asset.management','Asset', required=True),
-              'date':fields.date('Date', required=True),
-              'user_id':fields.many2one('hr.employee','User'),
+              'import_id':fields.many2one('kderp.asset.import','Import', required=True, states={'done':[('readonly',True)]}),
+              'asset_id':fields.many2one('kderp.asset.management','Asset', required=True, states={'done':[('readonly',True)]}),
+              'date':fields.date('Date', required=True, states={'done':[('readonly',True)]}),
+              'user_id':fields.many2one('hr.employee','User', states={'done':[('readonly',True)]}),
               'state':fields.selection((('draft','Draft'),('done','Completed')),'State',readonly=True),
               'reason':fields.char("Reason", size=128, readonly = True),
-              'manager_id':fields.many2one('hr.employee','Manager'),
-              'location_id':fields.many2one('kderp.asset.location','Location'),
-              'remarks':fields.char('Remark',size=256),
-              'job_id':fields.many2one('kderp.job','Job'),
+              'manager_id':fields.many2one('hr.employee','Manager', states={'done':[('readonly',True)]}),
+              'location_id':fields.many2one('kderp.asset.location','Location', states={'done':[('readonly',True)]}),
+              'remarks':fields.char('Remark',size=256, states={'done':[('readonly',True)]}),
+              'job_id':fields.many2one('kderp.job','Job', states={'done':[('readonly',True)]}),
               }
     _defaults = {
                  'state':lambda *x: 'draft'
