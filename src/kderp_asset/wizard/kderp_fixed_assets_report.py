@@ -290,12 +290,10 @@ class kderp_fixed_assets_detail_report(osv.osv):
                     Select 
                         kam.id as asset_id,
                         0 as original_price,
-                        
-                        case when 
-                            coalesce(price*quantity,0)-(coalesce(previous_depreciation,0)+sum(coalesce(kad.amount,0))+coalesce(partial_accumulated_amount,0))=0 
-                        then 0 
-                            else sum(coalesce(kad.amount,0))+price*quantity- ((case when using_remaining then price*quantity -remaining_amount else 0 end)+sum(coalesce(kad.amount,0))) 
-                        end as depreciation,
+                        sum(coalesce(kad.amount,0)) + coalesce(partial_accumulated_amount,0)
+                        + coalesce(price*quantity,0) - coalesce(previous_depreciation,0) - coalesce(partial_accumulated_amount,0) - sum(coalesce(kad.amount,0)) as depreciation,
+                        --((case when using_remaining then price*quantity -remaining_amount else 0 end)+sum(coalesce(kad.amount,0))) 
+                        --end as depreciation,
                         
                         price*quantity as reduce,-- -sum(coalesce(kad.amount,0))
                         0 as accumulated_depreciation
