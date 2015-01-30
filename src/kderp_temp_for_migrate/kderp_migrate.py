@@ -1017,6 +1017,23 @@ class kderp_migrate(osv.osv_memory):
                 fo1.close()
         return True
     
+    #Update VAT Received Amount in Job after changing Formulas
+    def update_vat_received(self, cr, uid, ids, context): #Temp don't used, using query 
+        SQL = "Select min(id),account_analytic_id from kderp_expense_budget_line group by account_analytic_id"
+        jb_obj = self.pool.get('kderp.expense.budget.line')
+        cr.execute(SQL)
+        for id,job_id in cr.fetchall():
+            jb_obj.write(cr, uid, [id], {})
+        return True
+    
+    #Update Contracted Amount after changing formulas
+    def update_contracted_job_and_contract(self, cr, uid, ids, context):
+        SQL = "Select id,default_curr from kderp_contract_currency where default_curr and contract_id is not null"
+        kcc_obj = self.pool.get('kderp.contract.currency')
+        cr.execute(SQL)
+        for id,default in cr.fetchall():
+            kcc_obj.write(cr, uid, [id], {})
+        return True
 kderp_migrate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

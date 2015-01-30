@@ -79,6 +79,21 @@ class kderp_supplier_vat_invoice(osv.osv):
             this_time=po_amt
         return this_time
     
+    def _new_total_vnd(self, cr, uid, context={}):
+        if not context:
+            context={}
+        this_time=0
+        if context.get('order_id',False):
+            exp_id = context.get('order_id',0)
+            po_amt=self.pool.get("purchase.order").read(cr,uid,exp_id,['amount_total','exrate'])
+            this_time = po_amt['amount_total'] * po_amt['exrate']
+            
+        if context.get('expense_id',False):
+            exp_id = context.get('expense_id',0)
+            po_amt=self.pool.get("kderp.other.expense").read(cr,uid,exp_id,['amount_total'])['amount_total']            
+            this_time=po_amt
+        return this_time
+    
     def _new_vat(self, cr, uid, context={}):
         if not context:
             context={}
@@ -135,21 +150,7 @@ class kderp_supplier_vat_invoice(osv.osv):
             exp_id = context.get('expense_id',0)
             po_amt=self.pool.get("kderp.other.expense").read(cr,uid,exp_id,['exrate'])['exrate']
             this_time=po_amt
-        return this_time
-    
-#     def _new_equivnd(self, cr, uid, context={}):
-#         if not context:
-#             context={}
-#         this_time=0
-#         if context.get('order_id',False):
-#             exp_id = context.get('order_id',0)
-#             po_list=self.pool.get("purchase.order").read(cr,uid,exp_id,['exrate','amount_total'])
-#             this_time=po_list['amount_total']*po_list['exrate']
-#         if context.get('expense_id',False):
-#             exp_id = context.get('expense_id',0)
-#             exp_list=self.pool.get("kderp.other.expense").read(cr,uid,exp_id,['exrate','amount_total'])['exrate']
-#             this_time=exp_list['amount_total']*exp_list['exrate']
-#         return this_time
+        return this_time    
     
     def _get_currency(self, cr, uid, context={}):
         if not context:
@@ -200,7 +201,7 @@ class kderp_supplier_vat_invoice(osv.osv):
                'subtotal':_new_subtotal,
                'amount_tax':_new_vat,
                'total_amount':_new_total,
-               #'equivalent_vnd':lambda *x:0.0,
+               'equivalent_vnd':_new_total_vnd,
                'rate':_new_exrate,
                'received_date':_new_date,
                }
@@ -223,24 +224,24 @@ class kderp_supplier_vat_invoice(osv.osv):
         return result
     
     def onchange_totalamount(self, cr, uid, ids, amount, qvnd, rate,type):
-        if type=='qe':
+        if type=='ev':
             value={'rate':qvnd/amount if amount<>0 else 0}
-        elif type=='rate':
-            value={'equivalent_vnd':amount*rate}
         else:
-            value={}
+            value={'equivalent_vnd':amount*rate}
+        #else:
+         #   value={}
         return {'value':value}
     
-    def on_changevalue_per(self, cr, uid, ids, amount, tax_per,amount_tax=0,rate=1):
+    def on_changevalue_per(self, cr, uid, ids, amount, tax_per, amount_tax=0,dump = 0):
         if abs(amount*tax_per/100.0-amount_tax)<=2:
             amount_tax=amount_tax
         else:
             amount_tax=amount*tax_per/100.0
-        result={'amount_tax':amount_tax,'total_amount':amount_tax+amount,'equivalent_vnd':(amount_tax+amount)*rate}
+        result={'amount_tax':amount_tax,'total_amount':amount_tax+amount}
         return {'value':result}
     
-    def on_changevalue(self, cr, uid, ids, amount, amount_tax,rate=1):
-        result={'total_amount':amount_tax+amount,'equivalent_vnd':(amount_tax+amount)*rate}
+    def on_changevalue(self, cr, uid, ids, amount, amount_tax,dump = 0):
+        result={'total_amount':amount_tax+amount}
         return {'value':result}
     
 kderp_supplier_vat_invoice()

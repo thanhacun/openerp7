@@ -105,6 +105,10 @@
                     <button name='update_ia' type='object' string='2. Update Temp'/>
                     </h3>
                     
+                    <!-- UPDATED CHAING FORMULAS -->
+                    <label string='8. UPDATED CHANGE FORMULAS'/>
+                    <label string="1. Update Job - VAT Received, don't use pls. run query `Job VAT Received Amount.sql`"/> <!-- button name='update_vat_received' type='object'  -->
+                    <button name='update_contracted_job_and_contract' type='object' string='2. Update Job &amp; Contract - Contracted Amount'/>                    
                 </form>
             </field>
         </record>

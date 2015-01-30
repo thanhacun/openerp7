@@ -20,7 +20,8 @@ class kderp_contract_client(Model):
             contract_obj={}
             #Them tong gia tri cua contract vao mot object, kiem tra xem currency co giong currency cua company khong 
             for ctc_curr in ctc.contract_summary_currency_ids:
-                contract_obj.update({ctc_curr.name.id:{'amount':ctc_curr.amount,'tax_amount':ctc_curr.tax_amount,'currency_id':ctc_curr.name.id,'must_convert':company_currency_id!=ctc_curr.name.id}})
+                contract_obj.update({ctc_curr.name.id:{'amount':ctc_curr.amount,'tax_amount':ctc_curr.tax_amount,'currency_id':ctc_curr.name.id,
+                                                       'must_convert':company_currency_id!=ctc_curr.name.id}})
 
             contracted_amount = 0.0
             contracted_tax = 0.0
@@ -79,11 +80,11 @@ class kderp_contract_client(Model):
                         for kr in inv.received_ids:
                             collected_total_amount_vnd+=kr.amount*kr.exrate                        
                         #Calculation base on Collected Amount
-                        claim_tax= round_base((amount_tax / amount_untaxed if amount_untaxed<>0 else 0)*100,5)                        
+                        #claim_tax= round_base((amount_tax / amount_untaxed if amount_untaxed<>0 else 0)*100,5)                        
                         
                         #Collected                        
-                        collected_vnd_subtotal=collected_total_amount_vnd/(1+claim_tax/100.0)
-                        collected_vnd_tax=collected_vnd_subtotal*claim_tax/100.0
+                        collected_vnd_subtotal = round_base(inv.amount_untaxed * inv.exrate, 5)  #collected_total_amount_vnd/(1+claim_tax/100.0)
+                        collected_vnd_tax = round_base(inv.amount_tax * inv.exrate, 5) # collected_vnd_subtotal*claim_tax/100.0
 
                         contract_collect_total+=collected_total_amount_vnd
                         contract_collect_amount+=collected_vnd_subtotal

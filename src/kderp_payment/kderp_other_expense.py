@@ -88,7 +88,10 @@ class kderp_other_expense(osv.osv):
         
         for koe in self.browse(cr, uid, ids):
             total_request_amount=0
-            total_vat_amount=0
+            total_vat_amount = 0
+            total_vat_amount = 0
+            subtotal_vat_amount = 0
+            vat_amount = 0
             total_payment_amount=0
             
             koe_currency_id = koe.currency_id.id
@@ -107,8 +110,9 @@ class kderp_other_expense(osv.osv):
                     total_request_amount+=cur_obj.compute(cr, uid, kspe.currency_id.id, koe_currency_id, request_amount, round=True, context=context)
                     #Cal total VAT Amount
                     for kspvi in kspe.kderp_vat_invoice_ids:
-                        vat_amount=kspvi.total_amount
-                        total_vat_amount+=cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, vat_amount, round=True, context=context)
+                        total_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, kspvi.total_amount, round=True, context=context)
+                        subtotal_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, kspvi.subtotal, round=True, context=context)
+                        vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, kspvi.amount_tax, round=True, context=context)
                     cal=True
                     koe_subtotal_amount-=kspe.amount
                     for kp in kspe.payment_ids:
@@ -131,7 +135,9 @@ class kderp_other_expense(osv.osv):
             res[koe.id]={'total_request_amount':total_request_amount,
                         'total_vat_amount':total_vat_amount,
                         'total_payment_amount':total_payment_amount,
-                        'payment_percentage':payment_percentage}
+                        'payment_percentage':payment_percentage,
+                        'subtotal_vat_amount': subtotal_vat_amount,
+                        'vat_amount':vat_amount}
         return res
     
     def _get_order_from_supplier_payment(self, cr, uid, ids, context=None):
@@ -179,6 +185,20 @@ class kderp_other_expense(osv.osv):
                                                               'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
                                                              }),
               'total_vat_amount':fields.function(_get_summary_payment_amount,string='Total Invoice Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date'], 20),
+                                                              'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','kderp_vat_invoice_ids'], 25),
+                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                             }),
+              'subtotal_vat_amount':fields.function(_get_summary_payment_amount,string='Subtotal Invoice Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date'], 20),
+                                                              'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','kderp_vat_invoice_ids'], 25),
+                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                             }),
+              'vat_amount':fields.function(_get_summary_payment_amount,string='VAT Invoice Amt.',
                                                        method=True,type='float',multi="_get_summary",
                                                        store={
                                                               'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date'], 20),

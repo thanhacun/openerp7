@@ -122,7 +122,9 @@ class purchase_order(osv.osv):
         
         for po in self.browse(cr, uid, ids):
             total_request_amount=0
-            total_vat_amount=0
+            total_vat_amount = 0
+            subtotal_vat_amount = 0
+            amount_vat = 0
             total_payment_amount=0
             
             po_currency_id = po.currency_id.id
@@ -142,9 +144,10 @@ class purchase_order(osv.osv):
                     request_amount=ksp.total
                     total_request_amount+=cur_obj.compute(cr, uid, ksp.currency_id.id, po_currency_id, request_amount, round=True, context=context)
                     #Cal total VAT Amount
-                    for kspvi in ksp.kderp_vat_invoice_ids:
-                        vat_amount=kspvi.total_amount
-                        total_vat_amount+=cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, vat_amount, round=True, context=context)
+                    for kspvi in ksp.kderp_vat_invoice_ids:                                               
+                        total_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.total_amount, round=True, context=context)
+                        subtotal_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.subtotal, round=True, context=context)
+                        amount_vat += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.amount_tax, round=True, context=context)
                     cal=True
                     po_final_price-=ksp.sub_total
                     exrate = ksp.exrate
@@ -168,7 +171,9 @@ class purchase_order(osv.osv):
             res[po.id]={'total_request_amount':total_request_amount,
                         'total_vat_amount':total_vat_amount,
                         'total_payment_amount':total_payment_amount,
-                        'payment_percentage':payment_percentage}
+                        'payment_percentage':payment_percentage,
+                        'subtotal_vat_amount':subtotal_vat_amount,
+                        'vat_amount':amount_vat}
         return res
     
     def _check_po_budgetover(self, cr, uid, ids, fields, arg, context={}):
@@ -235,6 +240,20 @@ class purchase_order(osv.osv):
                                                        store={
                                                               'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order'], 20),
                                                               'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','kderp_vat_invoice_ids'], 25),
+                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                             }),
+              'subtotal_vat_amount':fields.function(_get_summary_payment_amount,string='Sub-Total Invoice Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order'], 20),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','kderp_vat_invoice_ids'], 30),
+                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                             }),
+              'vat_amount':fields.function(_get_summary_payment_amount,string='VAT Invoice Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order'], 20),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','kderp_vat_invoice_ids'], 30),
                                                               'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
                                                              }),
               'total_payment_amount':fields.function(_get_summary_payment_amount,string='Payment Amt.',
