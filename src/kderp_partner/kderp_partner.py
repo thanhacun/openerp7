@@ -22,7 +22,7 @@ class Bank(Model):
         if not args:
             args = []
         if not context:
-            context = {}
+            context = {}        
         if name:
             ids = self.search(cr, uid, [('short_name', '=', name)] + args, limit=limit, context=context)
             if not ids:
@@ -107,7 +107,10 @@ class res_partner(Model):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-                
+    
+        if context.get('inactive', False):
+            args += ['|',('active','=',True),('active','=',False)]
+            
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             # search on the name of the contacts and of its company
             search_name = name
