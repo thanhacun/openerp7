@@ -8,7 +8,34 @@ class account_budget_post(osv.osv):
     """
     _name = 'account.budget.post'
     _inherit = 'account.budget.post'
-    
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        job_id = context.get('job_id', False) 
+        
+        if job_id:
+            general_expense = context.get('general_expense', False)          
+            budget_ids = []
+            cr.execute("""select 
+                            budget_id
+                        from 
+                            kderp_budget_data
+                        where 
+                            account_analytic_id=%s
+                        Union
+                        Select 
+                            id
+                        from
+                            account_budget_post abp
+                        where
+                            general_expense = %s and nofilter""" % (job_id, general_expense))
+            for budget_id in cr.fetchall():
+                budget_ids.append(budget_id[0])
+            args.append((('id', 'in', budget_ids)))
+
+        return super(account_budget_post, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
+
     _columns = {
                 'general_expense':fields.boolean("General Expense?", help = 'Check if budget using for General Expense'),
                 'nofilter':fields.boolean("Filter?")

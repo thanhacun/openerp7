@@ -46,30 +46,24 @@ class account_budget_post(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
-        job_id = context.get('job_id', False) 
+        job_id = context.get('job_id',0)
         
-        if job_id:
-            general_expense = context.get('general_expense', False)          
+        if context.has_key('job_id'):
+            if not job_id:
+                job_id=0          
             budget_ids = []
             cr.execute("""select 
                             budget_id
                         from 
                             kderp_budget_data
                         where 
-                            account_analytic_id=%s
-                        Union
-                        Select 
-                            id
-                        from
-                            account_budget_post abp
-                        where
-                            general_expense = %s and nofilter""" % (job_id, general_expense))
+                            account_analytic_id=%s""" % job_id)
             for budget_id in cr.fetchall():
                 budget_ids.append(budget_id[0])
             args.append((('id', 'in', budget_ids)))
 
-        return super(account_budget_post, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
-
+        return super(account_budget_post, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)    
+    
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
