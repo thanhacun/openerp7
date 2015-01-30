@@ -20,3 +20,4 @@
 ##############################################################################
 
 import update_contract_status
+import create_contract_from_quotation
