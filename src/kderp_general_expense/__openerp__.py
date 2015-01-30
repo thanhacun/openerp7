@@ -43,8 +43,9 @@
             "views/kderp_other_expense_view.xml",
             "views/kderp_departments_view.xml",
             "data/kderp_check_update_exp.xml",
-            "views/kderp_batch_update_view.xml",
+            #"views/kderp_batch_update_view.xml",
             "security/kderp_general_expense_rule.xml",
+            'wizard/update_monthly_expense_view.xml'
             ],
     'demo':[],
     'installable':True
