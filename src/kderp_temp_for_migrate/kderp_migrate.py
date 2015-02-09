@@ -188,6 +188,24 @@ class kderp_migrate(osv.osv_memory):
         fo.close();
         return True
     
+    def write_quotation_actual_completion_date(self, cr, uid, ids, context):
+        cr.execute("""Select 
+                            id,
+                            completion_date_contract
+                        from
+                            sale_order so
+                        where
+                            completion_date is null and completion_date_contract is not null
+                            """)
+        so_obj = self.pool.get('sale.order')        
+        for so_id, so_date in cr.fetchall():
+            try:            
+                result=so_obj.write(cr, uid, [so_id],{'completion_date': so_date})            
+                cr.commit()
+            except:            
+                continue
+        return True
+    
     def write_sol(self, cr, uid, ids, context):
         cr.execute("""Select 
                             id,

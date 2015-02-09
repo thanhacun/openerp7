@@ -211,4 +211,9 @@ div.oe_sidebar > div:nth-last-child(1) > ul:nth-last-child(1) > li:nth-last-chil
   background-image:url('/kderp_web/static/src/img/oe_banner.jpg') !important;
   background-size:100% !important; 
 }
+
+.openerp .oe_logo
+	{
+		background: transparent !important;
+	}
 /*Trang tri khu vuc thanh tieu de*/
