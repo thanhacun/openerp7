@@ -72,6 +72,7 @@ class kderp_create_allocation_sheet(osv.osv_memory):
         obj = self.browse(cr,  uid, ids[0], context)
         ge_obj = self.pool.get('kderp.other.expense')
         ge_id = context.get('ge_id', False)
+        
         if ge_id:
             if not obj.startdate_default:
                 val = {'number_of_month': obj.number_of_month
