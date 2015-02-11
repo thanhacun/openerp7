@@ -96,7 +96,7 @@ class kderp_wizard_packing_payment(osv.osv_memory):
                 payment_details = []
                 cr.execute("Select\
                                 pol.account_analytic_id,\
-                                sum(final_subtotal)\
+                                sum(coalesce(sm.product_qty,0)*(coalesce(pol.final_subtotal,0)/coalesce(pol.plan_qty,0)))\
                             from stock_move sm\
                             left join purchase_order_line pol on purchase_line_id = pol.id\
                             where pol.order_id=%s\
