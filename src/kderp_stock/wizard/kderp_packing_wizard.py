@@ -51,7 +51,7 @@ class kderp_wizard_packing_payment(osv.osv_memory):
             raise osv.except_osv("KDERP Warning","One or more packing already created payment !")
         
         for po in pay_obj.browse(cr, uid, record_ids, context=context):
-            if po.state in ('draft', 'cancel') or po.purchase_id.state in ('draft', 'cancel'):
+            if po.state in ('draft', 'cancel') or po.purchase_id.state in ('draft', 'cancel', 'done'):
                 raise osv.except_osv("KDERP Warning","Check status Purchase and Packing !")
                         
             cr.execute("Select\
