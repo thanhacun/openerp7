@@ -12,7 +12,10 @@
 	        	</field>
 				<field name='state' position="attributes">
 	            	<attribute name="readonly">1</attribute>
-	        	</field>	        	
+	        	</field>
+	        	<field name='invoice_address_id' position='after'>
+	        		<field name='project_location_id'/>
+	        	</field>
 			</field>
 		</record>
 		

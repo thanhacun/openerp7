@@ -36,6 +36,7 @@ class account_analytic_account(osv.osv):
                 'process_status':fields.selection([('doing','On-Going'),('done','Completed'),('closed','Closed'),('cancel','Cancelled')],"Process Status",select=1),
                 #Them truong moi
                 'remark':fields.text('Remark'),
+                'project_location_id':fields.many2one('kderp.location','Project Location',ondelete='restrict'),
               }
 
     def onchange_job_code(self, cr, uid, ids, code):

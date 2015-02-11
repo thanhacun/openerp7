@@ -5,7 +5,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
-
+from datetime import date
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _inherit = 'account.analytic.account'
@@ -506,7 +506,9 @@ class account_analytic_account(osv.osv):
                'code':lambda *x:'',
                'state':lambda *x:'doing',
                'process_status':lambda *x:'doing',
-               'user_id': False,               
+               'user_id': False,
+               'date_start':False,
+               "registration_date": date.today().strftime("%Y-%m-%d")
                }
     _sql_constraints = [
         ('unique_code_analytic_account', 'unique (code)',  'Job code must be unique')

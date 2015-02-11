@@ -106,9 +106,15 @@
                     </h3>
                     
                     <!-- UPDATED CHAING FORMULAS -->
-                    <label string='8. UPDATED CHANGE FORMULAS'/>
+                    <label string='9. UPDATED CHANGE FORMULAS'/>
                     <label string="1. Update Job - VAT Received, don't use pls. run query `Job VAT Received Amount.sql`"/> <!-- button name='update_vat_received' type='object'  -->
-                    <button name='update_contracted_job_and_contract' type='object' string='2. Update Job &amp; Contract - Contracted Amount'/>                    
+                    <button name='update_contracted_job_and_contract' type='object' string='2. Update Job &amp; Contract - Contracted Amount'/>
+                    <h3>
+	                    <br/><br/><br/><br/><br/><br/>
+	                    <!-- UPDATED QUOTATION COMPLETION-->
+	                    <label string='10. UPDATED QUOTATION COMPLETION'/>                    
+	                    <button name='write_quotation_actual_completion_date' type='object' string='Update Quotation Completion Date'/>
+                    </h3>
                 </form>
             </field>
         </record>

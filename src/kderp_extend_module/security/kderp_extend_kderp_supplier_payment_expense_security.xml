@@ -16,7 +16,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 			<field name="global" eval="False"/>
-	    	<field name="domain_force">[('expense_id','in',"((select expense_id from kderp_other_expense_line where account_analytic_id in (Select distinct id from account_analytic_account where code ilike 'PE%' or code ilike 'PP%' or code ilike 'PM%')).sql.query)"),('payment_type','=','cash')]</field>
+	    	<field name="domain_force">[('expense_id','in',"((select expense_id from kderp_other_expense_line where account_analytic_id in (Select distinct id from account_analytic_account where code ilike 'PE%' or code ilike 'PP%' or code ilike 'PM%')).sql.query)")]</field>
 	   		<field eval="[(6,0,[ref('group_kderp_supplier_payment_expense_read_only_bankstransfer')])]" name="groups"/>
 	    </record>
 
