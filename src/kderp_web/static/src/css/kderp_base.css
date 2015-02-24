@@ -192,28 +192,3 @@ div.oe_sidebar > div:nth-last-child(1) > ul:nth-last-child(1) > li:nth-last-chil
 	min-height: inherit;
 }
 
-
-/*Trang tri khu vuc thanh tieu de*/
-/*.openerp .oe_application .oe_breadcrumb_item:last-child:after{
-.greeting {
-        color:#FF3366;
-        font-style:italic;
-        font-size:1.2em;
-        content:"   ___Merry Xmas & Happy New Year!___";
-}*/
-
-.openerp .oe_leftbar{
-  background-image:url('/kderp_web/static/src/img/oe_leftbar.png');
-  background-size:100%;
-}
-
-.openerp .oe_view_manager_current > .oe_view_manager_header{
-  background-image:url('/kderp_web/static/src/img/oe_banner.jpg') !important;
-  background-size:100% !important; 
-}
-
-.openerp .oe_logo
-	{
-		background: transparent !important;
-	}
-/*Trang tri khu vuc thanh tieu de*/
