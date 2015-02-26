@@ -80,15 +80,15 @@ class kderp_contract_client(osv.osv):
         cr.execute("""select 
                             kccl.id,
                             rc.name,
-                            kccu.amount
+                            coalesce( kccu.amount,0)
                         from 
                             kderp_contract_client kccl
                         left join 
-                            kderp_contract_currency kccu on kccu.contract_id = kccl.id  
+                            kderp_contract_currency kccu on kccl.id = kccu.contract_id  and default_curr = true
                         left join 
-                            res_currency rc on rc.id = kccu.name
+                            res_currency rc on kccu.name = rc.id
                         where 
-                            kccl.id in (%s) and default_curr = true
+                            kccl.id in (%s)
                         group by
                             kccl.id, rc.name, kccu.amount""" % (c_ids))
         for id, cur_contract_info, amount_contract_info in cr.fetchall():
@@ -113,7 +113,7 @@ class kderp_contract_client(osv.osv):
                                              ),
               }
     _defaults={
-               'availability':lambda *x: 'inused'
+               'availability':lambda *x: 'inused',
                }
 kderp_contract_client()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
