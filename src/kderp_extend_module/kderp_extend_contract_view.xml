@@ -8,13 +8,24 @@
             <field name="model">kderp.contract.client</field>
             <field name='inherit_id' ref='kderp_contract.kderp_view_contract_client_tree'/>
             <field name="arch" type="xml">
-				<field name="client_id" position='after'>
-					<field name='registration_date'/>
-					<field name='revise_date'/>
-					<field name='contracted_amount'/>
-					<field name='availability'/>
-					<field name='remark'/>
-				</field>
+            	 <tree string="Contract" position='replace'>
+	            	 <tree string="Contract">
+	            	 	<field name="code"/>
+	            	 	<field name='contract_ref'/>
+	            	 	<field name="client_id" invisible="'client_id' in context.get('group_by',[])"/>
+	            	 	<field name="project_name"/>
+	            	 	<field name="name"/>
+	            	 	<field name='amount_contract_info'/>
+	            	 	<field name='cur_contract_info'/>
+						<field name='registration_date'/>
+						<field name='revise_date'/>
+						<field name='contracted_amount'/>
+						<field name='availability'/>
+						<field name='remark'/>
+						<field name="state" invisible="'state' in context.get('group_by',[])"/>
+	                    <field name="outstanding"/>
+	                  </tree>
+				</tree>
 			</field>
 		</record>
                    

@@ -74,12 +74,43 @@ class kderp_contract_client(osv.osv):
             val={'address_id':address_id,'invoice_address_id':invoice_address_id}
         return {'value':val}
     
+    def _get_value_from_contract_info(self, cr, uid, ids, field_name, arg, context=None):
+        res={}
+        c_ids = ",".join(map(str,ids))
+        cr.execute("""select 
+                            kccl.id,
+                            rc.name,
+                            kccu.amount
+                        from 
+                            kderp_contract_client kccl
+                        left join 
+                            kderp_contract_currency kccu on kccu.contract_id = kccl.id  
+                        left join 
+                            res_currency rc on rc.id = kccu.name
+                        where 
+                            kccl.id in (%s) and default_curr = true
+                        group by
+                            kccl.id, rc.name, kccu.amount""" % (c_ids))
+        for id, cur_contract_info, amount_contract_info in cr.fetchall():
+            res[id]={'cur_contract_info':cur_contract_info,
+                     'amount_contract_info':amount_contract_info,
+                    }
+        return res
+
     AVAILABILITY_SELECTION = [('inused',"IN USE"),("cancelled","CANCELLED")]
     
     _columns={
                 'revise_date': fields.date('Rev. Date'),
                 'availability':fields.selection(AVAILABILITY_SELECTION,'Availability',readonly=True),
-                'remark':fields.char('Remark',size=128)
+                'remark':fields.char('Remark',size=128),
+                'cur_contract_info':fields.function(_get_value_from_contract_info,type='char',
+                                            size='8',method=True,string='Currency',
+                                            multi='_get_value_from_contract_info',
+                                             ),
+                'amount_contract_info':fields.function(_get_value_from_contract_info,type='float',
+                                            method=True,string='Amount',
+                                            multi='_get_value_from_contract_info',
+                                             ),
               }
     _defaults={
                'availability':lambda *x: 'inused'
