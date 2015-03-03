@@ -45,4 +45,23 @@ jasper_reports.report_jasper(
    parser=kderp_material_sub_con_sheet
 )
 
+def kderp_material_sub_con_ex_sheet(cr, uid, ids, data, context):
+    if not context:
+        context={}
+    #Check if print from Purchase find Job IDs in Purchase
+    if context.get('active_model','')=='purchase.order':
+        job_ids=[]
+        for po in pooler.get_pool(cr.dbname).get('purchase.order').browse(cr, uid, ids):
+            for pol in po.order_line:
+                job_ids.append(pol.account_analytic_id.id)
+        job_ids=list(set(job_ids))
+        ids=job_ids
+                        
+    return {'ids': ids,                        
+            }
+jasper_reports.report_jasper(
+   'report.kderp.material.sub.con.ex.sheet',
+   'account.analytic.account',
+   parser=kderp_material_sub_con_ex_sheet
+)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
