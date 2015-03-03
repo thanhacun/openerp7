@@ -132,7 +132,7 @@ class kderp_create_allocation_sheet(osv.osv_memory):
                         else:
                             allocated_amount = gel.amount - round(gel.amount / number_of_month) * (number_of_month - 1)
                         exp_line.append((0, False, 
-                                         {'account_analytic_id': gel.account_analytic_id.id,
+                                         {'account_analytic_id': job_id,
                                           'budget_id': obj.budget_id.id,
                                           'belong_expense_id': ge.id,
                                           'asset_id': ge.link_asset_id.id if ge.link_asset_id else False,
