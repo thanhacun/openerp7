@@ -67,11 +67,13 @@ class stock_picking(osv.osv):
         return True
     
     _columns = {
+        'check_payment':fields.many2one('kderp.supplier.payment', 'Supplier Payment'),
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True, required=True),
         'received_date':fields.date('Received Date'),
     }
 
     _defaults = {
-        'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
-    }
+                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
+                }
+
