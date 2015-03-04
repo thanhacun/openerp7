@@ -14,6 +14,13 @@
 			</field>
 		</record>
 		
+		<act_window
+            id="action_open_purchase_from_a_product"
+            name="Open Purchase(s) Related"
+            res_model="purchase.order"
+            src_model="product.product"
+            domain="[('order_line.product_id','in',active_ids)]"/>
+            		
 		<!-- Material View Area -->			
 		<record id="kderp_price_history_data_tree" model="ir.ui.view">
             <field name="name">kderp.price.history.data.main.tree</field>
@@ -89,14 +96,8 @@
         <!-- Sub Parent menu -->
         <menuitem id="menu_material_price_historical_data" parent="kderp_material_price_wizard" name="Material Price Master List" sequence="5"/>
         <!-- Action Menu -->    	
-        <menuitem action="action_kderp_price_historical_data_main_view" id="menu_price_historical_data_view_item" parent="menu_material_price_historical_data"/>
-        
-		<act_window
-            id="action_open_purchase_from_a_product"
-            name="Open Purchase(s) Related"
-            res_model="purchase.order"
-            src_model="product.product"
-            domain="[('order_line.product_id','in',active_ids)]"/> 
+        <menuitem action="action_kderp_price_historical_data_main_view" id="menu_price_historical_data_view_item" parent="menu_material_price_historical_data"/>        
+		 
             
 	</data>
 </openerp>
