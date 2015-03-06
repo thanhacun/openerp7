@@ -50,3 +50,39 @@ def get_new_from_tree( cr, uid, id, object, lists, field, startnum=1, step_num=1
             max_sq = exist_max_val
     res = max_sq+step_num
     return res
+
+def get_new_value_from_tree( cr, uid, id, object, lists, field, context={}): 
+    list_nochange=[]
+    list_delete = [0]
+    lists_remain = []
+    res = False
+    for lst in lists:
+        if lst[0] in (2,3,5): #Delete Cut Link
+            list_delete.append(lst[1])
+        elif lst[0]==4:
+            list_nochange.append(lst[1])
+        elif lst[0]==1:
+            if field not in lst[2]:
+                list_nochange.append(lst[1])
+            else:
+                lists_remain.append(lst)
+        else:
+            lists_remain.append(lst)
+            
+    for lst in lists_remain:        
+        res = lst[2][field]
+        
+    if id and not res:
+        object_name = object.__class__.__name__
+        try:
+            table_name = object._table_name
+        except:
+            table_name = object_name.replace('.','_')
+            
+        res_id = max(list_nochange)        
+        
+        if res_id:
+            cr.execute("""Select %s from %s where id = %s""" % (field,table_name,res_id))
+            res = cr.fetchone()[0]            
+            
+    return res
