@@ -23,6 +23,7 @@ import time
 from openerp.osv import fields, osv, orm
 from kderp_base import kderp_base
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class kderp_prepaid_purchase_order(osv.osv):
     _name = 'kderp.prepaid.purchase.order'
@@ -127,10 +128,51 @@ class kderp_prepaid_purchase_order_line(osv.osv):
     _name = 'kderp.prepaid.purchase.order.line'
     _description = 'kderp.prepaid.purchase.order.line'
     
+    def onchange_product_id(self, cr, uid, ids, product_id, qty, uom_id, price_unit, context=None):
+        """
+        onchange handler of product_id.
+        """
+        if context is None:
+            context = {}
+  
+        res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
+        if not product_id:
+            return res
+  
+        product_product = self.pool.get('product.product')
+        product_uom = self.pool.get('product.uom')
+        
+        product = product_product.browse(cr, uid, product_id, context)
+        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+        if not name:
+            dummy, name = product_product.name_get(cr, uid, product_id, context,from_obj='pol')[0]
+            if product.description_purchase:
+                name = product.description_purchase
+        res['value'].update({'name': name})
+  
+        # - set a domain on product_uom
+#        res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
+  
+        # - check that uom and product uom belong to the same category
+        product_uom_po_id = product.uom_po_id.id
+        if not uom_id:
+            uom_id = product_uom_po_id
+  
+        res['value'].update({'product_uom': uom_id})
+  
+        # - determine product_qty and date_planned based on seller info 
+        qty = qty or 1.0
+        
+        if qty:
+            res['value'].update({'product_qty': qty})
+  
+        return res   
+  
     _columns={
               'product_id':fields.many2one('product.product','Product', required = True),
-              'product_uom':fields.many2one('product.uom', 'Unit', required = True),
-              'price_unit':fields.float('Price Unit', required = True),
+              'product_uom':fields.many2one('product.uom', 'Unit', required = True, digits=(16,2)),
+              'product_qty':fields.float("Quantity", required = True),
+              'price_unit':fields.float('Price Unit', required = True, digits_compute=dp.get_precision('Amount')),
               'name':fields.char('Description', required = True, size = 128),
               'location_id':fields.many2one('stock.location', 'Destination', required = True),
               'prepaid_order_id':fields.many2one('kderp.prepaid.purchase.order','Prepaid Order'),

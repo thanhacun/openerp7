@@ -79,7 +79,7 @@ def get_new_value_from_tree( cr, uid, id, object, lists, field, context={}):
         except:
             table_name = object_name.replace('.','_')
             
-        res_id = max(list_nochange)        
+        res_id = max(list_nochange) if list_nochange else False         
         
         if res_id:
             cr.execute("""Select %s from %s where id = %s""" % (field,table_name,res_id))
