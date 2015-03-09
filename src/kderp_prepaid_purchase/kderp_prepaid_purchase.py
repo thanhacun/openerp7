@@ -39,6 +39,54 @@ class kderp_prepaid_purchase_order(osv.osv):
     SELECTION_STATE = [('draft','Draft'),
                        ('approved','Approved')]
     
+    def onchange_date(self, cr, uid, ids, oldno, date):
+        val = {}
+        if not oldno and date:
+            cr.execute("""SELECT 
+                            wnewcode.pattern || 
+                            btrim(to_char(max(substring(wnewcode.code::text, length(wnewcode.pattern) + 1,padding )::integer) + 1,lpad('0',padding,'0'))) AS newcode
+                        from
+                            (
+                            SELECT 
+                                isq.name,
+                                isq.code as seq_code,
+                                isq.prefix || to_char(DATE '%s', suffix || lpad('_',padding,'_')) AS to_char, 
+                                CASE WHEN cnewcode.code IS NULL 
+                                THEN isq.prefix::text || to_char(DATE '%s', suffix || lpad('0',padding,'0'))
+                                ELSE cnewcode.code
+                                END AS code, 
+                                isq.prefix::text || to_char(DATE '%s', suffix) AS pattern,
+                                padding,
+                                prefix
+                            FROM 
+                                ir_sequence isq
+                            LEFT JOIN 
+                                (SELECT 
+                                    kderp_prepaid_purchase_order.code
+                                FROM 
+                                    kderp_prepaid_purchase_order
+                                WHERE
+                                    length(kderp_prepaid_purchase_order.code::text)=
+                                    ((SELECT 
+                                    length(prefix || suffix) + padding AS length
+                                    FROM 
+                                    ir_sequence
+                                    WHERE 
+                                    ir_sequence.code::text = 'kderp_prepaid_order_code'::text LIMIT 1))
+                                ) cnewcode ON cnewcode.code::text ~~ (isq.prefix || to_char(DATE '%s',  suffix || lpad('_',padding,'_'))) and isq.code::text = 'kderp_prepaid_order_code'::text  
+                            WHERE isq.active and isq.code::text = 'kderp_prepaid_order_code') wnewcode
+                        GROUP BY 
+                            pattern, 
+                            name,
+                            seq_code,
+                            prefix,
+                            padding""" %(date,date,date,date))
+            res = cr.fetchone()
+            if res:
+                val={'code':res[0]}
+        
+        return {'value':val}
+    
     _order="date desc, name desc"
     _columns={
               'code':fields.char('Code', required = True, size=16, select=1, readonly = True, states={'draft':[('readonly', False)]}),
@@ -75,7 +123,7 @@ class kderp_prepaid_purchase_order(osv.osv):
     
 kderp_prepaid_purchase_order()
 
-class kderp_prepaid_purchase_line(osv.osv):
+class kderp_prepaid_purchase_order_line(osv.osv):
     _name = 'kderp.prepaid.purchase.order.line'
     _description = 'kderp.prepaid.purchase.order.line'
     
@@ -89,8 +137,8 @@ class kderp_prepaid_purchase_line(osv.osv):
               }    
     
     _defaults = {
-                 #'product_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'product_id', context),
-                 #'product_uom': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'product_uom', context),
-                # 'location_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'location_id', context),
-                 #'price_unit': lambda *x: 0.0,
+                 'product_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'product_id', context),
+                 'product_uom': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'product_uom', context),
+                 'location_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'location_id', context),
+                 'price_unit': lambda *x: 0.0,
                  }

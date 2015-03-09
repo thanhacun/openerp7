@@ -33,6 +33,7 @@
     'data':[
              "security/kderp_prepaid_purchase_security.xml",
              "security/ir.model.access.csv",
+             "data/kderp_prepaid_purchase_code.xml",
              "views/kderp_prepaid_purchase_view.xml"
             ],
     'demo':[],
