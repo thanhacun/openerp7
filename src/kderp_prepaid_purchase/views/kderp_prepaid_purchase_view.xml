@@ -72,7 +72,7 @@
             		<field name="date"/>      		
             		<field name="partner_id"/>
             		
-            		<field string="Product" name="prepaid_order_line" filter_domain="[('prepaid_order_line','=',self)]"/>
+            		<field string="Product" name="prepaid_order_line" filter_domain="[('prepaid_order_line','ilike',self)]"/>
             		  
             		<filter string="Draft" domain="[('state','=','draft')]"/>
             		<filter string="Approved" domain="[('state','=','approved')]"/>
