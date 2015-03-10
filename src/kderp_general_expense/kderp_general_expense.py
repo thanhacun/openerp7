@@ -365,26 +365,4 @@ class kderp_other_expense_line(osv.osv):
         return True
     _constraints = [(_check_job_budget, 'Please check you Job and Budget you have just modify (No Budget Job) !', ['account_analytic_id','budget_id'])]
     
-    def action_open_related_exp(self, cr, uid, ids, *args):
-        context = filter(lambda arg: type(arg) == type({}), args)
-        if not context:
-            context = {}
-        else:
-            context = context[0]
-        context['general_expense'] = True                
-        
-        expense_id = self.browse(cr, uid, ids[0]).expense_id.id            
-            
-        interface_string = 'General Expense'
-        if expense_id:            
-            return {
-            'type': 'ir.actions.act_window',
-            'name': interface_string,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context': context,
-            'res_model': 'kderp.other.expense',
-            'domain': "[('id','=',%s)]" % expense_id
-            }
-        else:
-            return True
+#   
