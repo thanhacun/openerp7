@@ -59,6 +59,7 @@ class account_analytic_account(osv.osv):
                  'general_expense': lambda self, cr, uid, context={}:context.get('general_expense',False),
                  'code': lambda self, cr, uid, context={}:self.pool.get('ir.sequence').get(cr, uid, 'kderp.general.expense.code')[:-1] if context.get('general_expense',False) else ""
                  }
+    #Fuction get ID de mo Yearly G.E Budget tu GE vaf GE payment
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
             context = {}
@@ -68,6 +69,7 @@ class account_analytic_account(osv.osv):
                 view_id = views_ids[0]             
         return super(account_analytic_account, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
     
+     #Fuction action mo view Yearly G.E Budget
     def action_open_related_gex_job(self, cr, uid, ids, *args):
         context = filter(lambda arg: type(arg) == type({}), args)
         if not context:
