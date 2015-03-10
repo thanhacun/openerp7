@@ -59,7 +59,38 @@ class account_analytic_account(osv.osv):
                  'general_expense': lambda self, cr, uid, context={}:context.get('general_expense',False),
                  'code': lambda self, cr, uid, context={}:self.pool.get('ir.sequence').get(cr, uid, 'kderp.general.expense.code')[:-1] if context.get('general_expense',False) else ""
                  }
-
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if not context:
+            context = {}
+        if context.get('general_expense', False) and not view_id:
+            views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','view.account.analytic.kderp.yearlybudget.%s' % view_type)])
+            if views_ids:
+                view_id = views_ids[0]             
+        return super(account_analytic_account, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+    
+    def action_open_related_gex_job(self, cr, uid, ids, *args):
+        context = filter(lambda arg: type(arg) == type({}), args)
+        if not context:
+            context = {}
+        else:
+            context = context[0]
+        context['general_expense'] = True                
+        
+        account_analytic_id = self.browse(cr, uid, ids[0]).account_analytic_id.id            
+            
+        interface_string = 'Yearly G.E Budget'
+        if account_analytic_id:            
+            return {
+            'type': 'ir.actions.act_window',
+            'name': interface_string,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context': context,
+            'res_model': 'account.analytic.account',
+            'domain': "[('id','=',%s)]" % account_analytic_id
+            }
+        else:
+            return True
 
 class kderp_other_expense(osv.osv):
     """
