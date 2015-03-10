@@ -70,29 +70,6 @@ class account_analytic_account(osv.osv):
                 view_id = views_ids[0]             
         return super(account_analytic_account, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
     
-     #Fuction action mo view Yearly G.E Budget
-    def action_open_related_gex_job(self, cr, uid, ids, *args):
-        context = filter(lambda arg: type(arg) == type({}), args)
-        if not context:
-            context = {}
-        else:
-            context = context[0]
-        context['general_expense'] = True                
-        account_analytic_id = self.browse(cr, uid, ids[0]).account_analytic_id.id              
-        interface_string = 'Yearly G.E Budget'
-        if account_analytic_id:            
-            return {
-            'type': 'ir.actions.act_window',
-            'name': interface_string,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context': context,
-            'res_model': 'account.analytic.account',
-            'domain': "[('id','=',%s)]" % account_analytic_id
-            }
-        else:
-            return True
-
 class kderp_other_expense(osv.osv):
     """
     Customize Other Expense suitable with general expense
