@@ -59,6 +59,7 @@ class account_analytic_account(osv.osv):
                  'general_expense': lambda self, cr, uid, context={}:context.get('general_expense',False),
                  'code': lambda self, cr, uid, context={}:self.pool.get('ir.sequence').get(cr, uid, 'kderp.general.expense.code')[:-1] if context.get('general_expense',False) else ""
                  }
+    
     #Fuction get ID de mo Yearly G.E Budget tu GE vaf GE payment
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
@@ -77,9 +78,7 @@ class account_analytic_account(osv.osv):
         else:
             context = context[0]
         context['general_expense'] = True                
-        
-        account_analytic_id = self.browse(cr, uid, ids[0]).account_analytic_id.id            
-            
+        account_analytic_id = self.browse(cr, uid, ids[0]).account_analytic_id.id              
         interface_string = 'Yearly G.E Budget'
         if account_analytic_id:            
             return {
