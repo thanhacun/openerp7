@@ -20,20 +20,36 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from json.decoder import _CONSTANTS
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
+    
     _columns = {
-        'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
+        #'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
                 
         'purchase_line_id': fields.many2one('purchase.order.line',
-            'Purchase Order Line', ondelete='set null', select=True),
+            'Purchase Order Line', ondelete='restrict', select=True),
         'name': fields.char('Description', select=True),
         'date': fields.datetime('Date', select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]}, select=True, help="Scheduled date for the processing of this move"),
         'location_id': fields.many2one('stock.location', 'Source Location', select=True,states={'done': [('readonly', True)]}),
         'location_dest_id': fields.many2one('stock.location', 'Destination Location',states={'done': [('readonly', True)]}, ),
     }
+    def _check_product_id(self, cr, uid, ids, context=None):
+        """
+            Kiem tra product id and purchase_line_id
+        """
+        if not context:
+            context={}
+        for sm in self.browse(cr, uid, ids, context=context):
+            if sm.purchase_line_id and sm.product_id:
+                if sm.purchase_line_id.product_id.id !=  sm.product_id.id:
+                    return False
+        return True
+    
+    _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id'])]
+    
     def purchase_order_line_change(self, cr, uid, ids, order_line_id):        
         if not order_line_id:
             return {'value': {
@@ -53,7 +69,6 @@ class stock_move(osv.osv):
             }}
         return result
 stock_move()
-
 #
 # Inherit of picking to add the link to the PO
 #
@@ -61,7 +76,9 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     
     def init(self,cr):
-        cr.execute("""Update wkf set on_create=False where on_create=True and osv='stock.picking';""")
+        #cr.execute("""Update wkf set on_create=False where on_create=True and osv='stock.picking';""")
+        pass
+        
     def update_stock_received(self,cr, uid, ids, *args):
         self.write(cr,uid,ids,{'state':'done'})
         return True
@@ -76,4 +93,3 @@ class stock_picking(osv.osv):
     _defaults = {
                  'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
                 }
-
