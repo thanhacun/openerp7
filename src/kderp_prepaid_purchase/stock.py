@@ -21,6 +21,13 @@
 
 from openerp.osv import fields, osv
 
+class stock_location(osv.osv):
+    _inherit = 'stock.location'
+    _name = 'stock.location'
+    _columns = {
+                'global_stock':fields.boolean("Global", "Using for HANOI and Ho Chi Minh")
+                }
+    
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     

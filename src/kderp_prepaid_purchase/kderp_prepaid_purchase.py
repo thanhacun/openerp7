@@ -45,7 +45,7 @@ class kderp_prepaid_purchase_order(osv.osv):
         if not context: context={}
         res=[]
         for record in self.browse(cr, uid, ids):
-            name = "%s - %s" % (record.code, record.name)  
+            name = "%s - %s" % (record.name, record.description)  
             res.append((record['id'], name))
         return res
     
@@ -62,8 +62,20 @@ class kderp_prepaid_purchase_order(osv.osv):
         # By default we will consider the first one as most important, but this behavior can be overridden.
         return picking_ids[0] if picking_ids else False
     
+    def action_reject(self, cr, uid, ids, context = {}):
+        if not context:
+            context = {}
+        for ppo in self.browse(cr, uid, ids, context):
+            for pk in ppo.packing_ids:
+                if pk not in ('draft','cancel'):
+                    raise osv.except_osv("KDERP Warning", "State in packing related not in draft")
+        self.write(cr, uid, ids, {'state''cancel'})
+        return True
+    
     SELECTION_STATE = [('draft','Draft'),
-                       ('approved','Approved')]
+                       ('approved','Approved'),
+                       ('done','Done'),
+                       ('cancel','Rejected')]
     
     def onchange_date(self, cr, uid, ids, oldno, date):
         val = {}
@@ -88,11 +100,11 @@ class kderp_prepaid_purchase_order(osv.osv):
                                 ir_sequence isq
                             LEFT JOIN 
                                 (SELECT 
-                                    kderp_prepaid_purchase_order.code
+                                    kderp_prepaid_purchase_order.name as code
                                 FROM 
                                     kderp_prepaid_purchase_order
                                 WHERE
-                                    length(kderp_prepaid_purchase_order.code::text)=
+                                    length(kderp_prepaid_purchase_order.name::text)=
                                     ((SELECT 
                                     length(prefix || suffix) + padding AS length
                                     FROM 
@@ -109,22 +121,24 @@ class kderp_prepaid_purchase_order(osv.osv):
                             padding""" %(date,date,date,date))
             res = cr.fetchone()
             if res:
-                val={'code':res[0]}
+                val={'name':res[0]}
         
         return {'value':val}
     
     _order="date desc, name desc"
     _columns={
-              'code':fields.char('Code', required = True, size=16, select=1, readonly = True, states={'draft':[('readonly', False)]}),
-              'name':fields.char('Description', required = True, size=64, readonly = True, states={'draft':[('readonly', False)]}),
+              'name':fields.char('Code', required = True, size=16, select=1, readonly = True, states={'draft':[('readonly', False)]}),
+              'description':fields.char('Description', required = True, size=64, readonly = True, states={'draft':[('readonly', False)]}),
               'date':fields.date('Order Date', select = 1, required = True, readonly = True, states={'draft':[('readonly', False)]}),
               
               'partner_id':fields.many2one('res.partner', 'Supplier', ondelete='restrict', required=True, readonly = True, states={'draft':[('readonly', False)]} , change_default=True),
               'address_id':fields.many2one('res.partner', 'Address', ondelete='restrict', required=True, readonly = True, states={'draft':[('readonly', False)]}),
               'currency_id':fields.many2one('res.currency','Curr', required=True, readonly = True, states={'draft':[('readonly', False)]}),
               
-              'prepaid_order_line':fields.one2many('kderp.prepaid.purchase.order.line', 'prepaid_order_id', readonly = True, states={'draft':[('readonly', False)]}),
+              'packing_ids':fields.one2many('stock.picking','prepaid_purchase_order_id','Packing List', readonly = True),
               
+              'prepaid_order_line':fields.one2many('kderp.prepaid.purchase.order.line', 'prepaid_order_id', readonly = True, states={'draft':[('readonly', False)]}),
+
               'state':fields.selection(SELECTION_STATE, 'State', readonly = True)
               }
     
@@ -322,4 +336,5 @@ class kderp_prepaid_purchase_order_line(osv.osv):
                  'location_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'location_id', context),
                  'price_unit': lambda *x: 0.0,
                  }
-    
+    _sql_constraints = [
+        ('product_order_location_unique', 'unique(prepaid_order_id, product_id, location_id)', 'Product and Location must be unique !')]

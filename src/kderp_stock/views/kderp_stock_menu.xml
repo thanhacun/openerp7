@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+		<menuitem id="menu_kderp_stock_management_root" name="Stock" sequence="8"/>
+				 <!-- groups="kderp_base.group_kderp_purchase_admin_menu" -->
+    	
+        <menuitem 
+        	id="kderp_kderp_stock" name="Stock Management" sequence="5" parent="menu_kderp_stock_management_root"/>	
+        			
+		<record id="kderp_action_stock_location" model="ir.actions.act_window">
+            <field name="name">Stock</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.location</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_in_location':1}</field>
+        </record>
+        <menuitem 
+        			action="kderp_action_stock_location" 
+        			id="menu_kderp_stock_location" 
+        			parent="kderp_kderp_stock" sequence="5"/>        		
+     </data>
+</openerp>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,28 +15,10 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     d
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name':"KDERP Stock",
-    'version':"7.0.0",
-    'author':"KDERP IT-Dev. Team",
-    'images' : ['images/kinden.png'],
-    'summary':"Customize Purchase Module for Suiteable Kinden Procedure",
-    'category':"KDERP Apps",
-    'depends':['kderp_purchase','kderp_supplier_payment'],
-    'description': """
-    - Customize Database structure and function
-    - Customize Procedure
-    - Customize Interface""",
-    'data':[
-            "security/kderp_stock_security.xml",
-            "security/ir.model.access.csv",
-            "views/kderp_stock_menu.xml",
-            "views/kderp_stock_view.xml",
-            "wizard/kderp_packing_wizard_view.xml"
-            ],
-    'demo':[],
-    'installable':True
-}
+
+import allocate_to_job
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -25,7 +25,7 @@
     'images' : ['images/kinden.png'],
     'summary':"Add new module Prepaid Purchase Module",
     'category':"KDERP Apps",
-    'depends':['kderp_stock'],
+    'depends':['kderp_stock','kderp_purchase_extend'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure
@@ -34,7 +34,9 @@
              "security/kderp_prepaid_purchase_security.xml",
              "security/ir.model.access.csv",
              "data/kderp_prepaid_purchase_code.xml",
-             "views/kderp_prepaid_purchase_view.xml"
+             'wizard/allocate_to_job_view.xml',
+             "views/kderp_prepaid_purchase_view.xml",
+             'views/stock_view.xml'
             ],
     'demo':[],
     'installable':True

@@ -7,8 +7,8 @@
             <field name="model">kderp.prepaid.purchase.order</field>
             <field name="arch" type="xml">
             	<tree string="Prepaid Purchase" colors="blue:state == 'draft';green:state == 'approved'">
-            		<field name="code"/>
             		<field name="name"/>
+            		<field name="description"/>
             		<field name="date"/>      		
             		<field name="partner_id"/>
             		<field name="state"/>
@@ -22,19 +22,19 @@
             <field name="arch" type="xml">
             	<form string="Prepaid Order" version="7.0">            	
 	            	<header>						
-						<button icon="gtk-apply" name="action_draft_to_approved" type='object' states="draft" string="Approved"/>												
-	               		
-	                    <field name="state" widget="statusbar" statusbar_visible="draft,waiting_for_payment,done" statusbar_colors='{"waiting_for_payment":"green","cancel":"red","done":"blue"}' readonly="1"/>
+						<button icon="gtk-apply" name="action_draft_to_approved" type='object' states="draft" string="Approved"/>
+	               		<button icon='gtk-convert' name="%(action_ppo_allocate_to_job)d" type='action' states='approved' string='Allocate to Job'/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"approved":"green","cancel":"red","draft":"blue"}' readonly="1"/>
 	            	</header>
 	            	<sheet>
 	            		<div class="oe_title">
 	                        <h1>
-	                            <label for="code" class="oe_inline oe_edit_only" string="Prepaid Order No.:"/>
-	                            <field name="code" class="oe_inline"/>
+	                            <label for="name" class="oe_inline oe_edit_only" string="Prepaid Order No.:"/>
+	                            <field name="name" class="oe_inline"/>
 	                        </h1>
 	                    </div>
 	                    <group colspan="4">                        	
-                            <field name="date" on_change="onchange_date(code, date)"/>
+                            <field name="date" on_change="onchange_date(name, date)"/>
                             <field name="currency_id"/>
 	                    </group>
 	                    <notebook>
@@ -42,7 +42,7 @@
 	                        	<group colspan="4" col="4">
 	                        		<field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
 	                        		<field name="address_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options='{"always_reload": True}'/>
-	                        		<field name='name' colspan="4" widget='text'/>
+	                        		<field name='description' colspan="4" widget='text'/>
 	                        	</group>
 	                            <field name="prepaid_order_line" context="{'id':active_id,'prepaid_order_line':prepaid_order_line}">
 	                                <tree string="Prepaid PO Details" editable="bottom">
@@ -55,8 +55,14 @@
 	                                </tree>
 	                            </field>	                            
 	                        </page>
+	                        <page string='Packing'>
+	                        	<field name='packing_ids' colspan="4"/>
+	                        </page>
 	                    </notebook>
 	            	</sheet>
+	            	<footer>
+	            		<button icon="gtk-cancel" name="action_reject" type='object' states="draft,approved" string="Reject"/>
+	            	</footer>
 	            </form>
             </field>
         </record>
@@ -67,8 +73,8 @@
             <field name="model">kderp.prepaid.purchase.order</field>
             <field name="arch" type="xml">
                 <search string="Search Prepaid Purchase Order">
-                	<field name="code"/>
-            		<field name="name"/>
+                	<field name="name"/>
+            		<field name="description"/>
             		<field name="date"/>      		
             		<field name="partner_id"/>
             		
