@@ -32,6 +32,8 @@
     - Customize Procedure
     - Customize Interface""",
     'data':[
+            "security/kderp_base_security.xml",
+            "security/ir.model.access.csv",
             "views/kderp_link_view.xml"
             ],    
     'demo':[],
