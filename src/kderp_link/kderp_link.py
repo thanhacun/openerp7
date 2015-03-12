@@ -64,12 +64,12 @@ class kderp_link_server_line(osv.osv):
     _name = 'kderp.link.server.line'
     _description = 'KDERP Link Server Line'
     
-    
     STATE_SELECTION = (('draft','Draft'),('done','Done'))    
         
     _columns = {        
-                'table_link':fields.char('Server', size=32, required = True, readonly = True, states = {'draft':[('readonly',False)]}),
+                'table_link_name':fields.char('Table Link Name', size=32, required = True, readonly = True, states = {'draft':[('readonly',False)]}),
                 'table_definition':fields.text('Table Definition', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
+                'remote_query':fields.text('Remote Query', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
                 'link_server_id':fields.many2one('kderp.link.server','Server', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
                 'state':fields.selection(STATE_SELECTION, 'State', readonly = True, required = True)
     }
@@ -77,13 +77,30 @@ class kderp_link_server_line(osv.osv):
                 'state':'draft'
                 }
     
-    def _action_commit(self, cr, uid, ids, context):
+    def action_create_table_link(self, cr, uid, ids, context):
         if not context:
             context = {}
         for klsl in self.browse(cr, uid, ids, context):
-            #Create table remote                        
-            SQL_Table = 'Create table '
-        
-    
+            #Create table remote
+            tblOriginal = klsl.table_link_name
+            tblName = klsl.table_link_name + "_remote"
+            vwName = 'vw' + tblName 
+            tblDefinition = klsl.table_definition
+            connStr = klsl.link_server_id.connection_string
+            remoteQuery = klsl.remote_query
+            
+            SQLTable = 'CREATE TABLE IF NOT EXISTS %s (%s);' % (tblName, tblDefinition)
+            
+            SQLView = """CREATE VIEW %s AS Select *  from 
+                                        dblink('%s', '%s') as 
+                                        %s (%s)""" % (vwName, 
+                                                      connStr, remoteQuery,
+                                                      tblOriginal, tblDefinition)
+            #Create remote table
+            cr.execute(SQLTable)
+            #Create remote View
+            tools.drop_view_if_exists(cr, vwName)
+            cr.execute(SQLView)
+                
 kderp_link_server_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

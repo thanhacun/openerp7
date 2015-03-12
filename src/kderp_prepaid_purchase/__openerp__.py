@@ -36,7 +36,8 @@
              "data/kderp_prepaid_purchase_code.xml",
              'wizard/allocate_to_job_view.xml',
              "views/kderp_prepaid_purchase_view.xml",
-             'views/stock_view.xml'
+             'views/stock_view.xml',
+             "views/kderp_company_view.xml"
             ],
     'demo':[],
     'installable':True

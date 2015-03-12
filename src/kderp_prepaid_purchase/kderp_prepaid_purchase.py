@@ -318,8 +318,10 @@ class kderp_prepaid_purchase_order_line(osv.osv):
         if qty:
             res['value'].update({'product_qty': qty})
   
-        return res   
-  
+        return res
+    
+    SELECTION_STATE = [('doing','Doing'),                       
+                       ('done','Done')]
     _columns={
               'product_id':fields.many2one('product.product','Product', required = True),
               'product_uom':fields.many2one('product.uom', 'Unit', required = True, digits=(16,2)),
@@ -328,6 +330,7 @@ class kderp_prepaid_purchase_order_line(osv.osv):
               'name':fields.char('Description', required = True, size = 128),
               'location_id':fields.many2one('stock.location', 'Destination', required = True, domain = [('usage','=','internal')]),
               'prepaid_order_id':fields.many2one('kderp.prepaid.purchase.order','Prepaid Order'),
+              'state':fields.selection(SELECTION_STATE, 'State', readonly = True)
               }    
     
     _defaults = {
