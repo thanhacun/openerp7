@@ -19,25 +19,21 @@
 #
 ##############################################################################
 {
-    'name':"KDERP Prepaid Purchase",
+    'name':"KDERP Link Two server",
     'version':"7.0.0",
     'author':"KDERP IT-Dev. Team",
-    'images' : ['images/kinden.png'],
-    'summary':"Add new module Prepaid Purchase Module",
+    'images' : [''],
+    'summary':"Link Two server OpenERP 7",
     'category':"KDERP Apps",
-    'depends':['kderp_stock','kderp_purchase_extend','kderp_link'],
+    'depends':['base'],
     'description': """
+    Add interface link 2 servers OpenERP 7
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
     'data':[
-             "security/kderp_prepaid_purchase_security.xml",
-             "security/ir.model.access.csv",
-             "data/kderp_prepaid_purchase_code.xml",
-             'wizard/allocate_to_job_view.xml',
-             "views/kderp_prepaid_purchase_view.xml",
-             'views/stock_view.xml'
-            ],
+            "views/kderp_link_view.xml"
+            ],    
     'demo':[],
     'installable':True
 }

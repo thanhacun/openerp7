@@ -25,7 +25,8 @@ class stock_location(osv.osv):
     _inherit = 'stock.location'
     _name = 'stock.location'
     _columns = {
-                'global_stock':fields.boolean("Global", "Using for HANOI and Ho Chi Minh")
+                'global_stock':fields.boolean("Global?",help= "Using for HANOI and Ho Chi Minh"),
+                'stock_code':fields.char("Stock Code", size=32, help='This code is very important for Global Stock, this code is using for matching stock between two server')
                 }
     
 class stock_picking(osv.osv):

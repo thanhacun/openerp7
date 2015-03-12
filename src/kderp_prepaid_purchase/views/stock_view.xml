@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
             	<field name='active' position='before'>
             		<field name='global_stock'/>
+            		<field name='stock_code' attrs="{'required':[('global_stock','=',True)]}"/>
             	</field>            	
             </field>
         </record>
