@@ -42,6 +42,7 @@ class account_analytic_account(osv.osv):
             context={}
         if 'kderp_search' in context:
             kd_ctx=context['kderp_search']
+            kd_ctx['id'] = kd_ctx['id'] if kd_ctx['id'] else 0
             list = self.pool.get(kd_ctx['model']).read(cr, uid, kd_ctx['id'],[kd_ctx['field']])[kd_ctx['field']]
             list_res=list
             if 'sub_model' in kd_ctx:
