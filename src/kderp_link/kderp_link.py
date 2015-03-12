@@ -70,13 +70,20 @@ class kderp_link_server_line(osv.osv):
     _columns = {        
                 'table_link':fields.char('Server', size=32, required = True, readonly = True, states = {'draft':[('readonly',False)]}),
                 'table_definition':fields.text('Table Definition', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
-                'server_id':fields.many2one('kderp.link.server','Server', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
+                'link_server_id':fields.many2one('kderp.link.server','Server', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
                 'state':fields.selection(STATE_SELECTION, 'State', readonly = True, required = True)
     }
     _defaults ={
                 'state':'draft'
                 }
-    def _action_commit(self, cr, uid, ids, context = {}):
-        pass
+    
+    def _action_commit(self, cr, uid, ids, context):
+        if not context:
+            context = {}
+        for klsl in self.browse(cr, uid, ids, context):
+            #Create table remote                        
+            SQL_Table = 'Create table '
+        
+    
 kderp_link_server_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
