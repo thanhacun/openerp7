@@ -62,27 +62,21 @@ kderp_link_server()
 
 class kderp_link_server_line(osv.osv):
     _name = 'kderp.link.server.line'
-    _description = 'KDERP Link Server'
+    _description = 'KDERP Link Server Line'
     
-    def _get_connection(self, cr, uid, ids, name, arg, context=None):
-        if not context:
-            context = {}
-        res = {}
-        for kls in self.browse(cr, uid, ids, context):
-            res[kls.id] ="dbname=%s port=%s host=%s user=%s password=%s" % (kls.database, kls.port, kls.server, kls.user, kls.password) 
-        return res
     
+    STATE_SELECTION = (('draft','Draft'),('done','Done'))    
+        
     _columns = {        
-                'table_link':fields.char('Server', size=32, required = True),
-                'server_id':fields.many2one('kderp.link.server','Server')                
+                'table_link':fields.char('Server', size=32, required = True, readonly = True, states = {'draft':[('readonly',False)]}),
+                'table_definition':fields.text('Table Definition', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
+                'server_id':fields.many2one('kderp.link.server','Server', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
+                'state':fields.selection(STATE_SELECTION, 'State', readonly = True, required = True)
     }
     _defaults ={
-                'port':5432
+                'state':'draft'
                 }
-    
-    def init(self, cr):
-        cr.execute("""select * from pg_extension where extname='dblink'""")
-        if not cr.rowcount:
-            cr.execute("""CREATE EXTENSION dblink;""")
-kderp_link_server()
+    def _action_commit(self, cr, uid, ids, context = {}):
+        pass
+kderp_link_server_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
