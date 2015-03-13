@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	
+       
 		 <record id="view_kderp_stock_location_form" model="ir.ui.view">
             <field name="name">kderp.stock.location.form</field>
             <field name="model">stock.location</field>
@@ -41,22 +41,24 @@
             <field name="model">stock.location</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-            	<tree string="Stock Location">
+            	<tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
             		<field name="complete_name"/>
             		<field name="usage"/>
             		<field name="stock_code"/>
             		<field name="global_stock"/>
+            		<field name="stock_real" invisible="'product_id' not in context"/>
+                    <field name="stock_virtual" invisible="'product_id' not in context"/>
             	</tree>
             </field>
         </record>
-        
-       	<record id="view_location_search" model="ir.ui.view">
-            <field name="name">stock.location.search</field>
+       
+       	<record id="view_kderp_stock_location_search" model="ir.ui.view">
+            <field name="name">kderp.stock.location.search</field>
             <field name="model">stock.location</field>
-            <field eval="1" name="priority"/>
+           <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Locations">
-                    <field name="name" string="Stock Locations"/>
+                    <field name="name" string="Stock Locations" />
                     <field name="location_id" string="Belong to Location"/>
                     <field name="stock_code"/>
                     <field name="partner_id"/>
@@ -65,10 +67,15 @@
             		  
             		<filter string="Global" domain="[('global_stock','=',True)]"/>
             		<filter string="Not Global" domain="[('global_stock','=',False)]"/>
+            		<separator/>
+            		<filter icon="terp-go-home" name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
+                    <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
+                    <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
             		
             		<group expand="0" string="Group by ...">
             			<filter string="Location Type" name='group_usage' domain="[]" context="{'group_by':'usage'}"/> 
             		</group>
+
                 </search>
             </field>
         </record>
