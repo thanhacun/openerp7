@@ -29,7 +29,7 @@ class stock_location(osv.osv):
     _columns = {
                 'global_stock':fields.boolean("Global?",help= "Using for HANOI and Ho Chi Minh"),
                 'stock_code':fields.char("Stock Code", size=32, help='This code is very important for Global Stock, this code is using for matching stock between two server'),
-                'product_details':fields.one2many('stock.location.product.detail','location_id','Details')
+                'product_details':fields.one2many('stock.location.product.detail','location_id','Details', readonly = 1)
                 }
 
 class stock_location_product_detail(osv.osv):
