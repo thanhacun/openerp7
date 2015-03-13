@@ -124,7 +124,9 @@ class stock_location_product_detail(osv.osv):
                  'allocated_qty':fields.float('Allocated Qty.', digits=(16,2)),
                  'available_qty':fields.float('Available Qty.', digits=(16,2)),
                  'move_code':fields.char('Move Code', size=12),            
-                 'origin':fields.char('Origin', size=64)
+                 'origin':fields.char('Origin', size=64),
+                 'vat_code':fields.char('VAT Code', size=32),
+                 'product_description':fields.char('Desc.', size=256),
                  }
     
     def init(self,cr):
@@ -150,23 +152,29 @@ class stock_location_product_detail(osv.osv):
                                     smi.price_unit,
                                     smi.product_uom,
                                     smi.move_code,    
-                                    smi.origin    
+                                    smi.origin,
+                                    rp.vat_code,
+                                    smi.name as product_description
                                 from
                                     stock_location sl
                                 left join
                                     stock_move smi on sl.id = smi.location_dest_id and state = 'done' and smi.global_state <> 'done'
+                                left join
+                                    res_partner rp on smi.partner_id = rp.id
                                 left join
                                     stock_move smo on smi.move_code = smo.source_move_code and sl.id != smo.location_dest_id and smi.product_uom = smo.product_uom
                                 where
                                     smi.move_code is not null
                                 group by
                                     sl.id,
-                                    smi.product_id,
+                                    smi.id,
                                     smi.product_qty,
                                     smi.price_unit,
                                     smi.product_uom,
                                     smi.move_code,    
-                                    smi.origin
+                                    smi.origin,
+                                    rp.vat_code,
+                                    smi.name
                                 Union
                                 --Stock In Remote @ from View
                                 Select 
@@ -178,7 +186,9 @@ class stock_location_product_detail(osv.osv):
                                     smi.price_unit,
                                     pu.id as product_uom,
                                     smi.move_code,
-                                    smi.origin
+                                    smi.origin,
+                                    smi.vat_code,
+                                    smi.product_description
                                 from
                                     stock_location sl
                                 left join
@@ -198,5 +208,7 @@ class stock_location_product_detail(osv.osv):
                                     smi.price_unit,
                                     pu.id,
                                     smi.move_code,
-                                    smi.origin
+                                    smi.origin,
+                                    smi.vat_code,
+                                    smi.product_description
                                ) vwstockinout""" % vwName)

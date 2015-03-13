@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
             	<form string="Stock Location" version="7.0">
             		<header>
-            			<button icon='gtk-convert' name="%(action_ppo_allocate_to_job)d" type='action' states='approved' string='Allocate to Job'/>
+            			<button icon='gtk-convert' name="%(action_ppo_allocate_to_job)d" type='action' string='Allocate to Job' context = "{'location_id':active_id}"/>
             		</header>
             		<sheet>
 	            		<label for="location_id" class="oe_edit_only" string="Location Name"/>
@@ -26,6 +26,7 @@
 	                		<field name="product_details" nolabel="1" string="Details" colspan="4">
 	                			<tree>
 	                				<field name='product_id'/>
+	                				<field name='product_description'/>
 	                				<field name='product_uom'/>
 	                				<field name='price_unit'/>
 	                				<field name='quantity'/>
@@ -33,6 +34,7 @@
 	                				<field name='available_qty'/>
 	                				<field name='move_code'/>
 	                				<field name="origin"/>
+	                				<field name="vat_code"/>
 	                			</tree>
 	                		</field>
 	                	</group>

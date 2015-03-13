@@ -279,6 +279,6 @@ class purchase_order_line(osv.osv):
     _description = 'Purchase Order Line'
     
     _columns = {
-                'prepaid_purchase_order_line_id':fields.many2one('kderp.prepaid.purchase.order.line','Prepaid Order Line',ondelete='restrict')
+                'prepaid_purchase_order_line_id':fields.many2one('kderp.prepaid.purchase.order.line', 'Prepaid Order Line', ondelete='restrict')
                 }
     

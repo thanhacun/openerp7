@@ -289,6 +289,7 @@ class kderp_prepaid_purchase_order_line(osv.osv):
   
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
+            res = {'value': {'price_unit': 0.0, 'name': '', 'product_uom' : False}}
             return res
   
         product_product = self.pool.get('product.product')
@@ -339,5 +340,3 @@ class kderp_prepaid_purchase_order_line(osv.osv):
                  'location_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'location_id', context),
                  'price_unit': lambda *x: 0.0,
                  }
-    _sql_constraints = [
-        ('product_order_location_unique', 'unique(prepaid_order_id, product_id, location_id)', 'Product and Location must be unique !')]

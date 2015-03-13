@@ -27,21 +27,52 @@ from openerp.tools.float_utils import float_compare
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
-class kderp_prepaid_order_allocate_to_job_line(osv.TransientModel):
+class kderp_order_allocate_to_job_select(osv.osv_memory):
+    _name = "kderp.order.allocate.to.job.select"
+    _rec_name = 'prepaid_ref'
+    _description = "Allocated Stock Order to Job"
+    
+    def _get_prepaid_order(self, cr, uid, context):        
+        stock_location_id = context.get('location_id', 0)
+        cr.execute("""Select distinct origin from stock_location_product_detail where location_id=%s and origin is not null order by origin""" % stock_location_id)
+        res = []
+        for ppo_no in cr.fetchall():
+            code = str(ppo_no[0])
+            res.append((code, code))
+        return res
+    
+    _columns = {
+                'prepaid_ref':fields.selection(_get_prepaid_order,'Prepaid Ref.', required = True)
+                }
+    
+    def open_stock_allocated(self, cr, uid, ids, context):
+        if not context:
+            context = context    
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model':'kderp.stock.order.allocate.to.job',
+            'name': _('Allocate to Job'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': context,
+        }
+    
+class kderp_stock_move_allocate_to_job_line(osv.TransientModel):
 
-    _name = "kderp.prepaid.order.allocate.to.job.line"
+    _name = "kderp.stock.move.allocate.to.job.line"
     _rec_name = 'product_id'
     _columns = {        
         'product_id':fields.many2one('product.product','Product', required = True),
         'product_uom':fields.many2one('product.uom', 'Unit', required = True, digits=(16,2)),
         'product_qty':fields.float("Quantity", required = True),
-        'price_unit':fields.float('Price Unit', required = True, digits_compute=dp.get_precision('Amount')),
+        'price_unit':fields.float('Price Unit', required = True, readonly = True, digits_compute=dp.get_precision('Amount')),
         'name':fields.char('Description', required = True, size = 128),
-        'location_id':fields.many2one('stock.location', 'Source', required = True, domain = [('usage','=','internal')]),
-        'location_dest_id':fields.many2one('stock.location', 'Source', required = True, domain = [('usage','=','internal')]),
-        'prepaid_order_id':fields.many2one('kderp.prepaid.purchase.order','Prepaid Order'),
-        'wizard_id' : fields.many2one('stock.partial.picking', string="Wizard", ondelete='CASCADE'),
-        'account_anlytic_id': fields.many2one('account.analytic.account', 'Job', required=True, ondelete='CASCADE'),
+        #'location_id':fields.many2one('stock.location', 'Source', required = True, domain = [('usage','=','internal')]),
+        'location_dest_id':fields.many2one('stock.location', 'To Stock', required = True, domain = [('usage','=','internal')]),
+        'move_code':fields.float('Move Code'),
+        'wizard_id' : fields.many2one('kderp.stock.order.allocate.to.job', string="Wizard", ondelete='CASCADE'),
+        'account_anlytic_id': fields.many2one('account.analytic.account', 'Job', ondelete='CASCADE'),
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, name, qty, uom_id, price_unit, context=None):
@@ -82,62 +113,73 @@ class kderp_prepaid_order_allocate_to_job_line(osv.TransientModel):
         if qty:
             res['value'].update({'product_qty': qty})
   
-        return res   
+        return res
 
-
-class kderp_prepaid_order_allocate_to_job(osv.osv_memory):
-    _name = "kderp.prepaid.order.allocate.to.job"
+class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
+    _name = "kderp.stock.order.allocate.to.job"
     _rec_name = 'date'
-    _description = "Allocated Prepaid Order to Job"
+    _description = "Allocated Stock Order to Job"
 
     _columns = {
         'date': fields.datetime('Date', required=True),
-        'prepaid_order_id':fields.many2one('kderp.prepaid.purchase.order', 'Prepaid Order'),
+        'stock_location_id':fields.many2one('stock.location', 'From Stock'),
+        'location_dest_id':fields.many2one('stock.location', 'To Stock'),
         'description':fields.char('Description', size=128, required = True),
-        'partner_id':fields.many2one('res.partner', 'Supplier', ondelete='restrict', required=True, readonly = True),
+        'partner_id':fields.many2one('res.partner', 'Supplier', ondelete='restrict', required=True),
         'address_id':fields.many2one('res.partner', 'Address', ondelete='restrict', required=True),
-        'prepaid_order_line' : fields.one2many('kderp.prepaid.order.allocate.to.job.line', 'wizard_id', 'Product Moves'),
+        'product_details' : fields.one2many('kderp.stock.move.allocate.to.job.line', 'wizard_id', 'Product Moves'),
         'account_anlytic_id': fields.many2one('account.analytic.account', 'Job', required=True, ondelete='CASCADE'),
     }
     
-    def _allocate_line_for(self, cr, uid, ppol, context=None):
+    def _allocate_line_for(self, cr, uid, pd, context=None):
         pol = {
-            'product_id': ppol.product_id.id,
-            'price_unit':ppol.price_unit,
-            'product_uom':ppol.product_uom.id,
-            'product_qty':ppol.product_qty,
-            'name': ppol.name,
-            'quantity' : ppol.product_qty,
-            'product_uom' : ppol.product_uom.id,
-            'prepaid_purchase_order_line_id' : ppol.id,
-            'location_id' : ppol.location_id.id,
-            'location_dest_id' : ppol.location_id.id
+            'product_id': pd.product_id.id,
+            'price_unit':pd.price_unit,
+            'product_uom':pd.product_uom.id,
+            'product_qty':pd.quantity,
+            'name': pd.product_description,
+            'product_uom': pd.product_uom.id,
+            'move_code': pd.move_code
         }
         return pol
     
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
-        res = super(kderp_prepaid_order_allocate_to_job, self).default_get(cr, uid, fields, context=context)
-        prepaid_order_ids = context.get('active_ids', [])
+        res = super(kderp_stock_to_order_allocate_to_job, self).default_get(cr, uid, fields, context=context)
+        stock_location_ids = context.get('active_ids', [])
         active_model = context.get('active_model')
 
-        if not prepaid_order_ids or len(prepaid_order_ids) != 1:
+        if not stock_location_ids or len(stock_location_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
             return res
-        assert active_model in ('kderp.prepaid.purchase.order'), 'Bad context propagation'        
-        prepaid_order_id, = prepaid_order_ids
-        ppo = self.pool.get(active_model).browse(cr, uid, prepaid_order_id, context=context)
-        if 'partner_id':
-            res.update(partner_id=ppo.partner_id.id)
-        if 'address_id':
-            res.update(address_id=ppo.address_id.id)
+        assert active_model in ('stock.location'), 'Bad context propagation'        
+        stock_location_id, = stock_location_ids
+
+        stl = self.pool.get(active_model).browse(cr, uid, stock_location_id, context=context)
+        vat_code = False
+#         for pd in stl.product_details:
+#             if pd.vat_code:
+#                 vat_code = pd.vat_code
+#                 break
+        cr.execute("""Select vat_code from stock_location_product_detail where location_id=%s and coalesce(vat_code,'')<>'' limit 1""" % stock_location_id)
+        if cr.rowcount:
+            vat_code = cr.fetchone()[0]
+             
+        if vat_code:
+            rp_ids = self.pool.get('res.partner').search(cr, uid, [('vat_code','ilike', vat_code)], limit=1)
+            partner_id = rp_ids[0] if rp_ids else False
+            if 'partner_id':
+                res.update(partner_id=partner_id)
+            if 'address_id' and vat_code:
+                res.update(address_id=partner_id)
+                
         if 'description' in fields:
-            res.update(description=ppo.description)
-        if 'prepaid_order_id' in fields:
-            res.update(prepaid_order_id=prepaid_order_id)
-        if 'prepaid_order_line' in fields:
-            ppo_lines = [self._allocate_line_for(cr, uid, ppol, context=context) for ppol in ppo.prepaid_order_line]
-            res.update(prepaid_order_line=ppo_lines)
+            res.update(description='Allocated material from stock to Job')        
+        if 'stock_location_id' in fields:
+            res.update(stock_location_id=stock_location_id)
+        if 'product_details' in fields:
+            ppo_lines = [self._allocate_line_for(cr, uid, pd, context=context) for pd in stl.product_details if pd.origin == context.get('prepaid_ref','')]
+            res.update(product_details=ppo_lines)
         if 'date' in fields:
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
         return res
