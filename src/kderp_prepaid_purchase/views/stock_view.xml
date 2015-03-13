@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
- 		 <record id="view_location_form_kderp_inherit" model="ir.ui.view">
-            <field name="name">stock.location.form.kderp.inherit</field>
+	
+		 <record id="view_kderp_stock_location_form" model="ir.ui.view">
+            <field name="name">kderp.stock.location.form</field>
             <field name="model">stock.location</field>
-            <field name='inherit_id' ref='stock.view_location_form'/>
+            <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-            	<field name='active' position='before'>
-            		<field name='global_stock'/>
-            		<field name='stock_code' attrs="{'required':[('global_stock','=',True)]}"/>
-            	</field>
-                <label for="location_id" class="oe_edit_only" position="replace">
-                	<label for="location_id" class="oe_edit_only" string="Belong to Location"/>
-                </label>
-                <h2 position="replace">
-                	<h2><field name="location_id"/></h2>
-                </h2>
-                <group string="Localization" position="after">
+            	<form string="Stock Location" version="7.0">
+            		<label for="location_id" class="oe_edit_only" string="Location Name"/>
+            		<h2><field name="name"/></h2>
+            		<label for="location_id" class="oe_edit_only" string="Belong to Location"/>
+					<h2><field name="location_id"/></h2>
+					<group string="Stock Location Info." col="4" colspan="4">
+						<field name="usage"/>	
+            			<field name='stock_code' attrs="{'required':[('global_stock','=',True)]}"/>
+            			<field name="partner_id"/>
+						<field name='global_stock'/>
+            		</group>
                 	<group string="Details">
                 		<field name="product_details" nolabel="1" string="Details" colspan="4">
                 			<tree>
@@ -32,20 +32,46 @@
                 			</tree>
                 		</field>
                 	</group>
-                </group>
+                </form>
             </field>
         </record>
-        <record id="view_location_tree_kderp_inherit" model="ir.ui.view">
-            <field name="name">stock.location.tree.kderp.inherit</field>
+
+        <record id="view_kderp_stock_location_tree" model="ir.ui.view">
+            <field name="name">kderp.stock.location.tree</field>
             <field name="model">stock.location</field>
-            <field name='inherit_id' ref='stock.view_location_tree2'/>
+            <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-            	<field name="usage" position="after">
+            	<tree string="Stock Location">
+            		<field name="complete_name"/>
+            		<field name="usage"/>
             		<field name="stock_code"/>
             		<field name="global_stock"/>
-            	</field>
+            	</tree>
             </field>
         </record>
-	
+        
+       	<record id="view_location_search" model="ir.ui.view">
+            <field name="name">stock.location.search</field>
+            <field name="model">stock.location</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Stock Locations">
+                    <field name="name" string="Stock Locations"/>
+                    <field name="location_id" string="Belong to Location"/>
+                    <field name="stock_code"/>
+                    <field name="partner_id"/>
+                    
+                    <field string="Product" name="product_details" filter_domain="[('product_details','ilike',self)]"/>
+            		  
+            		<filter string="Global" domain="[('global_stock','=',True)]"/>
+            		<filter string="Not Global" domain="[('global_stock','=',False)]"/>
+            		
+            		<group expand="0" string="Group by ...">
+            			<filter string="Location Type" name='group_usage' domain="[]" context="{'group_by':'usage'}"/> 
+            		</group>
+                </search>
+            </field>
+        </record>
+
 	</data>
 </openerp>
