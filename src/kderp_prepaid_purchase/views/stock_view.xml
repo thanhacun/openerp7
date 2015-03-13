@@ -10,7 +10,40 @@
             	<field name='active' position='before'>
             		<field name='global_stock'/>
             		<field name='stock_code' attrs="{'required':[('global_stock','=',True)]}"/>
-            	</field>            	
+            	</field>
+                <label for="location_id" class="oe_edit_only" position="replace">
+                	<label for="location_id" class="oe_edit_only" string="Belong to Location"/>
+                </label>
+                <h2 position="replace">
+                	<h2><field name="location_id"/></h2>
+                </h2>
+                <group string="Localization" position="after">
+                	<group string="Details">
+                		<field name="product_details" nolabel="1" string="Details" colspan="4">
+                			<tree>
+                				<field name='product_id'/>
+                				<field name='product_uom'/>
+                				<field name='price_unit'/>
+                				<field name='quantity'/>
+                				<field name='allocated_qty'/>
+                				<field name='available_qty'/>
+                				<field name='move_code'/>
+                				<field name="origin"/>
+                			</tree>
+                		</field>
+                	</group>
+                </group>
+            </field>
+        </record>
+        <record id="view_location_tree_kderp_inherit" model="ir.ui.view">
+            <field name="name">stock.location.tree.kderp.inherit</field>
+            <field name="model">stock.location</field>
+            <field name='inherit_id' ref='stock.view_location_tree2'/>
+            <field name="arch" type="xml">
+            	<field name="usage" position="after">
+            		<field name="stock_code"/>
+            		<field name="global_stock"/>
+            	</field>
             </field>
         </record>
 	

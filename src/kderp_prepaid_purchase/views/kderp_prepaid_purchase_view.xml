@@ -82,6 +82,8 @@
             		  
             		<filter string="Draft" domain="[('state','=','draft')]"/>
             		<filter string="Approved" domain="[('state','=','approved')]"/>
+            		<filter string="Done" domain="[('state','=','done')]"/>
+            		<filter string="Cancel" domain="[('state','=','cancel')]"/>
             		
             		<group expand="0" string="Group by ...">
             			<filter string="Status" name='group_state' domain="[]" context="{'group_by':'state'}"/> 
