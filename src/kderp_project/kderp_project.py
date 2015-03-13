@@ -51,7 +51,20 @@ class account_analytic_account(osv.osv):
                     if r_id not in list_res:
                         list_res.append(r_id[kd_ctx['sub_field']][0])
             args.append((('id', 'in', list_res)))
-        # Open Job from Quotation
+        # Search Job cua General Expense 
+        allocated_to = context.get("kderp_search_pge",[])
+        if allocated_to == 'GE':
+            job_ids=[]
+            cr.execute("""select 
+                            id  
+                        from 
+                            account_analytic_account
+                        where 
+                            general_expense""")
+            for job_id in cr.fetchall():
+                job_ids.append(job_id[0])
+            args.append((('id', 'in', job_ids)))
+        # Open Job from Quotation      
         quo_ids = context.get("kderp_search_default_quotation_lists",[])
         if quo_ids:
             job_ids=[]
