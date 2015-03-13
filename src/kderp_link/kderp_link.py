@@ -89,7 +89,7 @@ class kderp_link_server_line(osv.osv):
             connStr = klsl.link_server_id.connection_string
             remoteQuery = klsl.remote_query
             
-            SQLTable = 'CREATE TABLE IF NOT EXISTS %s (%s);' % (tblName, tblDefinition)
+            #SQLTable = 'CREATE TABLE IF NOT EXISTS %s (%s);' % (tblName, tblDefinition)
             
             SQLView = """CREATE VIEW %s AS Select *  from 
                                         dblink('%s', '%s') as 
@@ -97,7 +97,7 @@ class kderp_link_server_line(osv.osv):
                                                       connStr, remoteQuery,
                                                       tblOriginal, tblDefinition)
             #Create remote table
-            cr.execute(SQLTable)
+            #cr.execute(SQLTable)
             #Create remote View
             tools.drop_view_if_exists(cr, vwName)
             cr.execute(SQLView)
