@@ -11,9 +11,9 @@ class res_company(osv.osv):
     _name = 'res.company'
     
     _columns={
-             'location_code':fields.selection((('h','Hanoi'),('s','HCM')),'Location', help='Using for move code', required = True),
+             'location_code':fields.selection((('4','Hanoi'),('8','HCM')),'Location', help='Using for move code', required = True),
              }
     _defaults={
-               'location_code':'h'
+               'location_code':'4'
                }
 res_company()
