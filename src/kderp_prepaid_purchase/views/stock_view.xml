@@ -8,30 +8,35 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
             	<form string="Stock Location" version="7.0">
-            		<label for="location_id" class="oe_edit_only" string="Location Name"/>
-            		<h2><field name="name"/></h2>
-            		<label for="location_id" class="oe_edit_only" string="Belong to Location"/>
-					<h2><field name="location_id"/></h2>
-					<group string="Stock Location Info." col="4" colspan="4">
-						<field name="usage"/>	
-            			<field name='stock_code' attrs="{'required':[('global_stock','=',True)]}"/>
-            			<field name="partner_id"/>
-						<field name='global_stock'/>
-            		</group>
-                	<group string="Details">
-                		<field name="product_details" nolabel="1" string="Details" colspan="4">
-                			<tree>
-                				<field name='product_id'/>
-                				<field name='product_uom'/>
-                				<field name='price_unit'/>
-                				<field name='quantity'/>
-                				<field name='allocated_qty'/>
-                				<field name='available_qty'/>
-                				<field name='move_code'/>
-                				<field name="origin"/>
-                			</tree>
-                		</field>
-                	</group>
+            		<header>
+            			<button icon='gtk-convert' name="%(action_ppo_allocate_to_job)d" type='action' states='approved' string='Allocate to Job'/>
+            		</header>
+            		<sheet>
+	            		<label for="location_id" class="oe_edit_only" string="Location Name"/>
+	            		<h2><field name="name"/></h2>
+	            		<label for="location_id" class="oe_edit_only" string="Belong to Location"/>
+						<h2><field name="location_id"/></h2>
+						<group string="Stock Location Info." col="4" colspan="4">
+							<field name="usage"/>	
+	            			<field name='stock_code' attrs="{'required':[('global_stock','=',True)]}"/>
+	            			<field name="partner_id"/>
+							<field name='global_stock'/>
+	            		</group>
+	                	<group string="Details">
+	                		<field name="product_details" nolabel="1" string="Details" colspan="4">
+	                			<tree>
+	                				<field name='product_id'/>
+	                				<field name='product_uom'/>
+	                				<field name='price_unit'/>
+	                				<field name='quantity'/>
+	                				<field name='allocated_qty'/>
+	                				<field name='available_qty'/>
+	                				<field name='move_code'/>
+	                				<field name="origin"/>
+	                			</tree>
+	                		</field>
+	                	</group>
+                	</sheet>
                 </form>
             </field>
         </record>

@@ -22,8 +22,7 @@
             <field name="arch" type="xml">
             	<form string="Prepaid Order" version="7.0">            	
 	            	<header>						
-						<button icon="gtk-apply" name="action_draft_to_approved" type='object' states="draft" string="Approved"/>
-	               		<button icon='gtk-convert' name="%(action_ppo_allocate_to_job)d" type='action' states='approved' string='Allocate to Job'/>
+						<button icon="gtk-apply" name="action_draft_to_approved" type='object' states="draft" string="Approved"/>	               		
 	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"approved":"green","cancel":"red","draft":"blue"}' readonly="1"/>
 	            	</header>
 	            	<sheet>

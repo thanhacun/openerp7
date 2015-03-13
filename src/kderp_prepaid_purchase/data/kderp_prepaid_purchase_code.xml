@@ -21,7 +21,7 @@
             <field name="name">KDERP Prepaid Purchase Order HCM</field>
             <field name="code">kderp_prepaid_order_code</field>
             <field eval="4" name="padding"/>
-            <field name="prefix">SHPPO</field>
+            <field name="prefix">SPPO</field>
             <field name="suffix">YY-</field>
             <field name="example">SPPOYY-0000</field>
             <field name="padding">4</field>

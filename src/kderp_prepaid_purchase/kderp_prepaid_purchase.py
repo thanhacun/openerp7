@@ -69,7 +69,7 @@ class kderp_prepaid_purchase_order(osv.osv):
             for pk in ppo.packing_ids:
                 if pk not in ('draft','cancel'):
                     raise osv.except_osv("KDERP Warning", "State in packing related not in draft")
-        self.write(cr, uid, ids, {'state''cancel'})
+        self.write(cr, uid, ids, {'state':'cancel'})
         return True
     
     SELECTION_STATE = [('draft','Draft'),
