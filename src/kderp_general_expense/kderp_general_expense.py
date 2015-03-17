@@ -60,14 +60,18 @@ class account_analytic_account(osv.osv):
                  'code': lambda self, cr, uid, context={}:self.pool.get('ir.sequence').get(cr, uid, 'kderp.general.expense.code')[:-1] if context.get('general_expense',False) else ""
                  }
     
-    #Fuction get ID de mo Yearly G.E Budget tu GE vaf GE payment
+    #Fuction get ID de mo Yearly G.E hay Jpb tu GE vaf GE payment
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
             context = {}
-        if context.get('general_expense', False) and not view_id:
-            views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','view.account.analytic.kderp.yearlybudget.%s' % view_type)])
-            if views_ids:
-                view_id = views_ids[0]             
+        job_id = context.get('job_id',False) 
+        if job_id:
+            aaa_obj = self.pool.get('account.analytic.account')
+            ge_type = aaa_obj.read(cr, uid,job_id, ['general_expense'])['general_expense'] 
+            if ge_type and not view_id:
+                views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','view.account.analytic.kderp.yearlybudget.%s' % view_type)])
+                if views_ids:
+                    view_id = views_ids[0]                
         return super(account_analytic_account, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
     
 class kderp_other_expense(osv.osv):
@@ -335,12 +339,11 @@ class kderp_other_expense_line(osv.osv):
             bg_ids = self.pool.get('account.budget.post').search(cr, uid, [('code','=',bg_code)])
             res = bg_ids[0] if bg_ids else False
         return res
-    
     _columns = {
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
                 'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False),
-                'date':fields.related('expense_id', 'date', string='Date', type='date', store = False)
+                'date':fields.related('expense_id', 'date', string='Date', type='date', store = False),
                 #'budget_id':fields.many2one("account.budget.post", "Budget",required=True,ondelete="restrict",context={'job_id':0}),
                 }
     _defaults ={

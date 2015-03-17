@@ -72,15 +72,16 @@
 	                        	</group>	                        	
 	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
-	                                    <field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" options='{"always_reload": True}' context="{'general_expense': True}"/>
+	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge': parent.allocated_to,'job_id':account_analytic_id}"/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
-	                                    <field name="section_id" string="Allocated Section"/>	                                    
+	                                    <field name="section_id" string="Allocated Section"/>	                     
 	                                    <field name="amount" sum='Sub-total'/>
+<!-- 	                                    <field name="general_type" invisible="1" /> -->
 	                                </tree>
 	                            </field>
 	                            <field name="expense_line_ge" context="{'id':active_id,'account_analytic_id':account_analytic_id, 'budget_code':'A99'}" attrs="{'invisible':[('expense_type','not in',('fixed_asset','prepaid'))]}">
 	                                <tree string="Expense Details" editable="bottom">
-	                                    <field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" invisible="1" options='{"always_reload": True}' context="{'general_expense': True}"/>
+	                                    <field name='account_analytic_id' string='Job/G.E'  invisible="1" options='{"always_reload": True}' context="{'kderp_search_pge':parent.allocated_to,'job_id': account_analytic_id}"/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' invisible="1"/>
 	                                    <field name="name" string="Desc."/>	                                    
 	                                    <field name="amount" sum='Sub-total'/>
@@ -88,14 +89,14 @@
 	                            </field>
 	                            <field name="expense_line_pending" attrs="{'invisible':[('expense_type','!=','monthly_expense')]}" context="{'id':active_id,'account_analytic_id':account_analytic_id}">
 	                                <tree string="Expense Details" editable="bottom">
-	                                    <field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" options='{"always_reload": True}' context="{'general_expense': True}"/>
-	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge':parent.allocated_to,'job_id': account_analytic_id}"/>
+	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, }" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="belong_expense_id" domain="[('id','!=',parent.id),('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]"/>
-	                                    <field name="amount" sum='Sub-total'/>
+	                                    <field name="amount" sum='Sub-total'/> 
 	                                </tree>
 	                            </field>	                            
-	                            <group class="oe_subtotal_footer oe_right">
+	                            <group class="oe_subtotal_footer oe_right"> 
 	                            	<group colspan="2" col="2">
 	                            		<label for="amount_untaxed" string="Sub-total"/>
 		                            	<field nolabel="1" name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>

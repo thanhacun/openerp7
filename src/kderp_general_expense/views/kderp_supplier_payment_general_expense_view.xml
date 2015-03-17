@@ -64,7 +64,7 @@
                     			<tree string='Payment Detail' editable="top">
                     				<field name='account_analytic_id' 
                     						context="{'kderp_search':{'model':'kderp.other.expense','id':parent.expense_id,'field':'expense_line',
-                    												'sub_model':'kderp.other.expense.line','sub_field':'account_analytic_id'},'general_expense':True}" string='GE/Job'/>
+                    												'sub_model':'kderp.other.expense.line','sub_field':'account_analytic_id'},'job_id':account_analytic_id}" string='GE/Job'/>
                     				<field name='amount'/>
                     			</tree>
                     		</field>
