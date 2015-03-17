@@ -29,7 +29,7 @@ from kderp_base import kderp_base
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
-from openerp import netsvc
+from openerp import netsvc, SUPERUSER_ID
 
 class kderp_prepaid_purchase_order(osv.osv):
     _name = 'kderp.prepaid.purchase.order'

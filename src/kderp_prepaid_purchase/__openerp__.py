@@ -37,7 +37,8 @@
              'wizard/allocate_to_job_view.xml',
              "views/kderp_prepaid_purchase_view.xml",
              'views/stock_view.xml',
-             "views/kderp_company_view.xml"
+             "views/kderp_company_view.xml",
+             "views/kderp_purchase_inherit_workflow.xml"
             ],
     'demo':[],
     'installable':True

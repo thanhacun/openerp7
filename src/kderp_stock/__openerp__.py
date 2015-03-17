@@ -35,7 +35,8 @@
             "security/ir.model.access.csv",
             "views/kderp_stock_menu.xml",
             "views/kderp_stock_view.xml",
-            "wizard/kderp_packing_wizard_view.xml"
+            "wizard/kderp_packing_wizard_view.xml",
+            'data/kderp_stock_data_code.xml'
             ],
     'demo':[],
     'installable':True
