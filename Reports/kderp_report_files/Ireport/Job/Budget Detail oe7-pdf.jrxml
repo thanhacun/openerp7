@@ -4,6 +4,9 @@
 	<property name="ireport.x" value="263"/>
 	<property name="ireport.y" value="0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;kderp_budget_data_line/detail_budget&apos;] "/>
+	<parameter name="pCodeBudget" class="java.lang.String">
+		<defaultValueExpression><![CDATA["4000,7000,1022"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="xPath">
 		<![CDATA[/data/record]]>
 	</queryString>
@@ -215,6 +218,7 @@
 	<variable name="Per_Actual_Cost" class="java.lang.Double" resetType="None">
 		<variableExpression><![CDATA[$V{Total_Budget_Amt_VND}==null || $V{Total_Budget_Amt_VND}==0?0:($V{Total_Actual_Cost_VND}/$V{Total_Budget_Amt_VND})]]></variableExpression>
 	</variable>
+	<filterExpression><![CDATA[($P{pCodeBudget}==null||$P{pCodeBudget}=="")?true:($P{pCodeBudget}.indexOf( $F{BudgetCode} )>=0)]]></filterExpression>
 	<group name="Job Group" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{JobNumber}]]></groupExpression>
 		<groupHeader>
