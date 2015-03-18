@@ -12,8 +12,8 @@ class account_budget_post(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
+            
         job_id = context.get('job_id', False) 
-        
         if job_id:
             general_expense = context.get('general_expense', False)          
             budget_ids = []
@@ -33,7 +33,6 @@ class account_budget_post(osv.osv):
             for budget_id in cr.fetchall():
                 budget_ids.append(budget_id[0])
             args.append((('id', 'in', budget_ids)))
-
         return super(account_budget_post, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
 
     _columns = {
@@ -55,6 +54,7 @@ class account_analytic_account(osv.osv):
     _columns = {
                 'general_expense':fields.boolean("General Expense?")
                 }
+    
     _defaults = {
                  'general_expense': lambda self, cr, uid, context={}:context.get('general_expense',False),
                  'code': lambda self, cr, uid, context={}:self.pool.get('ir.sequence').get(cr, uid, 'kderp.general.expense.code')[:-1] if context.get('general_expense',False) else ""
@@ -63,7 +63,7 @@ class account_analytic_account(osv.osv):
     #Fuction get ID de mo Yearly G.E hay Jpb tu GE vaf GE payment
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
-            context = {}
+            context = {} 
         job_id = context.get('job_id',False) 
         if job_id:
             aaa_obj = self.pool.get('account.analytic.account')
@@ -339,6 +339,7 @@ class kderp_other_expense_line(osv.osv):
             bg_ids = self.pool.get('account.budget.post').search(cr, uid, [('code','=',bg_code)])
             res = bg_ids[0] if bg_ids else False
         return res
+    
     _columns = {
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
@@ -346,6 +347,7 @@ class kderp_other_expense_line(osv.osv):
                 'date':fields.related('expense_id', 'date', string='Date', type='date', store = False),
                 #'budget_id':fields.many2one("account.budget.post", "Budget",required=True,ondelete="restrict",context={'job_id':0}),
                 }
+    
     _defaults ={
                'budget_id':_get_budget
                }
@@ -366,6 +368,30 @@ class kderp_other_expense_line(osv.osv):
             else:
                 return False
         return True
+    
+    def action_open_related_exp(self, cr, uid, ids, *args):
+        context = filter(lambda arg: type(arg) == type({}), args)
+        if not context:
+            context = {}
+        else:
+            context = context[0]
+        context['general_expense'] = True
+        
+        expense_id = self.browse(cr, uid, ids[0]).expense_id.id
+        interface_string = 'General Expense'
+        if expense_id:
+            return {
+               'type': 'ir.actions.act_window',
+                'name': interface_string,
+                'view_type': 'form',
+               'view_mode': 'tree,form',
+               'context': context,
+               'res_model': 'kderp.other.expense',
+                 'domain': "[('id','=',%s)]" % expense_id
+            }
+        else:
+            return True
+        
     _constraints = [(_check_job_budget, 'Please check you Job and Budget you have just modify (No Budget Job) !', ['account_analytic_id','budget_id'])]
     
 #   
