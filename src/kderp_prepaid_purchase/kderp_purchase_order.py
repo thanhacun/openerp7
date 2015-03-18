@@ -76,7 +76,7 @@ class purchase_order(osv.osv):
             'partner_id': order.partner_id.id,
             'invoice_state': 'none', 
             'type': 'in',
-            'purchase_order_id': order.id,
+            'purchase_id': order.id,
             #'company_id': order.company_id.id,
             'move_lines' : [],
         }
@@ -102,7 +102,7 @@ class purchase_order(osv.osv):
             #'move_dest_id': order_line.move_dest_id.id,
             'state': 'draft',
             'type':'in',
-            'purchase_id': order_line.id,
+            'purchase_line_id': order_line.id,
             #'company_id': order.company_id.id,
             'price_unit': price_unit,
             'source_move_code':order_line.move_code
@@ -142,6 +142,7 @@ class purchase_order(osv.osv):
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
+        stock_move.action_done(cr, uid, todo_moves)
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 

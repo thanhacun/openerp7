@@ -24,4 +24,5 @@ import kderp_prepaid_purchase
 import kderp_purchase_order
 import stock
 import wizard
+import kderp_prepaid_purchase_line_detail
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

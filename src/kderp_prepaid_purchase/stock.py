@@ -105,6 +105,7 @@ class stock_move(osv.osv):
         return res
     
     _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id'])]
+    
 
 stock_move()
 
@@ -115,16 +116,16 @@ class stock_location_product_detail(osv.osv):
     
     _columns  = {
                  'location_id':fields.many2one('stock.location', 'Stock'),
-                 'product_id':fields.many2one('product.product', 'Product'),
+                 'product_id':fields.many2one('product.product','Product'),
                  'product_uom':fields.many2one('product.uom', 'Uom'),
-                 'price_unit':fields.float('Price Unit', digits=(16,2)),
+                 'price_unit':fields.float('Price Unit',digits=(16,2)),
                  'quantity':fields.float('Qty.', digits=(16,2)),
                  'allocated_qty':fields.float('Allocated Qty.', digits=(16,2)),
                  'available_qty':fields.float('Available Qty.', digits=(16,2)),
-                 'move_code':fields.integer('Move Code'),            
-                 'origin':fields.char('Origin', size=64),
+                 'move_code':fields.integer('Move Code'),
+                 'origin':fields.char('Origin', size=32),
                  'vat_code':fields.char('VAT Code', size=32),
-                 'product_description':fields.char('Desc.', size=256),
+                 'product_description':fields.char('Desc', size=256),
                  }
     
     def init(self,cr):
@@ -133,106 +134,170 @@ class stock_location_product_detail(osv.osv):
         cr.execute("""SELECT 1  FROM  information_schema.views where table_name = '%s'""" % checkView1)
         if cr.rowcount:        
             tools.drop_view_if_exists(cr, vwName)
-            tools.drop_view_if_exists(cr, 'vwcombine_stock_move')
-            cr.execute("""Create or replace view vwcombine_stock_move as 
-                        Select 
-                                sl.id as location_id,
-                                sm.product_id,
-                                sm.product_qty as quantity,
-                                sm.price_unit,
-                                sm.product_uom,
-                                sm.move_code,
-                                sm.source_move_code,
-                                sm.origin,
-                                rp.vat_code,
-                                sm.name as product_description        
-                            from
-                                stock_location sl
-                            left join
-                                stock_move sm on (sl.id = sm.location_dest_id or sl.id=sm.location_id) and state = 'done' and sm.global_state <> 'done'
-                            left join
-                                res_partner rp on sm.partner_id = rp.id
-                            where
-                                sm.move_code is not null or sm.source_move_code is not null
-                            group by
-                                sl.id,
-                                sm.id,
-                                sm.product_qty,
-                                sm.price_unit,
-                                sm.product_uom,
-                                sm.move_code,    
-                                sm.origin,
-                                rp.vat_code,
-                                sm.name
-                        Union
-                            Select 
-                                sl.id as location_id,
-                                pp.id as product_id,
-                                sm.product_qty as quantity,
-                                sm.price_unit,
-                                pu.id as product_uom,
-                                sm.move_code,
-                                sm.source_move_code,
-                                sm.origin,
-                                sm.vat_code,
-                                sm.product_description
-                            from
-                                stock_location sl
-                            left join
-                                vwstock_move_remote sm on (sl.stock_code = stock_destination or sl.stock_code = stock_source) and global_state <> 'done'
-                            left join
-                                product_product pp on product_code = pp.default_code
-                            left join
-                                product_uom pu on product_uom = pu.name
-                            where
-                                sm.move_code is not null or sm.source_move_code is not null
-                            Group by
-                                sl.id,
-                                pp.id,
-                                sm.product_qty,
-                                sm.price_unit,
-                                pu.id,
-                                sm.move_code,
-                                sm.origin,
-                                sm.vat_code,
-                                sm.product_description,
-                                sm.source_move_code
-            """)
             cr.execute("""
                         Create or replace view %s as 
                             ---***********STOCK IN ***************************
                             Select
-                                row_number() over (order by location_id,product_id) as id,
-                                *
-                            from
-                                (Select 
-                                    sl.id as location_id,
-                                    smi.product_id,
-                                    smi.quantity as quantity,
-                                    sum(coalesce(smo.quantity,0)) as allocated_qty,
-                                    smi.quantity - sum(coalesce(smo.quantity,0)) as available_qty,
-                                    smi.price_unit,
-                                    smi.product_uom,
-                                    smi.move_code,    
-                                    smi.origin,
-                                    smi.vat_code,
-                                    smi.product_description
-                                from
-                                    stock_location sl
-                                left join
-                                    vwcombine_stock_move smi on sl.id = smi.location_id 
-                                left join
-                                    vwcombine_stock_move smo on smi.move_code = smo.source_move_code and smo.move_code is null and smi.product_uom = smo.product_uom and sl.id = smo.location_id
-                                where
-                                    smi.move_code is not null
-                                group by
-                                    sl.id,
-                                    smi.product_id,
-                                    smi.quantity,
-                                    smi.price_unit,
-                                    smi.product_uom,
-                                    smi.move_code,
-                                    smi.origin,
-                                    smi.vat_code,
-                                    smi.product_description
-                               ) vwstockinout""" % vwName)
+                                        row_number() over (order by vwin.location_id, vwin.move_code) as id,
+                                        vwin.location_id,
+                                        vwin.product_uom,
+                                        vwin.move_code,
+                                        vwin.source_move_code,
+                                        vwin.origin,
+                                        vwin.vat_code,
+                                        vwin.product_description,
+                                        vwin.quantity,
+                                        vwin.product_id,
+                                        vwin.price_unit,
+                                        sum(coalesce(vwout.quantity,0)) as allocated_qty,
+                                        vwin.quantity - sum(coalesce(vwout.quantity,0)) as available_qty
+                                    from
+                                        stock_location sl
+                                    left join
+                                        (-- STOCK IN
+                                        --Stock In Local
+                                            Select 
+                                                sl.id as location_id,
+                                                sm.product_id,
+                                                sm.product_qty as quantity,
+                                                sm.price_unit,
+                                                sm.product_uom,
+                                                sm.move_code,
+                                                sm.source_move_code,
+                                                sm.origin,
+                                                rp.vat_code,
+                                                sm.name as product_description        
+                                            from
+                                                stock_location sl
+                                            left join
+                                                stock_move sm on (sl.id = sm.location_dest_id) and state = 'done' and sm.global_state <> 'done'
+                                            left join
+                                                res_partner rp on sm.partner_id = rp.id
+                                            where
+                                                sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(move_code,0)>0 
+                                            group by
+                                                sl.id,
+                                                sm.id,
+                                                sm.product_qty,
+                                                sm.price_unit,
+                                                sm.product_uom,
+                                                sm.move_code,    
+                                                sm.origin,
+                                                rp.vat_code,
+                                                sm.name
+                                        Union
+                                        --Stock In Remote
+                                            Select 
+                                                sl.id as location_id,
+                                                pp.id as product_id,
+                                                sm.product_qty as quantity,
+                                                sm.price_unit,
+                                                pu.id as product_uom,
+                                                sm.move_code,
+                                                sm.source_move_code,
+                                                sm.origin,
+                                                sm.vat_code,
+                                                sm.product_description
+                                            from
+                                                stock_location sl
+                                            left join
+                                                vwstock_move_remote sm on (sl.stock_code = stock_destination) and global_state <> 'done'
+                                            left join
+                                                product_product pp on product_code = pp.default_code
+                                            left join
+                                                product_uom pu on product_uom = pu.name
+                                            where
+                                                sl.global_stock and coalesce(move_code,0) > 0 and coalesce(stock_destination,'') != coalesce(stock_source, '') 
+                                            Group by
+                                                sl.id,
+                                                pp.id,
+                                                sm.product_qty,
+                                                sm.price_unit,
+                                                pu.id,
+                                                sm.move_code,
+                                                sm.origin,
+                                                sm.vat_code,
+                                                sm.product_description,
+                                                sm.source_move_code) vwin on sl.id = vwin.location_id
+                                    left join
+                                        (-- STOCK Out
+                                        --Stock Out Local
+                                        Select 
+                                                sl.id as location_id,
+                                                sm.product_id,
+                                                sm.product_qty as quantity,
+                                                sm.price_unit,
+                                                sm.product_uom,
+                                                sm.move_code,
+                                                sm.source_move_code,
+                                                sm.origin,
+                                                rp.vat_code,
+                                                sm.name as product_description        
+                                            from
+                                                stock_location sl
+                                            left join
+                                                stock_move sm on (sl.id = sm.location_id) and state = 'done' and sm.global_state <> 'done'
+                                            left join
+                                                res_partner rp on sm.partner_id = rp.id
+                                            where
+                                                sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(source_move_code,0)>0 
+                                            group by
+                                                sl.id,
+                                                sm.id,
+                                                sm.product_qty,
+                                                sm.price_unit,
+                                                sm.product_uom,
+                                                sm.move_code,    
+                                                sm.origin,
+                                                rp.vat_code,
+                                                sm.name
+                                        Union
+                                        --Stock Out Remote
+                                            Select 
+                                                sl.id as location_id,
+                                                pp.id as product_id,
+                                                sm.product_qty as quantity,
+                                                sm.price_unit,
+                                                pu.id as product_uom,
+                                                sm.move_code,
+                                                sm.source_move_code,
+                                                sm.origin,
+                                                sm.vat_code,
+                                                sm.product_description
+                                            from
+                                                stock_location sl
+                                            left join
+                                                vwstock_move_remote sm on (sl.stock_code = stock_source) and global_state <> 'done'
+                                            left join
+                                                product_product pp on product_code = pp.default_code
+                                            left join
+                                                product_uom pu on product_uom = pu.name
+                                            where
+                                                sl.global_stock and coalesce(source_move_code,0) > 0 and coalesce(stock_destination,'') != coalesce(stock_source, '')
+                                            Group by
+                                                sl.id,
+                                                pp.id,
+                                                sm.product_qty,
+                                                sm.price_unit,
+                                                pu.id,
+                                                sm.move_code,
+                                                sm.origin,
+                                                sm.vat_code,
+                                                sm.product_description,
+                                                sm.source_move_code) vwout on vwin.location_id = vwout.location_id and vwin.move_code = vwout.source_move_code
+                                    where
+                                        coalesce(vwin.location_id,0)>0 or coalesce(vwout.location_id,0)>0 
+                                    group by
+                                        sl.id,
+                                        vwin.location_id,
+                                        vwin.quantity,    
+                                        vwin.product_uom,
+                                        vwin.move_code,
+                                        vwin.source_move_code,
+                                        vwin.origin,
+                                        vwin.vat_code,
+                                        vwin.product_description,
+                                        vwin.product_id,
+                                        vwin.price_unit
+                                    Order by
+                                        sl.id""" % vwName)
