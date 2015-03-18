@@ -35,7 +35,23 @@ class kderp_order_allocate_to_job_select(osv.osv_memory):
     def _get_prepaid_order(self, cr, uid, context):        
         stock_location_id = context.get('location_id', 0)
         try:
-            cr.execute("""Select distinct origin from stock_location_product_detail where location_id=%s and origin is not null and available_qty>0 order by origin""" % stock_location_id)
+            cr.execute("""Select                                    
+                            origin
+                        from
+                            stock_location sl
+                        left join
+                            stock_move sm on sl.id = sm.location_dest_id and state = 'done' and sm.global_state <> 'done'
+                        where
+                            sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and sm.move_code is not null and sl.id = %s
+                        Union
+                        Select                                    
+                           origin
+                        from
+                            stock_location sl
+                        left join
+                            vwstock_move_remote sm on sl.stock_code = sm.stock_destination and sm.global_state <> 'done'
+                        where
+                            sl.global_stock and coalesce(sm.stock_destination,'') != coalesce(sm.stock_source,'') and sm.move_code is not null and sl.id = %s""" % (stock_location_id, stock_location_id))
         except:
             res = []
         res = []
@@ -50,7 +66,8 @@ class kderp_order_allocate_to_job_select(osv.osv_memory):
     
     def open_stock_allocated(self, cr, uid, ids, context):
         if not context:
-            context = context    
+            context = {}
+        context['origin'] = self.browse(cr, uid, id, context).prepaid_ref
         return {
             'type': 'ir.actions.act_window',
             'res_model':'kderp.stock.order.allocate.to.job',
@@ -129,8 +146,9 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
         'stock_location_id':fields.many2one('stock.location', 'From Stock', readonly = 1),
         'location_dest_id':fields.many2one('stock.location', 'To Stock', required = True, domain = [('usage','=','internal')]),
         'description':fields.char('Description', size=128, required = True),
+        'origin':fields.char('Origin', readonly = 1),
         'partner_id':fields.many2one('res.partner', 'Supplier', ondelete='restrict', required=True),
-        'address_id':fields.many2one('res.partner', 'Address', ondelete='restrict', required=True),
+        'address_id':fields.many2one('res.partner', 'Address', ondelete='restrict'),
         'product_details' : fields.one2many('kderp.stock.move.allocate.to.job.line', 'wizard_id', 'Product Moves'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Job', required=True, ondelete='CASCADE'),
     }
@@ -138,7 +156,7 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
     def _allocate_line_for(self, cr, uid, pd, context=None):
         pol = {
             'product_id': pd.product_id.id,
-            'price_unit':pd.price_unit,
+            'price_unit':pd.price_unit if pd.price_unit else False,
             'product_uom':pd.product_uom.id,
             'available_qty':pd.available_qty,
             'product_qty': pd.available_qty if pd.available_qty==1 else False,
@@ -177,7 +195,7 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
                 res.update(partner_id=partner_id)
             if 'address_id' and vat_code:
                 res.update(address_id=partner_id)
-                
+        res.update(origin=context.get('origin', ''))
         if 'description' in fields:
             res.update(description='Allocated material from stock to Job')        
         if 'stock_location_id' in fields:
@@ -192,8 +210,7 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
         return res
 
-    def _create_poline(self, wizard_obj_line, wizard_obj):
-
+    def _create_poline(self, wizard_obj_line, wizard_obj):        
         return (0, False, {
             'account_analytic_id': wizard_obj_line.account_analytic_id.id if wizard_obj_line.account_analytic_id else wizard_obj.account_analytic_id.id,
             'plan_qty': wizard_obj_line.product_qty,            
@@ -225,7 +242,7 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
         po_data.update({
             'date_order': time.strftime('%Y-%m-%d'),
             'partner_id': allocateJob.partner_id.id,
-            'address_id': allocateJob.address_id.id,
+            'address_id': allocateJob.address_id.id if allocateJob.address_id else allocateJob.partner_id.id,
             'pricelist_id': pricelist_id,
             'description': allocateJob.description,
             'typeoforder': 'm',
@@ -253,6 +270,8 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
             #        raise osv.except_osv(_('Warning!'), _('The unit of measure rounding does not allow you to ship "%s %s", only rounding of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
             
             pols.append(self._create_poline(wizard_line, allocateJob))
+        if not pols:
+            return {'type': 'ir.actions.act_window_close'}
         po_data.update(order_line=pols)
         po_id = po_obj.create(cr, uid, po_data, context)
         return {

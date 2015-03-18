@@ -189,7 +189,8 @@ class kderp_prepaid_purchase_order(osv.osv):
     
     def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
+            #'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
+            'name': self.pool.get('stock.picking').get_newcode(cr, uid, 'in', context),
             'origin': order.name,
             'date': self.date_to_datetime(cr, uid, order.date, context),
             'partner_id': order.partner_id.id,
@@ -247,6 +248,7 @@ class kderp_prepaid_purchase_order(osv.osv):
         """
         if not picking_id:
             picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
+            
         todo_moves = []
         stock_move = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
@@ -260,6 +262,7 @@ class kderp_prepaid_purchase_order(osv.osv):
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
+        stock_move.action_done(cr, uid, todo_moves)
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
@@ -340,3 +343,18 @@ class kderp_prepaid_purchase_order_line(osv.osv):
                  'location_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'location_id', context),
                  'price_unit': lambda *x: 0.0,
                  }
+    
+    def action_open_line_detail(self, cr, uid, ids, context):
+        if not context:
+            context = {}
+        context['search_default_group_order_line'] = True
+        res_action = {
+                    'type': 'ir.actions.act_window',
+                    'domain': [('prepaid_order_line_id','in', ids)],
+                    'res_model':'kderp.prepaid.purchase.order.line.detail',
+                    'name': _('Allocated Detail'),
+                    'view_type': 'form',
+                    'view_mode': 'tree',
+                    'context': context
+                    }
+        return res_action
