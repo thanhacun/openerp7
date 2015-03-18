@@ -140,17 +140,18 @@ class kderp_expense_budget_line(osv.osv):
                 kebl_ids.append(kebl.id)                                
             else:
                 res[kebl.id] = False
-        kebl_ids = ','.join(map(str, kebl_ids))
-        cr.execute("""Select kebl.id,
-                            kotel.section_id
-                        from
-                            kderp_expense_budget_line kebl
-                        left join
-                            kderp_other_expense_line kotel on kebl.id = expense_budget_line
-                        where
-                            kebl.id in (%s)""" % kebl_ids)
-        for id, sect_id in cr.fetchall():
-            res[id] = sect_id 
+        if kebl_ids:
+            kebl_ids = ','.join(map(str, kebl_ids))
+            cr.execute("""Select kebl.id,
+                                kotel.section_id
+                            from
+                                kderp_expense_budget_line kebl
+                            left join
+                                kderp_other_expense_line kotel on kebl.id = expense_budget_line
+                            where
+                                kebl.id in (%s)""" % kebl_ids)
+            for id, sect_id in cr.fetchall():
+                res[id] = sect_id 
         return res
     
     _columns = {
