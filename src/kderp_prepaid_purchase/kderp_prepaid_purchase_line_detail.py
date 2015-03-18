@@ -44,7 +44,7 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
         tools.drop_view_if_exists(cr, vwName)        
         sqlCommand = """Create or replace view %s as 
                             Select 
-                                ('1' || kppol.id::text)::integer as id,
+                                ('1' || row_number() over (order by kppol.id)::text)::integer as id,                                
                                 kppol.id as prepaid_order_line_id,
                                 smo.origin as po_number,
                                 aaa.code as move_description,
@@ -69,7 +69,7 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
                                 coalesce(smo.id,0)>0
                             union all
                             Select 
-                                ('2' || kppol.id::text)::integer as id,
+                                ('2' || row_number() over (order by kppol.id)::text)::integer as id,
                                 kppol.id as prepaid_order_line_id,
                                 vsmo.origin as po_number,
                                 move_description,
