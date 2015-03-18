@@ -7,8 +7,10 @@
 			<field name="model">kderp.job.wizard.balance.sheet.form</field>
 			<field name="arch" type="xml">
 				<form string="Input Value for Job Budget form" version="7.0" readonly="1" create="false" >
-					<field name='pcodebudget' widget="many2many_tags" options="{'limit': 10, 'create': false, 'create_edit': false}"/>	
-					<field name='file_type'/>							
+					<group colspan="2" col="2">
+						<field name='pcodebudget' widget="many2many_tags" options="{'limit': 10, 'create': false, 'create_edit': false}"/>	
+						<field name='file_type'/>	
+					</group>						
 					<footer>
 						<button string='Print' name="print_report" type="object" class="oe_highlight"/>
 						or
