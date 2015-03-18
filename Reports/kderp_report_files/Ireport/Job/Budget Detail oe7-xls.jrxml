@@ -6,6 +6,9 @@
 	<property name="OPENERP_RELATIONS" value="[&apos;kderp_budget_data_line/detail_budget&apos;] "/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="true"/>
+	<parameter name="pCodeBudget" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString language="xPath">
 		<![CDATA[/data/record]]>
 	</queryString>
