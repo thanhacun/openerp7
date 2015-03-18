@@ -21,3 +21,4 @@
 
 import update_contract_status
 import create_contract_from_quotation
+import kderp_job_wizard_form_report
