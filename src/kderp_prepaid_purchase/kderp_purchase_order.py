@@ -38,10 +38,57 @@ class purchase_order(osv.osv):
               'allocate_order':fields.boolean("Allocate Order") 
               }
     
-    def action_create_received_picking(self, cr, uid, ids, context = {}):
+    def action_create_picking(self, cr, uid, ids, context = {}):
         picking_id = self.action_picking_create(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'state':'done'})
         return picking_id    
+    
+    def action_draft_to_final_quotation(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        todo = []
+        period_obj = self.pool.get('account.period')
+        picking_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            if not po.order_line:
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+            for line in po.order_line:
+                if line.state=='draft':
+                    todo.append(line.id)
+
+            period_id = po.period_id and po.period_id.id or False
+            if not period_id:
+                period_ids = period_obj.find(cr, uid, po.date_order, context)
+                period_id = period_ids and period_ids[0] or False
+            self.write(cr, uid, [po.id], {'state' : 'waiting_for_roa', 'period_id':period_id,'validator' : uid})
+                        
+            if po.allocate_order and not po.picking_ids:                
+                picking_ids = self.action_create_picking(cr, uid, [po.id], context)
+        self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
+        return picking_ids
+    
+    def act_assign_move_picking(self, cr, uid, ids, context = {}):
+        todo_moves = []
+        stock_move = self.pool.get('stock.move')
+        wf_service = netsvc.LocalService("workflow")
+        for po in self.browse(cr, uid, ids, context):
+            for sp in po.picking_ids:
+                for sm in sp.move_lines:
+                    todo_moves.append(sm.id)
+                wf_service.trg_validate(uid, 'stock.picking', sp.id, 'button_confirm', cr)
+        self.write(cr, uid, ids, {'state' : 'waiting_for_delivery'})
+        stock_move.force_assign(cr, uid, todo_moves)
+        return ids
+    
+    def action_receive_picking(self, cr, uid, ids, context = {}):
+        stock_move = self.pool.get('stock.move')                
+        for po in self.browse(cr, uid, ids, context):
+            for sp in po.picking_ids:
+                todo_moves = []
+                for sm in sp.move_lines:
+                    todo_moves.append(sm.id)
+                stock_move.action_done(cr, uid, todo_moves)                
+        self.write(cr, uid, ids, {'state' : 'done'})
+        return ids
     
     #Stock Picking and MoveArea
     def date_to_datetime(self, cr, uid, userdate, context=None):
@@ -141,9 +188,6 @@ class purchase_order(osv.osv):
                 #    order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
-        stock_move.force_assign(cr, uid, todo_moves)
-        stock_move.action_done(cr, uid, todo_moves)
-        wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
     def action_picking_create(self, cr, uid, ids, context=None):
