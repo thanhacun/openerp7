@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Job Number and Contract List" language="groovy" printOrder="Horizontal" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1176" leftMargin="14" rightMargin="0" topMargin="17" bottomMargin="20" isFloatColumnFooter="true">
 	<property name="ireport.zoom" value="2.2"/>
-	<property name="ireport.x" value="1339"/>
+	<property name="ireport.x" value="1136"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.layers" value="##Wed Apr 27 09:53:06 ICT 2011\nlayer.1.name=Static Text\nlayer.1.visible=true\nlayer.1.id=1\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;contract_ids/quotation_ids/contract_id/client_payment_ids&apos;]"/>
@@ -1694,7 +1694,7 @@ Amount (USD)]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="5"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$V{InvCount}==1?($F{InvoicieAmount}==null?0:$F{InvoicieAmount}):null]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{InvCount}==1?(($F{job_inv_state}=="draft"||$F{job_inv_state}=="cancel")?0:($F{InvoicieAmount}==null?0:$F{InvoicieAmount})):null]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToTallestObject" x="794" y="0" width="33" height="20"/>
