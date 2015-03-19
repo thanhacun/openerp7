@@ -269,7 +269,7 @@
 			<staticText>
 				<reportElement x="0" y="0" width="1190" height="36"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="16" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="15" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Project List]]></text>
 			</staticText>
