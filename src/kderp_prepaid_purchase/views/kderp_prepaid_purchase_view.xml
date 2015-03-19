@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>        
-
+        
     	<record id="view_kderp_prepaid_purchase_order_tree" model="ir.ui.view">
             <field name="name">view.kderp.prepaid.purchase.order.tree</field>
             <field name="model">kderp.prepaid.purchase.order</field>
@@ -107,9 +107,8 @@
             <field name="context">{'show_full_name':True,'show_field':['code'],'search_default_working':1}</field>
             <field name="search_view_id" ref="view_kderp_prepaid_purchase_order_filter"/>
         </record>
-        <menuitem 
-        			action="kderp_action_prepaid_order" 
-        			id="kderp_prepaid_purchase_order_mnu_action" 
-        			parent="kderp_purchase.kderp_exepense_purchase" sequence="8"/>
+        
+        <menuitem action="kderp_action_prepaid_order" id="kderp_prepaid_purchase_order_mnu_action" parent="kderp_stock.kderp_kderp_prepaid_purchase_order" sequence="5"/>
+
 	</data>
 </openerp>
