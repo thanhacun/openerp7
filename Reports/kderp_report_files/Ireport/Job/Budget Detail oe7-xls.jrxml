@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Budget Balance Sheet" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="263"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Budget Balance Sheet" language="groovy" pageWidth="1150" pageHeight="802" orientation="Landscape" columnWidth="1150" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5000000000000004"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;kderp_budget_data_line/detail_budget&apos;] "/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="true"/>
 	<parameter name="pCodeBudget" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -301,63 +303,66 @@
 					<text><![CDATA[BUDGET AMOUNT]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="25" y="169" width="34" height="20"/>
+					<reportElement x="25" y="169" width="47" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[PM(E/M)]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="907" y="149" width="45" height="20"/>
+					<reportElement x="893" y="149" width="59" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[Start]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="907" y="169" width="45" height="20"/>
+					<reportElement x="893" y="169" width="59" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[Complete]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="264" y="169" width="43" height="20"/>
+					<reportElement x="211" y="169" width="66" height="20"/>
+					<box leftPadding="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[OWNER]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="1039" y="149" width="54" height="20"/>
+					<reportElement x="1043" y="149" width="54" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[Date of report:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="264" y="149" width="43" height="20"/>
+					<reportElement x="211" y="149" width="66" height="20"/>
+					<box leftPadding="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[JOB NAME]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="25" y="149" width="34" height="20"/>
+					<reportElement x="25" y="149" width="47" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[Job No.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="588" y="149" width="32" height="20"/>
+					<reportElement x="524" y="149" width="43" height="20"/>
+					<box leftPadding="15"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[CLIENT:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="828" y="5" width="256" height="15"/>
+					<reportElement x="829" y="5" width="256" height="15"/>
 					<box leftPadding="0"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
@@ -365,7 +370,7 @@
 					<text><![CDATA[Checked by]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="828" y="20" width="64" height="85"/>
+					<reportElement x="829" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -378,7 +383,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="892" y="20" width="64" height="85"/>
+					<reportElement x="893" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -391,7 +396,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="956" y="20" width="64" height="85"/>
+					<reportElement x="957" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -404,7 +409,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="1020" y="20" width="64" height="85"/>
+					<reportElement x="1021" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -417,7 +422,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="1084" y="20" width="64" height="85"/>
+					<reportElement x="1085" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -444,21 +449,21 @@
 					<text><![CDATA[ACTUAL COST]]></text>
 				</staticText>
 				<textField pattern="dd-MMM-yy" isBlankWhenNull="true">
-					<reportElement x="952" y="149" width="71" height="20"/>
+					<reportElement x="952" y="149" width="66" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{StartDate}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="58" y="149" width="158" height="20"/>
+					<reportElement x="72" y="149" width="139" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{JobNumber}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="619" y="149" width="266" height="20"/>
+					<reportElement x="567" y="149" width="266" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.75"/>
 					</box>
@@ -468,14 +473,14 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Client}]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd-MMM-yy" isBlankWhenNull="true">
-					<reportElement x="952" y="169" width="71" height="20"/>
+					<reportElement x="952" y="169" width="66" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{CompleteDate}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="58" y="169" width="158" height="20"/>
+					<reportElement x="72" y="169" width="139" height="20"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 					</box>
@@ -485,7 +490,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{PME}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToBandHeight" x="306" y="169" width="256" height="20"/>
+					<reportElement stretchType="RelativeToBandHeight" x="277" y="169" width="247" height="20"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.75"/>
@@ -499,14 +504,14 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{OwnerName}.toUpperCase()]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToBandHeight" x="306" y="149" width="256" height="20"/>
+					<reportElement stretchType="RelativeToBandHeight" x="277" y="149" width="247" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{JobName}.toUpperCase()]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd-MMM-yy">
-					<reportElement x="1092" y="149" width="52" height="20"/>
+					<reportElement x="1096" y="149" width="52" height="20"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica"/>
@@ -981,7 +986,7 @@
 			</band>
 		</groupFooter>
 	</group>
-	<group name="Temp Group" isReprintHeaderOnEachPage="true">
+	<group name="Temp Group">
 		<groupExpression><![CDATA[$V{VTemp}]]></groupExpression>
 		<groupHeader>
 			<band height="34">
@@ -1752,7 +1757,7 @@ Contract No.]]></text>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
-		<band height="16">
+		<band height="16" splitType="Prevent">
 			<printWhenExpression><![CDATA[$F{Po_Number}!=null && $F{Po_Number}!=""]]></printWhenExpression>
 			<staticText>
 				<reportElement stretchType="RelativeToBandHeight" x="336" y="0" width="66" height="16" isPrintWhenDetailOverflows="true"/>
