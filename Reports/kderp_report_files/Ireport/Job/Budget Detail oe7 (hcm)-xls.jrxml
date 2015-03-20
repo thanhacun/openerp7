@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Budget Balance Sheet" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Budget Balance Sheet" language="groovy" pageWidth="1150" pageHeight="802" orientation="Landscape" columnWidth="1150" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="508"/>
 	<property name="ireport.y" value="0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;kderp_budget_data_line/detail_budget&apos;] "/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="true"/>
 	<parameter name="pCodeBudget" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -360,7 +362,7 @@
 					<text><![CDATA[CLIENT:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="828" y="5" width="256" height="15"/>
+					<reportElement x="830" y="5" width="256" height="15"/>
 					<box leftPadding="0"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
@@ -368,7 +370,7 @@
 					<text><![CDATA[Checked by]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="828" y="20" width="64" height="85"/>
+					<reportElement x="830" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -381,7 +383,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="892" y="20" width="64" height="85"/>
+					<reportElement x="894" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -394,7 +396,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="956" y="20" width="64" height="85"/>
+					<reportElement x="958" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -407,7 +409,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="1020" y="20" width="64" height="85"/>
+					<reportElement x="1022" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -420,7 +422,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="1084" y="20" width="64" height="85"/>
+					<reportElement x="1086" y="20" width="64" height="85"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -454,14 +456,14 @@
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{StartDate}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="58" y="149" width="158" height="20"/>
+					<reportElement x="59" y="149" width="158" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{JobNumber}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="619" y="149" width="266" height="20"/>
+					<reportElement x="620" y="149" width="266" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.75"/>
 					</box>
@@ -478,7 +480,7 @@
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{CompleteDate}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="58" y="169" width="158" height="20"/>
+					<reportElement x="59" y="169" width="158" height="20"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 					</box>
@@ -488,7 +490,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{PME}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToBandHeight" x="306" y="169" width="256" height="20"/>
+					<reportElement stretchType="RelativeToBandHeight" x="307" y="169" width="256" height="20"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.75"/>
@@ -502,14 +504,14 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{OwnerName}.toUpperCase()]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToBandHeight" x="306" y="149" width="256" height="20"/>
+					<reportElement stretchType="RelativeToBandHeight" x="307" y="149" width="256" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{JobName}.toUpperCase()]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd-MMM-yy">
-					<reportElement x="1092" y="149" width="52" height="20"/>
+					<reportElement x="1093" y="149" width="52" height="20"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica"/>
@@ -984,7 +986,7 @@
 			</band>
 		</groupFooter>
 	</group>
-	<group name="Temp Group" isReprintHeaderOnEachPage="true">
+	<group name="Temp Group">
 		<groupExpression><![CDATA[$V{VTemp}]]></groupExpression>
 		<groupHeader>
 			<band height="34">
