@@ -32,7 +32,7 @@ class kderp_update_quotation_date(osv.osv_memory):
                         from
                             sale_order so
                         where
-                            completion_date <> completion_date_contract
+                            completion_date is null and completion_date_contract is not null
                             """)       
         for so_id, so_date in cr.fetchall():           
             self.pool.get('sale.order').write(cr, uid, [so_id], {'completion_date': so_date})
