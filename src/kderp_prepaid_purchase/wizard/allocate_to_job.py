@@ -187,14 +187,11 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
         cr.execute("""Select vat_code from stock_location_product_detail where location_id=%s and coalesce(vat_code,'')<>'' limit 1""" % stock_location_id)
         if cr.rowcount:
             vat_code = cr.fetchone()[0]
-             
-        if vat_code:
-            rp_ids = self.pool.get('res.partner').search(cr, uid, [('vat_code','ilike', vat_code)], limit=1)
-            partner_id = rp_ids[0] if rp_ids else False
-            if 'partner_id':
-                res.update(partner_id=partner_id)
-            if 'address_id' and vat_code:
-                res.update(address_id=partner_id)
+        
+        if 'partner_id':
+            partner_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id            
+            res.update(partner_id=partner_id)        
+            res.update(address_id=partner_id)
         res.update(origin=context.get('origin', ''))
         if 'description' in fields:
             res.update(description='Allocated material from stock to Job')        
@@ -244,7 +241,7 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
             'partner_id': allocateJob.partner_id.id,
             'address_id': allocateJob.address_id.id if allocateJob.address_id else allocateJob.partner_id.id,
             'pricelist_id': pricelist_id,
-            'description': allocateJob.description,
+            'notes': allocateJob.description,
             'typeoforder': 'm',
             'account_analytic_id': job_id,
             'name': po_obj.new_code(cr, uid, False, job_id, 'm')['value']['name'],

@@ -230,8 +230,10 @@ class kderp_other_expense(osv.osv):
         if not context:
             context = {}
         res = {}
-        for koel in self.browse(cr, uid, ids, context = {}):
-            res[koel.expense_id.id] = True
+        koel_obj = self.pool.get('kderp.other.expense.line')
+        for koel in koel_obj.browse(cr, uid, ids, context = {}):
+            if koel.expense_id:
+                res[koel.expense_id.id] = True
             if koel.belong_expense_id:
                 res[koel.belong_expense_id.id] = True
         return res.keys()
@@ -393,5 +395,3 @@ class kderp_other_expense_line(osv.osv):
             return True
         
     _constraints = [(_check_job_budget, 'Please check you Job and Budget you have just modify (No Budget Job) !', ['account_analytic_id','budget_id'])]
-    
-#   

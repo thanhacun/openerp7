@@ -20,6 +20,8 @@
 ##############################################################################
 
 from openerp.osv import fields, osv, orm
+import openerp.addons.decimal_precision as dp
+
 import time
 import pytz
 from datetime import datetime
@@ -33,15 +35,215 @@ class purchase_order(osv.osv):
     _name = 'purchase.order'
     _inherit = 'purchase.order'
     _description = 'KDERP Purchase Order'
-     
-    _columns={
-              'allocate_order':fields.boolean("Allocate Order") 
-              }
+
+    def _get_summary_payment_amount(self, cr, uid, ids, name, args, context=None):#Tinh Requested Amount, Paid Amount, VAT Amount theo Currency Cua Purchase
+        if not context: context={}
+        res={}
+        cur_obj = self.pool.get('res.currency')
+        company_currency=self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
+                
+        for po in self.browse(cr, uid, ids):            
+            if po.allocate_order:
+                if po.state not in ('draft','cancel'):                    
+                    total_request_amount = po.amount_total
+                    total_payment_amount = po.amount_total
+                    total_vat_amount = po.amount_total
+                    subtotal_vat_amount = po.final_price
+                    amount_vat = po.amount_tax                    
+                    payment_percentage = 1
+                else:
+                    total_request_amount = 0
+                    total_payment_amount = 0
+                    total_vat_amount = 0
+                    subtotal_vat_amount = 0
+                    amount_vat = 0
+                    payment_percentage = 1
+            else:
+                total_request_amount=0
+                total_vat_amount = 0
+                subtotal_vat_amount = 0
+                amount_vat = 0
+                total_payment_amount=0
+                
+                po_currency_id = po.currency_id.id
+                po_date = po.date_order
+                context['date']= po_date
+                total_request_amount = 0.0
+                total_vat_amount = 0.0
+                total_payment_amount = 0.0
+                
+                #po_total_amount=po.amount_total
+                
+                po_final_price = po.final_price
+                total_request_amount_company_cur=0 #Without Tax
+                
+                for ksp in po.supplier_payment_ids:
+                    if ksp.state not in ('draft','cancel'):
+                        request_amount=ksp.total
+                        total_request_amount+=cur_obj.compute(cr, uid, ksp.currency_id.id, po_currency_id, request_amount, round=True, context=context)
+                        #Cal total VAT Amount
+                        for kspvi in ksp.kderp_vat_invoice_ids:                                               
+                            total_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.total_amount, round=True, context=context)
+                            subtotal_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.subtotal, round=True, context=context)
+                            amount_vat += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.amount_tax, round=True, context=context)
+                        cal=True
+                        po_final_price-=ksp.sub_total
+                        exrate = ksp.exrate
+                        for kp in ksp.payment_ids:
+                            #if kp.state<>'draft':
+                                cal=False
+                                payment_amount = kp.amount
+                                total_payment_amount+=cur_obj.compute(cr, uid, kp.currency_id.id, po_currency_id, payment_amount, round=True, context=context)
+                                exrate = kp.exrate
+                                #Sum of total payment
+                        total_request_amount_company_cur+=cur_obj.round(cr, uid, company_currency, ksp.sub_total* exrate)
+                        
+                #Planned PO Amount in Company Currency
+                total_po_amount_company_curr = total_request_amount_company_cur + cur_obj.compute(cr, uid, po.currency_id.id, company_currency.id, po_final_price, round=True, context=context)
+                #Percentage of payment TotalRequestAmountINVND/(TotalRequstAMOUNT+TotalReamainAmountInVND)
+                payment_percentage=total_request_amount_company_cur/total_po_amount_company_curr if total_po_amount_company_curr else 0
+                #Check if payment DONE ==> Mark PO Done
+                if total_request_amount==total_vat_amount and total_vat_amount==total_payment_amount and total_payment_amount==po.amount_total and po.state=='waiting_for_payment':
+                    result = self.write(cr, uid, [po.id], {'state':'done'})
+                
+            res[po.id]={'total_request_amount':total_request_amount,
+                        'total_vat_amount':total_vat_amount,
+                        'total_payment_amount':total_payment_amount,
+                        'payment_percentage':payment_percentage,
+                        'subtotal_vat_amount':subtotal_vat_amount,
+                        'vat_amount':amount_vat}
+        return res
     
-    def action_create_received_picking(self, cr, uid, ids, context = {}):
+    def _get_order_from_supplier_payment(self, cr, uid, ids, context=None):
+        result = {}
+        ksp_obj = self.pool.get('kderp.supplier.payment')
+        for ksp in ksp_obj.browse(cr, uid, ids):
+            result[ksp.order_id.id]=True
+        return result.keys()
+    
+    def _get_order_from_supplier_payment_pay(self, cr, uid, ids, context=None):
+        result = {}
+        kp_obj = self.pool.get('kderp.supplier.payment.pay')
+        for kp in kp_obj.browse(cr, uid, ids):
+            result[kp.supplier_payment_id.order_id.id]=True
+        return result.keys()
+    
+    def _get_order_from_supplier_vat(self, cr, uid, ids, context=None):
+        result = {}
+        kpvi_obj = self.pool.get('kderp.supplier.vat.invoice')
+        for kpvi in kpvi_obj.browse(cr, uid, ids):
+            for ksp in kpvi.kderp_supplier_payment_ids:
+                result[ksp.order_id.id]=True
+        return result.keys()
+    
+    def _get_order_from_line(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('purchase.order.line').browse(cr, uid, ids, context=context):
+            result[line.order_id.id] = True
+        return result.keys()
+
+    _columns={
+                'allocate_order':fields.boolean("Allocate Order"),                               
+                'total_request_amount':fields.function(_get_summary_payment_amount,string='Requested Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order','allocate_order','state','state'], 20),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','amount','advanced_amount','retention_amount','taxes_id','currency_id','date'], 25),
+                                                              'kderp.supplier.payment.pay': (_get_order_from_supplier_payment_pay, None, 30),
+                                                             }),
+                'total_vat_amount':fields.function(_get_summary_payment_amount,string='Total Invoice Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order','allocate_order','state'], 20),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','kderp_vat_invoice_ids'], 25),
+                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                             }),
+                'subtotal_vat_amount':fields.function(_get_summary_payment_amount,string='Sub-Total Invoice Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order','allocate_order','state'], 20),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','kderp_vat_invoice_ids'], 30),
+                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                             }),
+                'vat_amount':fields.function(_get_summary_payment_amount,string='VAT Invoice Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order','allocate_order','state'], 20),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','kderp_vat_invoice_ids'], 30),
+                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                             }),
+                'total_payment_amount':fields.function(_get_summary_payment_amount,string='Payment Amt.',
+                                                       method=True,type='float',multi="_get_summary",
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order','allocate_order','state'], 5),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['state','order_id'], 10),
+                                                              'kderp.supplier.payment.pay': (_get_order_from_supplier_payment_pay, None, 30),
+                                                             }),
+               
+                'payment_percentage':fields.function(_get_summary_payment_amount,string='Payment Percentage',
+                                                       method=True,type='float',multi="_get_summary",digits_compute=dp.get_precision('Percent'),
+                                                       store={
+                                                              'purchase.order': (lambda self, cr, uid, ids, c={}: ids, ['pricelist_id','date_order','allocate_order','state','discount_amount','taxes_id'], 20),
+                                                              'purchase.order.line': (_get_order_from_line, None, 10),
+                                                              'kderp.supplier.payment': (_get_order_from_supplier_payment, ['order_id','state','amount','advanced_amount','retention_amount','taxes_id','currency_id','date'], 25),
+                                                              'kderp.supplier.payment.pay': (_get_order_from_supplier_payment_pay, None, 30),
+                                                             })
+              }
+    _default = {
+                'allocate_order': False,
+                }
+    
+    def action_create_picking(self, cr, uid, ids, context = {}):
         picking_id = self.action_picking_create(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'state':'done'})
         return picking_id    
+    
+    def action_draft_to_final_quotation(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        todo = []
+        period_obj = self.pool.get('account.period')
+        picking_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            if not po.order_line:
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+            for line in po.order_line:
+                if line.state=='draft':
+                    todo.append(line.id)
+
+            period_id = po.period_id and po.period_id.id or False
+            if not period_id:
+                period_ids = period_obj.find(cr, uid, po.date_order, context)
+                period_id = period_ids and period_ids[0] or False
+            self.write(cr, uid, [po.id], {'state' : 'waiting_for_roa', 'period_id':period_id,'validator' : uid})
+                        
+            if po.allocate_order and not po.picking_ids:                
+                picking_ids = self.action_create_picking(cr, uid, [po.id], context)
+        self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
+        return picking_ids
+    
+    def act_assign_move_picking(self, cr, uid, ids, context = {}):
+        todo_moves = []
+        stock_move = self.pool.get('stock.move')
+        wf_service = netsvc.LocalService("workflow")
+        for po in self.browse(cr, uid, ids, context):
+            for sp in po.picking_ids:
+                for sm in sp.move_lines:
+                    todo_moves.append(sm.id)
+                wf_service.trg_validate(uid, 'stock.picking', sp.id, 'button_confirm', cr)
+        self.write(cr, uid, ids, {'state' : 'waiting_for_delivery'})
+        stock_move.force_assign(cr, uid, todo_moves)
+        return ids
+    
+    def action_receive_picking(self, cr, uid, ids, context = {}):
+        stock_move = self.pool.get('stock.move')                
+        for po in self.browse(cr, uid, ids, context):
+            for sp in po.picking_ids:
+                todo_moves = []
+                for sm in sp.move_lines:
+                    todo_moves.append(sm.id)
+                stock_move.action_done(cr, uid, todo_moves)                
+        self.write(cr, uid, ids, {'state' : 'done'})
+        return ids
     
     #Stock Picking and MoveArea
     def date_to_datetime(self, cr, uid, userdate, context=None):
@@ -141,9 +343,6 @@ class purchase_order(osv.osv):
                 #    order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
-        stock_move.force_assign(cr, uid, todo_moves)
-        stock_move.action_done(cr, uid, todo_moves)
-        wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
     def action_picking_create(self, cr, uid, ids, context=None):
