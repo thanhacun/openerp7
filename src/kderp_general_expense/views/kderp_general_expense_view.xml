@@ -55,7 +55,7 @@
 		                </div>
 	                    <group colspan="4" col="4">
 							<field name='allocated_to' colspan="1" default_focus="1"/>
-                        	<field name="account_analytic_id" string='Job/G.E' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]"  attrs="{'invisible':[('expense_type','in',('fixed_asset','prepaid'))]}"/>
+                        	<field name="account_analytic_id" string='Job/G.E' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" context="{'job_id':account_analytic_id}" attrs="{'invisible':[('expense_type','in',('fixed_asset','prepaid'))]}"/>
 	                        <field name="date" colspan="1" string='Exp./Allocated Date'/>
 	                        <field name='section_incharge_id' colspan="1"/>                       
 	                    </group>
