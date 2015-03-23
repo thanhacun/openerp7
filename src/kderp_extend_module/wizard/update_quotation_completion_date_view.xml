@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Update Quotation Date" version="7.0">
                 	<p>
-                		<b>You want update Completion Date to Comp. Date of Contract ?</b>
+                		<b>Do you want to update Completion Date of Contract to Comp. Date ?</b>
                 	</p>
                     <footer>
                         <button string="Update" name="action_buttom_update_date" type="object" class="oe_highlight"/>

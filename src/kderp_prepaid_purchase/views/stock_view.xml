@@ -31,12 +31,14 @@
 	                				<field name='product_uom'/>
 	                				<field name='price_unit'/>
 	                				<field name='quantity'/>
+	                				<field name='prepaid_amount'/>
 	                				<field name='allocated_qty'/>
+	                				<field name='allocated_amount'/>
 	                				<field name='requesting_qty'/>
 	                				<field name='available_qty'/>
+	                				<field name='remaining_amount'/>
 	                				<field name='move_code'/>
 	                				<field name="origin"/>
-	                				<field name="vat_code"/>
 	                			</tree>
 	                		</field>
 	                	</group>
