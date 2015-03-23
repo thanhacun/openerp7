@@ -6,7 +6,7 @@
 				 <!-- groups="kderp_base.group_kderp_purchase_admin_menu" -->
     	
         <menuitem id="kderp_kderp_stock" name="Stock Management" sequence="10" parent="menu_kderp_stock_management_root"/>
-        <menuitem id="kderp_kderp_prepaid_purchase_order" name="Prepaid Purchase Order" sequence="5" parent="menu_kderp_stock_management_root"/>	
+        	
         <!--  		
 		<record id="kderp_action_stock_location" model="ir.actions.act_window">
             <field name="name">Stock</field>
