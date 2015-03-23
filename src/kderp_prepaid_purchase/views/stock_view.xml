@@ -117,7 +117,7 @@
         <menuitem 
         			action="kderp_action_working_stock_location" 
         			id="kderp_working_stock_location_action" 
-        			parent="kderp_kderp_stock" sequence="5"/>
+        			parent="kderp_stock.kderp_kderp_stock" sequence="5"/>
         			
 	</data>
 </openerp>

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>        
-        <menuitem id="menu_kderp_stock_management_root" name="Stock" sequence="8"/>
-        <menuitem id="kderp_kderp_stock" name="Stock Management" sequence="10" parent="menu_kderp_stock_management_root"/>
-        <menuitem id="kderp_kderp_prepaid_purchase_order" name="Prepaid Purchase Order" sequence="5" parent="menu_kderp_stock_management_root"/>
-        
+		<menuitem id="kderp_kderp_prepaid_purchase_order" name="Prepaid Purchase Order" sequence="5" parent="kderp_stock.menu_kderp_stock_management_root"/>
+		
     	<record id="view_kderp_prepaid_purchase_order_tree" model="ir.ui.view">
             <field name="name">view.kderp.prepaid.purchase.order.tree</field>
             <field name="model">kderp.prepaid.purchase.order</field>
