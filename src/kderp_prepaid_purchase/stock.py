@@ -122,6 +122,7 @@ class stock_location_product_detail(osv.osv):
                  'quantity':fields.float('Qty.', digits=(16,2)),
                  'allocated_qty':fields.float('Allocated Qty.', digits=(16,2)),
                  'available_qty':fields.float('Available Qty.', digits=(16,2)),
+                 'requesting_qty':fields.float('Requesting Qty.', digits=(16,2)),
                  'move_code':fields.integer('Move Code'),
                  'origin':fields.char('Origin', size=32),
                  'vat_code':fields.char('VAT Code', size=32),
@@ -149,7 +150,8 @@ class stock_location_product_detail(osv.osv):
                                         vwin.quantity,
                                         vwin.product_id,
                                         vwin.price_unit,
-                                        sum(coalesce(vwout.quantity,0)) as allocated_qty,
+                                        sum(case when vwout.state='confirmed' then 0 else coalesce(vwout.quantity,0) end ) as allocated_qty,
+                                        sum(case when vwout.state='confirmed' then coalesce(vwout.quantity,0) else 0 end ) as requesting_qty,
                                         vwin.quantity - sum(coalesce(vwout.quantity,0)) as available_qty
                                     from
                                         stock_location sl
@@ -166,25 +168,16 @@ class stock_location_product_detail(osv.osv):
                                                 sm.source_move_code,
                                                 sm.origin,
                                                 rp.vat_code,
-                                                sm.name as product_description        
+                                                sm.name as product_description,
+                                                sm.state
                                             from
                                                 stock_location sl
                                             left join
-                                                stock_move sm on (sl.id = sm.location_dest_id) and state = 'done' and sm.global_state <> 'done'
+                                                stock_move sm on (sl.id = sm.location_dest_id) and state in ('done','assigned') and sm.global_state <> 'done'
                                             left join
                                                 res_partner rp on sm.partner_id = rp.id
                                             where
-                                                sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(move_code,0)>0 
-                                            group by
-                                                sl.id,
-                                                sm.id,
-                                                sm.product_qty,
-                                                sm.price_unit,
-                                                sm.product_uom,
-                                                sm.move_code,    
-                                                sm.origin,
-                                                rp.vat_code,
-                                                sm.name
+                                                sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(move_code,0)>0                                           
                                         Union
                                         --Stock In Remote
                                             Select 
@@ -197,28 +190,19 @@ class stock_location_product_detail(osv.osv):
                                                 sm.source_move_code,
                                                 sm.origin,
                                                 sm.vat_code,
-                                                sm.product_description
+                                                sm.product_description,
+                                                sm.state
                                             from
                                                 stock_location sl
                                             left join
-                                                vwstock_move_remote sm on (sl.stock_code = stock_destination) and global_state <> 'done'
+                                                vwstock_move_remote sm on (sl.stock_code = stock_destination) and global_state <> 'done' and state in ('done','assigned')
                                             left join
                                                 product_product pp on product_code = pp.default_code
                                             left join
                                                 product_uom pu on product_uom = pu.name
                                             where
-                                                sl.global_stock and coalesce(move_code,0) > 0 and coalesce(stock_destination,'') != coalesce(stock_source, '') 
-                                            Group by
-                                                sl.id,
-                                                pp.id,
-                                                sm.product_qty,
-                                                sm.price_unit,
-                                                pu.id,
-                                                sm.move_code,
-                                                sm.origin,
-                                                sm.vat_code,
-                                                sm.product_description,
-                                                sm.source_move_code) vwin on sl.id = vwin.location_id
+                                                sl.global_stock and coalesce(move_code,0) > 0 and coalesce(stock_destination,'') != coalesce(stock_source, '')
+                                           ) vwin on sl.id = vwin.location_id
                                     left join
                                         (-- STOCK Out
                                         --Stock Out Local
@@ -232,25 +216,16 @@ class stock_location_product_detail(osv.osv):
                                                 sm.source_move_code,
                                                 sm.origin,
                                                 rp.vat_code,
-                                                sm.name as product_description        
+                                                sm.name as product_description,
+                                                sm.state
                                             from
                                                 stock_location sl
                                             left join
-                                                stock_move sm on (sl.id = sm.location_id) and state = 'done' and sm.global_state <> 'done'
+                                                stock_move sm on (sl.id = sm.location_id) and state in ('done','assigned','confirmed') and sm.global_state <> 'done'
                                             left join
                                                 res_partner rp on sm.partner_id = rp.id
                                             where
-                                                sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(source_move_code,0)>0 
-                                            group by
-                                                sl.id,
-                                                sm.id,
-                                                sm.product_qty,
-                                                sm.price_unit,
-                                                sm.product_uom,
-                                                sm.move_code,    
-                                                sm.origin,
-                                                rp.vat_code,
-                                                sm.name
+                                                sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(source_move_code,0)>0
                                         Union
                                         --Stock Out Remote
                                             Select 
@@ -263,7 +238,8 @@ class stock_location_product_detail(osv.osv):
                                                 sm.source_move_code,
                                                 sm.origin,
                                                 sm.vat_code,
-                                                sm.product_description
+                                                sm.product_description,
+                                                sm.state
                                             from
                                                 stock_location sl
                                             left join
@@ -274,17 +250,7 @@ class stock_location_product_detail(osv.osv):
                                                 product_uom pu on product_uom = pu.name
                                             where
                                                 sl.global_stock and coalesce(source_move_code,0) > 0 and coalesce(stock_destination,'') != coalesce(stock_source, '')
-                                            Group by
-                                                sl.id,
-                                                pp.id,
-                                                sm.product_qty,
-                                                sm.price_unit,
-                                                pu.id,
-                                                sm.move_code,
-                                                sm.origin,
-                                                sm.vat_code,
-                                                sm.product_description,
-                                                sm.source_move_code) vwout on vwin.location_id = vwout.location_id and vwin.move_code = vwout.source_move_code
+                    ) vwout on vwin.location_id = vwout.location_id and vwin.move_code = vwout.source_move_code
                                     where
                                         coalesce(vwin.location_id,0)>0 or coalesce(vwout.location_id,0)>0 
                                     group by

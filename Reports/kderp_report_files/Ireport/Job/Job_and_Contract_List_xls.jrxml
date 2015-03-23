@@ -1700,7 +1700,7 @@ Amount (USD)]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="5"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$V{InvCount}==1?($F{InvoicieAmount}==null?0:$F{InvoicieAmount}):null]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{InvCount}==1?(($F{job_inv_state}=="draft"||$F{job_inv_state}=="cancel")?0:($F{InvoicieAmount}==null?0:$F{InvoicieAmount})):null]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToTallestObject" x="794" y="0" width="33" height="20"/>

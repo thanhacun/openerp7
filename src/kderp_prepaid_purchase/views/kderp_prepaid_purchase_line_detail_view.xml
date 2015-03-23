@@ -11,7 +11,8 @@
             		<field name="prepaid_order_line_id"/>
             		<field name="po_number"/>
             		<field name="product_id"/>
-            		<field name="move_description"/>      		
+            		<field name="move_description"/>
+            		<field name='requesting_qty'/>
             		<field name="allocated_qty"/>
             		<field name="product_uom"/>
             		<field name="date"/>

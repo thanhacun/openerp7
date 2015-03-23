@@ -58,7 +58,8 @@
              "security/kderp_extend_kderp_supplier_payment_expense_security.xml",
              'wizard/create_contract_from_quotation_view.xml',
              'kderp_budget_view.xml',
-             'wizard/kderp_job_wizard_form_report_view.xml'
+             'wizard/kderp_job_wizard_form_report_view.xml',
+             'wizard/update_quotation_completion_date_view.xml'
             ],
     'demo':[],
     'installable':True

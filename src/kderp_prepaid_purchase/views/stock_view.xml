@@ -32,6 +32,7 @@
 	                				<field name='price_unit'/>
 	                				<field name='quantity'/>
 	                				<field name='allocated_qty'/>
+	                				<field name='requesting_qty'/>
 	                				<field name='available_qty'/>
 	                				<field name='move_code'/>
 	                				<field name="origin"/>
