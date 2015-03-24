@@ -346,8 +346,7 @@ class kderp_other_expense_line(osv.osv):
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
                 'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False),
-                'date':fields.related('expense_id', 'date', string='Date', type='date', store = False),
-                #'budget_id':fields.many2one("account.budget.post", "Budget",required=True,ondelete="restrict",context={'job_id':0}),
+                'date':fields.related('expense_id', 'date', string='Date', type='date', store = False)
                 }
     
     _defaults ={
