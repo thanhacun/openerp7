@@ -62,38 +62,7 @@ class kderp_other_expense(osv.osv):
             res.append((record.id, full_name))
         return res
     
-    def action_revising_done(self, cr, uid, ids, context=None):
-        return self.check_and_make_koe_done(cr, uid, ids, context)
-    
-    def _get_expense_final_exrate(self, cr, uid, ids, name, args, context=None):#Tinh PO Final Exrate khi PO Completed
-        if not context: context={}
-        res={}
-        cur_obj = self.pool.get('res.currency')
-        
-        company_currency=self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
-        company_currency_id=company_currency.id
-        
-        for koe in self.browse(cr, uid, ids):
-            if koe.currency_id.id<>company_currency_id and koe.expense_type <> 'monthly_expense':
-                paid_amount=0
-                koe_total_amount = koe.amount_total
-                for kspe in koe.supplier_payment_expense_ids:
-                    if kspe.state not in ('draft','cancel'):
-                        cal=False
-                        for kp in kspe.payment_ids:
-                            #if kp.state<>'draft':
-                                cal=True
-                                paid_amount+=cur_obj.round(cr, uid, company_currency, kp.amount*kp.exrate)
-                        if cal:
-                            koe_total_amount-=kspe.total
-                paid_amount+=cur_obj.compute(cr, uid, koe.currency_id.id, company_currency_id, koe_total_amount, round=True, context={'date':koe.date})
-                exrate=paid_amount/(koe.amount_total*koe.exrate) if (koe.amount_total*koe.exrate) else 0
-                res[koe.id]=exrate
-            else:
-                res[koe.id]= 1
-        return res            
-
-    def check_and_make_koe_done(self, cr, uid, ids, cron_mode=True, context=None):
+    def check_and_make_koe_done(self, cr, uid, ids, cron_mode=True, context=None):                
         try:
             if not ids:
                 ids = self.search(cr, uid, [('state','in',('waiting_for_payment','paid'))])
@@ -126,16 +95,54 @@ class kderp_other_expense(osv.osv):
                         continue
                       
             if koe_list_mark_done:
-                self.write(cr, uid, koe_list_mark_done, {'state':'done'})                
+                #self.write(cr, uid, koe_list_mark_done, {'state':'done'})
+                cr.execute("""Update kderp_other_expense set state='done' where id in (%s) """ % ",".join(map(str, koe_list_mark_done)))                
             if koe_list_mark_paid:
-                self.write(cr, uid, koe_list_mark_paid, {'state':'paid'})
+                #self.write(cr, uid, koe_list_mark_paid, {'state':'paid'})
+                cr.execute("""Update kderp_other_expense set state='paid' where id in (%s) """ % ",".join(map(str, koe_list_mark_paid)))
             if koe_list_mark_done_remain:
                 cr.execute("""Update kderp_other_expense set state='done' where id in (%s) """ % ",".join(map(str, koe_list_mark_done_remain)))
             if check_ot_ids:
                 self.check_and_make_koe_done(cr, uid, check_ot_ids, context=context)
         except:
             raise            
-        return True
+        return True    
+    
+    def action_revising_done(self, cr, uid, ids, context=None):
+        return self.check_and_make_koe_done(cr, uid, ids, context)
+    
+    def action_done_revising(self, cr, uid, ids, context=None):
+        if ids:              
+            cr.execute("""Update kderp_other_expense set state='revising' where id in (%s) """ % ",".join(map(str, ids)))
+        return ids
+    
+    def _get_expense_final_exrate(self, cr, uid, ids, name, args, context=None):#Tinh PO Final Exrate khi PO Completed
+        if not context: context={}
+        res={}
+        cur_obj = self.pool.get('res.currency')
+        
+        company_currency=self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
+        company_currency_id=company_currency.id
+        
+        for koe in self.browse(cr, uid, ids):
+            if koe.currency_id.id<>company_currency_id and koe.expense_type <> 'monthly_expense':
+                paid_amount=0
+                koe_total_amount = koe.amount_total
+                for kspe in koe.supplier_payment_expense_ids:
+                    if kspe.state not in ('draft','cancel'):
+                        cal=False
+                        for kp in kspe.payment_ids:
+                            #if kp.state<>'draft':
+                                cal=True
+                                paid_amount+=cur_obj.round(cr, uid, company_currency, kp.amount*kp.exrate)
+                        if cal:
+                            koe_total_amount-=kspe.total
+                paid_amount+=cur_obj.compute(cr, uid, koe.currency_id.id, company_currency_id, koe_total_amount, round=True, context={'date':koe.date})
+                exrate=paid_amount/(koe.amount_total*koe.exrate) if (koe.amount_total*koe.exrate) else 0
+                res[koe.id]=exrate
+            else:
+                res[koe.id]= 1
+        return res    
     
     def _get_summary_payment_amount(self, cr, uid, ids, name, args, context=None):#Tinh Requested Amount, Paid Amount, VAT Amount theo Currency Cua Purchase
         if not context: context={}
@@ -242,47 +249,47 @@ class kderp_other_expense(osv.osv):
         return result.keys()
     
     _columns={
-              'total_request_amount':fields.function(_get_summary_payment_amount,string='Requested Amt.',
-                                                       method=True,type='float',multi="_get_summary",
-                                                       store={
-                                                              'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type'], 20),
-                                                              'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
-                                                              'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
-                                                              'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
-                                                             }),
-              'total_vat_amount':fields.function(_get_summary_payment_amount,string='Total Invoice Amt.',
-                                                       method=True,type='float',multi="_get_summary",
-                                                       store={
-                                                              'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type'], 20),
-                                                              'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','kderp_vat_invoice_ids'], 25),
-                                                              'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
-                                                             }),
-              'total_payment_amount':fields.function(_get_summary_payment_amount,string='Payment Amt.',
-                                                       method=True,type='float',multi="_get_summary",
-                                                       store={
-                                                              'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type'], 5),
-                                                              'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state'], 10),
-                                                              'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
-                                                             }),
-              
-              'exp_final_exrate': fields.function(_get_expense_final_exrate,string='Exp Exrate',
-                                                       method=True,type='float',digits_compute=dp.get_precision('Percent'),
-                                                       store={
-                                                              'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','state','discount_amount','taxes_id','expense_type'], 5),
-                                                              'kderp.other.expense.line': (_get_expense_from_line, None, 20),
-                                                              'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
-                                                              'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
-                                                              'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
-                                                             }),
-                                                        
-              'payment_percentage':fields.function(_get_summary_payment_amount,string='Payment Percentage',
-                                                       method=True,type='float',multi="_get_summary",digits_compute=dp.get_precision('Percent'),
-                                                       store={
-                                                              'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','discount_amount','taxes_id','expense_type'], 20),
-                                                              'kderp.other.expense.line': (_get_expense_from_line, None, 20),
-                                                              'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
-                                                              'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
-                                                              'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
-                                                             }),
+            'total_request_amount':fields.function(_get_summary_payment_amount,string='Requested Amt.',
+                                                     method=True,type='float',multi="_get_summary",
+                                                     store={
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type','state'], 20),
+                                                            'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
+                                                            'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
+                                                            'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
+                                                           }),
+            'total_vat_amount':fields.function(_get_summary_payment_amount,string='Total Invoice Amt.',
+                                                     method=True,type='float',multi="_get_summary",
+                                                     store={
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type','state'], 20),
+                                                            'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','kderp_vat_invoice_ids'], 25),
+                                                            'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                           }),
+            'total_payment_amount':fields.function(_get_summary_payment_amount,string='Payment Amt.',
+                                                     method=True,type='float',multi="_get_summary",
+                                                     store={
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type','state'], 5),
+                                                            'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state'], 10),
+                                                            'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
+                                                           }),
+               
+            'exp_final_exrate': fields.function(_get_expense_final_exrate,string='Exp Exrate',
+                                                     method=True,type='float',digits_compute=dp.get_precision('Percent'),
+                                                     store={
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','state','taxes_id','expense_type'], 5),
+                                                            'kderp.other.expense.line': (_get_expense_from_line, None, 20),
+                                                            'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
+                                                            'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
+                                                            'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
+                                                           }),
+                                                         
+            'payment_percentage':fields.function(_get_summary_payment_amount,string='Payment Percentage',
+                                                     method=True,type='float',multi="_get_summary",digits_compute=dp.get_precision('Percent'),
+                                                     store={
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','discount_amount','taxes_id','expense_type','state'], 20),
+                                                            'kderp.other.expense.line': (_get_expense_from_line, None, 20),
+                                                            'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
+                                                            'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
+                                                            'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
+                                                           }),
               }    
 kderp_other_expense()

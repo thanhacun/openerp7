@@ -64,5 +64,12 @@
 			<field name="users" eval="[(4, ref('base.user_root'))]"/>
 			<field name="category_id" ref="module_category_kderp_group_only_attachment"/>
 		</record>
+		
+		<!-- Them group Update Conpletion Quotation Date -->
+		<record id="kderp_group_update_completion_date" model="res.groups">
+			<field name="name">KDERP Group Update Completion Date</field>
+			<field name="users" eval="[(4, ref('base.user_root'))]"/>
+			<field name="category_id" ref="kderp_quotation.module_category_kderp_quotation"/>
+		</record>
 	</data>
 </openerp>

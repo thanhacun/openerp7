@@ -119,13 +119,15 @@ class stock_location_product_detail(osv.osv):
                  'product_id':fields.many2one('product.product','Product'),
                  'product_uom':fields.many2one('product.uom', 'Uom'),
                  'price_unit':fields.float('Price Unit',digits=(16,2)),
+                 'prepaid_amount':fields.float('Prepaid Amt.',digits=(16,2)),
+                 'allocated_amount':fields.float('All. Amt.',digits=(16,2)),
+                 'remaining_amount':fields.float('Remaing Amt.',digits=(16,2)),
                  'quantity':fields.float('Qty.', digits=(16,2)),
                  'allocated_qty':fields.float('Allocated Qty.', digits=(16,2)),
                  'available_qty':fields.float('Available Qty.', digits=(16,2)),
                  'requesting_qty':fields.float('Requesting Qty.', digits=(16,2)),
                  'move_code':fields.integer('Move Code'),
-                 'origin':fields.char('Origin', size=32),
-                 'vat_code':fields.char('VAT Code', size=32),
+                 'origin':fields.char('Origin', size=32),                 
                  'product_description':fields.char('Desc', size=256),
                  }
     
@@ -145,14 +147,16 @@ class stock_location_product_detail(osv.osv):
                                         vwin.move_code,
                                         vwin.source_move_code,
                                         vwin.origin,
-                                        vwin.vat_code,
                                         vwin.product_description,
                                         vwin.quantity,
                                         vwin.product_id,
                                         vwin.price_unit,
+                                        vwin.price_unit*vwin.quantity as prepaid_amount, 
                                         sum(case when vwout.state='confirmed' then 0 else coalesce(vwout.quantity,0) end ) as allocated_qty,
+                                        vwin.price_unit*sum(case when vwout.state='confirmed' then 0 else coalesce(vwout.quantity,0) end ) as allocated_amount,
                                         sum(case when vwout.state='confirmed' then coalesce(vwout.quantity,0) else 0 end ) as requesting_qty,
-                                        vwin.quantity - sum(coalesce(vwout.quantity,0)) as available_qty
+                                        vwin.quantity - sum(coalesce(vwout.quantity,0)) as available_qty,
+                                        vwin.price_unit * (vwin.quantity - sum(coalesce(vwout.quantity,0))) as remaining_amount
                                     from
                                         stock_location sl
                                     left join
@@ -167,15 +171,12 @@ class stock_location_product_detail(osv.osv):
                                                 sm.move_code,
                                                 sm.source_move_code,
                                                 sm.origin,
-                                                rp.vat_code,
                                                 sm.name as product_description,
                                                 sm.state
                                             from
                                                 stock_location sl
                                             left join
                                                 stock_move sm on (sl.id = sm.location_dest_id) and state in ('done','assigned') and sm.global_state <> 'done'
-                                            left join
-                                                res_partner rp on sm.partner_id = rp.id
                                             where
                                                 sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(move_code,0)>0                                           
                                         Union
@@ -189,7 +190,6 @@ class stock_location_product_detail(osv.osv):
                                                 sm.move_code,
                                                 sm.source_move_code,
                                                 sm.origin,
-                                                sm.vat_code,
                                                 sm.product_description,
                                                 sm.state
                                             from
@@ -215,15 +215,12 @@ class stock_location_product_detail(osv.osv):
                                                 sm.move_code,
                                                 sm.source_move_code,
                                                 sm.origin,
-                                                rp.vat_code,
                                                 sm.name as product_description,
                                                 sm.state
                                             from
                                                 stock_location sl
                                             left join
                                                 stock_move sm on (sl.id = sm.location_id) and state in ('done','assigned','confirmed') and sm.global_state <> 'done'
-                                            left join
-                                                res_partner rp on sm.partner_id = rp.id
                                             where
                                                 sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(source_move_code,0)>0
                                         Union
@@ -237,7 +234,6 @@ class stock_location_product_detail(osv.osv):
                                                 sm.move_code,
                                                 sm.source_move_code,
                                                 sm.origin,
-                                                sm.vat_code,
                                                 sm.product_description,
                                                 sm.state
                                             from
@@ -261,7 +257,6 @@ class stock_location_product_detail(osv.osv):
                                         vwin.move_code,
                                         vwin.source_move_code,
                                         vwin.origin,
-                                        vwin.vat_code,
                                         vwin.product_description,
                                         vwin.product_id,
                                         vwin.price_unit

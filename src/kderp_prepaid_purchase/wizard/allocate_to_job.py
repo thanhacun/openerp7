@@ -34,26 +34,24 @@ class kderp_order_allocate_to_job_select(osv.osv_memory):
     
     def _get_prepaid_order(self, cr, uid, context):        
         stock_location_id = context.get('location_id', 0)
-        try:
+        if stock_location_id:        
             cr.execute("""Select                                    
-                            origin
-                        from
-                            stock_location sl
-                        left join
-                            stock_move sm on sl.id = sm.location_dest_id and state = 'done' and sm.global_state <> 'done'
-                        where
-                            sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and sm.move_code is not null and sl.id = %s
-                        Union
-                        Select                                    
-                           origin
-                        from
-                            stock_location sl
-                        left join
-                            vwstock_move_remote sm on sl.stock_code = sm.stock_destination and sm.global_state <> 'done'
-                        where
-                            sl.global_stock and coalesce(sm.stock_destination,'') != coalesce(sm.stock_source,'') and sm.move_code is not null and sl.id = %s""" % (stock_location_id, stock_location_id))
-        except:
-            res = []
+                                origin
+                            from
+                                stock_location sl
+                            left join
+                                stock_move sm on sl.id = sm.location_dest_id and state = 'done' and sm.global_state <> 'done'
+                            where
+                                sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and sm.move_code is not null and sl.id = %s
+                            Union
+                            Select                                    
+                               origin
+                            from
+                                stock_location sl
+                            left join
+                                vwstock_move_remote sm on sl.stock_code = sm.stock_destination and sm.global_state <> 'done'
+                            where
+                                sl.global_stock and coalesce(sm.stock_destination,'') != coalesce(sm.stock_source,'') and sm.move_code is not null and sl.id = %s""" % (stock_location_id, stock_location_id))
         res = []
         for ppo_no in cr.fetchall():
             code = str(ppo_no[0])
@@ -179,14 +177,14 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
         stock_location_id, = stock_location_ids
 
         stl = self.pool.get(active_model).browse(cr, uid, stock_location_id, context=context)
-        vat_code = False
+        #vat_code = False
 #         for pd in stl.product_details:
 #             if pd.vat_code:
 #                 vat_code = pd.vat_code
 #                 break
-        cr.execute("""Select vat_code from stock_location_product_detail where location_id=%s and coalesce(vat_code,'')<>'' limit 1""" % stock_location_id)
-        if cr.rowcount:
-            vat_code = cr.fetchone()[0]
+        #cr.execute("""Select vat_code from stock_location_product_detail where location_id=%s and coalesce(vat_code,'')<>'' limit 1""" % stock_location_id)
+        #if cr.rowcount:
+        #    vat_code = cr.fetchone()[0]
         
         if 'partner_id':
             partner_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id            

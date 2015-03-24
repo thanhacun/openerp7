@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Update Quotation Date" version="7.0">
                 	<p>
-                		<b>You want update Completion Date to Comp. Date of Contract ?</b>
+                		<b>Do you want to update Completion Date of Contract to Comp. Date ?</b>
                 	</p>
                     <footer>
                         <button string="Update" name="action_buttom_update_date" type="object" class="oe_highlight"/>
@@ -30,6 +30,8 @@
         <menuitem action="action_kderp_update_quotation_completion_date"
             id="menu_action_kderp_update_quotation_completion_date"
             parent="kderp_quotation.kderp_menu_quotation"
-            sequence="300"/>
+            sequence="300"
+            groups="kderp_group_update_completion_date"
+            />
     </data>
 </openerp>
