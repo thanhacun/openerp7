@@ -71,7 +71,13 @@ class account_analytic_account(osv.osv):
             if ge_type and not view_id:
                 views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','view.account.analytic.kderp.yearlybudget.%s' % view_type)])
                 if views_ids:
-                    view_id = views_ids[0]                
+                    view_id = views_ids[0]   
+        else:
+#             #raise osv.except_osv("No",context)
+            context.get('general_expense', False) and not view_id
+            views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','view.account.analytic.kderp.yearlybudget.%s' % view_type)])
+            if views_ids:
+                view_id = views_ids[0]                
         return super(account_analytic_account, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
     
 class kderp_other_expense(osv.osv):
