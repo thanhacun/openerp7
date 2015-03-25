@@ -94,7 +94,18 @@
                </search>
             </field>
         </record>
-		
+        
+		<!-- PO Search -->
+		<record id="purchase_order_filter_kderp_purchase_inherit_extend" model="ir.ui.view">
+            <field name="name">purchase.order.filter.kderp.purchase.inherit.extend</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref='kderp_purchase.view_purchase_order_filter'/>
+            <field name="arch" type="xml"> 
+            	<filter string="With Contract" name="without_contract" domain="[('without_contract','=',1)]" position="after">
+            		<filter string="Allocated Purchase" name="allocate_order" domain="[('allocate_order','=',True)]"/>
+            	</filter> 
+            </field>
+         </record>
 		<!-- Menu Area -->			
 		
 		<!-- All Prepaid Purchase -->
