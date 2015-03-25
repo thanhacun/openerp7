@@ -11,7 +11,7 @@
             		<field name="name"/>
             		<field name="date"/>
             		<field name="description" string='Desc.'/>
-            		<field name="account_analytic_id" context="{'general_expense': True}" string='Job/G.E'/>
+            		<field name="account_analytic_id" context="{'job_id': account_analytic_id}" string='Job/G.E'/>
             		<field name="expense_type"/>
             		<field name="partner_id" string="Supplier" invisible="'partner_id' in context.get('group_by',[])"/>
             		<field name="budgets"/>
@@ -55,7 +55,7 @@
 		                </div>
 	                    <group colspan="4" col="4">
 							<field name='allocated_to' colspan="1" default_focus="1"/>
-                        	<field name="account_analytic_id" string='Job/G.E' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]"  attrs="{'invisible':[('expense_type','in',('fixed_asset','prepaid'))]}"/>
+                        	<field name="account_analytic_id" string='Job/G.E' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" context="{'job_id':account_analytic_id}" attrs="{'invisible':[('expense_type','in',('fixed_asset','prepaid'))]}"/>
 	                        <field name="date" colspan="1" string='Exp./Allocated Date'/>
 	                        <field name='section_incharge_id' colspan="1"/>                       
 	                    </group>
@@ -77,7 +77,7 @@
 <!-- 	                                    <field name="general_type" invisible="1" /> -->
 	                                </tree>
 	                            </field>
-	                            <field name="expense_line_ge" context="{'id':active_id,'account_analytic_id':account_analytic_id, 'budget_code':'A99'}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('fixed_asset','prepaid'))], 'invisible':[('expense_type','not in',('fixed_asset','prepaid'))]}">
+	                            <field name="expense_line_ge" context="{'id':active_id,'account_analytic_id':account_analytic_id, 'budget_code':'A99'}" attrs="{'readonly':[('expense_type','not in',('fixed_asset','prepaid'))], 'invisible':[('expense_type','not in',('fixed_asset','prepaid'))]}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E'  invisible="1" options='{"always_reload": True}' context="{'kderp_search_pge':parent.allocated_to,'job_id': account_analytic_id}"/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' invisible="1"/>
