@@ -102,6 +102,7 @@
             <field name="inherit_id" ref='kderp_purchase.view_purchase_order_filter'/>
             <field name="arch" type="xml"> 
             	<filter string="With Contract" name="without_contract" domain="[('without_contract','=',1)]" position="after">
+            		<separator/>
             		<filter string="Allocated Purchase" name="allocate_order" domain="[('allocate_order','=',True)]"/>
             	</filter> 
             </field>
