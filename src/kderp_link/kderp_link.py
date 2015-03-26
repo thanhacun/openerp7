@@ -101,6 +101,6 @@ class kderp_link_server_line(osv.osv):
             #Create remote View
             tools.drop_view_if_exists(cr, vwName)
             cr.execute(SQLView)
-                
+            klsl.write({'state':'done'})
 kderp_link_server_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
