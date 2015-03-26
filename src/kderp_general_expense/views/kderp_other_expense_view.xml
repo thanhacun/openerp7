@@ -17,26 +17,36 @@
 	            			<field name="expense_type" on_change="onchange_expensetype(expense_type, partner_id, taxes_id)" style='width:auto !important'/>			                 	
           				</h1>		                    
 	                </div>
-				</div>		                
+				</div>	
+				<field name="account_analytic_id" position='replace'>
+					<field name="account_analytic_id" on_change="new_code(account_analytic_id,'E',name)" default_focus="1" context="{'job_id': account_analytic_id}"/>	
+	             </field>	                
 				<field name='exrate' position='after'>
 					<field name='allocated_to'/>
 					<field name='section_incharge_id' attrs="{'invisible':[('allocated_to','=','PE')]}"/>
 				</field>
-				<field name="expense_line" position='attributes'>
-					<attribute name='attrs'>{'invisible':[('allocated_to','!=','PE')]}</attribute>
+				<field name="expense_line" position='replace'>
+					<field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('allocated_to','!=','PE')]}">
+	                	<tree string="Expense Details" editable="bottom">
+	                        <field name='account_analytic_id' context="{'job_id': account_analytic_id}" string='Job' />
+	            			<field name='budget_id' string='Code' context="{'job_id':account_analytic_id}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                        <field name="name"/>
+	                        <field name="amount" sum='Sub-total'/>
+	                    </tree>
+	               </field>
 				</field>
 				<group class="oe_subtotal_footer oe_right" position='before'>
 					<group attrs="{'invisible':[('allocated_to','=','PE')]}">
 						<field name="expense_line_ge" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('expense_type','=','monthly_expense')]}" nolabel="1">
 							<tree string="Expense Details" editable="bottom">
-								<field name='account_analytic_id' string='Job/GE'/>
+								<field name='account_analytic_id' context="{'job_id': account_analytic_id}" string='Job/GE'/>
 								<field name='budget_id' string='Code' context="{'job_id':account_analytic_id}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 								<field name="amount" sum='Sub-total'/>
 							</tree>
 						</field>
 						<field name="expense_line_pending" attrs="{'invisible':[('expense_type','!=','monthly_expense')]}" context="{'id':active_id,'account_analytic_id':account_analytic_id}"  nolabel="1">
 	              			<tree string="Expense Details" editable="bottom">
-	                  			<field name='account_analytic_id' string='Job/G.E' domain="[('general_expense','=',True)]" options='{"always_reload": True}'/>
+	                  			<field name='account_analytic_id' string='Job/G.E' options='{"always_reload": True}' context="{'job_id': account_analytic_id,'general_expense': True'}" />
 								<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 			                 	<field name="section_id" string="Allocated Section"/>
 			                 	<field name="belong_expense_id"/>
