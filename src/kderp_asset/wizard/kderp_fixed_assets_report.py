@@ -236,7 +236,7 @@ class kderp_fixed_assets_detail_report(osv.osv):
         cr.execute("""Select 
                         kam.id as asset_id,
                         price*quantity-coalesce(partial_accumulated_amount,0) as original_price,
-                        case when old_code='EQ1008-2' then 56622500 else sum(coalesce(kad.amount,0)) end as depreciation,
+                        case when old_code='EQ1008-2' and '2014-01-01' between '%s' and '%s' then 56622500 else sum(coalesce(kad.amount,0)) end as depreciation,
                         coalesce(partial_accumulated_amount,0) as reduce,
                         previous_depreciation+sum(coalesce(kad.amount,0))-coalesce(partial_accumulated_amount,0) as accumulated_depreciation
                     from
@@ -397,7 +397,8 @@ class kderp_fixed_assets_detail_report(osv.osv):
                         kam.id,
                         previous_depreciation,
                         coalesce(partial_accumulated_amount,0)
-                        """ % (date_start,date_stop,new_condition,#DK1
+                        """ % (date_start,date_stop,
+                               date_start,date_stop,new_condition,#DK1
                                date_start,date_stop, #DK2
                                date_start,#DK4
                                new_condition,#DK5
