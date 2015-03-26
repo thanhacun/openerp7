@@ -46,6 +46,18 @@ class stock_picking(osv.osv):
         'prepaid_purchase_order_id': False,
     }
     
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(stock_picking, self).write(cr, uid, ids, vals, context=context)
+        from openerp import netsvc
+        wf_service = netsvc.LocalService("workflow")
+        if vals.get('state') in ['done']:
+            for sp in self.browse(cr, uid, ids, context=context):
+                    if sp.purchase_id.state == 'waiting_for_delivery':
+                        wf_service.trg_validate(uid, 'purchase.order', sp.purchase_id.id, 'btn_roa_completed_delivered', cr)
+        return res
+    
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     
@@ -67,6 +79,19 @@ class stock_move(osv.osv):
                 res[sm.id] = int(sm.company_id.location_code + str(sm.id))
             else:
                 res[sm.id] = False
+        return res
+    
+    def action_confirm(self, cr, uid, ids, context=None):
+        """ Confirms stock move.
+        @return: List of ids.
+        """        
+        check_error = self.pool.get('stock.location.product.detail').check_prepaid_product_availability(cr, uid, ids)
+        res = super(stock_move, self).action_confirm(cr, uid, ids, context)
+        return res
+    
+    def force_assign(self, cr, uid, ids, context=None):
+        check_error = self.pool.get('stock.location.product.detail').check_prepaid_product_availability(cr, uid, ids)
+        res = super(stock_move, self).force_assign(cr, uid, ids, context)
         return res
     
     _columns = {
@@ -114,6 +139,33 @@ class stock_location_product_detail(osv.osv):
     _name = 'stock.location.product.detail'
     _description = 'List of product Available in Stock'
     
+    def check_prepaid_product_availability(self, cr, uid, move_codes_ids, context = {}):
+        """
+            Check product availability in stock or not
+            ({}) -> False is everything thing is ok 
+        """
+        tmp_move_code = []
+        check_move_codes = {}
+        stm_obj = self.pool.get('stock.move')
+        for move in stm_obj.browse(cr, uid, move_codes_ids, context=context):
+            source_move_code = move.source_move_code             
+            if move.source_move_code:                
+                if move.source_move_code in check_move_codes:
+                    check_move_codes[source_move_code] += move.product_qty
+                else:
+                    check_move_codes[source_move_code] = move.product_qty
+                tmp_move_code.append(source_move_code)
+                    
+        slpd_ids = self.search(cr, uid, [('move_code', 'in', tmp_move_code)])
+        list_errors = []
+        for pd in self.browse(cr, uid, slpd_ids):
+            if check_move_codes[pd.move_code] > pd.available_qty:
+                error = '%s: only available %s (%s) to allocate (Your Request: %s)' % (pd.product_id.code, pd.available_qty, pd.product_uom.name, check_move_codes[pd.move_code])
+                list_errors.append(error)
+        if list_errors:
+            raise osv.except_osv("KDERP Warning",'\n'.join(map(str, list_errors)))
+        return True
+    
     _columns  = {
                  'location_id':fields.many2one('stock.location', 'Stock'),
                  'product_id':fields.many2one('product.product','Product'),
@@ -131,11 +183,28 @@ class stock_location_product_detail(osv.osv):
                  'product_description':fields.char('Desc', size=256),
                  }
     
-    def init(self,cr):
+    def init(self, cr):
+        #Create user connect
+        new_role = 'stock_remote'
+        cr.execute("""SELECT * FROM pg_catalog.pg_user WHERE usename = '%s'""" % new_role)
+        if not cr.rowcount:
+            #Create User
+            cr.execute("""CREATE ROLE stock_remote LOGIN PASSWORD '290797!sr' NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;""")
+            #Grant Permission
+            cr.execute("""                        
+                        GRANT SELECT ON
+                                        product_product, 
+                                        product_uom, 
+                                        stock_location, 
+                                        purchase_order_line, 
+                                        account_analytic_account 
+                        TO %s ;
+                        GRANT ALL ON stock_move TO %s ;""" % (new_role, new_role))        
+        
         vwName = 'stock_location_product_detail'
         checkView1 = 'vwstock_move_remote'
         cr.execute("""SELECT 1  FROM  information_schema.views where table_name = '%s'""" % checkView1)
-        if cr.rowcount:        
+        if cr.rowcount:            
             tools.drop_view_if_exists(cr, vwName)
             cr.execute("""
                         Create or replace view %s as 
@@ -155,7 +224,7 @@ class stock_location_product_detail(osv.osv):
                                         sum(case when vwout.state='confirmed' then 0 else coalesce(vwout.quantity,0) end ) as allocated_qty,
                                         vwin.price_unit*sum(case when vwout.state='confirmed' then 0 else coalesce(vwout.quantity,0) end ) as allocated_amount,
                                         sum(case when vwout.state='confirmed' then coalesce(vwout.quantity,0) else 0 end ) as requesting_qty,
-                                        vwin.quantity - sum(coalesce(vwout.quantity,0)) as available_qty,
+                                        vwin.quantity - sum(case when vwout.state!='confirmed' then coalesce(vwout.quantity,0) else 0 end ) as available_qty,
                                         vwin.price_unit * (vwin.quantity - sum(coalesce(vwout.quantity,0))) as remaining_amount
                                     from
                                         stock_location sl

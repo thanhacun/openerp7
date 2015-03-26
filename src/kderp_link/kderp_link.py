@@ -53,6 +53,9 @@ class kderp_link_server(osv.osv):
     _defaults ={
                 'port':5432
                 }
+    _sql_constraints =[("sql_unique_link_server_name",'unique(name)','KDERP Warning: Name for Server Link must unique'),
+                       ("sql_unique_database_name",'unique(server, database, user)','KDERP Warning: Server and database must be unique'),
+                       ]
     
     def init(self, cr):
         cr.execute("""select * from pg_extension where extname='dblink'""")
@@ -71,11 +74,23 @@ class kderp_link_server_line(osv.osv):
                 'table_definition':fields.text('Table Definition', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
                 'remote_query':fields.text('Remote Query', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
                 'link_server_id':fields.many2one('kderp.link.server','Server', required = True, readonly = True, states = {'draft':[('readonly',False)]}),
-                'state':fields.selection(STATE_SELECTION, 'State', readonly = True, required = True)
+                'state':fields.selection(STATE_SELECTION, 'State', readonly = True, required = True),
+                'name':fields.char("Description", required = True)
     }
     _defaults ={
                 'state':'draft'
                 }
+    _sql_constraints =[("sql_unique_line_name",'unique(name)','KDERP Warning: Name for Server Link Line must unique'),
+                       ("sql_unique_line_table",'unique(table_link_name, link_server_id)','KDERP Warning: Name for Server Link Line table and server must unique'),
+                       ]
+    def unlink(self, cr, uid, ids, context=None):
+        todo_ids = []
+        for klsl in self.browse(cr, uid, ids, context):
+            if klsl.state=='draft':
+                todo_ids.append(klsl.id)
+            else:
+                raise osv.except_osv("KDERP Warning", "Can delete this record")
+        return osv.osv.unlink(self, cr, uid, todo_ids, context=context)
     
     def action_create_table_link(self, cr, uid, ids, context):
         if not context:
@@ -101,6 +116,6 @@ class kderp_link_server_line(osv.osv):
             #Create remote View
             tools.drop_view_if_exists(cr, vwName)
             cr.execute(SQLView)
-            klsl.write({'state':'done'})
+            klsl.write({'state':'done'}, context)
 kderp_link_server_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
