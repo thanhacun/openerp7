@@ -22,7 +22,7 @@
 					<field name="account_analytic_id" on_change="new_code(account_analytic_id,'E',name)" default_focus="1" context="{'job_id': account_analytic_id}"/>	
 	             </field>	                
 				<field name='exrate' position='after'>
-					<field name='allocated_to' filter_domain="[('allocated_to','!=','GE')]"/>
+					<field name='allocated_to'/>
 					<field name='section_incharge_id' attrs="{'invisible':[('allocated_to','=','PE')]}"/>
 				</field>
 				<field name="expense_line" position='replace'>
