@@ -92,6 +92,9 @@ class kderp_link_server_line(osv.osv):
                 raise osv.except_osv("KDERP Warning", "Can delete this record")
         return osv.osv.unlink(self, cr, uid, todo_ids, context=context)
     
+    def action_open(self, cr, uid, ids, context):
+        return self.write(cr, uid, ids, {'state':'draft'}, context)
+    
     def action_create_table_link(self, cr, uid, ids, context):
         if not context:
             context = {}
@@ -116,6 +119,6 @@ class kderp_link_server_line(osv.osv):
             #Create remote View
             tools.drop_view_if_exists(cr, vwName)
             cr.execute(SQLView)
-            klsl.write({'state':'done'}, context)
+            klsl.write({'state':'done'})
 kderp_link_server_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

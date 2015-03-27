@@ -72,6 +72,8 @@
             	<form version='7.0' string='Link Server'>
             		<header>
             			<button name='action_create_table_link' type='object' icon='gtk-execute' string='Create' states='draft'/>
+            			<button name='action_open' type='object' icon='gtk-convert' string='Open' states='done' groups='base.group_system'/>
+            			
             			<field name='state' widget='statusbar' statusbar_visible="draft,done"/>
             		</header>
             		<sheet>
