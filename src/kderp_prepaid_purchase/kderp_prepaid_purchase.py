@@ -128,7 +128,7 @@ class kderp_prepaid_purchase_order(osv.osv):
     _order="date desc, name desc"
     _columns={
               'name':fields.char('Code', required = True, size=16, select=1, readonly = True, states={'draft':[('readonly', False)]}),
-              'description':fields.char('Description', required = True, size=64, readonly = True, states={'draft':[('readonly', False)]}),
+              'description':fields.char('Description', required = True, size=256, readonly = True, states={'draft':[('readonly', False)]}),
               'date':fields.date('Order Date', select = 1, required = True, readonly = True, states={'draft':[('readonly', False)]}),
               
               'partner_id':fields.many2one('res.partner', 'Supplier', ondelete='restrict', required=True, readonly = True, states={'draft':[('readonly', False)]} , change_default=True),

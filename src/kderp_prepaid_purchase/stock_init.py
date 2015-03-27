@@ -75,7 +75,7 @@ class stock_init(osv.osv):
     tblLinkStock = 'stock_move'
     
     def init(self, cr):        
-        from openerp import SUPERUSER_ID
+        from openerp import SUPERUSER_ID        
         kls_obj = self.pool.get('kderp.link.server')
         code_server = 'connection_to_%s' % self.location_dict[self.pool.get('res.users').browse(cr, SUPERUSER_ID, SUPERUSER_ID).company_id.location_code]
         kls_ids = kls_obj.search(cr, SUPERUSER_ID, [('name','=',code_server)])
