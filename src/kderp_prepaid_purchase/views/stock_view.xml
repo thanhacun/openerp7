@@ -76,10 +76,11 @@
                     
                     <field string="Product" name="product_details" filter_domain="[('product_details','ilike',self)]"/>
             		  
-            		<filter string="Global" domain="[('global_stock','=',True)]"/>
+            		<filter name='global' string="Global" domain="[('global_stock','=',True)]"/>
             		<filter string="Not Global" domain="[('global_stock','=',False)]"/>
+            		
             		<separator/>
-            		<filter icon="terp-go-home" name="global" string="Global" domain="[('global_stock', '=', True)]" help="Global"/>
+            		
                     <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                     <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
             		
