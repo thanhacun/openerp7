@@ -71,8 +71,8 @@
             <field name="arch" type="xml">
             	<form version='7.0' string='Link Server'>
             		<header>
-            			<button name='action_create_table_link' type='object' icon='gtk-execute' string='Create'/>
-            			<field name='state' widget='statusbar' states= 'draft, done'/>
+            			<button name='action_create_table_link' type='object' icon='gtk-execute' string='Create' states='draft'/>
+            			<field name='state' widget='statusbar' statusbar_visible="draft,done"/>
             		</header>
             		<sheet>
 	            		<group string='Link server information' col="4">

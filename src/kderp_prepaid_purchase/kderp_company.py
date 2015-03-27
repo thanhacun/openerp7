@@ -14,6 +14,6 @@ class res_company(osv.osv):
              'location_code':fields.selection((('4','Hanoi'),('8','HCM')),'Location', help='Using for move code', required = True),
              }
     _defaults={
-               'location_code':'4'
+               'location_code':lambda self, cr, uid, context = {}: '8' if cr.dbname.count('HCM')>0 else '4' 
                }
 res_company()

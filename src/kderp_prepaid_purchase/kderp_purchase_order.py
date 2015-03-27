@@ -197,6 +197,15 @@ class purchase_order(osv.osv):
         picking_id = self.action_picking_create(cr, uid, ids, context)
         return picking_id    
     
+    def action_cancel(self, cr, uid, ids, context=None):
+        res = super(purchase_order, self).action_cancel(cr, uid, ids, context)
+        wf_service = netsvc.LocalService("workflow")
+        for po in self.browse(cr, uid, ids):
+            for sp in po.picking_ids:
+                if sp.state!='cancel':
+                    wf_service.trg_validate(uid, 'stock.picking', sp.id, 'button_cancel', cr)
+        return res
+        
     def action_draft_to_final_quotation(self, cr, uid, ids, context=None):
         if not context:
             context = {}
@@ -216,8 +225,14 @@ class purchase_order(osv.osv):
                 period_id = period_ids and period_ids[0] or False
             self.write(cr, uid, [po.id], {'state' : 'waiting_for_roa', 'period_id':period_id,'validator' : uid})
                         
-            if po.allocate_order and not po.picking_ids:                
-                picking_ids = self.action_create_picking(cr, uid, [po.id], context)
+            if po.allocate_order:
+                sp_exists = False
+                for sp in po.picking_ids:
+                    if sp.state!='cancel':
+                        sp_exists = True
+                        break
+                if not sp_exists:
+                    picking_ids = self.action_create_picking(cr, uid, [po.id], context)
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         return picking_ids
     
@@ -227,11 +242,12 @@ class purchase_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for po in self.browse(cr, uid, ids, context):
             for sp in po.picking_ids:
-                for sm in sp.move_lines:
-                    todo_moves.append(sm.id)
-                wf_service.trg_validate(uid, 'stock.picking', sp.id, 'button_confirm', cr)
-        self.write(cr, uid, ids, {'state' : 'waiting_for_delivery'})
+                if sp.state<>'cancel':
+                    for sm in sp.move_lines:
+                        todo_moves.append(sm.id)
+                    wf_service.trg_validate(uid, 'stock.picking', sp.id, 'button_confirm', cr)
         stock_move.force_assign(cr, uid, todo_moves)
+        self.write(cr, uid, ids, {'state' : 'waiting_for_delivery'})        
         return ids
     
     def action_receive_picking(self, cr, uid, ids, context = {}):
@@ -242,7 +258,7 @@ class purchase_order(osv.osv):
                 for sm in sp.move_lines:
                     todo_moves.append(sm.id)
                 stock_move.action_done(cr, uid, todo_moves)                
-        self.write(cr, uid, ids, {'state' : 'done'})
+        #self.write(cr, uid, ids, {'state' : 'done'})
         return ids
     
     #Stock Picking and MoveArea
@@ -370,5 +386,19 @@ class purchase_order_line(osv.osv):
                 'move_code':fields.integer('Move Code', readonly = 1),
                 'location_id':fields.many2one('stock.location', 'From Stock', readonly = 1),
                 'location_dest_id':fields.many2one('stock.location', 'To Stock', readonly = 1),
+                'move_ids':fields.one2many('stock.move','purchase_line_id','StockMoves')
                 }
     
+    def write(self, cr, uid, ids, vals, context = {}):
+        res = super(purchase_order_line, self).write(cr, uid, ids, vals, context)
+        if 'plan_qty' in vals or 'product_uom' in vals:
+            todo_moves = []
+            for pol in self.browse(cr, uid, ids):
+                if pol.order_id.state not in ('draft','waiting_for_roa') and pol.order_id.allocate_order:
+                    raise osv.except_osv("KDVN Warning", "Can't change quantity in this status")
+                for sm in filter(lambda move: move.state!='cancel' and pol.order_id.allocate_order and move.product_qty<>pol.plan_qty, pol.move_ids):
+                    val = {'product_qty': pol.plan_qty}
+                    sm.write(val, context = context)
+                    todo_moves.append(sm.id)
+            check_error = self.pool.get('stock.location.product.detail').check_prepaid_product_availability(cr, uid, todo_moves)
+        return res

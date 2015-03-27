@@ -106,9 +106,10 @@ class purchase_order(osv.osv):
                         po_list_mark_done.append(po.id)
                 else:
                     continue
-                
-            if po_list_mark_done:
-                self.write(cr, uid, po_list_mark_done, {'state':'done'})
+            wf_service = netsvc.LocalService("workflow")
+            for po_id in po_list_mark_done:                
+                wf_service.trg_validate(uid, 'purchase.order', po_id, 'btn_delivered_done', cr)
+                #self.write(cr, uid, po_list_mark_done, {'state':'done'})
         except:
             raise            
         return True

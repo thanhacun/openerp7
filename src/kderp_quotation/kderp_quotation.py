@@ -215,7 +215,7 @@ class sale_order(Model):
                                                                   }),
                 
                 'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, select=True),
-                'name': fields.char('Code', size=16,required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
+                'name': fields.char('Code', size=20, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
                 'dateofregistration':fields.date('Date of Registration'),
                 
                 #Client & Address & Information
