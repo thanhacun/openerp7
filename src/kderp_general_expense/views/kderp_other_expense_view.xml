@@ -22,13 +22,13 @@
 					<field name="account_analytic_id" on_change="new_code(account_analytic_id,'E',name)" default_focus="1" context="{'job_id': account_analytic_id}"/>	
 	             </field>	                
 				<field name='exrate' position='after'>
-					<field name='allocated_to'/>
+					<field name='allocated_to' filter_domain="[('allocated_to','!=','GE')]"/>
 					<field name='section_incharge_id' attrs="{'invisible':[('allocated_to','=','PE')]}"/>
 				</field>
 				<field name="expense_line" position='replace'>
 					<field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('allocated_to','!=','PE')]}">
 	                	<tree string="Expense Details" editable="bottom">
-	                        <field name='account_analytic_id' context="{'job_id': account_analytic_id}" string='Job' />
+	                        <field name='account_analytic_id' domain="[('general_expense','=',False)]" context="{'kderp_search_pge': parent.allocated_to,'job_id':account_analytic_id}" string='Job' />
 	            			<field name='budget_id' string='Code' context="{'job_id':account_analytic_id}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 	                        <field name="name"/>
 	                        <field name="amount" sum='Sub-total'/>
