@@ -25,7 +25,7 @@
 					<field name='section_incharge_id' attrs="{'invisible':[('allocated_to','=','PE')]}"/>
 				</field>
 				<field name="expense_line" position='replace'>
-					<field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'invisible':[('allocated_to','!=','PE')]}">
+					<field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('allocated_to','not in',('PE'))] ,'invisible':[('allocated_to','!=','PE')]}">
 	                	<tree string="Expense Details" editable="bottom">
 	                        <field name='account_analytic_id' domain="[('general_expense','=',False)]" context="{'kderp_search_pge': parent.allocated_to,'job_id':account_analytic_id}" string='Job' />
 	            			<field name='budget_id' string='Code' context="{'job_id':account_analytic_id}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
@@ -55,8 +55,7 @@
           			</group>
 				</group>
             </field>
-        </record>
-        
+        </record>  
         <record id="view_kderp_other_expense_inherit_search" model="ir.ui.view">
             <field name="name">kderp.other.expense.inherit.search</field>
             <field name="model">kderp.other.expense</field>
