@@ -35,7 +35,7 @@ class res_users(Model):
 
     # Private Function section
     def _get_translation(self, cr, lang, text):
-        context = {'lang': lang}
+        context = {'lang': lang}  # noqa: _() checks page for locals
         return _(text)
 
     def _send_email_passkey(self, cr, user_id, user_agent_env):
@@ -96,7 +96,7 @@ class res_users(Model):
  is admin password. In the second case, send mail to user and admin."""
         user_id = super(res_users, self).authenticate(
             db, login, password, user_agent_env)
-        if user_id != SUPERUSER_ID:
+        if user_id and (user_id != SUPERUSER_ID):
             same_password = False
             cr = pooler.get_db(db).cursor()
             try:
