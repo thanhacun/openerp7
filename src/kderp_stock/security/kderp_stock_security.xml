@@ -39,5 +39,12 @@
 	        								(4, ref('group_kderp_stock_picking_create')),
 	        								(4, ref('group_kderp_stock_picking_delete'))]"/>
   	   </record>
+  	   
+  	   <!-- Group Menu Stock -->
+  	   <record id="group_menu_kderp_stock" model="res.groups">
+	       	<field name="name">KDERP Menu Stock</field>
+	      	<field name="category_id" ref="module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
     </data>
 </openerp>

@@ -2,7 +2,7 @@
 <openerp>
     <data>
     
-		 <menuitem id="menu_kderp_stock_management_root" name="Stock" sequence="8" groups="group_kderp_stock_picking_full"/>
+		 <menuitem id="menu_kderp_stock_management_root" name="Stock" sequence="8" groups="group_menu_kderp_stock"/>
     	
         <menuitem id="kderp_kderp_stock" name="Stock Management" sequence="10" parent="menu_kderp_stock_management_root"/>
         	
