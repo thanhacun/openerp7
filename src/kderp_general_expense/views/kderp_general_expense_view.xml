@@ -181,7 +181,7 @@
                 	<field name="name" string="Expense No." filter_domain="[('name','ilike',self)]"/>
                     <field name="description" string="Description" filter_domain="[('description','ilike',self)]"/>
                     <field name="partner_id" string="Supplier" filter_domain="[('partner_id','ilike',self)]"/>
-                    <field name="date" string="Expense Date" filter_domain="[('date','$gt;=',self)]"/>
+                    <field name="date" string="Expense Date" filter_domain="[('date','=',self)]"/>
 					<field name="amount_untaxed" string="Sub Total" filter_domain="[('amount_untaxed','=',self)]"/>
                     <field name="budgets" string="Budgets" filter_domain="[('budgets','ilike',self)]"/>
                     <field name="expense_line" string="Details/Job/Amount" filter_domain="[('expense_line','ilike',self)]"/>
