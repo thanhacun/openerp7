@@ -22,7 +22,7 @@
 
 {
     'name': 'Authentification - Admin Passkey',
-    'version': '2.1',
+    'version': '2.1.1',
     'category': 'base',
     'description': """
 Admin password become a passkey for all active logins
@@ -44,12 +44,12 @@ Copyright, Author and Licence :
     * Author : Sylvain LE GAL (https://twitter.com/legalsylvain);
     * Licence : AGPL-3 (http://www.gnu.org/licenses/)
     """,
-    'author': 'GRAP',
+    'author': "GRAP,Odoo Community Association (OCA)",
     'website': 'http://www.grap.coop',
     'license': 'AGPL-3',
     'depends': [
         'mail',
-        ],
+    ],
     'data': [
         'data/ir_config_parameter.xml',
         'view/res_config_view.xml',
