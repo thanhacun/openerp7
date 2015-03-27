@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>	
-		 
+    <data>	 
  		<record id="view_kderp_other_expense_inherit_add_ge_form" model="ir.ui.view">
             <field name="name">view.kderp.other.expense.inherit.add.ge.form</field>
             <field name="model">kderp.other.expense</field>
@@ -57,6 +56,17 @@
 				</group>
             </field>
         </record>
-                
+        
+        <record id="view_kderp_other_expense_inherit_search" model="ir.ui.view">
+            <field name="name">kderp.other.expense.inherit.search</field>
+            <field name="model">kderp.other.expense</field>
+            <field name="inherit_id" ref='kderp_other_expense.view_kderp_other_expense_filter'/>
+            <field name="arch" type="xml">
+            	<field name='date' position='replace'>
+					<field name="date" string="Expense Date" filter_domain="[('date','=',self)]"/>
+	       		</field>
+            </field>
+        </record>
+               
 	</data>
 </openerp>
