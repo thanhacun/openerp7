@@ -5,7 +5,7 @@
        <record id="view_kderp_suppplier_payment_ge_tree" model="ir.ui.view">
            <field name="name">kderp.supplier.payment.ge.tree</field>
            <field name="model">kderp.supplier.payment</field>
-           <field name="priority" eval="1"/>
+           <field name="priority" eval="5"/>
            <field name="arch" type="xml">
                <tree colors="blue:state == 'draft';gray:state == 'cancel'" string="Supplier Payment">
                    <field name="name"/>

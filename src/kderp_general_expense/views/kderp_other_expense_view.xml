@@ -56,7 +56,7 @@
 				</group>
             </field>
         </record>  
-        <record id="view_kderp_other_expense_inherit_search" model="ir.ui.view">
+       <record id="view_kderp_other_expense_inherit_search" model="ir.ui.view">
             <field name="name">kderp.other.expense.inherit.search</field>
             <field name="model">kderp.other.expense</field>
             <field name="inherit_id" ref='kderp_other_expense.view_kderp_other_expense_filter'/>
@@ -105,6 +105,6 @@
 		            </page>
 	            </page>
             </field>
-        </record>   
+        </record> 
 	</data>
 </openerp>
