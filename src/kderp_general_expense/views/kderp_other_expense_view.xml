@@ -66,6 +66,15 @@
 	       		</field>
             </field>
         </record>
-               
+        <record id="view_kderp_other_expense_form_add_payment_vat_inherit" model="ir.ui.view">
+            <field name="name">view.kderp.other.expense.form.add.payment.vat.inherit</field>
+            <field name="model">kderp.other.expense</field>
+            <field name="inherit_id" ref='kderp_supplier_payment.view_kderp_other_expense_form_add_payment_vat'/>
+            <field name="arch" type="xml">
+           		<button string="Create Payment" position='replace'>
+            		<button attrs="{'invisible':['|','|',('supplier_payment_expense_ids','!=',[]),('state','not in',('revising','waiting_for_payment')),('expense_type','=','monthly_expense')]}" icon='gtk-new' type='object' string='Create Payment' name='action_expense_create_supplier_payment_expense'/>
+	            </button>
+            </field>
+        </record>   
 	</data>
 </openerp>
