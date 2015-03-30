@@ -74,6 +74,36 @@
            		<button string="Create Payment" position='replace'>
             		<button attrs="{'invisible':['|','|',('supplier_payment_expense_ids','!=',[]),('state','not in',('revising','waiting_for_payment')),('expense_type','=','monthly_expense')]}" icon='gtk-new' type='object' string='Create Payment' name='action_expense_create_supplier_payment_expense'/>
 	            </button>
+	            <page string='Payment &amp; VAT Invoices' position ='replace'>
+	            	<page string='Payment &amp; VAT Invoices' attrs="{'invisible':[('expense_type','=','monthly_expense')]}">
+	           			<field name="supplier_payment_expense_ids" readonly="0" colspan="4">
+	            			<tree colors="blue:state == 'draft';gray:state == 'cancel'" string="Supplier Payment">
+	            				<button name="open_expense_supplier_payment" icon="gtk-zoom-fit" type="object"/>
+			                    <field name="name"/>
+			                    <field name="date"/>                    
+			                    <field name="currency_id"/>
+			                    <field name="amount"/>
+			                    <field name="amount_tax"/>                    
+			                    <field name="total" sum="Total"/>
+			                    <field name="state"/>
+			                </tree>
+						</field>
+	           			<field name="supplier_vat_ids" readonly="1" colspan="4">
+	           				<tree string='VAT Invoices'>
+								<field name="name" select="1" string="VAT Inv. No."/>
+								<field name="date" select="1"/>
+								<field name="currency_id" string="Cur."/>
+								<field name="subtotal" on_change="on_changevalue_per(subtotal,tax_per)"/>
+								<field name="tax_per" on_change="on_changevalue_per(subtotal,tax_per)"/>
+								<field name="amount_tax" string="VAT" on_change="on_changevalue(subtotal,amount_tax)"/>
+								<field name="total_amount" on_change="onchange_totalamount(total_amount,equivalent_vnd,rate,'total_amount')" sum='Total'/>
+								<field name="equivalent_vnd" on_change="onchange_totalamount(total_amount,equivalent_vnd,rate,'ev')"/>
+								<field name="rate" on_change="onchange_totalamount(total_amount,equivalent_vnd,rate,'rate')"/>
+								<field name="state" invisible="1"/>
+							</tree>
+	           			</field>
+		            </page>
+	            </page>
             </field>
         </record>   
 	</data>
