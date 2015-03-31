@@ -1,0 +1,4 @@
+.openerp td[data-field="available_qty"]{
+	/*Lam dam truong Available Qty*/
+	font-weight: bold;
+}

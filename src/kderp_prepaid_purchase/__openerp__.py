@@ -30,6 +30,7 @@
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
+    'css': ['static/src/css/*.css'],
     'data':[
              "security/kderp_prepaid_purchase_security.xml",
              "security/ir.model.access.csv",
