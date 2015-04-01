@@ -51,15 +51,36 @@
 	            						<field name='product_uom'/>
 	            						<field name='product_qty'/>	            						
 	            						<field name='price_unit'/>
+	            						<field name='subtotal' sum='Subtotal'/>
 	            						<field name='location_id'/>
 	            						<button name='action_open_line_detail' type='object' icon='gtk-zoom-fit'/>
 	                                </tree>
-	                            </field>	                            
+	                            </field>
 	                        </page>
 	                        <page string='Packing'>
 	                        	<field name='packing_ids' colspan="4"/>
 	                        </page>
 	                    </notebook>
+						<group class="oe_subtotal_footer oe_right">
+	                    	<group colspan="2" col="2">
+								<label for="amount_untaxed" string="Sub-total"/>
+                            	<field nolabel="1" name="amount_untaxed"/>
+                            	<field style="text-align:left" col="1" name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]">
+									<tree>
+										<field name='name'/>
+									</tree>
+                       			</field>
+                       			<field col="1" name="amount_tax"/>
+	                        </group>	                                
+                            <div class="oe_subtotal_footer_separator oe_inline"/>
+                            <group colspan="2" col="2">
+                            	<div class="oe_inline">
+                                	<label for="amount_total" string="TOTAL" class="oe_clear" style="font-size:15px"/>
+                            	</div>
+                             <field style="background-color:rgb(232, 240, 209); font-weight:bold; font-size:15px" name="amount_total" nolabel="1"/>
+                            </group>
+                       	</group>
+                        <div class="oe_clear"/>
 	            	</sheet>
 	            	<footer>
 	            		<button icon="gtk-cancel" name="action_reject" type='object' states="draft,approved" string="Reject"/>
