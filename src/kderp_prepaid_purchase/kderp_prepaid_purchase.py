@@ -385,9 +385,17 @@ class kderp_prepaid_purchase_order_line(osv.osv):
             res[ppol.id] = ppol.product_qty * ppol.price_unit
         return res
     
+    def _get_new_seq(self, cr, uid, context={}):
+        from kderp_base import kderp_base
+        if not context:
+            context={}
+        new_val = kderp_base.get_new_from_tree(cr, uid, context.get('id',False), self,context.get('lines',[]),'sequence', 1, 1, context)
+        return new_val
+    
     SELECTION_STATE = [('doing','Doing'),                       
                        ('done','Done')]
     _columns={
+              'sequence':fields.integer("Seq."),
               'product_id':fields.many2one('product.product','Product', required = True),
               'product_uom':fields.many2one('product.uom', 'Unit', required = True, digits=(16,2)),
               'product_qty':fields.float("Quantity", required = True),
@@ -408,6 +416,7 @@ class kderp_prepaid_purchase_order_line(osv.osv):
                  'product_uom': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'product_uom', context),
                  'location_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'location_id', context),
                  'price_unit': lambda *x: 0.0,
+                 'sequence':_get_new_seq
                  }
     
     def action_open_line_detail(self, cr, uid, ids, context):
