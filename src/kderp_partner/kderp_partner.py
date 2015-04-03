@@ -127,8 +127,13 @@ class res_partner(Model):
             if not ids:
                 ids = self.search(cr, uid, [('trade_name', operator, search_name)] + args, limit=limit, context=context)
             if not ids:
+                sqlCommand = """Select id from res_partner rp where replace(code || '-' || name,' ', '') ilike '%%%s%%'""" % name.replace(' ', '')
+                cr.execute(sqlCommand)
+                ids = [rp_id[0] for rp_id in cr.fetchall()]
+                
+            if not ids:
                 ids = self.search(cr, uid, [('code',operator,search_name)] + args, limit=limit, context=context)
-            
+                
             if ids:                
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)

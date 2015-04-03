@@ -43,6 +43,7 @@
 							<field name='payment_amount' sum='Sub-total'/>
 							<field name='partner_id'/>
 							<field name='description'/>
+							<button name='action_open_related_obj' type='object' icon='gtk-open'/>
 	            		</tree>
             		</field>
                 </form>
