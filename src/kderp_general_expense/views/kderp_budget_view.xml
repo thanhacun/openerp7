@@ -32,10 +32,8 @@
             <field name='arch' type='xml'>
             	<field name='description' position='after'>
             		<field name='section_id'/>
-            		</field>
-				<!-- <xpath expr="//field[@name='detail_budget']/tree" position='attributes'>
-                    <attribute name="editable">top</attribute>
-                </xpath> -->
+            		<button name="action_open_related_obj" icon="gtk-zoom-fit" type="object"/>
+            	</field>
 			</field>
 		</record>
 		
