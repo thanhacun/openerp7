@@ -37,7 +37,6 @@
 	                				<field name='requesting_qty'/>
 	                				<field name='available_qty'/>
 	                				<field name='remaining_amount'/>
-	                				<field name='move_code'/>
 	                				<field name="origin"/>
 	                			</tree>
 	                		</field>
