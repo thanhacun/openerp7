@@ -225,6 +225,7 @@
             <field name="context">{'show_full_name':True,'show_field':['code'],'search_default_working':1,'general_expense':True}</field>
             <field name="search_view_id" ref="view_kderp_other_expense_ge_search"/>
         </record>
+        
         <!-- Link view to action -->
 		<record id="action_window_view_other_general_expense_form" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
