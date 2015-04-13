@@ -141,7 +141,7 @@ class stock_location_product_detail(osv.osv):
     
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         self.pool.get('kderp.link.server').check_server_connection(cr, uid, [], {})                
-        return super(self.__name__, self).check_access_rights(cr, uid, operation, raise_exception)
+        return super(stock_location_product_detail, self).check_access_rights(cr, uid, operation, raise_exception)
     
     def check_prepaid_product_availability(self, cr, uid, move_codes_ids, context = {}):
         """

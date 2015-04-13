@@ -29,7 +29,7 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
     
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         self.pool.get('kderp.link.server').check_server_connection(cr, uid, [], {})                
-        return super(self.__name__, self).check_access_rights(cr, uid, operation, raise_exception)
+        return super(kderp_prepaid_purchase_order_line_detail, self).check_access_rights(cr, uid, operation, raise_exception)
     
     _columns={
               'prepaid_order_line_id':fields.many2one('kderp.prepaid.purchase.order.line','Desc.', required = True),
