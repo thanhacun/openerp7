@@ -38,13 +38,7 @@
 	          								(4, ref('group_kderp_prepaid_purchase_write')),
 	        								(4, ref('group_kderp_prepaid_purchase_create')),
 	        								(4, ref('group_kderp_prepaid_purchase_delete'))]"/>
-  	   </record>
-  	   
-  	   <!-- Stock Location Product Detail -->
-		<record id='group_stock_location_product_detail_read' model='res.groups'>
-	        <field name='name'>KDERP Stock Location Product Detail</field>
-	        <field name="category_id" ref="module_category_kderp_prepaid_purchase"/>
-	        <field name="users" eval="[(4, ref('base.user_root'))]"/>
-    	</record>
+  	   </record>  	   
+    	
 	</data>
 </openerp>

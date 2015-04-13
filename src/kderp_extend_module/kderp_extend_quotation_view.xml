@@ -325,6 +325,10 @@
             	<field name="project_manager_id" string="SM/PM" position='replace'>
             		<field name="project_manager_id" string="SM/PM/Est" filter_domain="['|','|','|','|','|','|','|',('project_manager_id','ilike',self),('project_manager_m_id','ilike',self),('site_manager_e_id','ilike',self),('site_manager_m_id','ilike',self),('estimation_e_manager_j','ilike',self),('estimation_m_manager_j','ilike',self),('estimation_e_manager_v','ilike',self),('estimation_m_manager_v','ilike',self)]"/>
             	</field>
+            	<filter string="My Quotations" domain="[('user_id','=',uid)]" help="My Sales Orders" icon="terp-personal" name="my_sale_orders_filter" position="after">
+            		<separator/>
+            		<filter string="VAT Amount" name="quotation_submit_line.tax_amount" domain="[('quotation_submit_line.tax_amount','!=','0')]"/>
+            	</filter>
             </field>
         </record>
         

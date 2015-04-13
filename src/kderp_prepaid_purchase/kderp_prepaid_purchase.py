@@ -30,6 +30,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 from openerp import netsvc, SUPERUSER_ID
+from encodings.punycode import digits
 
 class kderp_prepaid_purchase_order(osv.osv):
     _name = 'kderp.prepaid.purchase.order'
@@ -125,28 +126,80 @@ class kderp_prepaid_purchase_order(osv.osv):
         
         return {'value':val}
     
+    #Field Funtion Area
+    def _get_tax_default(self,cr,uid,context):
+        tax_ids = self.pool.get('account.tax').search(cr, uid,[('type_tax_use','=','purchase'),('active','=',True),('default_tax','=',True)])
+        return tax_ids
+    
+    def _get_prepaid_from_detail(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('kderp.prepaid.purchase.order.line').browse(cr, uid, ids, context=context):
+            result[line.prepaid_order_id.id] = True
+        return result.keys()
+    
+    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for ppo in self.browse(cr, uid, ids, context=context):
+            res[ppo.id] = {
+                'amount_untaxed': 0.0,
+                'amount_total': 0.0,
+                'amount_tax':0.0
+                }
+            val = 0.0
+            val1=0.0
+            
+            for line in ppo.prepaid_order_line:
+                val += line.subtotal
+            
+            for c in self.pool.get('account.tax').compute_all(cr, uid, ppo.taxes_id, val, 1, False, False)['taxes']:
+                val1 += c.get('amount', 0.0)
+            
+            res[ppo.id]['amount_untaxed'] = val
+            res[ppo.id]['amount_tax'] = val1            
+            res[ppo.id]['amount_total'] = val1 + val
+            
+        return res
     _order="date desc, name desc"
     _columns={
-              'name':fields.char('Code', required = True, size=16, select=1, readonly = True, states={'draft':[('readonly', False)]}),
-              'description':fields.char('Description', required = True, size=256, readonly = True, states={'draft':[('readonly', False)]}),
-              'date':fields.date('Order Date', select = 1, required = True, readonly = True, states={'draft':[('readonly', False)]}),
-              
-              'partner_id':fields.many2one('res.partner', 'Supplier', ondelete='restrict', required=True, readonly = True, states={'draft':[('readonly', False)]} , change_default=True),
-              'address_id':fields.many2one('res.partner', 'Address', ondelete='restrict', required=True, readonly = True, states={'draft':[('readonly', False)]}),
-              'currency_id':fields.many2one('res.currency','Curr', required=True, readonly = True, states={'draft':[('readonly', False)]}),
-              
-              'packing_ids':fields.one2many('stock.picking','prepaid_purchase_order_id','Packing List', readonly = True),
-              
-              'prepaid_order_line':fields.one2many('kderp.prepaid.purchase.order.line', 'prepaid_order_id', readonly = True, states={'draft':[('readonly', False)]}),
-
-              'state':fields.selection(SELECTION_STATE, 'State', readonly = True)
+                'name':fields.char('Code', required = True, size=16, select=1, readonly = True, states={'draft':[('readonly', False)]}),
+                'description':fields.char('Description', required = True, size=256, readonly = True, states={'draft':[('readonly', False)]}),
+                'date':fields.date('Order Date', select = 1, required = True, readonly = True, states={'draft':[('readonly', False)]}),
+                
+                'partner_id':fields.many2one('res.partner', 'Supplier', ondelete='restrict', required=True, readonly = True, states={'draft':[('readonly', False)]} , change_default=True),
+                'address_id':fields.many2one('res.partner', 'Address', ondelete='restrict', required=True, readonly = True, states={'draft':[('readonly', False)]}),
+                'currency_id':fields.many2one('res.currency','Curr', required=True, readonly = True, states={'draft':[('readonly', False)]}),
+                
+                'packing_ids':fields.one2many('stock.picking','prepaid_purchase_order_id','Packing List', readonly = True),
+                
+                'prepaid_order_line':fields.one2many('kderp.prepaid.purchase.order.line', 'prepaid_order_id', readonly = True, states={'draft':[('readonly', False)]}),
+                
+                'state':fields.selection(SELECTION_STATE, 'State', readonly = True),
+                
+                'taxes_id': fields.many2many('account.tax', 'prepaid_purchase_vat_tax', 'prepaid_purchase_vat_id', 'tax_id', 'VAT (%)', states={'draft':[('readonly', False)]}, readonly = True),
+                            
+                'amount_untaxed':fields.function(_amount_all, digits_compute= dp.get_precision('Amount'),string='Amount',type='float', method=True, multi="kderp_expense_total",
+                                                  store={
+                                                          'kderp.prepaid.purchase.order.line': (_get_prepaid_from_detail, ['price_unit', 'product_qty'], 20),
+                                                          'kderp.prepaid.purchase.order':(lambda cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
+                                                         }),
+                'amount_tax':fields.function(_amount_all, digits_compute= dp.get_precision('Amount'),string='VAT',type='float', method=True, multi="kderp_expense_total",
+                                                  store={
+                                                         'kderp.prepaid.purchase.order.line': (_get_prepaid_from_detail, ['price_unit', 'product_qty'], 20),
+                                                         'kderp.prepaid.purchase.order':(lambda cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
+                                                         }),
+                'amount_total':fields.function(_amount_all, digits_compute= dp.get_precision('Amount'), string='Total',type='float', method=True, multi="kderp_expense_total",
+                                                store={
+                                                        'kderp.prepaid.purchase.order.line': (_get_prepaid_from_detail, ['price_unit', 'product_qty'], 20),
+                                                        'kderp.prepaid.purchase.order':(lambda cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
+                                                       }),
               }
     
     _defaults = {
                  'date': lambda *a: time.strftime('%Y-%m-%d'),
                  'state': lambda *x: 'draft',
                  'partner_id':lambda self, cr, uid, context={}: context.get('partner_id',False),
-                 'currency_id':lambda self, cr, uid, context={}:self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+                 'currency_id':lambda self, cr, uid, context={}:self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id,
+                 'taxes_id':_get_tax_default
                  }
     
     _sql_constraints=[('kderp_prepaid_purchase_code_unique','unique(code)','Prepaid Purchase Code must be unique !')]
@@ -324,9 +377,25 @@ class kderp_prepaid_purchase_order_line(osv.osv):
   
         return res
     
+    def _get_subtotal(self, cr, uid, ids, name, args, context={}):
+        if not context:
+            context = {}
+        res = {}
+        for ppol in self.browse(cr, uid, ids, context):
+            res[ppol.id] = ppol.product_qty * ppol.price_unit
+        return res
+    
+    def _get_new_seq(self, cr, uid, context={}):
+        from kderp_base import kderp_base
+        if not context:
+            context={}
+        new_val = kderp_base.get_new_from_tree(cr, uid, context.get('id',False), self,context.get('lines',[]),'sequence', 1, 1, context)
+        return new_val
+    
     SELECTION_STATE = [('doing','Doing'),                       
                        ('done','Done')]
     _columns={
+              'sequence':fields.integer("Seq."),
               'product_id':fields.many2one('product.product','Product', required = True),
               'product_uom':fields.many2one('product.uom', 'Unit', required = True, digits=(16,2)),
               'product_qty':fields.float("Quantity", required = True),
@@ -334,7 +403,12 @@ class kderp_prepaid_purchase_order_line(osv.osv):
               'name':fields.char('Description', required = True, size = 128),
               'location_id':fields.many2one('stock.location', 'Destination', required = True, domain = [('usage','=','internal')]),
               'prepaid_order_id':fields.many2one('kderp.prepaid.purchase.order','Prepaid Order'),
-              'state':fields.selection(SELECTION_STATE, 'State', readonly = True)
+              'state':fields.selection(SELECTION_STATE, 'State', readonly = True),
+              
+              'subtotal':fields.function(_get_subtotal, type='float', digits=(16,2), method= True, string='Sub-Total',
+                                         store={
+                                                'kderp.prepaid.purchase.order.line': (lambda cr, uid, ids, context = {}: ids, ['product_qty', 'price_unit'], 15) 
+                                                })
               }    
     
     _defaults = {
@@ -342,6 +416,7 @@ class kderp_prepaid_purchase_order_line(osv.osv):
                  'product_uom': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'product_uom', context),
                  'location_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'location_id', context),
                  'price_unit': lambda *x: 0.0,
+                 'sequence':_get_new_seq
                  }
     
     def action_open_line_detail(self, cr, uid, ids, context):
