@@ -99,6 +99,18 @@ class kderp_budget_data(osv.osv):
             res[kbd_id]=tmp_list
         return res
     
+    # Chan xoa budget
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        unlink_ids = []
+        for kbd in self.browse(cr, uid, ids, context=context):
+            for var in kbd.detail_budget:
+                raise osv.except_osv("KDERP Warning",'Can not DELETE budget having expenses.')
+            unlink_ids.append(kbd.id)
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return True
+        
     _columns={
               'expense_amount':fields.function(_get_summaryofbudget,string='Purchased',digits_compute=dp.get_precision('Budget'),method=True,type='float',multi='_get_info',
                                                store={
