@@ -35,7 +35,8 @@
              "security/ir.model.access.csv",
              "res_config_view.xml",
              "kderp_purchase_general_contract_view.xml",
-             "report/kderp_purchase_materialsub_budget_balancesheet_view.xml"            
+             "report/kderp_purchase_materialsub_budget_balancesheet_view.xml",
+             "kderp_purchase_view.xml"         
             ],
     'demo':[],
     'installable':True
