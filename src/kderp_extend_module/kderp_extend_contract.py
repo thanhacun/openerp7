@@ -90,16 +90,31 @@ class kderp_contract_client(osv.osv):
     def _get_vat_issued(self, cr, uid, ids, name, args, context=None):
         res={}
         kcc_ids=",".join(map(str,ids))
-        cr.execute("""select kcc.id ,sum(coalesce(kpvi.amount,0))-sum(coalesce(ai.amount_tax,0)),sum(coalesce(ai.amount_tax,0)),sum(coalesce(kpvi.amount,0))
+        cr.execute("""select 
+                        kcc.id ,
+                        round(sum(coalesce(qr_vat_issued .issued_subtotal,0))),
+                        round(sum(coalesce(qr_vat_issued .issued_amount,0))-sum(coalesce(qr_vat_issued .issued_subtotal,0))),
+                        sum(coalesce(qr_vat_issued .issued_amount,0))
                     from 
                         kderp_contract_client kcc
-                    left join 
-                        account_invoice ai on kcc.id = ai.contract_id 
-                    left join 
-                         kderp_payment_vat_invoice kpvi on ai.id =kpvi.payment_id
-                    where
-                         ai.state not in ('draft','cancel') and kcc.id in (%s)
-                    group by kcc.id""" %(kcc_ids))
+                    left join (select 
+                                    contract_id,
+                                    sum(kpvi.amount/(1+coalesce(tax_percent,0)/100)) as issued_subtotal,
+                                    sum(coalesce(kpvi.amount,0)) as issued_amount
+                                from 
+                                    account_invoice ai
+                                left join 
+                                    kderp_payment_vat_invoice kpvi on ai.id =kpvi.payment_id
+                                left join
+                                    kderp_invoice ki on vat_invoice_id=ki.id
+                                where
+                                    ai.state not in ('draft','cancel') 
+                                group by ai.contract_id
+                                ) qr_vat_issued on qr_vat_issued .contract_id=kcc.id
+                    where 
+                        kcc.id in (%s)
+                    group by 
+                        kcc.id""" %(kcc_ids))
         for kcc_id,issued_amount,issued_vat,issued_total in cr.fetchall():
             res[kcc_id]={'issued_amount':issued_amount,
                          'issued_vat':issued_vat,
