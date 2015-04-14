@@ -510,6 +510,31 @@ session.web.FormView =  session.web.FormView.extend({
 	}
     });
 
+/*
+ * Sua phan xoa line o trong List many2one
+ * Bi loi khi nhap budget, do list view se cap nhat du lieu theo tu tu sua, vi vay khi them 1 dong vao roi xoa 1 dong 
+ * Khi commit ma co rang buoc trung du lieu thi se bao loi do co 2 ban ghi trung nhay
+ * Sua lai de cho phan xoa len tren cung
+ * */
+session.web.DataSet.include({	
+	write: function (id, data, options) {
+		 _.each(data, function (dat) {
+             if (dat instanceof Object)
+                     dat.sort(function (rd) {
+                             switch(rd) {
+                                     case 2: return 0
+                                     case 3: return 1
+                                     case 1: return 2
+                                     case 0: return 3
+                                     case 4: return 4
+                                     }
+                             return 5
+
+                     })});
+		 return this._super(id, data, options);
+	},	
+});
+
 session.web.search.InputView = session.web.search.InputView.extend({
 	onKeydown: function (e) {
 		var _super=this._super(e);
