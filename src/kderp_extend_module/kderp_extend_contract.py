@@ -87,29 +87,26 @@ class kderp_contract_client(osv.osv):
             res.append(kpvi.payment_id.contract_id.id)
         return list(set(res))
     
-    def _get_issued(self, cr, uid, ids, name, args, context=None):
+    def _get_vat_issued(self, cr, uid, ids, name, args, context=None):
         res={}
         kcc_ids=",".join(map(str,ids))
-        cr.execute("""select kcc.id ,sum(coalesce(kpvi.amount-(kpvi.amount*0.1),0)),sum(coalesce(kpvi.amount*0.1,0)),sum(coalesce(kpvi.amount,0))
+        cr.execute("""select kcc.id ,sum(coalesce(kpvi.amount,0))-sum(coalesce(ai.amount_tax,0)),sum(coalesce(ai.amount_tax,0)),sum(coalesce(kpvi.amount,0))
                     from 
                         kderp_contract_client kcc
                     left join 
                         account_invoice ai on kcc.id = ai.contract_id 
-                       
                     left join 
                          kderp_payment_vat_invoice kpvi on ai.id =kpvi.payment_id
                     where
-                        kcc.id in (%s)
+                         ai.state not in ('draft','cancel') and kcc.id in (%s)
                     group by kcc.id""" %(kcc_ids))
         for kcc_id,issued_amount,issued_vat,issued_total in cr.fetchall():
             res[kcc_id]={'issued_amount':issued_amount,
                          'issued_vat':issued_vat,
                          'issued_total':issued_total,
                          }
-                         
-                       
-            
-        return res
+        return res 
+    
     def _get_value_from_contract_info(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         c_ids = ",".join(map(str,ids))
@@ -147,23 +144,20 @@ class kderp_contract_client(osv.osv):
                                             method=True,string='Amount',
                                             multi='_get_value_from_contract_info',
                                              ),
-                 'issued_amount':fields.function(_get_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
+                'issued_amount':fields.function(_get_vat_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
                                                  store={
-                                                        'account.invoice':(_get_job_issued_from_from_client_payment,None,35),
+                                                        'account.invoice':(_get_job_issued_from_from_client_payment,['state','amount'],35),
                                                         'kderp.payment.vat.invoice':(_get_job_issued_from_vat_allocated,None,35),
-                                                       
                                                       }),
-              'issued_vat':fields.function(_get_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
+                'issued_vat':fields.function(_get_vat_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
                                                  store={
-                                                        'account.invoice':(_get_job_issued_from_from_client_payment,None,35),
+                                                        'account.invoice':(_get_job_issued_from_from_client_payment,['state','amount'],35),
                                                         'kderp.payment.vat.invoice':(_get_job_issued_from_vat_allocated,None,35),
-                                                       
                                                       }),
-              'issued_total':fields.function(_get_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
+                'issued_total':fields.function(_get_vat_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
                                                  store={
-                                                        'account.invoice':(_get_job_issued_from_from_client_payment,None,35),
+                                                        'account.invoice':(_get_job_issued_from_from_client_payment,['state','amount'],35),
                                                         'kderp.payment.vat.invoice':(_get_job_issued_from_vat_allocated,None,35),
-                                                       
                                                       }),                        
               }
     _defaults={
