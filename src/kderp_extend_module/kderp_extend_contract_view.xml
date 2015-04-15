@@ -96,6 +96,23 @@
             </field>
 		</record>
 		
+		<!-- Them truong invoice issued -->
+		<record id="kderp_view_contract_client_form_inheri_inherit" model="ir.ui.view">
+            <field name="name">kderp_view_contract_client_form_inherit.inherit.form</field>
+            <field name="model">kderp.contract.client</field>
+            <field name='inherit_id' ref='kderp_client_payment.kderp_view_contract_client_form_inherit'/>
+            <field name="arch" type="xml">
+                <!-- Them Vat Issued -->
+                <field name='balance_total' position='after'>
+					<label string="VAT Invoice Issued (6)" colspan="1" class="oe_bold"/>
+							<field name='issued_total' nolabel='1' widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+							<field name='issued_vat' nolabel='1' widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+							<field name='issued_amount' nolabel='1' widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+							
+                </field>
+            </field>
+		</record>
+		
 		<!-- Comtract Menu Complete-->
         <record id="action_kderp_contracts_completed" model="ir.actions.act_window">
             <field name="name">Contract - Completed</field>
@@ -108,8 +125,8 @@
             <field name="search_view_id" ref="kderp_contract.view_kderp_contract_filter"/>
         </record>
         <menuitem action="action_kderp_contracts_completed" id="menu_action_kderp_contracts_completed" parent="kderp_contract.kderp_menu_contract_root" groups="kderp_base.group_kderp_global_view" sequence = '15'/> 
-        
-        <!--  Comtract Menu Uncomplete  -->
+   
+        <!--t  Comtract Menu Uncomplete  -->
 		<record id="action_kderp_contracts" model="ir.actions.act_window">
             <field name="name">Contract - Uncompleted</field>
             <field name="type">ir.actions.act_window</field>
