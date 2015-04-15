@@ -37,8 +37,10 @@
 	            <xpath expr="//field[@name='name']" position="after">
 					<field name="revise_date" string='Rev. Date' filter_domain="[('revise_date','=',self)]"/>
 					<field name="availability" string="Availability" filter_domain="[('availability','=',self)]"/>
-					<field name="project_location_id" string="Location"/><!-- filter_domain="[('project_location_id','ilike',self)]" -->
+					<field name="project_location_id" string="Location"/>
 					<field name="contract_currency_ids" string="Contract Currency" filter_domain="[('contract_currency_ids','ilike',self)]"/>
+					<field name="amount_contract_info" string="Amount in Contract Cur." filter_domain="[('amount_contract_info','=',self)]"/>
+					<field name="contracted_amount" string="Amount in Company Cur." filter_domain="[('contracted_amount','=',self)]"/>
 	            </xpath>
 	            <filter string="Completed" name="state" domain="[('state','=','completed')]" position='after'>
 	            	<separator string="Availability"/>

@@ -91,12 +91,18 @@ class kderp_contract_client(osv.osv):
                             kccl.id in (%s)
                         group by
                             kccl.id, rc.name, kccu.amount""" % (c_ids))
-        for id, cur_contract_info, amount_contract_info in cr.fetchall():
-            res[id]={'cur_contract_info':cur_contract_info,
+        for kcc_id, cur_contract_info, amount_contract_info in cr.fetchall():
+            res[kcc_id]={'cur_contract_info':cur_contract_info,
                      'amount_contract_info':amount_contract_info,
                     }
         return res
-
+    
+    def _get_contract_from_contractcur(self, cr, uid, ids, context=None):
+        res={}
+        for kccc_obj in self.pool.get('kderp.contract.currency').browse(cr,uid,ids):
+                res[kccc_obj.contract_id.id] = True
+        return res.keys()
+    
     AVAILABILITY_SELECTION = [('inused',"IN USE"),("cancelled","CANCELLED")]
     
     _columns={
@@ -104,12 +110,20 @@ class kderp_contract_client(osv.osv):
                 'availability':fields.selection(AVAILABILITY_SELECTION,'Availability',readonly=True),
                 'remark':fields.char('Remark',size=128),
                 'cur_contract_info':fields.function(_get_value_from_contract_info,type='char',
-                                            size='8',method=True,string='Currency',
+                                            size=8,method=True,string='Currency',
                                             multi='_get_value_from_contract_info',
+                                            store = {
+                                                     'kderp.contract.client':(lambda self, cr, uid, ids: ids, [], 25),
+                                                     'kderp.contract.currency':(_get_contract_from_contractcur, None, 25)
+                                                     }
                                              ),
                 'amount_contract_info':fields.function(_get_value_from_contract_info,type='float',
-                                            method=True,string='Amount',
+                                            method=True,string='Amt in Contract Cur.',
                                             multi='_get_value_from_contract_info',
+                                            store = {
+                                                     'kderp.contract.client':(lambda self, cr, uid, ids: ids, [], 25),
+                                                     'kderp.contract.currency':(_get_contract_from_contractcur, None, 25)
+                                                     }
                                              ),
               }
     _defaults={
