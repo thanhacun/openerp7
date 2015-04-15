@@ -90,13 +90,13 @@ class kderp_contract_client(osv.osv):
     def _get_vat_issued(self, cr, uid, ids, name, args, context=None):
         res={}
         kcc_ids=",".join(map(str,ids))
-        cr.execute("""select 
-                        kcc.id,
+        cr.execute("""select kcc.id,
+                        sum(coalesce(kpvi.amount,0))+sum(coalesce(kpvi.diff_exrate,0)) as issued_amount,
                         case when 
-                            sum(coalesce(ai.amount_tax,0))=0 then 1 
+                            sum(coalesce(ai.amount_tax,0))=0 then 0
                         else 
-                            sum(coalesce(amount_untaxed))/sum(coalesce(ai.amount_tax,0)) end as issued_vat,            
-                        sum(kpvi.amount) as issued_total
+                            (coalesce(((sum(kpvi.amount)*sum(coalesce(amount_untaxed))/sum(coalesce(ai.amount_tax,0)))/(100+ sum(coalesce(amount_untaxed))/sum(coalesce(ai.amount_tax,0)))),0))+sum(coalesce(kpvi.diff_exrate,0))
+                        end as issued_vat  
                     from 
                         kderp_contract_client kcc 
                     left join  
@@ -109,11 +109,11 @@ class kderp_contract_client(osv.osv):
                         kcc.id in (%s)
                     group by 
                         kcc.id""" %(kcc_ids))
-        for kcc_id,issued_vat,issued_total in cr.fetchall():
+        for kcc_id,issued_vat,issued_amount in cr.fetchall():
             res[kcc_id]={
-                         'issued_vat':issued_total/((1+issued_vat)/100),
-                         'issued_total':issued_total,
-                         'issued_amount':issued_total-(issued_total/((1+issued_vat)/100))
+                         'issued_vat':issued_vat,
+                         'issued_amount':issued_amount,
+                         'issued_total':issued_amount-issued_vat,
                          }
         return res 
     
