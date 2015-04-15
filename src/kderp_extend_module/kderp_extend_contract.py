@@ -91,11 +91,11 @@ class kderp_contract_client(osv.osv):
         res={}
         kcc_ids=",".join(map(str,ids))
         cr.execute("""select kcc.id,
-                        sum(coalesce(kpvi.amount,0))+sum(coalesce(kpvi.diff_exrate,0)) as issued_amount,
+                        sum(coalesce(kpvi.amount,0)+coalesce(kpvi.diff_exrate,0)) as issued_amount,
                         case when 
                             sum(coalesce(ai.amount_tax,0))=0 then 0
                         else 
-                            (coalesce(((sum(kpvi.amount)*sum(coalesce(amount_untaxed))/sum(coalesce(ai.amount_tax,0)))/(100+ sum(coalesce(amount_untaxed))/sum(coalesce(ai.amount_tax,0)))),0))+sum(coalesce(kpvi.diff_exrate,0))
+                            sum(coalesce(amount_untaxed))/sum(coalesce(ai.amount_tax,0))                 
                         end as issued_vat  
                     from 
                         kderp_contract_client kcc 
@@ -107,16 +107,17 @@ class kderp_contract_client(osv.osv):
                         kderp_invoice ki on vat_invoice_id=ki.id
                     where 
                         kcc.id in (%s)
-                    group by 
-                        kcc.id""" %(kcc_ids))
-        for kcc_id,issued_vat,issued_amount in cr.fetchall():
+                    group by  
+                        kcc.id""" %(kcc_ids)) 
+        
+        for kcc_id,issued_amount,issued_vat in cr.fetchall():
             res[kcc_id]={
-                         'issued_vat':issued_vat,
+                         'issued_vat':issued_amount - (issued_amount/(1 + issued_vat/100.0)),
                          'issued_amount':issued_amount,
-                         'issued_total':issued_amount-issued_vat,
+                         'issued_sub_total':issued_amount/ (1 + issued_vat/100.0) 
                          }
         return res 
-    
+
     def _get_value_from_contract_info(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         c_ids = ",".join(map(str,ids))
@@ -139,7 +140,7 @@ class kderp_contract_client(osv.osv):
                      'amount_contract_info':amount_contract_info,
                     }
         return res
-
+    
     AVAILABILITY_SELECTION = [('inused',"IN USE"),("cancelled","CANCELLED")]
     
     _columns={
@@ -164,7 +165,7 @@ class kderp_contract_client(osv.osv):
                                                         'account.invoice':(_get_job_issued_from_from_client_payment,['state','amount'],35),
                                                         'kderp.payment.vat.invoice':(_get_job_issued_from_vat_allocated,None,35),
                                                       }),
-                'issued_total':fields.function(_get_vat_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
+                'issued_sub_total':fields.function(_get_vat_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
                                                  store={
                                                         'account.invoice':(_get_job_issued_from_from_client_payment,['state','amount'],35),
                                                         'kderp.payment.vat.invoice':(_get_job_issued_from_vat_allocated,None,35),
