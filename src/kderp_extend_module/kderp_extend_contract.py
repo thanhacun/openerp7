@@ -139,17 +139,14 @@ class kderp_contract_client(osv.osv):
             res[kcc_id]={'cur_contract_info':cur_contract_info,
                      'amount_contract_info':amount_contract_info,
                     }
-        return res
-    
-<<<<<<< HEAD
+        return res    
+
     def _get_contract_from_contractcur(self, cr, uid, ids, context=None):
         res={}
         for kccc_obj in self.pool.get('kderp.contract.currency').browse(cr,uid,ids):
                 res[kccc_obj.contract_id.id] = True
         return res.keys()
-    
-=======
->>>>>>> refs/remotes/origin/Security
+
     AVAILABILITY_SELECTION = [('inused',"IN USE"),("cancelled","CANCELLED")]
     
     _columns={
