@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="monthly_received_work" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="1.8150000000000008"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="707"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
@@ -47,7 +47,7 @@
 		<fieldDescription><![CDATA[contract_currency_ids/rate]]></fieldDescription>
 	</field>
 	<field name="Cur" class="java.lang.String">
-		<fieldDescription><![CDATA[contract_currency_ids/name/name]]></fieldDescription>
+		<fieldDescription><![CDATA[contract_summary_currency_ids/name/name]]></fieldDescription>
 	</field>
 	<field name="Contract_amount" class="java.lang.Double">
 		<fieldDescription><![CDATA[contract_summary_currency_ids/amount]]></fieldDescription>
@@ -154,6 +154,7 @@
 	<variable name="Total_AmtE_Contract_Sub_Usd" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[($F{Cur}=="USD"&&$V{Contract_COUNT}==1)?($F{Contract_subtotal}==null?0:$F{Contract_subtotal}):0]]></variableExpression>
 	</variable>
+	<variable name="Cur" class="java.lang.String"/>
 	<group name="Registration">
 		<groupExpression><![CDATA[new SimpleDateFormat("MMMM").format($F{Registration_Month})]]></groupExpression>
 		<groupHeader>
