@@ -105,7 +105,7 @@
                 <!-- Them Vat Issued -->
                 <field name='balance_total' position='after'>
 					<label string="VAT Invoice Issued (6)" colspan="1" class="oe_bold"/>
-							<field name='issued_total' nolabel='1' widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+							<field name='issued_sub_total' nolabel='1' widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
 							<field name='issued_vat' nolabel='1' widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
 							<field name='issued_amount' nolabel='1' widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
 							
