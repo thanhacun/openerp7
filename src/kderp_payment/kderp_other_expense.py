@@ -89,7 +89,6 @@ class kderp_other_expense(osv.osv):
         for koe in self.browse(cr, uid, ids):
             total_request_amount=0
             total_vat_amount = 0
-            total_vat_amount = 0
             subtotal_vat_amount = 0
             vat_amount = 0
             total_payment_amount=0
@@ -103,6 +102,7 @@ class kderp_other_expense(osv.osv):
             
             koe_subtotal_amount= koe.amount_untaxed #koe.amount_total bo
             subtotal_request_amount_company_cur=0
+            total_amount = cur_obj.round(cr, uid, koe.currency_id, koe.amount_total)
             
             for kspe in koe.supplier_payment_expense_ids:
                 if kspe.state not in ('draft','cancel'):
@@ -129,7 +129,7 @@ class kderp_other_expense(osv.osv):
             #Percentage of payment TotalRequestAmountINVND/(TotalRequstAMOUNT+TotalReamainAmountInVND)
             payment_percentage=subtotal_request_amount_company_cur/subtotal_koe_amount_company_curr if subtotal_koe_amount_company_curr else 0
             #Check if payment DONE ==> Mark PO Done
-            if total_request_amount==total_vat_amount and total_vat_amount==total_payment_amount and total_payment_amount==koe.amount_total and koe.state=='waiting_for_payment':
+            if total_request_amount==total_vat_amount and total_vat_amount==total_payment_amount and total_payment_amount==total_amount and koe.state=='waiting_for_payment':
                 result = self.write(cr, uid, [koe.id], {'state':'done'})
                 
             res[koe.id]={'total_request_amount':total_request_amount,

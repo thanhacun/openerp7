@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,8 +15,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import models
-import wizard
+
+# 1 : imports of python lib
+# 2 :  imports of openerp
+import openerp
+from openerp.osv import fields, osv as models
+
+
+class StockLocation(models.Model):
+    """
+        Inherit stock location, customize for Kinden Vietnam
+    """
+    _inherit = 'stock.location'
+    _name = 'stock.location'
+    
+    # Fields declaration
+    

@@ -105,7 +105,7 @@ class kderp_budget_data(osv.osv):
             context = {}
         unlink_ids = []
         for kbd in self.browse(cr, uid, ids, context=context):
-            for var in kbd.detail_budget:
+            if kbd.detail_budget:
                 raise osv.except_osv("KDERP Warning",'Can not DELETE budget having expenses.')
             unlink_ids.append(kbd.id)
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
@@ -116,12 +116,12 @@ class kderp_budget_data(osv.osv):
                                                store={
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
                                                      'kderp.budget.data':(lambda self, cr, uid, ids, c={}: ids,None,50)
-                                                      }),              
+                                                     }),              
               'paid_amount':fields.function(_get_summaryofbudget,string='Paid',digits_compute=dp.get_precision('Budget'),method=True,type='float',multi='_get_info',
                                                store={
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
                                                      'kderp.budget.data':(lambda self, cr, uid, ids, c={}: ids,None,50)
-                                                      }),              
+                                                     }),              
               'balance_per':fields.function(_get_summaryofbudget,string='Balance (%)',digits_compute=dp.get_precision('Amount'),method=True,type='float',multi='_get_info',
                                                store={
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
@@ -132,13 +132,13 @@ class kderp_budget_data(osv.osv):
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
                                                      'kderp.budget.data':(lambda self, cr, uid, ids, c={}: ids,None,50),
                                                      'res.company':(_get_budget_from_company,['over_budget_value'],50)
-                                                      }),
+                                                     }),
               
               'expense_without_contract':fields.function(_get_summaryofbudget,string='Amt. Without Contract',method=True,type='float',digits_compute=dp.get_precision('Budget'),size=8,multi='_get_info',
                                                store={
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
                                                      'kderp.budget.data':(lambda self, cr, uid, ids, c={}: ids,None,50)
-                                                      }),
+                                                     }),
               'expense_with_contract':fields.function(_get_summaryofbudget,string='Amt. With Contract',method=True,type='float',digits_compute=dp.get_precision('Budget'),multi='_get_info',
                                                store={
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
