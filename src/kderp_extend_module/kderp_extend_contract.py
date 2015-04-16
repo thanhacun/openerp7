@@ -157,7 +157,7 @@ class kderp_contract_client(osv.osv):
                                             size=8,method=True,string='Currency',
                                             multi='_get_value_from_contract_info',
                                             store = {
-                                                     'kderp.contract.client':(lambda self, cr, uid, ids: ids, [], 25),
+                                                     'kderp.contract.client':(lambda self, cr, uid, ids, context = {}: ids, [], 25),
                                                      'kderp.contract.currency':(_get_contract_from_contractcur, None, 25)
                                                      }
                                              ),
@@ -165,7 +165,7 @@ class kderp_contract_client(osv.osv):
                                             method=True,string='Amt in Contract Cur.',
                                             multi='_get_value_from_contract_info',
                                             store = {
-                                                     'kderp.contract.client':(lambda self, cr, uid, ids: ids, [], 25),
+                                                     'kderp.contract.client':(lambda self, cr, uid, ids, context = {}: ids, [], 25),
                                                      'kderp.contract.currency':(_get_contract_from_contractcur, None, 25)
                                                      }
                                              ),
