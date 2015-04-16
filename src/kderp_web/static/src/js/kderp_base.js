@@ -857,6 +857,8 @@ session.web.search.NumberField = session.web.search.NumberField.include(/** @len
 	    	    				var return_value={'value_type':'less_number','type':'number','from_number':val,'to_number':tval};
 		    					var number_string= less_than_str + tval.toLocaleString();
     	    				}
+    	    			else        	    			
+    	    				val = undefined
     	    			}
 	    		else
 	    			{
