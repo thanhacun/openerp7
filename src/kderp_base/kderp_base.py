@@ -1,3 +1,4 @@
+from _socket import timeout
 def diff_month(d1, d2):                                                                                                             
     return (d1.year - d2.year)*12 + d1.month - d2.month                                                                             
 
@@ -86,3 +87,21 @@ def get_new_value_from_tree( cr, uid, id, object, lists, field, context={}):
             res = cr.fetchone()[0]            
             
     return res
+
+def check_connection(server = '192.168.1.11', port = '5432', timeout = 2):
+    """
+        (server, port, timeout) -> Boolean
+    """
+    import socket    
+    #Simply change the host and port values
+    host = server
+    port = port
+    
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(timeout)
+    try:
+        s.connect((host, port))
+        s.shutdown(2)
+        return True
+    except:
+        return False

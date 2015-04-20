@@ -15,29 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     d
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-{
-    'name':"KDERP Purchase Extend Module",
-    'version':"7.0.0",
-    'author':"KDERP IT-Dev. Team",
-    'images' : ['images/kinden.png'],
-    'summary':"Add new module Extend Purchase Module for Suiteable Kinden Procedure",
-    'category':"KDERP Apps",
-    'depends':['kderp_extend_module'],
-    'description': """
-    - Customize Database structure and function
-    - Customize Procedure
-    - Customize Interface""",
-    'data':[
-             "security/kderp_purchase_extend_security.xml",
-             "security/ir.model.access.csv",
-             "res_config_view.xml",
-             "kderp_purchase_general_contract_view.xml",
-             "report/kderp_purchase_materialsub_budget_balancesheet_view.xml",
-             "kderp_purchase_view.xml"         
-            ],
-    'demo':[],
-    'installable':True
-}
+import inherited_stock_move
+import inherited_stock_picking
+import inherited_stock_location
+
+import testing_demo

@@ -25,7 +25,7 @@
     'images' : [''],
     'summary':"Link Two server OpenERP 7",
     'category':"KDERP Apps",
-    'depends':['base'],
+    'depends':['kderp_base'],
     'description': """
     Add interface link 2 servers OpenERP 7
     - Customize Database structure and function

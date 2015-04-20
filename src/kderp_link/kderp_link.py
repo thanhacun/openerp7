@@ -30,6 +30,14 @@ class kderp_link_server(osv.osv):
     _name = 'kderp.link.server'
     _description = 'KDERP Link Server'
     
+    def check_server_connection(self, cr, uid, ids, context = {}):
+        from kderp_base import kderp_base
+        if not ids:
+            ids = self.search(cr, uid, [])
+        for kls in self.browse(cr, uid, ids):
+            if not kderp_base.check_connection(kls.server, kls.port):
+                raise osv.except_osv("KDERP Warning","There is an error while connecting to remote server. Please contact KINDEN VIETNAM OpenERP Administrator. We are sorry for this inconvenience.")
+        pass
     def _get_connection(self, cr, uid, ids, name, arg, context=None):
         if not context:
             context = {}

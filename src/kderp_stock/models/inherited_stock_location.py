@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,29 +15,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     d
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name':"KDERP Purchase Extend Module",
-    'version':"7.0.0",
-    'author':"KDERP IT-Dev. Team",
-    'images' : ['images/kinden.png'],
-    'summary':"Add new module Extend Purchase Module for Suiteable Kinden Procedure",
-    'category':"KDERP Apps",
-    'depends':['kderp_extend_module'],
-    'description': """
-    - Customize Database structure and function
-    - Customize Procedure
-    - Customize Interface""",
-    'data':[
-             "security/kderp_purchase_extend_security.xml",
-             "security/ir.model.access.csv",
-             "res_config_view.xml",
-             "kderp_purchase_general_contract_view.xml",
-             "report/kderp_purchase_materialsub_budget_balancesheet_view.xml",
-             "kderp_purchase_view.xml"         
-            ],
-    'demo':[],
-    'installable':True
-}
+
+# 1 : imports of python lib
+# 2 :  imports of openerp
+import openerp
+from openerp.osv import fields, osv as models
+
+
+class StockLocation(models.Model):
+    """
+        Inherit stock location, customize for Kinden Vietnam
+    """
+    _inherit = 'stock.location'
+    _name = 'stock.location'
+    
+    # Fields declaration
+    
