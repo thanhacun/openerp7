@@ -88,7 +88,7 @@ def get_new_value_from_tree( cr, uid, id, object, lists, field, context={}):
             
     return res
 
-def check_connection(server = '192.168.1.11', port = '5432', timeout = 2):
+def check_connection(server = '192.168.1.11', port = '5432', timeout = 5):
     """
         (server, port, timeout) -> Boolean
     """
