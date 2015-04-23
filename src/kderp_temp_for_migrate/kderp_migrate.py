@@ -1043,6 +1043,15 @@ class kderp_migrate(osv.osv_memory):
         for id,job_id in cr.fetchall():
             jb_obj.write(cr, uid, [id], {})
         return True
+
+    #Update VAT Received Amount in Job after changing Formulas
+    def update_vat_issued(self, cr, uid, ids, context):
+        SQL = "Select min(id),payment_id from kderp_payment_vat_invoice group by payment_id"
+        jb_obj = self.pool.get('kderp.payment.vat.invoice')
+        cr.execute(SQL)
+        for id,payment_id in cr.fetchall():
+            jb_obj.write(cr, uid, [id], {})
+        return True
     
     #Update Contracted Amount after changing formulas
     def update_contracted_job_and_contract(self, cr, uid, ids, context):

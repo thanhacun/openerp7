@@ -84,6 +84,8 @@ class sale_order(osv.osv):
         return res
     
     _columns={
+              'project_location_id':fields.many2one('kderp.location','Project Location', ondelete='restrict'),
+              
               'sort_approved_amount':fields.function(_get_sort_approved_amount,method=True,string="Sort",type='integer',
                                             store={
                                                    'sale.order':(lambda self, cr, uid, ids, c={}: ids, None, 20),

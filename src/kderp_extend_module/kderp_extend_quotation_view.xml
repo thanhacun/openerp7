@@ -65,6 +65,14 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="kderp_quotation.kderp_view_sale_quotation_form"/>
 			<field name="arch" type="xml">
+				<!-- Them truong project location -->
+				<field name='registered_by' position='replace'>
+					<field name='project_location_id'/>
+				</field>
+				<field name='description' position='before'>
+					<field name='registered_by'/>
+					<newline/>
+				</field>
 				<!-- Them Breakdown temp vao truoc Breakdown -->
 				<separator string="Electrical Breakdown" colspan="4" position="before">				
 					<separator string="Electrical Breakdown (Temp)" colspan="4"/>
@@ -138,6 +146,14 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="kderp_quotation.kderp_view_sale_quotation_quotation_info_form"/>
 			<field name="arch" type="xml">
+				<!-- Them truong project location -->
+				<field name='registered_by' position='replace'>
+					<field name='project_location_id'/>
+				</field>
+				<field name='description' position='before'>
+					<field name='registered_by'/>
+					<newline/>
+				</field>
 				<!-- Them Breakdown temp vao truoc Breakdown -->
 				<separator string="Electrical Breakdown" colspan="4" position="before">				
 					<separator string="Electrical Breakdown (Temp)" colspan="4"/>
@@ -230,6 +246,14 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="kderp_quotation.kderp_view_sale_quotation_contract_form"/>
 			<field name="arch" type="xml">
+				<!-- Them truong project location -->
+				<field name='registered_by' position='replace'>
+					<field name='project_location_id'/>
+				</field>
+				<field name='description' position='before'>
+					<field name='registered_by'/>
+					<newline/>
+				</field>
 				<!-- Them Breakdown temp vao truoc Breakdown -->
 				<separator string="Electrical Breakdown" colspan="4" position="before">				
 					<separator string="Electrical Breakdown (Temp)" colspan="4"/>

@@ -21,5 +21,3 @@
 import inherited_stock_move
 import inherited_stock_picking
 import inherited_stock_location
-
-import testing_demo

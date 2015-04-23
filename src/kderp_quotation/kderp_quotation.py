@@ -219,12 +219,12 @@ class sale_order(Model):
                 'dateofregistration':fields.date('Date of Registration'),
                 
                 #Client & Address & Information
-                'partner_id': fields.many2one('res.partner', 'Client', ondelete='restrict', readonly=True, domain="[('customer','=',1)]",states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True, track_visibility='always'),
-                'partner_address_id': fields.many2one('res.partner', 'Address', readonly=True,ondelete='restrict', required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+                'partner_id': fields.many2one('res.partner', 'Client Name', ondelete='restrict', readonly=True, domain="[('customer','=',1)]",states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True, track_visibility='always'),
+                'partner_address_id': fields.many2one('res.partner', 'Client Address', readonly=True,ondelete='restrict', required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                 'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=True,ondelete='restrict', required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                 'completion_date':fields.date('Completion Date'),
                 
-                'contract_id':fields.many2one('kderp.contract.client','Contract',ondelete='restrict'),
+                'contract_id':fields.many2one('kderp.contract.client','Contract No.',ondelete='restrict'),
                 
                 #For disable required
                 'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
@@ -235,8 +235,8 @@ class sale_order(Model):
                 'order_policy': fields.selection([('manual', 'On Demand')], 'Create Invoice', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                 
                 ### Quotation Information ####
-                'owner_id': fields.many2one('res.partner', 'Owner',ondelete='restrict', domain="[('customer','=',1)]",readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, change_default=True, select=True),
-                'location_id': fields.many2one('res.partner', 'Location',ondelete='restrict', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+                'owner_id': fields.many2one('res.partner', 'Owner Name',ondelete='restrict', domain="[('customer','=',1)]",readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, change_default=True, select=True),
+                'location_id': fields.many2one('res.partner', 'Owner Address',ondelete='restrict', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                 
                 'project_name':fields.char('Project Name', size=256,select=2),
                                 

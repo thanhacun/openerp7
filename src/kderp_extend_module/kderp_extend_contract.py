@@ -100,7 +100,7 @@ class kderp_contract_client(osv.osv):
                     from 
                         kderp_contract_client kcc 
                     left join  
-                        account_invoice ai on kcc.id =ai.contract_id and  ai.state not in ('draft','cancel') 
+                        account_invoice ai on kcc.id =ai.contract_id and  ai.state!='cancel' 
                     left join 
                         kderp_payment_vat_invoice kpvi on ai.id =kpvi.payment_id
                     left join

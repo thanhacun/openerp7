@@ -208,7 +208,7 @@ class account_analytic_account(Model):
                                 group by
                                     payment_id) vwpayment_vat on ai.id=vwpayment_vat.payment_id and coalesce(vwpayment_vat.payment_id,0)>0
                             where
-                                ai.state not in ('draft','cancel') and coalesce(aaa.id,0) in (%s)
+                                ai.state!='cancel' and coalesce(aaa.id,0) in (%s)
                             group by
                                 aaa.id""" % (job_ids,job_ids))
         for job_list in cr.dictfetchall():

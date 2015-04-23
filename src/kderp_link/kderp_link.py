@@ -33,7 +33,7 @@ class kderp_link_server(osv.osv):
     def check_server_connection(self, cr, uid, ids, context = {}):
         from kderp_base import kderp_base
         if not ids:
-            ids = self.search(cr, uid, [])
+            ids = self.search(cr, uid, [('need_to_check','=',True)])
         for kls in self.browse(cr, uid, ids):
             if not kderp_base.check_connection(kls.server, kls.port):
                 raise osv.except_osv("KDERP Warning","There is an error while connecting to remote server. Please contact KINDEN VIETNAM OpenERP Administrator. We are sorry for this inconvenience.")
@@ -53,13 +53,15 @@ class kderp_link_server(osv.osv):
                 'password':fields.char('Password', size=64, required = True),
                 'database':fields.char('Database', size=32, required = True),
                 'name':fields.char("Description", required = True),
+                'need_to_check':fields.boolean('Check?'),
                 'connection_string':fields.function(_get_connection, type='char', size=256, method = True,
                                                     store={'kderp.link.server': (lambda self, cr, uid, ids, c={}: ids, None, 20),
                                                            }),
                 'link_server_line':fields.one2many('kderp.link.server.line','link_server_id','Detail'),
     }
     _defaults ={
-                'port':5432
+                'port':5432,
+                'need_to_check': True,
                 }
     _sql_constraints =[("sql_unique_link_server_name",'unique(name)','KDERP Warning: Name for Server Link must unique'),
                        ("sql_unique_database_name",'unique(server, database, user)','KDERP Warning: Server and database must be unique'),

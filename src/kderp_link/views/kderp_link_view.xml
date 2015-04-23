@@ -12,6 +12,7 @@
            			<field name='user'/>
            			<field name='database'/>
            			<field name='name'/>
+           			<field name='need_to_check'/>
            		</tree>
            	</field>
         </record>
@@ -31,6 +32,7 @@
 	            			<field name='password' password="1"/>
 	            			<field name='database'/>
 	            			<field name='name'/>
+	            			<field name='need_to_check'/>
 	            		</group>            		
 	            	</sheet>
             	</form>				

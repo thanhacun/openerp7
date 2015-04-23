@@ -51,8 +51,6 @@
              'kderp_extend_employee_view.xml' ,
              'kderp_extend_client_payment_view.xml',
              'kderp_extend_supplier_payment_view.xml',
-             #'kderp_extend_job_budget_view.xml',
-             #'kderp_extend_job_budget_project_view.xml',
              'kderp_extend_base_view.xml',             
              "security/kderp_extend_kderp_supplier_payment_security.xml",
              "security/kderp_extend_kderp_supplier_payment_expense_security.xml",
