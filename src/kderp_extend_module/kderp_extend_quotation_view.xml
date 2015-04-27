@@ -135,6 +135,50 @@
 				<field name="total_working_budget" position='before'>
 					<field name='quotation_job_budget_na' string='N/A'/>
 				</field>
+				
+				<!-- Thay doi group Quotation Infomation va Submit Info.-->
+				<group string="Quotation Information" colspan="4" col="4" class="h4" position='replace'>
+					<group string="Quotation Information" colspan="4" col="4" class="h4">
+						<field name="owner_id" string="Owner Name" on_change="onchange_owner_id(owner_id)"/>
+						<field name="location_id" string="Owner Address" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+						<field name="project_name"/>
+						<field name='project_location_id'/>
+						<field name="description"/>
+						<field name="remarks"/>
+						<field name="quotation_type"/>
+                       	<field name="date_order"/>
+                       	<field name="quotation_submit_line" nolabel="1" string="Detail of Submission" colspan="4">
+                       		<tree string="Detail of Submission" editable="bottom" min_rows="2">
+                       			<field name="currency_id"/>
+                       			<field name="amount" string="Submit Amount"/>
+                       			<field name="tax_id" widget="many2many_tags" context="{'res_model':['kderp.sale.order.submit.line'],'res_id':[active_id],'type':'issued','res_name':parent.name}">
+                       				<tree>
+                       					<field name="name"/>
+                       				</tree>
+                       			</field>
+                       			<field name="tax_amount"/>
+                       			<field name="subtotal"/>
+                       			<field name="note"/>
+                       		</tree>
+                       	</field>
+					</group>
+					<group string="Persons Incharge" colspan="4" col="4" class="h4">
+						<field name="registered_by"/>
+						<label string="" colspan="2"/>
+						<field name="estimation_e_manager_j"/>
+						<field name="estimation_m_manager_j"/>
+						<field name="estimation_e_manager_v"/>
+						<field name="estimation_m_manager_v"/>
+						
+						<field name="project_manager_id"/>
+						<field name="project_manager_m_id"/>
+						<field name="site_manager_e_id"/>
+						<field name="site_manager_m_id"/>
+					</group>
+				</group>
+				<group string="Submit Info." col="4" colspan="3" position="replace">
+					<group string="Submit Info." invisible="True"/>
+				</group>
 			</field>
 		</record>	
 		
@@ -236,6 +280,50 @@
 				<field name="total_working_budget" position='before'>
 					<field name='quotation_job_budget_na' string='N/A'/>
 				</field>
+				
+				<!-- Thay doi group Quotation Infomation va Submit Info.-->
+				<group string="Quotation Information" colspan="4" col="4" class="h4" position='replace'>
+					<group string="Quotation Information" colspan="4" col="4" class="h4">
+						<field name="owner_id" string="Owner Name" on_change="onchange_owner_id(owner_id)"/>
+						<field name="location_id" string="Owner Address" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+						<field name="project_name"/>
+						<field name='project_location_id'/>
+						<field name="description"/>
+						<field name="remarks"/>
+						<field name="quotation_type"/>
+                       	<field name="date_order"/>
+                       	<field name="quotation_submit_line" nolabel="1" string="Detail of Submission" colspan="4">
+                       		<tree string="Detail of Submission" editable="bottom" min_rows="2">
+                       			<field name="currency_id"/>
+                       			<field name="amount" string="Submit Amount"/>
+                       			<field name="tax_id" widget="many2many_tags" context="{'res_model':['kderp.sale.order.submit.line'],'res_id':[active_id],'type':'issued','res_name':parent.name}">
+                       				<tree>
+                       					<field name="name"/>
+                       				</tree>
+                       			</field>
+                       			<field name="tax_amount"/>
+                       			<field name="subtotal"/>
+                       			<field name="note"/>
+                       		</tree>
+                       	</field>
+					</group>
+					<group string="Persons Incharge" colspan="4" col="4" class="h4">
+						<field name="registered_by"/>
+						<label string="" colspan="2"/>
+						<field name="estimation_e_manager_j"/>
+						<field name="estimation_m_manager_j"/>
+						<field name="estimation_e_manager_v"/>
+						<field name="estimation_m_manager_v"/>
+						
+						<field name="project_manager_id"/>
+						<field name="project_manager_m_id"/>
+						<field name="site_manager_e_id"/>
+						<field name="site_manager_m_id"/>
+					</group>
+				</group>
+				<group string="Submit Info." col="4" colspan="3" position="replace">
+					<group string="Submit Info." invisible="True"/>
+				</group>
 			</field>
 		</record>
 		
@@ -337,6 +425,50 @@
 				<field name="total_working_budget" position='before'>
 					<field name='quotation_job_budget_na' string='N/A'/>
 				</field>
+				
+				<!-- Thay doi group Quotation Infomation va Submit Info.-->
+				<group string="Quotation Information" colspan="4" col="4" class="h4" position='replace'>
+					<group string="Quotation Information" colspan="4" col="4" class="h4">
+						<field name="owner_id" string="Owner Name" on_change="onchange_owner_id(owner_id)"/>
+						<field name="location_id" string="Owner Address" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+						<field name="project_name"/>
+						<field name='project_location_id'/>
+						<field name="description"/>
+						<field name="remarks"/>
+						<field name="quotation_type"/>
+                       	<field name="date_order"/>
+                       	<field name="quotation_submit_line" nolabel="1" string="Detail of Submission" colspan="4">
+                       		<tree string="Detail of Submission" editable="bottom" min_rows="2">
+                       			<field name="currency_id"/>
+                       			<field name="amount" string="Submit Amount"/>
+                       			<field name="tax_id" widget="many2many_tags" context="{'res_model':['kderp.sale.order.submit.line'],'res_id':[active_id],'type':'issued','res_name':parent.name}">
+                       				<tree>
+                       					<field name="name"/>
+                       				</tree>
+                       			</field>
+                       			<field name="tax_amount"/>
+                       			<field name="subtotal"/>
+                       			<field name="note"/>
+                       		</tree>
+                       	</field>
+					</group>
+					<group string="Persons Incharge" colspan="4" col="4" class="h4">
+						<field name="registered_by"/>
+						<label string="" colspan="2"/>
+						<field name="estimation_e_manager_j"/>
+						<field name="estimation_m_manager_j"/>
+						<field name="estimation_e_manager_v"/>
+						<field name="estimation_m_manager_v"/>
+						
+						<field name="project_manager_id"/>
+						<field name="project_manager_m_id"/>
+						<field name="site_manager_e_id"/>
+						<field name="site_manager_m_id"/>
+					</group>
+				</group>
+				<group string="Submit Info." col="4" colspan="3" position="replace">
+					<group string="Submit Info." invisible="True"/>
+				</group>
 			</field>
 		</record>
 		
