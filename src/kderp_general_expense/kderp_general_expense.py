@@ -195,23 +195,25 @@ class kderp_other_expense(osv.osv):
             allocating_begin_date = False
             if koe.expense_type in ('prepaid', 'fixed_asset'):
                 for re_exp in koe.related_expense_ids:
+                    if not allocating_begin_date:
+                        allocating_begin_date = re_exp.expense_id.date
+                    else:
+                        if allocating_begin_date > re_exp.expense_id.date:
+                            allocating_begin_date = re_exp.expense_id.date
+                            
+                    if not allocating_date:
+                            allocating_date = re_exp.expense_id.date                            
+                    else:
+                            if allocating_date < re_exp.expense_id.date:
+                                allocating_date = re_exp.expense_id.date                    
+                    
                     if re_exp.expense_id.state not in ('draft', 'cancel'):
                         recognized_amount += re_exp.amount
                         if not allocated_date:                    
                             allocated_date = re_exp.expense_id.date
                         else:
                             if allocated_date < re_exp.expense_id.date:
-                                allocated_date = re_exp.expense_id.date
-                                
-                    elif re_exp.expense_id.state == 'draft':
-                        if not allocating_date:                    
-                            allocating_date = re_exp.expense_id.date
-                            allocating_begin_date = re_exp.expense_id.date
-                        else:
-                            if allocating_date < re_exp.expense_id.date:
-                                allocating_date = re_exp.expense_id.date
-                            if allocating_begin_date > re_exp.expense_id.date:
-                                allocating_begin_date = re_exp.expense_id.date
+                                allocated_date = re_exp.expense_id.date                                                    
                                                                                                                                      
             res[koe.id] = {'recognized_amount': recognized_amount,
                            'remaining_amount': koe.amount_untaxed - recognized_amount,
