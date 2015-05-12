@@ -244,5 +244,12 @@
         			action="kderp_action_working_other_expense_ge" 
         			id="kderp_working_other_expense_ge_action" 
         			parent="kderp_general_expense.menu_kderp_general_exepense_menu" sequence="5"/>
+        <act_window 
+            id="action_allocated_expense"
+            name="Allocated Expense"
+            res_model="kderp.other.expense"
+            src_model="kderp.other.expense.line"
+            context="{'belong_expense_ids':active_ids}"
+            key2="client_action_multi"/>
 	</data>
 </openerp>

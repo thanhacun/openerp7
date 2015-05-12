@@ -97,7 +97,7 @@ class kderp_other_expense(osv.osv):
                     ('PE','Job Expense'),
                     ('GE','General Expense'),
                     ('PGE','Job & General Expense'))
-    
+
     def check_and_submit_monthly_expense(self, cr, uid, ids, cron_mode=True, context=None):
         if not context:
             context = {}
@@ -298,7 +298,7 @@ class kderp_other_expense(osv.osv):
                                                            'kderp.other.expense':(_get_expense_remaining, ['state','expense_type','date'], 15),
                                                            'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
                                                            }),
-                'number_of_month':fields.integer("Number of month", readonly=True, help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),
+                'number_of_month':fields.integer("Allocated Months", readonly=True, help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),
                 }
 
     _defaults = {

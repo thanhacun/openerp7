@@ -49,8 +49,8 @@ class kderp_create_allocation_sheet(osv.osv_memory):
     _columns = {
                 'allocating_begin_date':fields.date('Start Date',required=True),
                 'startdate_default':fields.boolean('Start Date Defaults',invisible=True),
-                'number_of_month':fields.integer("Number of month?", help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),                
-                'allocated_selection':fields.selection(ALLOCATION_MONTH,'Select', required = True),
+                'number_of_month':fields.integer("Allocated Months", help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),                
+                'allocated_selection':fields.selection(ALLOCATION_MONTH,'Number of Months', required = True),
                 'allocated_to_month':fields.integer(""),
                 'section_id':fields.many2one('hr.department','Allocated to Section'),
                 'budget_id':fields.many2one('account.budget.post','Budget', required = True),
