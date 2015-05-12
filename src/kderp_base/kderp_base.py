@@ -1,6 +1,6 @@
 from _socket import timeout
-def diff_month(d1, d2):                                                                                                             
-    return (d1.year - d2.year)*12 + d1.month - d2.month                                                                             
+def diff_month(date_from, date_to):
+    return (date_to.year - date_from.year)*12 + date_to.month - date_from.month                                                                             
 
 def round_base(x, base=5):
         return int(base * round(float(x)/base))
