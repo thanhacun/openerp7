@@ -73,5 +73,18 @@
 			</field>
 		</record>
 		
+		<!--Them job code va job name vao tree -->
+		<record id="view_account_analytic_kderp_job_inherit_tree" model="ir.ui.view">
+			<field name="name">view.account.analytic.kderp.job.inherit.tree</field>
+			<field name="model">account.analytic.account</field>
+			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_tree"/>
+			<field name="priority" eval="5"/>
+			<field name="arch" type="xml">
+				<field name="full_name" position="replace">
+					<field name="code"/>
+					<field name="name"/>
+				</field>
+			</field>
+		</record>
 	</data>
 </openerp>

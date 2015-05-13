@@ -40,6 +40,10 @@ class kderp_asset_import(Model):
                     elif kail.state=='draft':
                         kail.write({'reason':'This asset already in Liquidation List'})
                         done = False
+                elif kai.import_type=='spec':
+                    write_data = {'name':kail.remarks}                    
+                    kail.asset_id.write(write_data)
+                    kail.write({'state':'done'})
                 elif kai.import_type=='usage':                    
                         if not kail.user_id or not kail.date:
                             raise osv.except_osv("KDERP Warning","Pls. input user and used time")
@@ -62,7 +66,7 @@ class kderp_asset_import(Model):
                 kai.write({'state':'done'})
         pass
         
-    IMPORT_TYPE = (('lq','Liquidation'),('usage','Usage'))
+    IMPORT_TYPE = (('lq','Liquidation'),('usage','Usage'),('spec','Specification'))
     _columns={
               'name':fields.date("Import Date", 
                                     states={'done':[('readonly',True)]}, required=True),              
@@ -72,6 +76,7 @@ class kderp_asset_import(Model):
               'state':fields.selection((('draft','Draft'),('done','Completed')),'State',readonly=True),
               
               'detail_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
+              'detail_spec_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_usage_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'import_type':fields.selection(IMPORT_TYPE,'Import type',states={'done':[('readonly',True)]}),
               }
