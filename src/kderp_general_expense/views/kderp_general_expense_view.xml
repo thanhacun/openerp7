@@ -191,6 +191,7 @@
                     <separator/>
                     <filter help="Draft Expense" name='draft' domain="[('state','=','draft')]"/>
                     <filter help="Waiting for Payment" name='waiting_for_payment' domain="[('state','=','waiting_for_payment')]"/>
+                    <filter help="Paid Expense" name='paid' domain="[('state','=','paid')]"/>
                     <filter help="Completed Expense" name='done' domain="[('state','=','done')]"/>
                     <filter help="Cancelled Expense" name='cancel' domain="[('state','=','cancel')]"/>
                     <separator/>
