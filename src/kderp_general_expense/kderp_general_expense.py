@@ -264,7 +264,36 @@ class kderp_other_expense(osv.osv):
             if koel.belong_expense_id:
                 res[koel.belong_expense_id.id] = True
         return res.keys()
-    
+    def action_open_allocated_expense(self, cr, uid, ids, *args):
+        context = filter(lambda arg: type(arg) == type({}), args)
+        if not context:
+            context = {}
+        else:
+            context = context[0]
+        expense_id = self.browse(cr, uid, ids[0]).id
+        interface_string = 'General Expense'
+        if expense_id:
+            expense_ids = []
+            cr.execute("""select
+                           koel.expense_id 
+                        from 
+                            kderp_other_expense koe
+                        left join 
+                            kderp_other_expense_line koel on koel.belong_expense_id = koe.id 
+                       where koe.id in (%s) """ % expense_id)
+            for expense_id  in cr.fetchall():
+                expense_ids.append(expense_id[0])
+            return {
+                    'type': 'ir.actions.act_window',
+                    'name': interface_string,
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'context': context,
+                    'res_model': 'kderp.other.expense',
+                    'domain': "[('id','=',%s)]" % expense_ids
+                    }
+        else:
+            return True
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_payment','Waiting for Payment'),
                    ('paid','Paid'),
@@ -373,7 +402,8 @@ class kderp_other_expense_line(osv.osv):
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
                 'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False),
-                'date':fields.related('expense_id', 'date', string='Date', type='date', store = False)
+                'date':fields.related('expense_id', 'date', string='Date', type='date', store = False),
+               
                 }
     
     _defaults ={

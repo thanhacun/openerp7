@@ -116,6 +116,7 @@
 	                            <div class="oe_clear"/>
 	                        </page>
 	                        <page string='Allocation Sheet' attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}">
+	                        	<button name='action_open_allocated_expense' type="object" string='Open Allocated Expense' icon='gtk-open'/>
 	                        	<field name='related_expense_ids' nolabel='1' colspan="4">
 	                        		<tree string='Allocation Sheet' editable='top'>
 		                        		<field name='expense_id' string='Expense No.'/>
@@ -124,6 +125,7 @@
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="amount" sum='Sub-total' string="Amount"/>
+	                                    <!-- <field  name='state'/>  -->
 	                                    <button name='action_open_related_exp' type="object" string='Open' icon='gtk-open'/>
 	                        		</tree>
 	                        	</field>
@@ -246,14 +248,7 @@
         			id="kderp_working_other_expense_ge_action" 
         			parent="kderp_general_expense.menu_kderp_general_exepense_menu" sequence="5"/>
         			
-       <!-- Action mo Allocate Expense cua Prepaid hoac Fixed Asset -->			
-        <act_window 
-            id="action_allocated_expense"
-            name="Allocated Expense"
-            res_model="kderp.other.expense"
-            src_model="kderp.other.expense.line"
-            context="{'belong_expense_ids':active_ids}"
-            key2="client_action_multi"/>
+       
 	</data>
 	
 </openerp>
