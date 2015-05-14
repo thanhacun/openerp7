@@ -125,7 +125,7 @@
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="amount" sum='Sub-total' string="Amount"/>
-	                                    <!-- <field  name='state'/>  -->
+	                                    <field  name='state'/> 
 	                                    <button name='action_open_related_exp' type="object" string='Open' icon='gtk-open'/>
 	                        		</tree>
 	                        	</field>

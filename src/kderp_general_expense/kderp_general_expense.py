@@ -403,7 +403,7 @@ class kderp_other_expense_line(osv.osv):
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
                 'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False),
                 'date':fields.related('expense_id', 'date', string='Date', type='date', store = False),
-               
+                'state':fields.related('expense_id','state',string='State',type='char',store =False)
                 }
     
     _defaults ={
