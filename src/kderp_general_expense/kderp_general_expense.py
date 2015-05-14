@@ -426,7 +426,22 @@ class kderp_other_expense_line(osv.osv):
             else:
                 return False
         return True
-    
+    def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        list_update=[]
+        koe_ids=[]
+        for koel in self.browse(cr, uid, ids):
+            if koel.expense_id.state <> 'draft':
+                list_update.append(koel.expense_id.name)
+                raise osv.except_osv("KDVN Message","State of Monthly Expense must be Draft !\n%s" % str(list_update))
+            else:
+                
+                koe_ids.append(koel.expense_id.id)  
+                koe_obj=self.pool.get('kderp.other.expense')
+        for kspe_id in koe_ids:
+                koe_obj.write(cr, uid, [kspe_id],{'state':'done'})
+        return True
     def action_open_related_exp(self, cr, uid, ids, *args):
         context = filter(lambda arg: type(arg) == type({}), args)
         if not context:
