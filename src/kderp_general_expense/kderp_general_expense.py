@@ -410,14 +410,11 @@ class kderp_other_expense_line(osv.osv):
     def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
         if not context:
             context = {}
-        list_update=[]
         koe_ids=[]
         for koel in self.browse(cr, uid, ids):
-            if koel.expense_id.state <> 'draft':
-                list_update.append(koel.expense_id.name)
-                raise osv.except_osv("KDVN Message","State of Monthly Expense must be Draft !\n%s" % str(list_update))
+            if not koel.expense_id.expense_line:
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a Expense without any Expense Details.'))
             else:
-                
                 koe_ids.append(koel.expense_id.id)  
                 koe_obj=self.pool.get('kderp.other.expense')
         for kspe_id in koe_ids:
