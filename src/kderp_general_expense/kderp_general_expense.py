@@ -97,25 +97,6 @@ class kderp_other_expense(osv.osv):
                     ('PE','Job Expense'),
                     ('GE','General Expense'),
                     ('PGE','Job & General Expense'))
-    
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}  
-        belong_expense_ids=context.get('active_ids',[]) 
-        belong_expense_id = ",".join(map(str,belong_expense_ids))
-        if belong_expense_id:      
-            expense_ids = []
-            cr.execute("""select
-                            koel.expense_id 
-                        from 
-                            kderp_other_expense koe
-                        left join 
-                            kderp_other_expense_line koel on koel.belong_expense_id = koe.id 
-                        where koel.belong_expense_id in (%s) """ % belong_expense_id)
-            for expense_id  in cr.fetchall():
-                expense_ids.append(expense_id[0])
-            args.append((('id', 'in', expense_ids)))
-        return super(kderp_other_expense, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
 
     def check_and_submit_monthly_expense(self, cr, uid, ids, cron_mode=True, context=None):
         if not context:
