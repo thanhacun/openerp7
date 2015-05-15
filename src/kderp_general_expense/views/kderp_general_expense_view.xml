@@ -117,7 +117,7 @@
 	                        </page>
 	                        <page string='Allocation Sheet' attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}">
 	                        	<field name='related_expense_ids' nolabel='1' colspan="4">
-	                        		<tree string='Allocation Sheet' editable='top'>
+	                        		<tree string='Allocation Sheet' editable='top' colors="blue:state == 'draft'">
 		                        		<field name='expense_id' string='Expense No.'/>
 										<field name='account_analytic_id' string='Job/GE' domain="[('general_expense','=',True)]" options='{"always_reload": True}' context="{'general_expense': True}"/>
 										<field name='date'/>
