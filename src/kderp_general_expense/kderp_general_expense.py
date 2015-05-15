@@ -430,14 +430,14 @@ class kderp_other_expense_line(osv.osv):
         interface_string = 'General Expense'
         if expense_id:
             return {
-               'type': 'ir.actions.act_window',
-                'name': interface_string,
-                'view_type': 'form',
-               'view_mode': 'tree,form',
-               'context': context,
-               'res_model': 'kderp.other.expense',
-                 'domain': "[('id','=',%s)]" % expense_id
-            }
+                    'type': 'ir.actions.act_window',
+                    'name': interface_string,
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'context': context,
+                    'res_model': 'kderp.other.expense',
+                    'domain': "[('id','=',%s)]" % expense_id
+                    }
         else:
             return True
         

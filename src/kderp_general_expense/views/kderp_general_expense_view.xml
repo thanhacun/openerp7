@@ -115,7 +115,7 @@
                             	</group>
 	                            <div class="oe_clear"/>
 	                        </page>
-	                        <page string='Allocation Sheet' attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}">
+	                        <page string='Allocation Sheet' attrs="{'invisible':[('expense_type','not in',('prepaid','fixed_asset'))]}">	                        	
 	                        	<button name='action_open_allocated_expense' type="object" string='Open Allocated Expense' icon='gtk-open'/>
 	                        	<field name='related_expense_ids' nolabel='1' colspan="4">
 	                        		<tree string='Allocation Sheet' editable='top' colors="blue:state == 'draft'">
@@ -136,7 +136,6 @@
 	                        		<field name='number_of_month'/>
 	                        		<field name='recognized_amount'/>	                        		
 	                        		<field name='remaining_amount'/>
-	                        		<newline/>
 	                        		<button attrs="{'invisible':[('remaining_amount','&lt;=',0),('recognized_amount','>',0)]}" name="%(act_kderp_create_allocation)d" type='action' context="{'ge_id':active_id}" string='Create Allocation Sheet' icon='gtk-new'/>
 	                        	</group>
 	                        </page>
