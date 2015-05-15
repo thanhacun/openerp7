@@ -248,11 +248,6 @@ class kderp_other_expense(osv.osv):
         return res.keys()
     
     def action_open_allocated_expense(self, cr, uid, ids, *args):
-        context = filter(lambda arg: type(arg) == type({}), args)
-        if not context:
-            context = {}
-        else:
-            context = context[0]
         interface_string = 'Allocated Expense'
         if ids:
             expense_ids = []
@@ -268,7 +263,7 @@ class kderp_other_expense(osv.osv):
                     'name': interface_string,
                     'view_type': 'form',
                     'view_mode': 'tree,form',
-                    'context': context,
+                    'context': {},
                     'res_model': 'kderp.other.expense',
                     'domain': "[('id','in',%s)]" % expense_ids
                     }
@@ -281,6 +276,7 @@ class kderp_other_expense(osv.osv):
                    ('done','Completed'),
                    ('revising','Expense Revising'),
                    ('cancel','Expense Canceled')]
+    
     _columns = {
                 #'allocated_date':fields.date('Allocated Date', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},
