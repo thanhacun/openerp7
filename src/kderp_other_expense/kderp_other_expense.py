@@ -208,6 +208,7 @@ class kderp_other_expense(osv.osv):
                    ('done','Completed'),
                    ('revising','Expense Revising'),
                    ('cancel','Expense Canceled')]
+    
     _order="date desc, name desc"
     _columns={
                 #String Fields
