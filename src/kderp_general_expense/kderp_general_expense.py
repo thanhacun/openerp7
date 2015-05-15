@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 import time
 from openerp.tools.translate import _
+from openerp import netsvc
 
 class account_budget_post(osv.osv):
     """
@@ -245,23 +246,21 @@ class kderp_other_expense(osv.osv):
             if koel.belong_expense_id:
                 res[koel.belong_expense_id.id] = True
         return res.keys()
+    
     def action_open_allocated_expense(self, cr, uid, ids, *args):
         context = filter(lambda arg: type(arg) == type({}), args)
         if not context:
             context = {}
         else:
             context = context[0]
-        expense_id = self.browse(cr, uid, ids[0]).id
-        interface_string = 'General Expense'
-        if expense_id:
+        interface_string = 'Allocated Expense'
+        if ids:
             expense_ids = []
             cr.execute("""select
-                           koel.expense_id 
+                            koel.expense_id 
                         from 
-                            kderp_other_expense koe
-                        left join 
-                            kderp_other_expense_line koel on koel.belong_expense_id = koe.id 
-                       where koe.id in (%s) """ % expense_id)
+                            kderp_other_expense_line koel 
+                        where koel.belong_expense_id = (%s)""" % ids[0])
             for expense_id  in cr.fetchall():
                 expense_ids.append(expense_id[0])
             return {
@@ -271,10 +270,11 @@ class kderp_other_expense(osv.osv):
                     'view_mode': 'tree,form',
                     'context': context,
                     'res_model': 'kderp.other.expense',
-                    'domain': "[('id','=',%s)]" % expense_ids
+                    'domain': "[('id','in',%s)]" % expense_ids
                     }
         else:
             return True
+        
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_payment','Waiting for Payment'),
                    ('paid','Paid'),
@@ -407,19 +407,19 @@ class kderp_other_expense_line(osv.osv):
             else:
                 return False
         return True
-    def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
+    
+    def action_submit(self, cr, uid, ids, context=None):
         if not context:
             context = {}
         koe_ids=[]
-        for koel in self.browse(cr, uid, ids):
-            if not koel.expense_id.expense_line:
-                raise osv.except_osv(_('Error!'),_('You cannot confirm a Expense without any Expense Details.'))
-            else:
-                koe_ids.append(koel.expense_id.id)  
-                koe_obj=self.pool.get('kderp.other.expense')
-        for kspe_id in koe_ids:
-                koe_obj.write(cr, uid, [kspe_id],{'state':'done'})
+        koel =self.browse(cr, uid, ids[0]).expense_id.id
+        if not koel:
+            raise osv.except_osv("No",context)
+        else:
+            koe_ids.append(koel)
+        self.pool.get('kderp.other.expense').action_draft_to_waiting_for_payment(cr, uid, koe_ids, context)
         return True
+    
     def action_open_related_exp(self, cr, uid, ids, *args):
         context = filter(lambda arg: type(arg) == type({}), args)
         if not context:

@@ -127,7 +127,7 @@
 	                                    <field name="amount" sum='Sub-total' string="Amount"/>
 	                                    <field  name='state'/> 
 	                                    <button name='action_open_related_exp' type="object" string='Open' icon='gtk-open'/>
-	                                    <button icon="gtk-apply" name="action_draft_to_waiting_for_payment" type='object' states="draft" string="Submit"/>
+	                                    <button string='Submit' name="action_submit" type="object" states="draft" class="oe_highlight"/>
 	                        		</tree>
 	                        	</field>
 	                        	<group col="4">
@@ -249,7 +249,6 @@
         			id="kderp_working_other_expense_ge_action" 
         			parent="kderp_general_expense.menu_kderp_general_exepense_menu" sequence="5"/>
         			
-       
 	</data>
 	
 </openerp>
