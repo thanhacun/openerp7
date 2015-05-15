@@ -371,6 +371,11 @@ class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
     _inherit = 'kderp.other.expense.line'
     
+    AllOCATED_STATE_SELECTION =[('draft','Draft'),
+                                ('done','Completed'),
+                                ('revising','Expense Revising'),
+                                ('cancel','Expense Canceled')]
+
     def _get_budget(self, cr, uid, context = {}):
         res = False
         bg_code = context.get('budget_code', False)
@@ -384,7 +389,7 @@ class kderp_other_expense_line(osv.osv):
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
                 'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False),
                 'date':fields.related('expense_id', 'date', string='Date', type='date', store = False),
-                'state':fields.related('expense_id','state',string='State',type='char',store =False)
+                'state':fields.related('expense_id','state',string='State',selection=AllOCATED_STATE_SELECTION,type='selection',store =False)
                 }
     
     _defaults ={
@@ -412,11 +417,8 @@ class kderp_other_expense_line(osv.osv):
         if not context:
             context = {}
         koe_ids=[]
-        koel =self.browse(cr, uid, ids[0]).expense_id.id
-        if not koel:
-            raise osv.except_osv("No",context)
-        else:
-            koe_ids.append(koel)
+        expense_id =self.browse(cr, uid, ids[0]).expense_id.id
+        koe_ids.append(expense_id)
         self.pool.get('kderp.other.expense').action_draft_to_waiting_for_payment(cr, uid, koe_ids, context)
         return True
     
