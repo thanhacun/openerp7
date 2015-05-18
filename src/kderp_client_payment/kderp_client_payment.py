@@ -468,7 +468,7 @@ class account_invoice(osv.osv):
         'exrate':fields.function(_get_claim_exrate, digits_compute=dp.get_precision('Percent'), string='Claim Ex.Rate',type='float',method=True,
                                 store={
                                        'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['contract_id','currency_id','state'], 5),
-                                       'kderp.contract.currency': (_get_clp_from_contract_currs, ['contract_id','name','exrate'], 5),
+                                       'kderp.contract.currency': (_get_clp_from_contract_currs, None, 5),
                                        'kderp.contract.client': (_get_clp_from_contract, ['contract_currency_ids'],5)                                       
                                        }),
  
