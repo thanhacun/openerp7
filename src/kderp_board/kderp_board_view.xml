@@ -5,7 +5,7 @@
         <!--
 		 Board for project managers
 		 -->
-		<menuitem id="kderp_board.menu_kderp_dashboard" name="Dashboard" sequence="5" groups="group_kderp_dashboard_menu_for_sm_pm"/>
+		<menuitem id="kderp_board.menu_kderp_dashboard" name="Dashboard" sequence="5" groups="group_kderp_dashboard_menu_for_sm_pm,group_kderp_dashboard_menu_special_user"/>
 		
 		<menuitem id="kderp_board.menu_kderp_sub_dashboard" name="Dashboard" parent="kderp_board.menu_kderp_dashboard"/>
                   
