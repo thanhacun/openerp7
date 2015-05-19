@@ -16,6 +16,16 @@
         			view_mode="tree,form" 
         			view_type="form"
         			limit="10"/>
+        			
+       	<!-- Them bang job o trang thay completed -->
+        <act_window id="act_project_completed_related" 
+        			domain="[('state','=','done')]" 
+        			name="Job Completed" 
+        			res_model="account.analytic.account" 
+        			view_mode="tree,form" 
+        			view_type="form"
+        			limit="10"/>
+        			
         <act_window limit="10" id="act_po_related" domain="[('state','=','draft')]" name="PO Related" res_model="purchase.order" view_mode="tree,form" view_type="form"/>
         
         <record id="act_quotation_nyd" model="ir.actions.act_window">
@@ -49,6 +59,8 @@
                             <action name="%(act_quotation_negotiated)d" string="Quotation - Negotiating"/>
 
                         	<action colspan="2" name="%(act_project_doing_related)d" string="On-Going Project"/>
+                        	
+                        	<action colspan="2" name="%(act_project_completed_related)d" string="Completed Project"/>
                  
                         	<action colspan="4" name="%(act_po_related)d" string="Purchase Order: Negotiating"/>
                         </column>
