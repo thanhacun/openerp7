@@ -25,7 +25,7 @@
     'images' : ['images/kinden.png'],
     'summary':"Customize Base module",
     'category':"KDERP Apps",
-    'depends':['base','kderp_job_summary','kderp_prepaid_purchase'],
+    'depends':['base','kderp_job_summary'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure
@@ -36,9 +36,6 @@
             "action/kderp_action_contract.xml",
             "action/kderp_action_client_payment.xml",
             "action/kderp_action_other_expense.xml",
-            "action/kderp_action_prepaid_purchase_order.xml",
-            #"action/kderp_action_general_expense_code.xml",
-            #action/kderp_action_general_expense_payment.xml",
             "action/kderp_action_purchase.xml",
             "security/kderp_dashboard_group_rule_for_purchase.xml",
             "security/kderp_dashboard_group_rule_for_quotation.xml",
