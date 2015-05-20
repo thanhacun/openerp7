@@ -49,8 +49,8 @@ class account_analytic_account(osv.osv):
     
     def onchange_job_type(self, cr, uid, ids, code, job_type):
         if code:
-            if code[1:2] != job_type:
-               return {'value':{}, 'warning':{'title':'KDERP Warning','message':'Check Job Code'}}
+            if code[1:2] != job_type and job_type and code[1:2]!='A':
+                return {'value':{}, 'warning':{'title':'KDERP Warning','message':'Check Job Code'}}
         return {'warning':{}}
       
     _sql_constraints = [('mask_code_analytic_account', "CHECK (code not ilike '% %')",  'Please check Job Code')]
