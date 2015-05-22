@@ -252,7 +252,7 @@ class kderp_other_expense(osv.osv):
         if ids:
             expense_ids = []
             cr.execute("""select
-                            koel.expense_id 
+                           distinct( koel.expense_id)
                         from 
                             kderp_other_expense_line koel 
                         where koel.belong_expense_id = (%s)""" % ids[0])
