@@ -343,6 +343,14 @@ class kderp_other_expense(osv.osv):
             value.update({'partner_id': self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id})
         return {'value': value}
     
+    def onchange_section_incharges(self, cr, uid, ids,allocated_to,section_incharge_id):#Auto fill location when change Owner
+        value = {}
+        if allocated_to == 'PGE':
+            user = self.pool.get('res.users').browse(cr, uid, uid)            
+            if user.employee_id.department_id.general_incharge:
+                value.update({'section_incharge_id':user.employee_id.department_id.id})
+        return {'value': value}
+    
     def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
         if not context:
             context = {}
