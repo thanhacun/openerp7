@@ -38,7 +38,7 @@ class hr_department(osv.osv):
                 for child_id in child_ids:
                     res.append(child_id)
         return res
-
+    
     def _get_expense_ids(self, cr, uid, ids, name, arg, context={}):
         if not context:
             context = {}
@@ -49,7 +49,23 @@ class hr_department(osv.osv):
             res[id] = koet_obj.search(cr, uid, [('section_id','in', section_ids)]) 
             
         return res
-        
+     
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if context is None:
+            context={}
+        if name:
+            department_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not department_ids:
+                department_ids = self.search(cr, uid, [('code', operator, name)] + args, limit=limit, context=context)
+            if not department_ids:
+                name = name.strip()
+                department_ids = self.search(cr, uid,  [('name', 'ilike', name)] + args, limit=limit, context=context)
+        else:
+            department_ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, department_ids, context=context)
+       
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
