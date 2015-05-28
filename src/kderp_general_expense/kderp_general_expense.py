@@ -123,8 +123,16 @@ class kderp_other_expense(osv.osv):
         if context.get('general_expense', False):
             return filter(lambda x: x[0] <> 'PE', self.ALLOCATE_SELECTION)
         else:
-            return filter(lambda x: x[0] <> 'GE', self.ALLOCATE_SELECTION)
+            return filter(lambda x: x[0] <>'GE', self.ALLOCATE_SELECTION)
         
+    def _get_expense_type_selection(self, cr, uid, context):
+        if not context:
+            context = {}   
+        if context.get('general_expense', False):
+            return filter(lambda x: x[0] <> '', self.EXPENSE_TYPE_SELECTION)
+        else:
+            return filter(lambda x: (x[0] <> 'prepaid' and x[0] <> 'fixed_asset'), self.EXPENSE_TYPE_SELECTION) 
+            
     #Get defaults values
     def _get_job(self, cr, uid, context={}):
         if not context:
@@ -279,7 +287,7 @@ class kderp_other_expense(osv.osv):
     
     _columns = {
                 #'allocated_date':fields.date('Allocated Date', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
-                'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},
+                'expense_type':fields.selection(_get_expense_type_selection, 'Exp. Type', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},
                                                 help="""Expense: Allocated direct to Job/General have payment\nRecognize Expense: Recognize allocated to Job/General from Fixed Asset, Prepaid without payment\nPrepaid, Fixed Asset for management and don't allocated"""),
                 'allocated_to':fields.selection(_get_allocated_selection, 'Allocate To', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
                 
@@ -330,7 +338,7 @@ class kderp_other_expense(osv.osv):
 
     _defaults = {
                 'allocated_to': lambda self, cr, uid, context={}:'GE' if context.get('general_expense',False) else 'PE',
-                'expense_type': lambda self, cr, uid, context={}:'expense',
+                'expense_type': lambda self, cr, uid, context={}:'expense' ,
                 'account_analytic_id': _get_job,
                 'section_incharge_id': _get_section_incharge,
                 }
