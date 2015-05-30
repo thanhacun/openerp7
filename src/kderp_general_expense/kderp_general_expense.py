@@ -35,7 +35,35 @@ class account_budget_post(osv.osv):
                 budget_ids.append(budget_id[0])
             args.append((('id', 'in', budget_ids)))
         return super(account_budget_post, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
-
+    
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if context is None:
+            context={}
+        if name:
+            department_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not department_ids:
+                department_ids = self.search(cr, uid, [('code', operator, name)] + args, limit=limit, context=context)
+            if not department_ids:
+                name = name.strip()
+                department_ids = self.search(cr, uid,  [('name', 'ilike', name)] + args, limit=limit, context=context)
+        else:
+            department_ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, department_ids, context=context) 
+    
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        reads = self.read(cr, uid, ids, ['code','name'], context=context)
+        res = []
+        for record in reads:
+            name = record['code']
+            if record['name']:
+                name = "%s - %s" % (name,record['name'])
+            res.append((record['id'], name))
+        return res
+    
     _columns = {
                 'general_expense':fields.boolean("General Expense?", help = 'Check if budget using for General Expense'),
                 'nofilter':fields.boolean("Filter?")
