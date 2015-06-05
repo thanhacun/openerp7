@@ -119,7 +119,7 @@ class kderp_other_expense(osv.osv):
     EXPENSE_TYPE_SELECTION =(
                     ('expense', 'Expense'),                    
                     ('prepaid', 'Prepaid'),
-                    ('fixed_asset', 'Fixed Asset (With Depreciation)'),
+                    ('fixed_asset', 'FA & TE'),
                     ('monthly_expense','---Allocated Expense---'),)
 
     ALLOCATE_SELECTION =(
