@@ -35,7 +35,35 @@ class account_budget_post(osv.osv):
                 budget_ids.append(budget_id[0])
             args.append((('id', 'in', budget_ids)))
         return super(account_budget_post, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
-
+    
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if context is None:
+            context={}
+        if name:
+            department_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not department_ids:
+                department_ids = self.search(cr, uid, [('code', operator, name)] + args, limit=limit, context=context)
+            if not department_ids:
+                name = name.strip()
+                department_ids = self.search(cr, uid,  [('name', 'ilike', name)] + args, limit=limit, context=context)
+        else:
+            department_ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, department_ids, context=context) 
+    
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        reads = self.read(cr, uid, ids, ['code','name'], context=context)
+        res = []
+        for record in reads:
+            name = record['code']
+            if record['name']:
+                name = "%s - %s" % (name,record['name'])
+            res.append((record['id'], name))
+        return res
+    
     _columns = {
                 'general_expense':fields.boolean("General Expense?", help = 'Check if budget using for General Expense'),
                 'nofilter':fields.boolean("Filter?")
@@ -91,7 +119,7 @@ class kderp_other_expense(osv.osv):
     EXPENSE_TYPE_SELECTION =(
                     ('expense', 'Expense'),                    
                     ('prepaid', 'Prepaid'),
-                    ('fixed_asset', 'Fixed Asset (With Depreciation)'),
+                    ('fixed_asset', 'FA & TE'),
                     ('monthly_expense','---Allocated Expense---'),)
 
     ALLOCATE_SELECTION =(
@@ -123,7 +151,7 @@ class kderp_other_expense(osv.osv):
         if context.get('general_expense', False):
             return filter(lambda x: x[0] <> 'PE', self.ALLOCATE_SELECTION)
         else:
-            return filter(lambda x: x[0] <> 'GE', self.ALLOCATE_SELECTION)
+            return filter(lambda x: x[0] <>'GE', self.ALLOCATE_SELECTION)   
         
     #Get defaults values
     def _get_job(self, cr, uid, context={}):
@@ -330,7 +358,7 @@ class kderp_other_expense(osv.osv):
 
     _defaults = {
                 'allocated_to': lambda self, cr, uid, context={}:'GE' if context.get('general_expense',False) else 'PE',
-                'expense_type': lambda self, cr, uid, context={}:'expense',
+                'expense_type': lambda self, cr, uid, context={}:'expense' ,
                 'account_analytic_id': _get_job,
                 'section_incharge_id': _get_section_incharge,
                 }
@@ -341,6 +369,14 @@ class kderp_other_expense(osv.osv):
             value['taxes_id'] = [] 
         if not partner_id and type=='monthly_expense':
             value.update({'partner_id': self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id})
+        return {'value': value}
+    
+    def onchange_section_incharges(self, cr, uid, ids,allocated_to,section_incharge_id):#Auto fill location when change Owner
+        value = {}
+        if allocated_to == 'PGE':
+            user = self.pool.get('res.users').browse(cr, uid, uid)            
+            if user.employee_id.department_id.general_incharge:
+                value.update({'section_incharge_id':user.employee_id.department_id.id})
         return {'value': value}
     
     def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
