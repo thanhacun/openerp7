@@ -189,7 +189,7 @@
                     <field name="expense_line" string="Details/Job/Amount" filter_domain="[('expense_line','ilike',self)]"/>
                     <field name="date" string="Exp./Allocated Date" filter_domain="[('date','ilike',self)]"/> 
                     <filter help="Working Expense" name="working" domain="[('state','in',('draft','waiting_for_payment')),('expense_type','!=','monthly_expense')]"/>
-                    <filter help="Working Allocation Sheet" name="working_allocation_sheet" domain="[('state','=','draft'),('expense_type','=','monthly_expense')]"/>
+                    <filter help="Working Allocated Expense" name="working_allocation_sheet" domain="[('state','=','draft'),('expense_type','=','monthly_expense')]"/>
                     <separator/>
                     <filter help="Draft Expense" name='draft' domain="[('state','=','draft')]"/>
                     <filter help="Waiting for Payment" name='waiting_for_payment' domain="[('state','=','waiting_for_payment')]"/>
@@ -198,8 +198,9 @@
                     <filter help="Cancelled Expense" name='cancel' domain="[('state','=','cancel')]"/>
                     <separator/>
                     <filter help="Expense" name='expense' domain="[('expense_type','=','expense')]"/>
-                    <filter help="Allocation Sheet" name='monthly_expense' domain="[('expense_type','=','monthly_expense')]"/>
-                    <filter help="Prepaid &amp; Fixed Asset" name="prepaid_fixed_asset" domain="['|',('expense_type','=','prepaid'),('expense_type','=','fixed_asset')]"/>
+                    <filter help="Allocated Expense" name='monthly_expense' domain="[('expense_type','=','monthly_expense')]"/>
+                    <filter help="Prepaid" name="prepaid_asset" domain="[('expense_type','=','prepaid')]"/>
+                    <filter help="Fixed Asset" name="fixed_asset" domain="[('expense_type','=','fixed_asset')]"/>
                     <separator/>
                     <filter help="General Expense" name='GE' domain="[('allocated_to','=','GE')]"/>
                     <filter help="Job &amp; General Expense" name='PGE' domain="[('allocated_to','=','PGE')]"/>

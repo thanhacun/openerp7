@@ -24,7 +24,7 @@
         			res_model="account.analytic.account" 
         			view_mode="tree,form" 
         			view_type="form"
-        			limit="10"/>
+        			/>
         			
         <act_window limit="10" id="act_po_related" domain="[('state','=','draft')]" name="PO Related" res_model="purchase.order" view_mode="tree,form" view_type="form"/>
         
