@@ -1,4 +1,6 @@
 from openerp.osv import fields, osv
+import time
+from datetime import datetime
 
 class kderp_other_expense_line(osv.osv):
     _name='kderp.other.expense.line'
@@ -166,7 +168,7 @@ class kderp_asset_management(osv.osv):
                 'expense_id':fields.many2one('kderp.other.expense', 'Expense', domain=[('expense_type','in',('expense','fixed_asset')),('link_asset_id','=',False)],
                                              context={'general_expense': True}, readonly=True, states={'draft':[('readonly',False)]})
               }
-    def onchange_asset(self, cr, uid, ids, expense_id, desc, supplier, price):
+    def onchange_asset(self, cr, uid, ids, expense_id, desc, supplier, price, dateofinvoice):
         value = {}
         if expense_id:
             exp_obj = self.pool.get('kderp.other.expense')
@@ -177,6 +179,10 @@ class kderp_asset_management(osv.osv):
                 value['supplier'] = exp.partner_id.name
             if not price:
                 value['price'] = exp.amount_untaxed
+            if not dateofinvoice:
+                for var_payment in exp.supplier_payment_expense_ids:
+                    for var_vat in var_payment.kderp_vat_invoice_ids:
+                        value['dateofinvoice']= var_vat.date
         return {'value':value}
 kderp_asset_management()
 
