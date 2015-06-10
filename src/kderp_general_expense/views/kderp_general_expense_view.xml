@@ -208,6 +208,8 @@
                     <filter help="Prepaid" name="prepaid_asset" domain="[('expense_type','=','prepaid')]"/>
                     <filter help="Fixed Asset" name="fixed_asset" domain="[('expense_type','=','fixed_asset')]"/>
                     <separator/>
+                    <filter help="Outstanding Expense" name="outstanding_expense" domain="[('state','=','paid'),('expense_type','in',('fixed_asset','prepaid'))]"/>
+                    <separator/>
                     <filter help="General Expense" name='GE' domain="[('allocated_to','=','GE')]"/>
                     <filter help="Job &amp; General Expense" name='PGE' domain="[('allocated_to','=','PGE')]"/>
 					
