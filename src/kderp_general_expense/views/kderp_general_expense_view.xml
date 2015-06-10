@@ -76,6 +76,7 @@
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge': parent.allocated_to,'job_id':account_analytic_id}"/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name="name" string="Desc."/>
 	                                    <field name="section_id" string="Allocated Section"/>	                     
 	                                    <field name="amount" sum='Sub-total'/>
 <!-- 	                                    <field name="general_type" invisible="1" /> -->
@@ -93,9 +94,10 @@
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge':parent.allocated_to,'job_id': account_analytic_id}"/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, }" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name="name" string="Desc."/>
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="belong_expense_id" domain="[('id','!=',parent.id),('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]" context="{'general_expense': True}"/>
-	                                    <field name="amount" sum='Sub-total'/> 
+	                                    <field name="amount" sum='Sub-total'/>
 	                                </tree>
 	                            </field>	                            
 	                            <group class="oe_subtotal_footer oe_right"> 
