@@ -174,7 +174,8 @@ class kderp_asset_management(osv.osv):
             exp_obj = self.pool.get('kderp.other.expense')
             exp = exp_obj.browse(cr, uid, expense_id)
             if not desc:
-                value['name'] = exp.description
+                for var_expense in exp.expense_line:
+                    value['name'] = var_expense.name
             if not supplier:
                 value['supplier'] = exp.partner_id.name
             if not price:
