@@ -336,6 +336,14 @@ class kderp_prepaid_purchase_order_line(osv.osv):
     _name = 'kderp.prepaid.purchase.order.line'
     _description = 'kderp.prepaid.purchase.order.line'
     
+    def name_get(self, cr, uid, ids, context=None):
+        if not context: context={}
+        res=[]
+        for record in self.browse(cr, uid, ids):
+            name = "%s - %s" % ("{:,.2f}".format(record.product_qty), record.name)  
+            res.append((record['id'], name))
+        return res
+    
     def onchange_product_id(self, cr, uid, ids, product_id, name, qty, uom_id, price_unit, context=None):
         """
         onchange handler of product_id.
