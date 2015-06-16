@@ -8,11 +8,9 @@
             <field name="arch" type="xml">
             	<tree string="Prepaid Purchase Order Line Detail">
             	    <field name="prepaid_order_id"/>
-            		<field name="prepaid_order_line_id"/>
             		<field name="po_number"/>
             		<field name="product_id"/>
             		<field name="move_description"/>
-            		<field name="total_qty"/>
             		<field name='requesting_qty'/>
             		<field name="allocated_qty"/>
             		<field name="product_uom"/>

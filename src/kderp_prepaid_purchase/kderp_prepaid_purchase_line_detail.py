@@ -41,7 +41,6 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
               'requesting_qty':fields.float('Requesting Qty', digit=(16,2)),
               'product_uom':fields.char('Unit', size = 6),              
               'date':fields.date('Date'),
-              'total_qty':fields.related('prepaid_order_line_id','product_qty',string='Total Quantity', type='float')
               }
         
     def init(self, cr):
