@@ -34,6 +34,8 @@ class StockLocation(models.Model):
     
     # Fields declaration
     _columns = {
+                'code':fields.char('Code', required = True, size=8),                
+                
                 'stock_manager_id':fields.many2one('res.users', 'Stock Manager', ondelete='restrict'),
                 'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', ondelete='restrict'),
                 'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', ondelete='restrict'),

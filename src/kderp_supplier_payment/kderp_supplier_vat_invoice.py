@@ -167,7 +167,7 @@ class kderp_supplier_vat_invoice(osv.osv):
         return this_time
     
     _columns={
-             'name':fields.char('Invoice No.',size=16,required=True),
+             'name':fields.char('Invoice No.',size=32,required=True),
              'currency_id':fields.many2one('res.currency','Curr.',required=True),
              
              'date':fields.date('Date',),              

@@ -2,8 +2,8 @@
 <openerp>
     <data>
        
-		 <record id="view_kderp_stock_location_form" model="ir.ui.view">
-            <field name="name">kderp.stock.location.form</field>
+		 <record id="view_kderp_stock_location_consignment_form" model="ir.ui.view">
+            <field name="name">kderp.stock.location.consignment.form</field>
             <field name="model">stock.location</field>
             <field eval="30" name="priority"/>
             <field name="arch" type="xml">
@@ -42,8 +42,8 @@
             </field>
         </record>
 
-        <record id="view_kderp_stock_location_tree" model="ir.ui.view">
-            <field name="name">kderp.stock.location.tree</field>
+        <record id="view_kderp_stock_location_consignment_tree" model="ir.ui.view">
+            <field name="name">kderp.stock.location.consignment.tree</field>
             <field name="model">stock.location</field>
             <field eval="30" name="priority"/>
             <field name="arch" type="xml">
@@ -58,8 +58,8 @@
             </field>
         </record>
        
-       	<record id="view_kderp_stock_location_search" model="ir.ui.view">
-            <field name="name">kderp.stock.location.search</field>
+       	<record id="view_kderp_stock_location_consignment_search" model="ir.ui.view">
+            <field name="name">kderp.stock.location.consignment.search</field>
             <field name="model">stock.location</field>
            <field eval="30" name="priority"/>
             <field name="arch" type="xml">
@@ -88,34 +88,33 @@
         </record>
 
 		<!-- All Stock  -->
-		<record id="kderp_action_working_stock_location" model="ir.actions.act_window">
+		<record id="action_kderp_stock_location_consignment" model="ir.actions.act_window">
             <field name="name">Consignment Stock</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.location</field>
             <field name="view_mode">tree,form</field>
             <field name="filter" eval="True"/>
-			<field name="view_id" ref="view_kderp_stock_location_tree"/>
             <field name="context">{'search_default_global':1}</field>
-            <field name="search_view_id" ref="view_kderp_stock_location_search"/>
+            <field name="search_view_id" ref="view_kderp_stock_location_consignment_search"/>
         </record>
         <!-- Link view to action -->
 		<record id="action_window_view_stock_location_form" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_kderp_stock_location_form"/>
-            <field name="act_window_id" ref="kderp_action_working_stock_location"/>
+            <field name="view_id" ref="view_kderp_stock_location_consignment_form"/>
+            <field name="act_window_id" ref="action_kderp_stock_location_consignment"/>
         </record>
         <record id="action_window_view_stock_location_tree" model="ir.actions.act_window.view">
             <field eval="5" name="sequence"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_kderp_stock_location_tree"/>
-            <field name="act_window_id" ref="kderp_action_working_stock_location"/>
+            <field name="view_id" ref="view_kderp_stock_location_consignment_tree"/>
+            <field name="act_window_id" ref="action_kderp_stock_location_consignment"/>
         </record>
         
         <menuitem 
-        			action="kderp_action_working_stock_location" 
-        			id="kderp_working_stock_location_action" 
-        			parent="kderp_stock.kderp_kderp_stock" sequence="5"/>
+        			action="action_kderp_stock_location_consignment" 
+        			id="menu_kderp_stock_location_consignment" 
+        			parent="kderp_stock.menu_kderp_stock" sequence="5"/>
         			
 	</data>
 </openerp>
