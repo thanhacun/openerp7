@@ -51,7 +51,100 @@
             context="{'order_id':active_id}"
             name="Packing" 
             res_model="stock.picking" 
-            src_model="purchase.order"/>		
+            src_model="purchase.order"/>
+            
+            
+		<!-- Stock Location Area -->
+		
+		 <record id="view_kderp_stock_location_form" model="ir.ui.view">
+            <field name="name">kderp.stock.location.form</field>
+            <field name="model">stock.location</field>
+            <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+            	<form string="Stock Location" version="7.0">
+            		<header>            			
+            		</header>
+            		<sheet>
+            			<label for="code" class="oe_edit_only" string="Code"/>
+            			<h2><field name="code"/></h2>
+	            		<label for="name" class="oe_edit_only" string="Name"/>
+						<h2><field name="name"/></h2>
+	            		<label for="location_id" class="oe_edit_only" string="Belong to Location"/>
+						<h2><field name="location_id"/></h2>
+						<group string="Stock Info." col="4" colspan="4">
+							<field name='stock_manager_id'/>
+							<field name="usage"/>
+	            			<field name="partner_id"/>	            			
+	            		</group>
+	            		<notebook>
+	            			<page string='Storekeeper(s)'>
+	            				<field name="storekeeper_ids" colspan="4" nolabel="1"/>
+	            			</page>
+	            			<page string='Job Related Info.'>
+	            				<field name="job_related_ids" colspan="4" nolabel="1">
+	            					<tree string='Job Info'>
+	            						<field name='code'/>
+	            						<field name='name'/>
+	            						<field name='job_type'/>
+	            					</tree>
+	            				</field>
+	            			</page>
+	            		</notebook>
+                	</sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_kderp_stock_location_tree" model="ir.ui.view">
+            <field name="name">kderp.stock.location.tree</field>
+            <field name="model">stock.location</field>
+            <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+            	<tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
+            		<field name="complete_name"/>
+            		<field name="usage"/>
+            		<field name="stock_real" invisible="'product_id' not in context"/>
+                    <field name="stock_virtual" invisible="'product_id' not in context"/>
+            	</tree>
+            </field>
+        </record>
+       
+       	<record id="view_kderp_stock_location_search" model="ir.ui.view">
+            <field name="name">kderp.stock.location.search</field>
+            <field name="model">stock.location</field>
+           <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Stock Locations">
+                    <field name="name" string="Stock Locations" />
+                    <field name="location_id" string="Belong to Location"/>
+                    <field name="partner_id"/>
+            		
+            		<separator/>
+            		            		
+                    <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
+                    <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
+            		
+            		<group expand="0" string="Group by ...">
+            			<filter string="Location Type" name='group_usage' domain="[]" context="{'group_by':'usage'}"/> 
+            		</group>
+
+                </search>
+            </field>
+        </record>
+
+		<!-- All Stock  -->
+		<record id="act_kderp_stock_location" model="ir.actions.act_window">
+            <field name="name">Stock</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.location</field>
+            <field name="view_mode">tree,form</field>
+            <field name="filter" eval="True"/>
+        </record>
+             
+        <menuitem 
+        			action="act_kderp_stock_location" 
+        			id="kderp_stock_location_menu" 
+        			parent="menu_kderp_stock" sequence="1"/>
                
     </data>
 </openerp>
