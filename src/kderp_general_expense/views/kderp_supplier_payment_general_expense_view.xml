@@ -38,7 +38,7 @@
                     <button icon='gtk-convert' name='action_back_revising' states='completed,paid' type="object" string='Open' groups='kderp_supplier_payment.group_kderp_supplier_payment_expense_open'/>
                		<button icon='gtk-apply' name='btn_action_revising_completed' type="object" string='Close' states='revising' groups='kderp_supplier_payment.group_kderp_supplier_payment_expense_open'/>
                     <button icon="gtk-cancel" name="action_cancel" states="revising" type='object' string="Reject" confirm='Are you sure to cancel this payment?'/>
-                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,pr_dept_checking,submitting,bc_passed,bc_checked,waiting_bod,completed,cancel" statusbar_colors='{"draft":"blue","cancel":"red"}'/>	
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,pr_dept_checking,submitting,bc_passed,bc_checked,waiting_bod,completed" statusbar_colors='{"draft":"blue","cancel":"red"}'/>	
                 </header>
                 <sheet string="Supplier Payment">
                     <h1>

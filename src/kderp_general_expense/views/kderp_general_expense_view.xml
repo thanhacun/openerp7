@@ -53,9 +53,11 @@
 			                 	<field name="expense_type" on_change="onchange_expensetype(expense_type, partner_id, taxes_id)" style='width:auto !important'/>			                 	
 	                 		</h1>		                    
 		                </div>
-	                    <group colspan="4" col="4">
-                        	<field name="account_analytic_id" string='G.E' on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" context="{'job_id':account_analytic_id}" attrs="{'invisible':[('expense_type','in',('fixed_asset','prepaid'))]}"/>
-	                       <field name='allocated_to' colspan="1" default_focus="1"/>
+	                    <group colspan="4" col="4">	    
+							<field name="account_analytic_id" string="G.E./Job" on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" context="{'job_id':account_analytic_id}" attrs="{'invisible':[('expense_type','in',('fixed_asset','prepaid'))]}"/>
+	                       	<label string=""/>
+	                       	<label string=""/>
+	                       	<field name='allocated_to' colspan="1" default_focus="1"/>
 							<field name="date" colspan="1" string='Exp./Allocated Date'/>
 	                        <field name='section_incharge_id' colspan="1"/>                       
 	                    </group>
@@ -72,6 +74,7 @@
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge': parent.allocated_to,'job_id':account_analytic_id}"/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, 'general_expense': True}" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name="name" string="Desc."/>
 	                                    <field name="section_id" string="Allocated Section"/>	                     
 	                                    <field name="amount" sum='Sub-total'/>
 <!-- 	                                    <field name="general_type" invisible="1" /> -->
@@ -89,9 +92,10 @@
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge':parent.allocated_to,'job_id': account_analytic_id}"/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, }" options='{"always_reload": True}' on_change="onchange_budget_id(budget_id)"/>
+	                                    <field name="name" string="Desc."/>
 	                                    <field name="section_id" string="Allocated Section"/>
 	                                    <field name="belong_expense_id" domain="[('id','!=',parent.id),('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]" context="{'general_expense': True}"/>
-	                                    <field name="amount" sum='Sub-total'/> 
+	                                    <field name="amount" sum='Sub-total'/>
 	                                </tree>
 	                            </field>	                            
 	                            <group class="oe_subtotal_footer oe_right"> 
@@ -200,7 +204,9 @@
                     <filter help="Expense" name='expense' domain="[('expense_type','=','expense')]"/>
                     <filter help="Allocated Expense" name='monthly_expense' domain="[('expense_type','=','monthly_expense')]"/>
                     <filter help="Prepaid" name="prepaid_asset" domain="[('expense_type','=','prepaid')]"/>
-                    <filter help="Fixed Asset" name="fixed_asset" domain="[('expense_type','=','fixed_asset')]"/>
+                    <filter help="FA &amp; TE" name="fixed_asset" domain="[('expense_type','=','fixed_asset')]"/>
+                    <separator/>
+                    <filter help="Outstanding Expense" name="outstanding_expense" domain="[('state','=','paid'),('expense_type','in',('fixed_asset','prepaid'))]"/>
                     <separator/>
                     <filter help="General Expense" name='GE' domain="[('allocated_to','=','GE')]"/>
                     <filter help="Job &amp; General Expense" name='PGE' domain="[('allocated_to','=','PGE')]"/>
