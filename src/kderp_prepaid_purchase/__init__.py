@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import kderp_company
 import stock_init
 
 import kderp_prepaid_purchase

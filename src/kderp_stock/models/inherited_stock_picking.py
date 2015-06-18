@@ -25,6 +25,16 @@ from json.decoder import _CONSTANTS
 #
 # Inherit of picking to add the link to the PO
 #
+
+class stock_picking_in(osv.osv):
+    _inherit = 'stock.picking.in'
+    
+    def create(self, cr, user, vals, context=None):
+        if ('name' not in vals) or (vals.get('name')=='/'):            
+            vals['name'] = self.pool.get('stock.picking').get_newcode(cr, user, 'int', context)
+        new_id = super(stock_picking_in, self).create(cr, user, vals, context)
+        return new_id
+    
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     
@@ -54,7 +64,7 @@ class stock_picking(osv.osv):
         
     def update_stock_received(self,cr, uid, ids, *args):
         self.write(cr,uid,ids,{'state':'done'})
-        return True
+        return True    
     
     _columns = {
         'check_payment':fields.many2one('kderp.supplier.payment', 'Supplier Payment'),
