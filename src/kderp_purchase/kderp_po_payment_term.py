@@ -43,49 +43,30 @@ class kderp_po_payment_term_line(osv.osv):
     
     def _get_amount(self, cr, uid, ids, *args):
         res = {}
-        for kptl in self.browse(cr, uid, ids):
+        for kptl in self.browse(cr, uid, ids):           
             
-            adv_amount = 0.0
-            retention_amount = 0.0
-            adv = 0.0
-            retention = 0.0
-            progress = 0.0
             po=kptl.order_id
-            res[kptl.id]=0
-            for po_term in po.purchase_payment_term_ids:
-                if po_term.type=='adv':
-                    adv_amount = po_term.value_amount*po.final_price/100.0
-                    adv = po_term.value_amount
-                elif po_term.type=='re':
-                    retention_amount = po_term.value_amount*po.final_price/100.0
-                    retention = po_term.value_amount
-                else:                    
-                    progress = po_term.value_amount
-            for po_term in po.purchase_payment_term_ids:
-                if po_term.type<>'p':
-                    this_tax_amount = 0.0
-                    this_progress_amount = 0.0
+            if kptl.type=='p':
+                adv_amount = 0.0
+                retention_amount = 0.0
+                for po_term in po.purchase_payment_term_ids:
                     if po_term.type=='adv':
-                        this_retention_amount = 0.0
-                        this_adv_amount = adv_amount
-                    else:
-                        this_adv_amount = 0.0
-                        this_retention_amount = retention_amount
-                else:
-                    progress = po_term.value_amount
-                    this_tax_amount = po.amount_tax*po_term.value_amount/100.0
-                    this_progress_amount = po.final_price*po_term.value_amount/100.0
-                    this_adv_amount = - adv_amount*progress/100.0
-                    this_retention_amount = - retention_amount*progress/100.0
-                                
+                        adv_amount += po_term.value_amount*po.final_price/100.0
+                    elif po_term.type=='re':
+                        retention_amount += po_term.value_amount*po.final_price/100.0                                                
+                progress = po_term.value_amount
                 
-                tax_ids=[]
-                for tax_id in po.taxes_id:
-                    if (tax_id.type=='percent' or po_term.value_amount==100) and po_term.type=='p':
-                        tax_ids.append(tax_id.id)
+                this_progress_amount = po.final_price*po_term.value_amount/100.0
+                this_adv_amount = - adv_amount*progress/100.0
+                this_retention_amount = - retention_amount*progress/100.0
+                
+                this_tax_amount = po.amount_tax*kptl.value_amount/100.0
+                
                 sub_total= this_progress_amount + this_adv_amount + this_retention_amount + this_tax_amount
-                if kptl.id==po_term.id:
-                    res[kptl.id]+=sub_total
+                
+                res[kptl.id] = sub_total
+            else:
+                res[kptl.id] = kptl.value_amount*po.final_price/100.0
         return res
     
     def name_get(self, cr, uid, ids, context={}): # Return name + " - " + type

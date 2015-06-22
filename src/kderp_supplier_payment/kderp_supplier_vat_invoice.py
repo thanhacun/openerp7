@@ -225,11 +225,10 @@ class kderp_supplier_vat_invoice(osv.osv):
     
     def onchange_totalamount(self, cr, uid, ids, amount, qvnd, rate,type):
         if type=='ev':
-            value={'rate':qvnd/amount if amount<>0 else 0}
+            value={'rate':round(qvnd/amount,2) if amount<>0 else 0}
         else:
-            value={'equivalent_vnd':amount*rate}
-        #else:
-         #   value={}
+            value={'equivalent_vnd':round(amount*rate,2)}
+
         return {'value':value}
     
     def on_changevalue_per(self, cr, uid, ids, amount, tax_per, amount_tax=0,dump = 0):
