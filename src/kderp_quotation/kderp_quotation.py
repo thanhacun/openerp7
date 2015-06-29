@@ -402,21 +402,27 @@ class sale_order(Model):
         if 'job_m_id' in vals:
             must_update = True
         
-        if 'order_line' in vals:
-            for t1,id,value in vals['order_line']:
-                value = value or {}
-                if 'currency_id' in value:
-                    must_update = True
-                if 'price_unit' in value or 'discount' in value:
-                    must_update = True
+        if 'order_line' in vals or not vals.get('order_line', False): #Neu co thay doi hoac xoa line
+            if not vals.get('order_line', False):
+                must_update = True
+            else:
+                for t1,id,value in vals['order_line']:
+                    value = value or {}
+                    if 'currency_id' in value:
+                        must_update = True
+                    if 'price_unit' in value or 'discount' in value:
+                        must_update = True
                                 
-        if 'order_line_m' in vals:
-            for t1,id,value in vals['order_line_m']:
-                value = value or {}
-                if 'currency_id' in value:
-                    must_update = True
-                if 'price_unit' in value or 'discount' in value:
-                    must_update = True
+        if 'order_line_m' in vals or not vals.get('order_line_m', False):
+            if not vals.get('order_line_m', False):
+                must_update = True
+            else:
+                for t1,id,value in vals['order_line_m']:
+                    value = value or {}
+                    if 'currency_id' in value:
+                        must_update = True
+                    if 'price_unit' in value or 'discount' in value:
+                        must_update = True
         
         ########### Luu vao database ##########
         new_obj = super(sale_order, self).write(cr, uid, tmp_ids, vals, context=context)

@@ -15,29 +15,28 @@ class kderp_quotation_contract_project_line(osv.osv):
     _description='KDERP Quotation Contract Project Line'
     _rec_name='account_analytic_id'
     
-    def check_update_and_create(self,cr,uid,contract_id,job_id,currency_id):
+    def check_update_and_create(self, cr, uid, contract_id, job_id, currency_id):
         filter ='contract_id = %d and job_e_id=%d and currency_id=%d' % (contract_id,job_id,currency_id)
         filter2 ='contract_id = %d and job_m_id=%d and currency_id=%d' % (contract_id,job_id,currency_id)
         filter3 ='contract_id = %d and account_analytic_id=%d and currency_id=%d' % (contract_id,job_id,currency_id)
+
         cr.execute("""Select 
                         contract_id,
                         job_e_id as job_id,
                         currency_id 
                     from 
-                        sale_order so left join sale_order_line sol on so.id = sol.order_id
+                        sale_order so left join sale_order_line sol on so.id = sol.order_id  and job_type='E'
                     where
-                        so.state='done' and job_type='E' and
-                        %s
+                        so.state='done' and %s
                     Union
                     Select 
                         contract_id,
                         job_m_id as job_id,
                         currency_id 
                     from 
-                        sale_order so left join sale_order_line sol on so.id = sol.order_id
+                        sale_order so left join sale_order_line sol on so.id = sol.order_id and job_type='M'
                     where
-                        so.state='done' and job_type='M'
-                        and %s""" % (filter,filter2))
+                        so.state='done' and %s""" % (filter,filter2))
         if cr.fetchall():
             cr.execute("""Select
                             sum(amount) as amount
@@ -45,9 +44,9 @@ class kderp_quotation_contract_project_line(osv.osv):
                             (Select 
                                sum(coalesce(sol.price_unit,0)+coalesce(sol.discount,0)) as amount
                             from 
-                                sale_order so left join sale_order_line sol on so.id = sol.order_id
+                                sale_order so left join sale_order_line sol on so.id = sol.order_id and job_type='E' 
                             where
-                                so.state='done' and job_type='E' and
+                                so.state='done' and
                                 %s
                             Group by 
                                 contract_id,
@@ -57,9 +56,9 @@ class kderp_quotation_contract_project_line(osv.osv):
                             Select 
                               sum(coalesce(sol.price_unit,0)+coalesce(sol.discount,0)) as amount    
                             from 
-                                sale_order so left join sale_order_line sol on so.id = sol.order_id
+                                sale_order so left join sale_order_line sol on so.id = sol.order_id and job_type='M'
                             where
-                                so.state='done' and job_type='M' and
+                                so.state='done' and
                                 %s
                             Group by 
                                 contract_id,
