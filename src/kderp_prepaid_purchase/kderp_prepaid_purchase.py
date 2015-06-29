@@ -339,9 +339,13 @@ class kderp_prepaid_purchase_order_line(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not context: context={}
         res=[]
-        for record in self.browse(cr, uid, ids):
-            name = "%s - %s" % (record.name, ("Total Qty. : "+"{:,.2f}".format(record.product_qty)+" - "+"Remaining Qty. : " +"{:,.2f}".format(record.remaining_qty)))  
-            res.append((record['id'], name))
+        if context.get('group_by') == 'prepaid_order_line_id':
+            for record in self.browse(cr, uid, ids):
+                name = "%s - %s" % (record.name, ("Total Qty. : "+"{:,.2f}".format(record.product_qty)))  
+                res.append((record['id'], name))
+        else:
+            for record in self.browse(cr, uid, ids):
+                res.append((record['id'], record.name))
         return res
     
     def onchange_product_id(self, cr, uid, ids, product_id, name, qty, uom_id, price_unit, context=None):
@@ -400,31 +404,6 @@ class kderp_prepaid_purchase_order_line(osv.osv):
         new_val = kderp_base.get_new_from_tree(cr, uid, context.get('id',False), self,context.get('lines',[]),'sequence', 1, 1, context)
         return new_val
     
-    def _get_remaining_qty(self, cr, uid, ids, name, args, context={}):
-        if not context:
-            context = {}
-        res = {}
-        for ppol in self.browse(cr, uid, ids, context):
-            if ppol.location_id.product_details:
-                remaining_qty = 0
-                for slpd in ppol.location_id.product_details:
-                    if ppol.product_id == slpd.product_id and ppol.prepaid_order_id.name == slpd.origin:
-                        remaining_qty +=slpd.available_qty
-                res[ppol.id] = remaining_qty
-        return res
-    
-    def _get_stock_location(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('stock.location').browse(cr, uid, ids, context=context):
-            result[line.location_id] = True
-        return result.keys()
-    
-    def _get_stock_location_line(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('stock.location.product.detail').browse(cr, uid, ids, context=context):
-            result[line.location_id.id] = True
-        return result.keys()
-    
     SELECTION_STATE = [('doing','Doing'),                       
                        ('done','Done')]
     _columns={
@@ -441,13 +420,7 @@ class kderp_prepaid_purchase_order_line(osv.osv):
               'subtotal':fields.function(_get_subtotal, type='float', digits=(16,2), method= True, string='Sub-Total',
                                          store={
                                                 'kderp.prepaid.purchase.order.line': (lambda cr, uid, ids, context = {}: ids, ['product_qty', 'price_unit','prepaid_order_id'], 15) 
-                                                }),
-              'remaining_qty':fields.function(_get_remaining_qty, type='float', digits=(16,2), method= True, string='Remaining Qty.',
-                             store={
-                                    'kderp.prepaid.purchase.order.line': (lambda cr, uid, ids, context = {}: ids, ['product_qty'], 15) ,
-                                     'stock.location':(_get_stock_location,None, 20),
-                                     'stock.location.product.detail':(_get_stock_location,['available_qty'], 20)
-                                    }),
+                                                })
               }
     _defaults = {
                  'product_id': lambda self, cr, uid, context = {}: kderp_base.get_new_value_from_tree(cr, uid, context.get('id',False), self, context.get('prepaid_order_line',[]), 'product_id', context),

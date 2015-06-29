@@ -1791,10 +1791,10 @@ new SimpleDateFormat("dd-MMM-yyyy").format($F{Effective_Date-effective_date})]]>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 					<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 				</box>
-				<textElement verticalAlignment="Bottom">
-					<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cur}+" "+(new DecimalFormat("#,##0").format($F{payment_amt}))]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA['<b>'+$F{cur}+" "+(new DecimalFormat("#,##0").format($F{payment_amt}))+'</b>']]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="130" y="0" width="88" height="15"/>

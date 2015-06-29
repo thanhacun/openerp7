@@ -146,7 +146,13 @@ class kderp_contract_client(osv.osv):
         for kccc_obj in self.pool.get('kderp.contract.currency').browse(cr,uid,ids):
                 res[kccc_obj.contract_id.id] = True
         return res.keys()
-
+    
+    def _get_contract_from_job(self, cr, uid, ids, context=None):
+        res={}
+        for kqcpl_obj in self.pool.get('kderp.quotation.contract.project.line').browse(cr,uid,ids):
+                res[kqcpl_obj.contract_id.id] = True
+        return res.keys()
+    
     AVAILABILITY_SELECTION = [('inused',"IN USE"),("cancelled","CANCELLED")]
     
     _columns={
@@ -166,7 +172,8 @@ class kderp_contract_client(osv.osv):
                                             multi='_get_value_from_contract_info',
                                             store = {
                                                      'kderp.contract.client':(lambda self, cr, uid, ids, context = {}: ids, [], 25),
-                                                     'kderp.contract.currency':(_get_contract_from_contractcur, None, 25)
+                                                     'kderp.contract.currency':(_get_contract_from_contractcur, None, 25),
+                                                     'kderp.quotation.contract.project.line':(_get_contract_from_job, None, 25)
                                                      }
                                              ),
                 'issued_amount':fields.function(_get_vat_issued,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_kcc_issued_vat',
