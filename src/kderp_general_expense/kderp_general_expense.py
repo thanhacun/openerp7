@@ -144,14 +144,12 @@ class kderp_other_expense(osv.osv):
                 view_id = views_ids[0]             
         return super(kderp_other_expense, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
     
-    def _get_allocated_selection(self, cr, uid, context):
-        if not context:
-            context = {}
-            
-        if context.get('general_expense', False):
-            return filter(lambda x: x[0] <> 'PE', self.ALLOCATE_SELECTION)
-        else:
-            return filter(lambda x: x[0] <>'GE', self.ALLOCATE_SELECTION)   
+    
+#     def _get_allocated_selection(self, cr, uid, context):
+#         if not context:
+#             context = {}
+#         try:       
+#             
         
     #Get defaults values
     def _get_job(self, cr, uid, context={}):
@@ -309,7 +307,7 @@ class kderp_other_expense(osv.osv):
                 #'allocated_date':fields.date('Allocated Date', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},
                                                 help="""Expense: Allocated direct to Job/General have payment\nAllocated Expense: Allocated to Job/General from FA & TE, Prepaid without payment\nPrepaid, FA & TE for management and don't allocated\nFA & TE : Fixed Asset and Tool & Equipment ( with Depreciation )"""),
-                'allocated_to':fields.selection(_get_allocated_selection, 'Allocate To', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
+                'allocated_to':fields.selection(ALLOCATE_SELECTION, 'Allocate To', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
                 
                 'link_asset_id':fields.many2one('kderp.asset.management', 'Asset', states={'done':[('readonly', True)], 'paid':[('readonly', True)]}),                
                 

@@ -94,22 +94,7 @@ class kderp_asset_management(osv.osv):
         for kotl in self.pool.get('kderp.other.expense.line').browse(cr, uid, ids, context):        
             if kotl.asset_id:
                 res.append(kotl.asset_id.id)
-        return list(set(res))
-    
-    def _get_asset_general_expense(self, cr, uid, ids, context=None):
-        res=[]
-        for kge in self.pool.get('kderp.general.expense').browse(cr, uid, ids, context):
-            for kgel in kge.general_expense_line_ids:
-                if kgel.asset_id:
-                    res.append(kgel.asset_id.id)
         return list(set(res))    
-    
-    def _get_asset_general_expense_line(self, cr, uid, ids, context=None):
-        res=[]
-        for kgel in self.pool.get('kderp.general.expense.line').browse(cr, uid, ids, context):        
-            if kgel.asset_id:
-                res.append(kgel.asset_id.id)
-        return list(set(res))
     
     def _get_asset_general_acc_code(self, cr, uid, ids, context=None):
         res=[]
@@ -149,16 +134,12 @@ class kderp_asset_management(osv.osv):
                                                                    'kderp.asset.management':(lambda self, cr, uid, ids, c={}: ids, ['price','quantity','state'], 10),
                                                                    'kderp.other.expense':(_get_asset_other_expense,['state'],15),
                                                                    'kderp.other.expense.line':(_get_asset_other_expense_line,['amount','asset_id'],15),
-                                                                   'kderp.general.expense':(_get_asset_general_expense,['state'],15),
-                                                                   'kderp.general.expense.line':(_get_asset_general_expense_line,['amount','asset_id'],15),
                                                                    }),
                'current_remaining':fields.function(_get_depreciation_amount,type='float',method=True,string='Remaining Amt.',multi="_get_dep_amt",
                                                    store={                                                                   
                                                                    'kderp.asset.management':(lambda self, cr, uid, ids, c={}: ids, ['price','quantity','state'], 10),
                                                                    'kderp.other.expense':(_get_asset_other_expense,['state'],15),
                                                                    'kderp.other.expense.line':(_get_asset_other_expense_line,['amount','asset_id'],15),
-                                                                   'kderp.general.expense':(_get_asset_general_expense,['state'],15),
-                                                                   'kderp.general.expense.line':(_get_asset_general_expense_line,['amount','asset_id'],15),
                                                                    }),
                'fixed_asset':fields.function(_get_check_fixed,method=True,type='boolean',string='Fixed Asset',store={                                                                   
                                                                    'kderp.asset.management':(lambda self, cr, uid, ids, c={}: ids, ['type_asset_acc_id'], 10),                                                                   

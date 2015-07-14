@@ -83,10 +83,12 @@ class kderp_create_allocation_sheet(osv.osv_memory):
             number_of_month = obj.number_of_month #Tong so nam can chi chi phi
             current_allocated = ge.allocating_date #Da chi chi phi den ngay (ca trang thai draft)
             allocating_begin_date = obj.allocating_begin_date #Ngay bat dau chi chi phi
+            from datetime import datetime
+            if allocating_begin_date:                             
+                allocating_begin_date = datetime.strptime(allocating_begin_date, "%Y-%m-%d").date()
             allocated = True
             month_allocated = 0
-            from datetime import datetime  
-            
+           
             #So thang can tao Allocation
             if obj.allocated_selection == -1:
                 month = obj.allocated_to_month
@@ -95,13 +97,12 @@ class kderp_create_allocation_sheet(osv.osv_memory):
                 if current_allocated:
                     tmp_currrent_allocated = datetime.strptime(current_allocated, "%Y-%m-%d").date()
                     need_allocated = diff_month(tmp_currrent_allocated, date.today()) #Need allocate today
-                month_current_endofyear =  diff_month(date.today(), date(date.today().year, 12, 31))
+                month_current_endofyear =  diff_month(allocating_begin_date, date(date.today().year, 12, 31))
                 month = need_allocated + month_current_endofyear                
             else:
                 month =1
             
-            if allocating_begin_date:                             
-                allocating_begin_date = datetime.strptime(allocating_begin_date, "%Y-%m-%d").date()
+            if allocating_begin_date:
                 if not current_allocated:
                     allocated = False
                     current_allocated = allocating_begin_date 
@@ -149,6 +150,6 @@ class kderp_create_allocation_sheet(osv.osv_memory):
                     exp['expense_line'] = exp_line
                     new_related_ids.append(ge_obj.create(cr, uid, exp, context))
                 #ge_obj.write(cr, uid, new_related_ids, {'taxes_id': False})
-        return
+        return True
 
 kderp_create_allocation_sheet()
