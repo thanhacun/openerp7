@@ -120,7 +120,7 @@ class gdt_companies_wizard(osv.TransientModel):
             rec_to_comp = gdt_company.read(cr, uid, tax_code_id, ['tax_code','name','address','status'])
             for item in rec_to_comp:
                 if (item.values()[0]==values[item.keys()[0]]):
-                    action = 'nothing'
+                    action = 'update'
                 else:
                     if (item.keys()[0]=='address'):#Voi truong hop address se kiem tra ky hon
                         if (item.values()[0].find(values[item.keys()[0]]) != -1): #Address tim kiem la mot phan cua address luu tren csdl
