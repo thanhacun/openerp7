@@ -128,7 +128,7 @@ class gdt_companies_wizard(osv.TransientModel):
                         else:
                             return 'create'
                     else:
-                        return 'create'
+                        return 'update'
         else:
             return 'create' 
         return action
