@@ -18,26 +18,33 @@ class gdt_companies_wizard(osv.TransientModel):
         argument page su dung de lam deep search
         """
         from urllib import urlopen
+        import urllib2, sys
         from bs4 import BeautifulSoup
         
         result = {'tax_code':'','name':'','address':'','status':''}
+        
+        site= "http://www.thongtincongty.com/search/%s/"%(tax_code[0:10])
+        hdr = {'User-Agent': 'Mozilla/5.0'}
+        req = urllib2.Request(site,headers=hdr)
+        soup_check = BeautifulSoup(urllib2.urlopen(req))
+        all_rows_check = soup_check.find('div',{'class':'jumbotron'})
+
         text = urlopen('http://www.hosocongty.vn/search.php?key=%s&ot=0&p=0&d=0'%(tax_code)).read()
         soup = BeautifulSoup(text)
-        
         all_rows = soup.find('div',{'class':'box_com'}).findChildren('li')
-        if not all_rows: 
+        if not all_rows_check: 
             result['tax_code']=tax_code
             result['name']=''
             result['address']=''
             result['status'] = 'NA'
         for i in range(len(all_rows)):   
-            if all_rows[i].findChildren('a')[1].getText()==tax_code: 
+            if all_rows[i].findChildren('a')[1].getText()==tax_code and all_rows_check: 
                 result['tax_code']=tax_code
                 result['name']=all_rows[i].findChildren('a')[0].getText()
                 result['address']=all_rows[i].findChildren('em')[0].getText()
                 result['status']='00'
         return result
-                    
+        
     def _get_tax_code_ids(self, cr, uid, ids, context):
         #tax_code_list = self.browse(cr, uid, ids[0],context).split(",")
         #for tax_code in tax_code_list:
