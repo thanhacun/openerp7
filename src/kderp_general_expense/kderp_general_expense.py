@@ -298,6 +298,7 @@ class kderp_other_expense(osv.osv):
         else:
             return True
         
+#
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_payment','Waiting for Payment'),
                    ('paid','Paid'),
@@ -309,7 +310,7 @@ class kderp_other_expense(osv.osv):
                 #'allocated_date':fields.date('Allocated Date', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'expense_type':fields.selection(EXPENSE_TYPE_SELECTION, 'Exp. Type', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]},
                                                 help="""Expense: Allocated direct to Job/General have payment\nAllocated Expense: Allocated to Job/General from FA & TE, Prepaid without payment\nPrepaid, FA & TE for management and don't allocated\nFA & TE : Fixed Asset and Tool & Equipment ( with Depreciation )"""),
-                'allocated_to':fields.selection(_get_allocated_selection, 'Allocate To', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
+                'allocated_to':fields.selection(ALLOCATE_SELECTION, 'Allocate To', required = True, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}, select = 1),
                 
                 'link_asset_id':fields.many2one('kderp.asset.management', 'Asset', states={'done':[('readonly', True)], 'paid':[('readonly', True)]}),                
                 
@@ -355,13 +356,37 @@ class kderp_other_expense(osv.osv):
                                                            }),
                 'number_of_month':fields.integer("Allocated Months", readonly=True, help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),
                 }
-
+    
     _defaults = {
                 'allocated_to': lambda self, cr, uid, context={}:'GE' if context.get('general_expense',False) else 'PE',
                 'expense_type': lambda self, cr, uid, context={}:'expense' ,
                 'account_analytic_id': _get_job,
                 'section_incharge_id': _get_section_incharge,
                 }
+          
+    def onchange_allocate_ge(self, cr, uid, ids, allocated_to,section_incharge_id,general_expense=False):
+        value={}
+        warning={}
+        if general_expense:
+            if allocated_to== 'PE':
+                warning = {  
+                  'title': _("KDERP Warning"),  
+                  'message': _('Can not chosen Allocated to is Job Expense'),  
+                 }
+                value={'allocated_to':'GE'}
+        else:
+            if allocated_to == 'GE':
+                value={'allocated_to':'PE'}
+                warning = {  
+                  'title': _("KDERP Warning"),  
+                  'message': _('Can not chosen Allocated to is General Expense'),}  
+            else:
+                if allocated_to == 'PGE':
+                    user = self.pool.get('res.users').browse(cr, uid, uid)            
+                    if user.employee_id.department_id.general_incharge:
+                        value.update({'section_incharge_id':user.employee_id.department_id.id})
+                return {'value': value}
+        return {'value':value,'warning':warning}
     
     def onchange_expensetype(self, cr, uid, ids, type, partner_id, taxes_id):#Auto fill location when change Owner
         value = {}
@@ -371,13 +396,23 @@ class kderp_other_expense(osv.osv):
             value.update({'partner_id': self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id})
         return {'value': value}
     
-    def onchange_section_incharges(self, cr, uid, ids,allocated_to,section_incharge_id):#Auto fill location when change Owner
-        value = {}
-        if allocated_to == 'PGE':
-            user = self.pool.get('res.users').browse(cr, uid, uid)            
-            if user.employee_id.department_id.general_incharge:
-                value.update({'section_incharge_id':user.employee_id.department_id.id})
-        return {'value': value}
+#     def onchange_section_incharges(self, cr, uid, ids,allocated_to,section_incharge_id):#Auto fill location when change Owner
+#         value = {}
+#         if allocated_to == 'PGE':
+#             user = self.pool.get('res.users').browse(cr, uid, uid)            
+#             if user.employee_id.department_id.general_incharge:
+#                 value.update({'section_incharge_id':user.employee_id.department_id.id})
+#         else:
+#             warning = {}
+#             if allocated_to== 'GE': 
+#                 warning = {  
+#                   'title': _("KDERP Warning"),  
+#                   'message': _('Can not chosen Allocated to is General Expense'),  
+#                  }
+#                 value={'allocated_to':'PE'}
+#           
+#             return {'value':value,'warning':warning}
+#         return {'value': value}
     
     def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
         if not context:

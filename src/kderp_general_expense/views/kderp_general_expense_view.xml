@@ -57,7 +57,8 @@
 							<field name="account_analytic_id" string="G.E./Job" on_change="new_code(account_analytic_id,'E',name)" domain="[('general_expense','=',True)]" context="{'job_id':account_analytic_id}" attrs="{'invisible':[('expense_type','in',('fixed_asset','prepaid'))]}"/>
 	                       	<label string=""/>
 	                       	<label string=""/>
-	                       	<field name='allocated_to' colspan="1" default_focus="1"/>
+	                       	<field name='allocated_to' on_change="onchange_allocate_ge(allocated_to,section_incharge_id,True)" context="{'general_expense':True}" colspan="1" default_focus="1"/>
+							<!-- <field name='allocated_to'  on_change="onchange_allocate_ge(allocated_to)" context="{'general_expense': True}" colspan="1" default_focus="1"/> -->
 							<field name="date" colspan="1" string='Exp./Allocated Date'/>
 	                        <field name='section_incharge_id' colspan="1"/>                       
 	                    </group>

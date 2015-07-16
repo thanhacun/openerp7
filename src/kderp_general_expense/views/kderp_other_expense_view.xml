@@ -21,7 +21,7 @@
 					<field name="account_analytic_id" domain="[('general_expense','=',False)]" on_change="new_code(account_analytic_id,'E',name)" default_focus="1" context="{'job_id': account_analytic_id}"/>	
 	            </field>	        
 				<field name='date' position='after'>
-					<field name='allocated_to'  on_change="onchange_section_incharges(allocated_to,section_incharge_id)" />
+					<field name='allocated_to' on_change="onchange_allocate_ge(allocated_to,section_incharge_id,False)" context="{'general_expense':False}" />
 					<field name='section_incharge_id' attrs="{'invisible':[('allocated_to','=','PE')]}"/>
 				</field>
 				<field name="expense_line" position='replace'>
