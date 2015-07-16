@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from openerp.osv import osv, fields
 #from osv.orm import intersect
 #from openerp import tools
@@ -28,6 +29,14 @@ class gdt_companies_wizard(osv.TransientModel):
         req = urllib2.Request(site,headers=hdr)
         soup_check = BeautifulSoup(urllib2.urlopen(req))
         all_rows_check = soup_check.find('div',{'class':'jumbotron'})
+        var_list = []
+        for br in all_rows_check.findAll('br'):
+            text_line = str(br.nextSibling.encode('utf-8')).strip()
+            if text_line:
+                var_list.append(br.nextSibling)
+        name = all_rows_check.find('h4').getText()
+        a = var_list[0]
+        address = a[a.find(': ')+1:len(a)].strip()
 
         text = urlopen('http://www.hosocongty.vn/search.php?key=%s&ot=0&p=0&d=0'%(tax_code)).read()
         soup = BeautifulSoup(text)
@@ -37,6 +46,13 @@ class gdt_companies_wizard(osv.TransientModel):
             result['name']=''
             result['address']=''
             result['status'] = 'NA'
+        
+        if all_rows_check and not all_rows: 
+            result['tax_code']=tax_code
+            result['name']=name
+            result['address']=address
+            result['status'] = '00'
+            
         for i in range(len(all_rows)):   
             if all_rows[i].findChildren('a')[1].getText()==tax_code and all_rows_check: 
                 result['tax_code']=tax_code
