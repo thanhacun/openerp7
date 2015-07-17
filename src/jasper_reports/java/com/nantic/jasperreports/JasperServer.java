@@ -129,6 +129,7 @@ public class JasperServer {
     public int privateExecute( Hashtable connectionParameters, String jrxmlPath, String outputPath, Hashtable parameters) throws java.lang.Exception {
 
         JasperReport report = null;
+        // JasperReportsContext report = null;
         byte[] result = null;
         JasperPrint jasperPrint = null;
         InputStream in = null;
@@ -138,6 +139,8 @@ public class JasperServer {
         compile( jrxmlPath );
 
         report = (JasperReport) JRLoader.loadObject( jasperPath( jrxmlPath ) );
+        
+        //report = (JasperReport) JRLoader.loadObjectFromFile( jasperPath( jrxmlPath ) );
 
         // Add SUBREPORT_DIR parameter
         index = jrxmlPath.lastIndexOf('/');
