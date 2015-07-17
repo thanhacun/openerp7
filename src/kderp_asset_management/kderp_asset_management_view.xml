@@ -241,7 +241,7 @@
 		                    <field name='brandname'/>
 		                    <field name='usefullife'/>
 		                    <field name='asset_state'/>
-		                    <field name='parent_id' string="Parent Asset" attrs="{'required':[('code','indexOf','FM')]}" domain="[('id','!=',active_id),('parent_id','=',False),('state','!=','liquidated')]" />
+		                    <field name='parent_id' string="Parent Asset" domain="[('id','!=',active_id),('parent_id','=',False),('state','!=','liquidated')]" />
 						</group>
 						<notebook>
 							<page string='Purchase Info.'>
