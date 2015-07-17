@@ -255,7 +255,19 @@
         			action="kderp_action_working_other_expense_ge" 
         			id="kderp_working_other_expense_ge_action" 
         			parent="kderp_general_expense.menu_kderp_general_exepense_menu" sequence="5"/>
-        			
-	</data>
-	
+        
+        <!-- Action and Menu Item for Import data -->
+        <record id="action_kderp_for_import_genereal_expense_line_data_view" model="ir.actions.act_window">
+            <field name="name">Import General Expense</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kderp.other.expense.line</field>
+            <field name="domain">[('create_uid','=',uid),('create_date','>=', ((context_today()).strftime('%Y-%m-%d')))]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_kderp_for_import_genereal_expense_line_data_view" 
+          			id="menu_for_import_general_expense_line" 
+          			parent="kderp_working_other_expense_ge_action" sequence="5"/>
+        		
+	</data>	
 </openerp>

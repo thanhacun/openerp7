@@ -43,8 +43,7 @@ class kderp_po_payment_term_line(osv.osv):
     
     def _get_amount(self, cr, uid, ids, *args):
         res = {}
-        for kptl in self.browse(cr, uid, ids):           
-            
+        for kptl in self.browse(cr, uid, ids):            
             po=kptl.order_id
             if kptl.type=='p':
                 adv_amount = 0.0
@@ -54,13 +53,13 @@ class kderp_po_payment_term_line(osv.osv):
                         adv_amount += po_term.value_amount*po.final_price/100.0
                     elif po_term.type=='re':
                         retention_amount += po_term.value_amount*po.final_price/100.0                                                
-                progress = po_term.value_amount
+                progress = kptl.value_amount
                 
-                this_progress_amount = po.final_price*po_term.value_amount/100.0
+                this_progress_amount = po.final_price*progress/100.0
                 this_adv_amount = - adv_amount*progress/100.0
                 this_retention_amount = - retention_amount*progress/100.0
                 
-                this_tax_amount = po.amount_tax*kptl.value_amount/100.0
+                this_tax_amount = po.amount_tax*progress/100.0
                 
                 sub_total= this_progress_amount + this_adv_amount + this_retention_amount + this_tax_amount
                 

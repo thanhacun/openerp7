@@ -29,7 +29,7 @@ from openerp.tools.misc import unquote as unquote
 class ir_rule(osv.osv):
     _name = 'ir.rule'
     _inherit = 'ir.rule'
-    
+        
     def clear_cache_cron(self, cr, uid, ids, cron_mode=True, context=None):
         self._compute_domain.clear_cache(self)
         return True

@@ -55,10 +55,10 @@ class kderp_other_expense(osv.osv):
             ids = [ids]
         res = []
         for record in self.browse(cr, uid, ids, context=context):
-            if record.description:
+            if record.description and context.get('general_expense', False):
                 full_name = '%s - %s' % (record.name,record.description)
             else:
-                full_name = record.name   
+                full_name = record.name
             res.append((record.id, full_name))
         return res
     

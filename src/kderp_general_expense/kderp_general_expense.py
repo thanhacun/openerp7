@@ -144,14 +144,12 @@ class kderp_other_expense(osv.osv):
                 view_id = views_ids[0]             
         return super(kderp_other_expense, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
     
-    def _get_allocated_selection(self, cr, uid, context):
-        if not context:
-            context = {}
-            
-        if context.get('general_expense', False):
-            return filter(lambda x: x[0] <> 'PE', self.ALLOCATE_SELECTION)
-        else:
-            return filter(lambda x: x[0] <>'GE', self.ALLOCATE_SELECTION)   
+    
+#     def _get_allocated_selection(self, cr, uid, context):
+#         if not context:
+#             context = {}
+#         try:       
+#             
         
     #Get defaults values
     def _get_job(self, cr, uid, context={}):
@@ -419,6 +417,7 @@ class kderp_other_expense(osv.osv):
             context = {}
     
         period_obj = self.pool.get('account.period')
+        result = {}
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.expense_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a Expense without any Expense Details.'))
@@ -432,7 +431,7 @@ class kderp_other_expense(osv.osv):
                 self.write(cr, uid, [exp.id], {'state' : state, 'period_id':period_id})
                 if exp.expense_type != 'monthly_expense':
                     result = self.action_expense_create_supplier_payment_expense(cr, uid, ids)
-        return True
+        return result
 
 class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
