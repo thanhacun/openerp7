@@ -1,7 +1,6 @@
 from openerp.osv import fields, osv
 import time
 from openerp.tools.translate import _
-from openerp import netsvc
 
 class account_budget_post(osv.osv):
     """
@@ -144,13 +143,6 @@ class kderp_other_expense(osv.osv):
                 view_id = views_ids[0]             
         return super(kderp_other_expense, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
     
-    
-#     def _get_allocated_selection(self, cr, uid, context):
-#         if not context:
-#             context = {}
-#         try:       
-#             
-        
     #Get defaults values
     def _get_job(self, cr, uid, context={}):
         if not context:
@@ -302,7 +294,7 @@ class kderp_other_expense(osv.osv):
                    ('paid','Paid'),
                    ('done','Completed'),
                    ('revising','Expense Revising'),
-                   ('cancel','Expense Canceled')]
+                   ('cancel','Expense Cancelled')]
     
     _columns = {
                 #'allocated_date':fields.date('Allocated Date', states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
@@ -362,28 +354,26 @@ class kderp_other_expense(osv.osv):
                 'section_incharge_id': _get_section_incharge,
                 }
           
-    def onchange_allocate_ge(self, cr, uid, ids, allocated_to,section_incharge_id,general_expense=False):
+    def onchange_allocate_ge(self, cr, uid, ids, allocated_to, section_incharge_id, general_expense=False):
         value={}
         warning={}
         if general_expense:
             if allocated_to== 'PE':
                 warning = {  
                   'title': _("KDERP Warning"),  
-                  'message': _('Can not chosen Allocated to is Job Expense'),  
+                  'message': _('You can not select "Job Expense"\nYou can select "General Expense or Job & General Expense"'),  
                  }
-                value={'allocated_to':'GE'}
-        else:
-            if allocated_to == 'GE':
-                value={'allocated_to':'PE'}
+                value={'allocated_to': False}
+        elif allocated_to == 'GE':
+                value={'allocated_to': False}
                 warning = {  
                   'title': _("KDERP Warning"),  
-                  'message': _('Can not chosen Allocated to is General Expense'),}  
-            else:
-                if allocated_to == 'PGE':
-                    user = self.pool.get('res.users').browse(cr, uid, uid)            
-                    if user.employee_id.department_id.general_incharge:
-                        value.update({'section_incharge_id':user.employee_id.department_id.id})
-                return {'value': value}
+                  'message': _('You can not select "General Expense"\nYou can select "Job Expense or Job & General Expense"'),}  
+        elif allocated_to == 'PGE':
+            user = self.pool.get('res.users').browse(cr, uid, uid)            
+            if user.employee_id.department_id.general_incharge:
+                value['section_incharge_id']= user.employee_id.department_id.id
+            return {'value': value}
         return {'value':value,'warning':warning}
     
     def onchange_expensetype(self, cr, uid, ids, type, partner_id, taxes_id):#Auto fill location when change Owner
@@ -393,24 +383,6 @@ class kderp_other_expense(osv.osv):
         if not partner_id and type=='monthly_expense':
             value.update({'partner_id': self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id})
         return {'value': value}
-    
-#     def onchange_section_incharges(self, cr, uid, ids,allocated_to,section_incharge_id):#Auto fill location when change Owner
-#         value = {}
-#         if allocated_to == 'PGE':
-#             user = self.pool.get('res.users').browse(cr, uid, uid)            
-#             if user.employee_id.department_id.general_incharge:
-#                 value.update({'section_incharge_id':user.employee_id.department_id.id})
-#         else:
-#             warning = {}
-#             if allocated_to== 'GE': 
-#                 warning = {  
-#                   'title': _("KDERP Warning"),  
-#                   'message': _('Can not chosen Allocated to is General Expense'),  
-#                  }
-#                 value={'allocated_to':'PE'}
-#           
-#             return {'value':value,'warning':warning}
-#         return {'value': value}
     
     def action_draft_to_waiting_for_payment(self, cr, uid, ids, context=None):
         if not context:
