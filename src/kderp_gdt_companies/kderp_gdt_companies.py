@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from openerp.osv import osv, fields
 #from osv.orm import intersect
 #from openerp import tools
@@ -17,64 +18,52 @@ class gdt_companies_wizard(osv.TransientModel):
         apt-get install python-requests
         argument page su dung de lam deep search
         """
-        import requests
+        from urllib import urlopen
+        import urllib2, sys
         from bs4 import BeautifulSoup
+        
         result = {'tax_code':'','name':'','address':'','status':''}
-        page = 1
-        do_query = True
-        while do_query:
-            url = 'http://www.gdt.gov.vn/wps/portal/home/tcnnt?id=%(id)s&mst=%(mst)s&action=%(action)s&page=%(page)s'
-            query = {'id':tax_code,'mst':tax_code,'action':'action','page':page}
-            req = requests.get(url % query)            
-            if (not req.raise_for_status()): #Chi chay khi ma tra ve la 200
-                raw_data = req.text
-                raw_html = BeautifulSoup(raw_data)
-                #Search table ta_border thu 1 de tim den dong co mst can tim
-                #Neu khong co se tim tiep cho den khi khong tim duoc
-                if (len(raw_html.find("table","ta_border").find_all("td")) != 1): #chi chay khi co ket qua tra ve
-                    a = raw_html.find("table","ta_border").find("a", text=tax_code) #tim element a chua mst can truy van
-                    if a:
-                        do_query = False
-                    else:
-                        page += 1
-                else: #khi khong co ket qua tra ve
-                    return False
-            else: #khi co loi ket noi
-                return False
-        else: #ket thuc query, tim cac ket qua
-            tds = a.find_parent("tr").find_all("td")
-            result['tax_code']=tds[1].text.strip()
-            result['name']=tds[2].text.strip()
-            result['address']=tds[2].find("a")["title"].strip()[16:] #lay gia tri cua address, loai chu thua
-            result['status']=tds[5].find("a")["alt"].strip() #lay gia tri cua attribute
-            #lay address chi tiet
-            if (len(raw_html.find_all("table","ta_border"))==2):
-                if (not result['tax_code']):
-                    result['tax_code']=raw_html.find_all("td")[-51].text.strip()
-                if (not result['name']):
-                    result['name']=raw_html.find_all("td")[-49].text.strip()
-                #somehow gdt result is not construct well, so have to use td instead of table.ta_border
-                try: 
-                    office = raw_html.find_all("td")[-45].text.strip()
-                    city = raw_html.find_all("td")[-43].text.strip()
-                    dist = raw_html.find_all("td")[-41].text.strip()
-                    ward = raw_html.find_all("td")[-39].text.strip()
-                    import re
-                    #ket qua tra ve co code o dau cho city va dist
-                    #su dung reg de loai cac so nay - dung unicode
-                    city = re.sub("^\d+\xa0", "", city)
-                    dist = re.sub("^\d+\xa0", "", dist)
-                    address_parts = [office, ward, dist, city]
-                    address = ', '.join(filter(None, address_parts))
-                    result['address']= address 
-                except IndexError:
-                    return result
-                if (not result['status']):
-                    result['status']="NA"
+        
+        site= "http://www.thongtincongty.com/search/%s/"%(tax_code[0:10])
+        hdr = {'User-Agent': 'Mozilla/5.0'}
+        req = urllib2.Request(site,headers=hdr)
+        soup_check = BeautifulSoup(urllib2.urlopen(req))
+        all_rows_check = soup_check.find('div',{'class':'jumbotron'})
+        var_list = []
+        
+        if not all_rows_check: 
+            result['tax_code']=tax_code
+            result['name']=''
+            result['address']=''
+            result['status'] = 'NA'
+        
+        if all_rows_check:
+            for br in all_rows_check.findAll('br'):
+                text_line = str(br.nextSibling.encode('utf-8')).strip()
+                if text_line:
+                    var_list.append(br.nextSibling)
+            name = all_rows_check.find('h4').getText()
+            a = var_list[0]
+            address = a[a.find(': ')+1:len(a)].strip()
+    
+        text = urlopen('http://www.hosocongty.vn/search.php?key=%s&ot=0&p=0&d=0'%(tax_code)).read()
+        soup = BeautifulSoup(text)
+        all_rows = soup.find('div',{'class':'box_com'}).findChildren('li')
+        
+        if all_rows_check and not all_rows: 
+            result['tax_code']=tax_code
+            result['name']=name
+            result['address']=address
+            result['status'] = '00'
+            
+        for i in range(len(all_rows)):   
+            if all_rows[i].findChildren('a')[1].getText()==tax_code and all_rows_check: 
+                result['tax_code']=tax_code
+                result['name']=all_rows[i].findChildren('a')[0].getText()
+                result['address']=all_rows[i].findChildren('em')[0].getText()
+                result['status']='00'
         return result
-
-
-
+        
     def _get_tax_code_ids(self, cr, uid, ids, context):
         #tax_code_list = self.browse(cr, uid, ids[0],context).split(",")
         #for tax_code in tax_code_list:
@@ -91,8 +80,8 @@ class gdt_companies_wizard(osv.TransientModel):
         error_list =[]
         #second cleanup
         for code in codes_clean:
-            if (len(code)==13): #13 number code
-                code_list.append(code[0:10] + '-' + code[10:])
+            if (len(code)==14): #13 number code
+                code_list.append(code[0:10] + '-' + code[11:])
             elif (len(code)==10):
                 code_list.append(code)
             else:
@@ -157,7 +146,7 @@ class gdt_companies_wizard(osv.TransientModel):
             rec_to_comp = gdt_company.read(cr, uid, tax_code_id, ['tax_code','name','address','status'])
             for item in rec_to_comp:
                 if (item.values()[0]==values[item.keys()[0]]):
-                    action = 'nothing'
+                    action = 'update'
                 else:
                     if (item.keys()[0]=='address'):#Voi truong hop address se kiem tra ky hon
                         if (item.values()[0].find(values[item.keys()[0]]) != -1): #Address tim kiem la mot phan cua address luu tren csdl
@@ -165,7 +154,7 @@ class gdt_companies_wizard(osv.TransientModel):
                         else:
                             return 'create'
                     else:
-                        return 'create'
+                        return 'update'
         else:
             return 'create' 
         return action
@@ -236,8 +225,8 @@ class gdt_companies(osv.Model):
 
     
     def gdt_link(self, cr, uid, ids, context):
-        tax_code = self.browse(cr, uid, ids[0]).tax_code
-        url = 'http://www.gdt.gov.vn/wps/portal/home/tcnnt?id=%s&mst=%s&action=%s' % (tax_code, tax_code, 'action')
+        #tax_code = self.browse(cr, uid, ids[0]).tax_code
+        url = 'http://tracuunnt.gdt.gov.vn/tcnnt/mstdn.jsp'
         return {
                 'type':'ir.actions.act_url',
                 'url': url,
