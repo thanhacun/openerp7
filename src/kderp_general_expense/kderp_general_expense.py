@@ -382,6 +382,7 @@ class kderp_other_expense(osv.osv):
             context = {}
     
         period_obj = self.pool.get('account.period')
+        result = {}
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.expense_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a Expense without any Expense Details.'))
@@ -395,7 +396,7 @@ class kderp_other_expense(osv.osv):
                 self.write(cr, uid, [exp.id], {'state' : state, 'period_id':period_id})
                 if exp.expense_type != 'monthly_expense':
                     result = self.action_expense_create_supplier_payment_expense(cr, uid, ids)
-        return True
+        return result
 
 class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
