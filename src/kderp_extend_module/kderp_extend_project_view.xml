@@ -46,18 +46,6 @@
             </field>
          </record>
         
-        <!-- Them truong remark vao trong form Project -->
-        <record id="kderp_job_form_inherit" model="ir.ui.view">
-			<field name="name">kderp.job.form.inherit</field>
-			<field name="model">account.analytic.account</field>
-			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_form"/>
-			<field name="arch" type="xml">			
-	        	<field name='area_site_manager_id' position='after'>
-	        		<field name='remark'/>
-	        	</field>
-			</field>
-		</record>
-        
         <!-- Thay doi job_type theo code-->
         <record id="kderp_job_form_inherit_code" model="ir.ui.view">
 			<field name="name">kderp.job.form.inherit</field>
@@ -69,6 +57,14 @@
 	        	</field>
 	        	<field name="job_type" position="replace">
 	        		<field name="job_type" required = "True" on_change="onchange_job_type(code, job_type)"/>
+	        	</field>
+	        	<!-- Them loc budget code trong form Project -->
+	        	<field name='budget_id' position="replace">
+	      			<field name='budget_id' domain="[('general_expense','=',False)]"/>
+				</field>
+				<!-- Them truong remark vao trong form Project -->
+				<field name='area_site_manager_id' position='after'>
+	        		<field name='remark'/>
 	        	</field>
 			</field>
 		</record>
@@ -86,5 +82,6 @@
 				</field>
 			</field>
 		</record>
+		
 	</data>
 </openerp>
