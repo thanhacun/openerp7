@@ -118,6 +118,12 @@
 	                    <!-- UPDATED QUOTATION COMPLETION-->
 	                    <label string='10. UPDATED QUOTATION COMPLETION'/>                    
 	                    <button name='write_quotation_actual_completion_date' type='object' string='Update Quotation Completion Date'/>
+	                    
+	                    <br/><br/><br/><br/><br/><br/>
+	                    <!-- UPDATED QUOTATION COMPLETION-->
+	                    <label string='11. UPDATED CONTRACT BALANCE AMOUNT'/>                    
+	                    <button name='update_contracted_contract_amount_errorbalance' type='object' string='UPDATED CONTRACT BALANCE AMOUNT'/>
+	                    
                     </h3>
                 </form>
             </field>

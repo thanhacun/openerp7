@@ -1061,6 +1061,24 @@ class kderp_migrate(osv.osv_memory):
         for id,default in cr.fetchall():
             kcc_obj.write(cr, uid, [id], {})
         return True
+    
+    #Update Contracted Amount after changing formulas
+    def update_contracted_contract_amount_errorbalance(self, cr, uid, ids, context):
+        SQL = """Select 
+                        kcur.id,
+                        default_curr
+                    from 
+                        kderp_contract_currency kcur
+                    left join
+                        kderp_contract_client kcc on contract_id = kcc.id
+                    where 
+                        default_curr and kcc.id is not null and balance_total<>0 and balance_total between -100 and 100"""
+                        
+        kcc_obj = self.pool.get('kderp.contract.currency')
+        cr.execute(SQL)
+        for id,default in cr.fetchall():
+            kcc_obj.write(cr, uid, [id], {})
+        return True
 kderp_migrate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
