@@ -3,7 +3,8 @@ def diff_month(date_from, date_to):
     return (date_to.year - date_from.year)*12 + date_to.month - date_from.month                                                                             
 
 def round_base(x, base=5):
-        return int(base * round(float(x)/base))
+        from openerp.tools.float_utils import float_round as round
+        return round(x, base)
     
 def get_new_from_tree( cr, uid, id, object, lists, field, startnum=1, step_num=1, context={}):
     res = 0
