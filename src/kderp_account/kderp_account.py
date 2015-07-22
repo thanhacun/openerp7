@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import time
 
@@ -68,8 +69,8 @@ class account_tax(osv.osv):
                 'type':'fixed',
                 'type_tax_use':'purchase',
                 'applicable_type':True,
-                'res_id':context.get('res_ids',[])[0],
-                'res_model':context.get('res_models',[])[0],
+                'res_id':context.get('res_ids',[])[0] if context.get('res_ids',[]) else False,
+                'res_model':context.get('res_models',[])[0] if context.get('res_models',[]) else '',
                 'name':'VAT for '+ (name if name else '')}
         else:
             default_list={

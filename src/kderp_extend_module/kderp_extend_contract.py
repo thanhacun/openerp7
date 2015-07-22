@@ -95,7 +95,7 @@ class kderp_contract_client(osv.osv):
                         case when 
                             sum(coalesce(ai.amount_tax,0))=0 then 0
                         else 
-                            sum(coalesce(amount_untaxed))/sum(coalesce(ai.amount_tax,0))                 
+                            sum(coalesce(ai.amount,0))/sum(coalesce(ai.amount_tax,0))                 
                         end as issued_vat  
                     from 
                         kderp_contract_client kcc 
@@ -103,8 +103,6 @@ class kderp_contract_client(osv.osv):
                         account_invoice ai on kcc.id =ai.contract_id and  ai.state!='cancel' 
                     left join 
                         kderp_payment_vat_invoice kpvi on ai.id =kpvi.payment_id
-                    left join
-                        kderp_invoice ki on vat_invoice_id=ki.id
                     where 
                         kcc.id in (%s)
                     group by  
@@ -112,7 +110,7 @@ class kderp_contract_client(osv.osv):
         
         for kcc_id,issued_amount,issued_vat in cr.fetchall():
             res[kcc_id]={
-                         'issued_vat':issued_amount - (issued_amount/(1 + issued_vat/100.0)),
+                         'issued_vat':issued_amount*issued_vat/100.0,
                          'issued_amount':issued_amount,
                          'issued_sub_total':issued_amount/ (1 + issued_vat/100.0) 
                          }
