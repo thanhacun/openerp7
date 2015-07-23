@@ -177,7 +177,8 @@ class account_analytic_account(Model):
         return list(set(res))
     
 #JOB ISSUED
-    def _get_job_issued_info(self, cr, uid, ids, name, arg, context=None):
+    ##TEMP REMOVE REQUEST BY MS. LAM - CALCULATION BASE ON PERCENTAGE I CLIENT PAYMENT
+    def _get_job_issued_info_TEMP(self, cr, uid, ids, name, arg, context=None): 
         res={}
         job_ids=",".join(map(str,ids))
         for id in ids:
@@ -214,7 +215,52 @@ class account_analytic_account(Model):
         for job_list in cr.dictfetchall():
             job_id=job_list.pop('job_id')
             res[job_id]=job_list
-        return res                
+        return res
+    #BASE ON CONTRACT
+    def _get_job_issued_info(self, cr, uid, ids, name, arg, context=None): 
+        res={}
+        job_ids=",".join(map(str,ids))
+        #for id in ids:
+        cr.execute("""Select    
+                        aaa.id as job_id,
+                        sum(coalesce(issued_total,0)*(case when coalesce(total,0)=0 then 0 else amount_currency/total end)) as vat_issued_amount,
+                        sum(coalesce(issued_subtotal,0)*(case when coalesce(total,0)=0 then 0 else amount_currency/total end)) as vat_issued_subtotal
+                    from
+                        account_analytic_account aaa
+                    left join    
+                        kderp_quotation_contract_project_line kqcpl on aaa.id = account_analytic_id
+                    left join
+                        (select 
+                            contract_id,
+                            sum(coalesce(amount_currency,0)) as total
+                        from 
+                            kderp_quotation_contract_project_line kqcpls
+                        where
+                            contract_id in (Select contract_id from kderp_quotation_contract_project_line where  account_analytic_id in (%s))
+                        group by
+                            contract_id) astemp on  kqcpl.contract_id = astemp.contract_id
+                    left join
+                        (Select
+                            contract_id,
+                            sum((kpvi.amount+coalesce(diff_exrate,0)) /(1+coalesce(tax_percent,0)/100)) as issued_subtotal,
+                            sum((kpvi.amount+coalesce(diff_exrate,0))) as issued_total
+                        from 
+                            kderp_payment_vat_invoice kpvi
+                        left join
+                            account_invoice ai on payment_id = ai.id 
+                        left join
+                            kderp_invoice ki on vat_invoice_id=ki.id
+                        where
+                            contract_id in (Select contract_id from kderp_quotation_contract_project_line where  account_analytic_id in (%s)) 
+                            and ai.state!='cancel'
+                        group by
+                            contract_id) vwcvatissued on kqcpl.contract_id = vwcvatissued.contract_id
+                    where aaa.id in (%s)
+                    group by aaa.id""" % (job_ids,job_ids,job_ids))
+        for job_list in cr.dictfetchall():
+            job_id=job_list.pop('job_id')
+            res[job_id]=job_list
+        return res
                 
     def _get_job_issued_from_from_client_payment(self, cr, uid, ids, context=None):
         res=[]
