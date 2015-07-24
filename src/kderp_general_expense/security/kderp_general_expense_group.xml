@@ -97,7 +97,6 @@
   	   </record>
 		
 		
-		
 	    <record id="group_kderp_department_read" model="res.groups">
 	       	<field name="name">KDERP - Department / Read </field>
 	      	<field name="category_id" ref="module_category_kderp_general_expense"/>
@@ -175,5 +174,12 @@
 			 <field name="users" eval="[(4, ref('base.user_root'))]"/>
 	         <field name="category_id" ref="module_category_kderp_general_expense"/>
 	   </record>
+	  
+	   <record id="group_kderp_other_expense_ge_tel_fee" model="res.groups">
+			 <field name="name">KDERP - Telephone Fee </field>
+			 <field name="users" eval="[(4, ref('base.user_root'))]"/>
+	         <field name="category_id" ref="module_category_kderp_general_expense"/>
+	   </record>
+	   
     </data>
 </openerp>

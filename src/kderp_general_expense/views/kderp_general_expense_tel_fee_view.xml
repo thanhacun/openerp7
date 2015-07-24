@@ -119,7 +119,9 @@
             <field name="view_mode">tree,form</field>
             <field name="filter" eval="True"/>
 			<field name="domain">[('allocated_to','!=','PE')]</field>			
-            <field name="context">{'show_full_name':True,'show_field':['code'],'search_default_working':1,'general_expense':True, "PGE": True}</field>          
+            <field name="context">{'show_full_name':True,'show_field':['code'],'search_default_working':1,
+            						'search_default_special_case':1,'general_expense':True, "PGE": True}</field>
+            <field name="search_view_id" ref="view_kderp_other_expense_ge_search"/>          
         </record>
         
         <!-- Link view to action -->
@@ -139,7 +141,8 @@
         <menuitem 
         	action="kderp_action_working_other_expense_ge_tel_fee" 
         	id="kderp_working_other_expense_ge_tel_fee_action" 
-        	parent="kderp_working_other_expense_ge_action" sequence="5"/>
+        	parent="kderp_working_other_expense_ge_action" sequence="5"
+        	groups="group_kderp_other_expense_ge_tel_fee"/>
         		
-	</data>	
+	</data>	 
 </openerp>
