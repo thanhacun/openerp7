@@ -214,7 +214,7 @@
                     <filter help="Job &amp; General Expense" name='PGE' domain="[('allocated_to','=','PGE')]"/>
 					
 					<separator/>
-					<filter groups="kderp_general_expense.group_kderp_other_expense_ge_tel_fee" string="Special Case - Arround 01 Week"
+					<filter groups="kderp_general_expense.group_kderp_other_expense_ge_tel_fee" string="Special Case - Around 01 Week"
                          domain="[('ref_number','!=',False),('date','&gt;=',(context_today()-datetime.timedelta(context_today().day)).strftime('%%Y-%%m-07')),
                                                 ('date','&lt;=',context_today().strftime('%%Y-%%m-07'))]" name="special_case"/>
                     <group expand="0" string="Group By...">
@@ -272,7 +272,7 @@
         </record>
         <menuitem action="action_kderp_for_import_genereal_expense_line_data_view" 
           			id="menu_for_import_general_expense_line" 
-          			parent="kderp_working_other_expense_ge_action" sequence="5"/>
+          			parent="kderp_working_other_expense_ge_action" sequence="10"/>
         		
 	</data>	
 </openerp>
