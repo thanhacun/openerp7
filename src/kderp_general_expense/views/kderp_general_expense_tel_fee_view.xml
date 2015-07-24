@@ -139,7 +139,8 @@
         <menuitem 
         	action="kderp_action_working_other_expense_ge_tel_fee" 
         	id="kderp_working_other_expense_ge_tel_fee_action" 
-        	parent="kderp_working_other_expense_ge_action" sequence="5"/>
+        	parent="kderp_working_other_expense_ge_action" sequence="5"
+        	groups="group_kderp_other_expense_ge_tel_fee"/>
         		
 	</data>	
 </openerp>
