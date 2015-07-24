@@ -213,6 +213,10 @@
                     <filter help="General Expense" name='GE' domain="[('allocated_to','=','GE')]"/>
                     <filter help="Job &amp; General Expense" name='PGE' domain="[('allocated_to','=','PGE')]"/>
 					
+					<separator/>
+					<filter string="Special Case - Arround 01 Week"
+                         domain="[('ref_number','!=',False),('date','&gt;=',(context_today()-datetime.timedelta(context_today().day)).strftime('%%Y-%%m-07')),
+                                                ('date','&lt;=',context_today().strftime('%%Y-%%m-07'))]" name="special_case"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>

@@ -39,10 +39,7 @@
 	               		<field name="claimed_amount_usd"/>
 	               		<field name="collected_amount_usd"/>
                		</group>
-				</field>
-				<field name='budget_id' position='replace'>
-					<field name='budget_id' domain="[('general_expense','=',False)]"/>
-				</field>
+				</field>				
 				<field name='planned_amount' position='after'>
 					<field name='expense_amount' sum='Sub-Total'/>
 					<field name='paid_amount' sum='Sub-Total'/>
