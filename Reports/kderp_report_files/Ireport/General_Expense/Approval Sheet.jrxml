@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ApprovalSheetGE" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="286"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="134"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;expense_line&apos;]"/>
 	<style name="st_pattern">
 		<conditionalStyle>
@@ -42,7 +42,7 @@
 		<fieldDescription><![CDATA[name]]></fieldDescription>
 	</field>
 	<field name="general_budget" class="java.lang.String">
-		<fieldDescription><![CDATA[/data/record/general_expense_line_ids/budget_id/code]]></fieldDescription>
+		<fieldDescription><![CDATA[/data/record/expense_line/budget_id/code]]></fieldDescription>
 	</field>
 	<field name="currency_name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/currency_id/name]]></fieldDescription>
@@ -102,7 +102,7 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font isBold="true"/>
+						<font fontName="Arial" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
 				</textField>
@@ -189,7 +189,7 @@
 						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font fontName="Arial" size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Sub_Total}]]></textFieldExpression>
 				</textField>
@@ -202,7 +202,7 @@
 						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="8" isBold="true" isItalic="false"/>
+						<font fontName="Arial" size="8" isBold="true" isItalic="false"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA["Total"]]></textFieldExpression>
 				</textField>
@@ -223,7 +223,7 @@
 					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font size="8" isBold="false" isItalic="false"/>
+					<font fontName="Arial" size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{detail_description}]]></textFieldExpression>
 			</textField>
@@ -233,7 +233,7 @@
 					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#CCCCCC"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Amount}!=0)&&($F{Amount}!=null)?$F{Amount}:null]]></textFieldExpression>
 			</textField>
@@ -606,7 +606,7 @@ Amount]]></text>
 				<reportElement x="102" y="22" width="162" height="15"/>
 				<box topPadding="2" leftPadding="2"/>
 				<textElement verticalAlignment="Top">
-					<font size="7" isBold="true"/>
+					<font fontName="Arial" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{General_Expesne}]]></textFieldExpression>
 			</textField>
@@ -630,7 +630,7 @@ Amount]]></text>
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
+					<font fontName="Arial" size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Sub_Total}]]></textFieldExpression>
 			</textField>
@@ -642,7 +642,7 @@ Amount]]></text>
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
+					<font fontName="Arial" size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Total-total}]]></textFieldExpression>
 			</textField>
@@ -654,7 +654,7 @@ Amount]]></text>
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
+					<font fontName="Arial" size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Amount_Tax}]]></textFieldExpression>
 			</textField>
@@ -738,6 +738,14 @@ Amount]]></text>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="14" y="22" width="54" height="15"/>
+				<box topPadding="2" leftPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{general_budget}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
