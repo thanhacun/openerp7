@@ -61,8 +61,15 @@
             <field name="inherit_id" ref='kderp_other_expense.view_kderp_other_expense_filter'/>
             <field name="arch" type="xml">
             	<field name='date' position='replace'>
-					<field name="date" string="Expense Date" filter_domain="[('date','=',self)]"/>
+					<field name="date" string="Expense Date" filter_domain="[('date','=',self)]"/>					
 	       		</field>
+	       		<filter name='cancel' position='after'>
+	       			<separator/>
+	       			<filter string="Special Case - Arround 01 Week"
+                         domain="[('ref_number','!=',False),('date','&gt;=',(context_today()-datetime.timedelta(context_today().day)).strftime('%%Y-%%m-07')),
+                                                ('date','&lt;=',context_today().strftime('%%Y-%%m-07'))]" name="special_case"
+                         groups="group_kderp_other_expense_ge_tel_fee"/>
+				</filter>
             </field>
         </record>
         <record id="view_kderp_other_expense_form_add_payment_vat_inherit" model="ir.ui.view">
