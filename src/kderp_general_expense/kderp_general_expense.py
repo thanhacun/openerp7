@@ -306,7 +306,7 @@ class kderp_other_expense(osv.osv):
                 
                 'section_incharge_id':fields.many2one('hr.department','Section In Charges', domain=[('general_incharge','=',True)],  select = 1, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),#General Affair or General Coordination Section
                 'related_expense_ids':fields.function(_get_related,string='Related',type='one2many',relation='kderp.other.expense.line', readonly=True),
-                
+                'ref_number':fields.char('Reference No.',size=32),
                 'sections':fields.function(_get_sections,string='Sections',size=256
                                          ,type='char', method=True,
                                           store={
