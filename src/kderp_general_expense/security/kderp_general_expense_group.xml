@@ -97,7 +97,6 @@
   	   </record>
 		
 		
-		
 	    <record id="group_kderp_department_read" model="res.groups">
 	       	<field name="name">KDERP - Department / Read </field>
 	      	<field name="category_id" ref="module_category_kderp_general_expense"/>

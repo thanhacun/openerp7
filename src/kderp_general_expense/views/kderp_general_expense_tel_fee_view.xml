@@ -142,5 +142,5 @@
         	parent="kderp_working_other_expense_ge_action" sequence="5"
         	groups="group_kderp_other_expense_ge_tel_fee"/>
         		
-	</data>	
+	</data>	 
 </openerp>
