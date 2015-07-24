@@ -149,6 +149,7 @@ class kderp_other_expense(osv.osv):
             context={}
         if context.get('account_analytic_id', False):
             res = context.get('account_analytic_id',False)
+       
         elif context.get('general_expense',False):
             strcurrent_time =  time.strftime('%Y-%m-%d')
             job_ids = self.pool.get('account.analytic.account').search(cr, uid, [('date_start','<=',strcurrent_time),('date','>=',strcurrent_time),('general_expense','=',True)])
@@ -287,7 +288,17 @@ class kderp_other_expense(osv.osv):
                     }
         else:
             return True
-        
+#     def _get_allocated_to(self, cr, uid, context = {}):
+#         if not context:
+#             context = {}
+#         res = False
+#         
+#         if context.get('general_expense',False):
+#             
+#             res='GE'
+#         else:
+#             res='PE'
+#         return res
 #
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_payment','Waiting for Payment'),
@@ -306,7 +317,7 @@ class kderp_other_expense(osv.osv):
                 
                 'section_incharge_id':fields.many2one('hr.department','Section In Charges', domain=[('general_incharge','=',True)],  select = 1, states={'paid':[('readonly', True)], 'done':[('readonly',True)], 'cancel':[('readonly',True)]}),#General Affair or General Coordination Section
                 'related_expense_ids':fields.function(_get_related,string='Related',type='one2many',relation='kderp.other.expense.line', readonly=True),
-                
+                'ref_number':fields.char('Reference No.',size=32),
                 'sections':fields.function(_get_sections,string='Sections',size=256
                                          ,type='char', method=True,
                                           store={
@@ -347,8 +358,8 @@ class kderp_other_expense(osv.osv):
                 'number_of_month':fields.integer("Allocated Months", readonly=True, help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),
                 }
     
-    _defaults = {
-                'allocated_to': lambda self, cr, uid, context={}:'GE' if context.get('general_expense',False) else 'PE',
+    _defaults = {                
+                'allocated_to': lambda self, cr, uid, context={}:'PGE' if context.get('PGE',False) else 'GE' if context.get('general_expense',False)  else 'PE',
                 'expense_type': lambda self, cr, uid, context={}:'expense' ,
                 'account_analytic_id': _get_job,
                 'section_incharge_id': _get_section_incharge,
@@ -422,6 +433,18 @@ class kderp_other_expense_line(osv.osv):
             res = bg_ids[0] if bg_ids else False
         return res
     
+    def _get_job(self, cr, uid, context = {}):
+        if not context:
+            context = {}
+        res = False
+        if context.get('account_analytic_id',False):
+            res = context.get('account_analytic_id',False)
+        elif context.get('code', False):
+            job_code = context.get('code', False)
+            job_ids = self.pool.get('account.analytic.account').search(cr, uid, [('code','=',job_code)])
+            res = job_ids[0] if job_ids else False
+        return res
+    
     _columns = {
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
@@ -431,7 +454,8 @@ class kderp_other_expense_line(osv.osv):
                 }
     
     _defaults ={
-               'budget_id':_get_budget
+               'budget_id':_get_budget,
+               'account_analytic_id': _get_job
                }
     
     def _check_job_budget(self, cr, uid, ids, context=None):
