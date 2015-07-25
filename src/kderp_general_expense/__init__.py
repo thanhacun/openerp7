@@ -27,3 +27,5 @@ import kderp_expense_budget_line
 import kderp_human_resources
  
 import wizard
+
+import kderp_supplier_payment_other_expense

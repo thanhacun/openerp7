@@ -19,6 +19,8 @@
 #
 ##############################################################################
 from openerp.osv import osv
+import logging
+_logger = logging.getLogger(__name__)
 
 class kderp_cash_payment_supplier(osv.osv_memory):
     """Create a memory Object for Update Paid to Supplier Payment from Advance & Cash"""
@@ -47,7 +49,6 @@ class kderp_cash_payment_supplier(osv.osv_memory):
                         kap.state not in ('draft','cancel') and
                         coalesce(kspep.id,0)=0""" )
         
-        list_update_error=[]        
         kpe_obj=self.pool.get('kderp.supplier.payment.expense.pay')
         kp_obj=self.pool.get('kderp.supplier.payment.pay')
        
@@ -60,7 +61,9 @@ class kderp_cash_payment_supplier(osv.osv_memory):
                                           'date':date},
                                           context)
                 cr.commit()
-            except ValueError, e:                
+            except ValueError, e:
+                import time
+                _logger.info("Error ON Update Supplier Payment Expense - Cash (%s) @ %s" % (e,time.strftime("%Y-%m-%d %H:%M")))
                 cr.rollback()
 
         #Update Supplier Payment 
@@ -94,6 +97,8 @@ class kderp_cash_payment_supplier(osv.osv_memory):
                                           context)
                 cr.commit()
             except ValueError, e:
+                import time
+                _logger.info("Error ON Update Supplier Payment - Cash (%s) @ %s" % (e,time.strftime("%Y-%m-%d %H:%M")))
                 cr.rollback()                
 
         return True

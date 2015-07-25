@@ -121,7 +121,7 @@ class kderp_other_expense(osv.osv):
         res={}
         cur_obj = self.pool.get('res.currency')
         
-        company_currency=self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
+        company_currency = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
         company_currency_id=company_currency.id
         
         for koe in self.browse(cr, uid, ids):
@@ -137,9 +137,9 @@ class kderp_other_expense(osv.osv):
                                 paid_amount+=cur_obj.round(cr, uid, company_currency, kp.amount*kp.exrate)
                         if cal:
                             koe_total_amount-=kspe.total
-                paid_amount+=cur_obj.compute(cr, uid, koe.currency_id.id, company_currency_id, koe_total_amount, round=True, context={'date':koe.date})
-                exrate=paid_amount/(koe.amount_total*koe.exrate) if (koe.amount_total*koe.exrate) else 0
-                res[koe.id]=exrate
+                paid_amount +=  cur_obj.round(cr, uid, company_currency, koe.exrate * koe_total_amount)
+                exrate= paid_amount/(koe.amount_total*koe.exrate) if (koe.amount_total*koe.exrate) else 0
+                res[koe.id] = exrate
             else:
                 res[koe.id]= 1
         return res    
@@ -176,22 +176,32 @@ class kderp_other_expense(osv.osv):
                 for kspe in koe.supplier_payment_expense_ids:
                     if kspe.state not in ('draft','cancel'):
                         request_amount = kspe.total
-                        total_request_amount+=cur_obj.compute(cr, uid, kspe.currency_id.id, koe_currency_id, request_amount, round=True, context=context)
+                        #In case payment is VND and Other Expense in Other Currency
+                        if company_currency.id == kspe.currency_id.id and koe_currency_id!=company_currency.id:
+                            total_request_amount += cur_obj.round(cr, uid, koe.currency_id, koe.exrate*request_amount)
+                        else:
+                            total_request_amount += cur_obj.compute(cr, uid, kspe.currency_id.id, koe_currency_id, request_amount, round=True, context=context)
                         #Cal total VAT Amount
                         for kspvi in kspe.kderp_vat_invoice_ids:
                             vat_amount=kspvi.total_amount
-                            total_vat_amount+=cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, vat_amount, round=True, context=context)
+                            if company_currency.id == kspvi.currency_id.id and koe_currency_id!=company_currency.id:
+                                total_vat_amount += round(cr, uid, koe.currency_id, koe.exrate*vat_amount)
+                            else: 
+                                total_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, vat_amount, round=True, context=context)
                         cal=True
-                        koe_subtotal_amount-=kspe.amount
+                        koe_subtotal_amount -= kspe.amount
                         for kp in kspe.payment_ids:
                             #if kp.state<>'draft':
                                 cal=False
                                 payment_amount = kp.amount
-                                total_payment_amount+=cur_obj.compute(cr, uid, kp.currency_id.id, koe_currency_id, payment_amount, round=True, context=context)
+                                if company_currency.id == kp.currency_id.id and koe_currency_id!=company_currency.id:
+                                    total_payment_amount += cur_obj.round(cr, uid, koe_currency_id, payment_amount * koe.exrate)
+                                else:
+                                    total_payment_amount += cur_obj.compute(cr, uid, kp.currency_id.id, koe_currency_id, payment_amount, round=True, context=context)
                                 #Sum of total payment
-                                subtotal_request_amount_company_cur+=cur_obj.round(cr, uid, company_currency, kp.amount*kp.exrate)
+                                subtotal_request_amount_company_cur += cur_obj.round(cr, uid, company_currency, kp.amount*kp.exrate)
                         if cal:
-                            subtotal_request_amount_company_cur+=cur_obj.compute(cr, uid, kspe.currency_id.id, company_currency.id, kspe.amount, round=True, context=context)
+                            subtotal_request_amount_company_cur += cur_obj.compute(cr, uid, kspe.currency_id.id, company_currency.id, kspe.amount, round=True, context=context)
                 #Planned PO Amount in Company Currency
                 subtotal_koe_amount_company_curr = subtotal_request_amount_company_cur + cur_obj.compute(cr, uid, koe.currency_id.id, company_currency.id, koe_subtotal_amount, round=True, context=context)
                 #Percentage of payment TotalRequestAmountINVND/(TotalRequstAMOUNT+TotalReamainAmountInVND)
@@ -211,6 +221,15 @@ class kderp_other_expense(osv.osv):
                         'total_payment_amount':total_payment_amount,
                         'payment_percentage':payment_percentage}
         self.check_and_make_koe_done(cr, uid, ids, context)
+        return res
+    
+    def _get_exrate(self, cr, uid, ids, name, args, context=None):
+        cur_obj = self.pool.get('res.currency')
+        company_currency_id=self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+        res = {}        
+        for exp in self.browse(cr,uid,ids):
+            exrate = exp.manual_exrate if exp.manual_exrate else cur_obj.compute(cr, uid, exp.currency_id.id, company_currency_id, 1, round=False,context={'date': exp.date})                
+            res[exp.id]= exrate        
         return res
     
     def _get_order_from_supplier_payment(self, cr, uid, ids, context=None):
@@ -249,10 +268,16 @@ class kderp_other_expense(osv.osv):
         return result.keys()
     
     _columns={
+              
+            'manual_exrate':fields.float('Manual Exrate.'),
+            
+            'exrate':fields.function(_get_exrate,help='Exchange rate from currency to company currency',
+                                         method=True,string="Ex.Rate",type='float',digits_compute=dp.get_precision('Amount')),
+              
             'total_request_amount':fields.function(_get_summary_payment_amount,string='Requested Amt.',
                                                      method=True,type='float',multi="_get_summary",
                                                      store={
-                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type','state'], 20),
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['manual_exrate','currency_id','date','expense_type','state'], 20),
                                                             'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
                                                             'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
                                                             'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
@@ -260,14 +285,14 @@ class kderp_other_expense(osv.osv):
             'total_vat_amount':fields.function(_get_summary_payment_amount,string='Total Invoice Amt.',
                                                      method=True,type='float',multi="_get_summary",
                                                      store={
-                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type','state'], 20),
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['manual_exrate','currency_id','date','expense_type','state'], 20),
                                                             'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','kderp_vat_invoice_ids'], 25),
                                                             'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
                                                            }),
             'total_payment_amount':fields.function(_get_summary_payment_amount,string='Payment Amt.',
                                                      method=True,type='float',multi="_get_summary",
                                                      store={
-                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','expense_type','state'], 5),
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['manual_exrate','currency_id','date','expense_type','state'], 5),
                                                             'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state'], 10),
                                                             'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
                                                            }),
@@ -275,7 +300,7 @@ class kderp_other_expense(osv.osv):
             'exp_final_exrate': fields.function(_get_expense_final_exrate,string='Exp Exrate',
                                                      method=True,type='float',digits_compute=dp.get_precision('Percent'),
                                                      store={
-                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','state','taxes_id','expense_type'], 5),
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['manual_exrate','currency_id','date','state','taxes_id','expense_type'], 5),
                                                             'kderp.other.expense.line': (_get_expense_from_line, None, 20),
                                                             'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
                                                             'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
@@ -285,7 +310,7 @@ class kderp_other_expense(osv.osv):
             'payment_percentage':fields.function(_get_summary_payment_amount,string='Payment Percentage',
                                                      method=True,type='float',multi="_get_summary",digits_compute=dp.get_precision('Percent'),
                                                      store={
-                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','date','discount_amount','taxes_id','expense_type','state'], 20),
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['manual_exrate','currency_id','date','discount_amount','taxes_id','expense_type','state'], 20),
                                                             'kderp.other.expense.line': (_get_expense_from_line, None, 20),
                                                             'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 25),
                                                             'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
@@ -293,3 +318,72 @@ class kderp_other_expense(osv.osv):
                                                            }),
               }    
 kderp_other_expense()
+
+class kderp_other_expense_line(osv.osv):
+    _name = "kderp.other.expense.line"
+    _inherit = 'kderp.other.expense.line'
+
+    def _amount_in_company_curr(self, cr, uid, ids, fields, arg, context={}):
+        res={}
+        cur_obj=self.pool.get('res.currency')
+        company_currency_id=self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id        
+        for koel in self.browse(cr, uid, ids):
+            try:
+                if koel.expense_id.currency_id<>company_currency_id:
+                    res[koel.id]=cur_obj.round(cr, uid, koel.expense_id.currency_id,koel.amount*koel.expense_id.exrate*koel.expense_id.exp_final_exrate)
+                else:
+                    res[koel.id]=cur_obj.round(cr, uid, koel.expense_id.currency_id,koel.amount*koel.expense_id.exrate)
+            except:
+                res[koel.id]=0
+        return res
+    
+    def _get_line_from_expense_line(self, cr, uid, ids, context=None):
+        result = {}
+        for koel in self.browse(cr, uid, ids, context=context):
+            for koell in koel.expense_id.expense_line: 
+                result[koell.id] = True
+        return result.keys()
+        
+    def _get_line_from_expense(self, cr, uid, ids, context=None):
+        result = {}
+        for koe in self.pool.get('kderp.other.expense').browse(cr, uid, ids, context=context):
+            for line in koe.expense_line: 
+                result[line.id] = True
+        return result.keys()
+    
+    def _get_expense_line_from_supplier_payment(self, cr, uid, ids, context=None):
+        result = {}
+        ksp_obj = self.pool.get('kderp.supplier.payment.expense')
+        for kspe in ksp_obj.browse(cr, uid, ids):
+            for koel in kspe.expense_id.expense_line:
+                result[koel.id]=True
+        return result.keys()
+    
+    def _get_expense_line_from_supplier_payment_line(self, cr, uid, ids, context=None):
+        result = {}
+        kspel_obj = self.pool.get('kderp.supplier.payment.expense.line')
+        for kspel in kspel_obj.browse(cr, uid, ids):
+            for koel in kspel.supplier_payment_expense_id.expense_id.expense_line:
+                result[koel.id]=True
+        return result.keys()
+    
+    def _get_expense_line_from_supplier_payment_pay(self, cr, uid, ids, context=None):
+        result = {}
+        kp_obj = self.pool.get('kderp.supplier.payment.expense.pay')
+        for kp in kp_obj.browse(cr, uid, ids):
+            for koel in kp.supplier_payment_expense_id.expense_id.expense_line: 
+                result[koel.id]=True
+        return result.keys()
+    
+    _columns={
+              'amount_company_curr':fields.function(_amount_in_company_curr,digits_compute=dp.get_precision('Budget'),string='Subtotal',
+                                                  type='float',method=True,
+                                                  store={
+                                                        'kderp.other.expense.line': (_get_line_from_expense_line, None, 35),
+                                                        'kderp.other.expense': (_get_line_from_expense, ['manual_exrate','currency_id','date','discount_amount','taxes_id','expense_type','state'], 35),
+                                                        'kderp.supplier.payment.expense': (_get_expense_line_from_supplier_payment, ['expense_id','state','amount','taxes_id','currency_id','date'], 35),
+                                                        'kderp.supplier.payment.expense.line':(_get_expense_line_from_supplier_payment_line, None, 35),
+                                                        'kderp.supplier.payment.expense.pay': (_get_expense_line_from_supplier_payment_pay, None, 35),
+                                                        }),
+              }
+kderp_other_expense_line()

@@ -47,6 +47,7 @@
 	                        		<field name='description' colspan="4"/>
 	                        		<field name='currency_id'/>
 	                        		<field name='exrate'/>
+	                        		<field name='manual_exrate'/>
 	                        	</group>	                        	
 	                            <field name="expense_line" context="{'id':active_id,'code':'JD','budget_code':'7000'}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
