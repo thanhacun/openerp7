@@ -972,7 +972,8 @@ class kderp_supplier_payment_expense(osv.osv):
                 'account_id':_get_default_account,
                 'expense_account_id':_default_expense_account_id,
                 'move_id':lambda *x: False,
-                'payment_type':lambda *a: 'na'
+                'payment_type':lambda *a: 'na',
+               # 'date': lambda *a: time.strftime('%Y-%m-%d'),
                 }
     #Onchange
     def on_changevalue(self, cr, uid, ids, amount, taxes_id, type='amt',currency_id=False):
