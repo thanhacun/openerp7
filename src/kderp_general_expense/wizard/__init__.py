@@ -21,3 +21,4 @@
 
 import kderp_allocation_sheet_wizard
 import update_monthly_expense
+import kderp_auto_paid_payment_supplier_expense

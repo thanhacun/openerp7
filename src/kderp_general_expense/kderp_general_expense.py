@@ -356,6 +356,8 @@ class kderp_other_expense(osv.osv):
                                                            'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
                                                            }),
                 'number_of_month':fields.integer("Allocated Months", readonly=True, help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),
+                
+                'paid_auto':fields.boolean('Paid Auto',help='Using for case already paid (Prepaid), but prepaid without record in System because prepaid without VAT Invoice, and VAT Later and record to each payment')
                 }
     
     _defaults = {                
@@ -363,6 +365,7 @@ class kderp_other_expense(osv.osv):
                 'expense_type': lambda self, cr, uid, context={}:'expense' ,
                 'account_analytic_id': _get_job,
                 'section_incharge_id': _get_section_incharge,
+                'paid_auto':lambda self, cr, uid, context  = {}: context.get('paid_auto', False)
                 }
           
     def onchange_allocate_ge(self, cr, uid, ids, allocated_to, section_incharge_id, general_expense=False):

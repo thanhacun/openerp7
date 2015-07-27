@@ -24,9 +24,6 @@ from osv import fields, osv
 
 class kderp_update_monthly_expense(osv.osv_memory):
     _name='kderp.update.monthly.expense'
-    _description = "KDERP Update Monthly Expense"
-    
-    def update_contract_status(self, cr, uid, ids=False, context=False):
-               
-        return True
+    _description = "KDERP Update Monthly Expense"    
+
 kderp_update_monthly_expense()
