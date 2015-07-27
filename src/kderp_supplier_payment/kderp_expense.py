@@ -76,9 +76,21 @@ class kderp_other_expense(osv.osv):
             tax_ids=[]
             for tax_id in koe.taxes_id:
                 tax_ids.append(tax_id.id)
-            rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date(cr, uid, [], payment_date,'')['value']
-            newcode = rValue.get('name', False)
-            duedate = rValue.get('due_date', False)
+            rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date(cr, uid, [], payment_date,'')['value']  
+            cr.execute("""SELECT uid
+                              FROM res_groups_users_rel 
+                                  where gid in( select id from res_groups where name ='KDERP - Supplier Payment / Hai Phong ')
+                            and uid =%s
+                            """%(uid))
+            if cr.rowcount !=0:                    
+                date=False
+                duedate = False
+                newcode= False
+            else:
+                date=time.strftime('%Y-%m-%d')
+                duedate = rValue.get('due_date', False)
+                newcode = rValue.get('name', False)
+            
             payment = {
                 'amount':koe.amount_untaxed,
                 'taxes_id': [[6, False, tax_ids]],
@@ -86,7 +98,7 @@ class kderp_other_expense(osv.osv):
                 'payment_line': payment_details,
                 'expense_id':koe.id, 
                 'description':new_description,
-                'date':time.strftime('%Y-%m-%d'),
+                'date':date,
                 'name':newcode,
                 'due_date':duedate
                 }
