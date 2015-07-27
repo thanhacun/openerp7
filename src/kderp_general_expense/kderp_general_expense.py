@@ -125,6 +125,7 @@ class kderp_other_expense(osv.osv):
                     ('PE','Job Expense'),
                     ('GE','General Expense'),
                     ('PGE','Job & General Expense'))
+    
     PAYMENT_SELECTION =(
                     ('bank','Bankstransfer'),
                     ('cash','By Cash'),
