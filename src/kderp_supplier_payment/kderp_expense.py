@@ -1,6 +1,7 @@
 from osv import osv, fields
 from osv.orm import intersect
 import time
+from datetime import datetime
 import openerp.addons.decimal_precision as dp
 import openerp.exceptions
 
@@ -45,6 +46,7 @@ class kderp_other_expense(osv.osv):
     def action_expense_create_supplier_payment_expense(self, cr, uid, ids, *args):
         res = {}
         kspe_ids=[]
+        
         for koe in self.browse(cr, uid, ids):
             if koe.supplier_payment_expense_ids:
                 return True
@@ -67,19 +69,33 @@ class kderp_other_expense(osv.osv):
                 new_description = koe.description
             else:
                 new_description = ""
+            
             tax_ids=[]
             for tax_id in koe.taxes_id:
                 tax_ids.append(tax_id.id)
+                
+            if not self.pool.get('ir.model.access').check_groups(cr, uid, "kderp_supplier_payment.group_kderp_supplier_payment_haiphong"):
+                rop_date = time.strftime('%Y-%m-%d')
+                rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date(cr, uid, [], rop_date, '')['value']                
+                duedate = rValue.get('due_date', False)
+                newcode = rValue.get('name', False)
+            else:
+                rop_date=False
+                duedate = False
+                newcode= False
+            
             payment = {
                 'amount':koe.amount_untaxed,
                 'taxes_id': [[6, False, tax_ids]],
                 'currency_id': koe.currency_id.id,
                 'payment_line': payment_details,
                 'expense_id':koe.id, 
-                'description':new_description#po_term['name'] + "\n"+  o['notes']
+                'description':new_description,
+                'date':rop_date,
+                'name':newcode,
+                'due_date':duedate
                 }
-
-            kderp_kspe_id = self.pool.get('kderp.supplier.payment.expense').create(cr, uid, payment)
+            kderp_kspe_id = self.pool.get('kderp.supplier.payment.expense').create(cr, uid, payment)            
             kspe_ids.append(kderp_kspe_id)
 
         return {

@@ -122,7 +122,7 @@
 			<field name="domain">[('allocated_to','!=','PE')]</field>			
             <field name="context">{'show_full_name':True,'show_field':['code'],'search_default_working':1,
             						'search_default_special_case':1,'general_expense':True, "PGE": True,
-            						'paid_auto':1}</field>
+            						'paid_auto':1,'partner_code':'P00594'}</field>
             <field name="search_view_id" ref="view_kderp_other_expense_ge_search"/>          
         </record>
         

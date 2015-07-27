@@ -266,6 +266,14 @@ class kderp_other_expense(osv.osv):
                 res[koel.belong_expense_id.id] = True
         return res.keys()
     
+    def _get_partner(self, cr, uid, context = {}):
+        res = False
+        code = context.get('partner_code', False)
+        if code:
+            sp_ids = self.pool.get('res.partner').search(cr, uid, [('code','=',code)])
+            res = sp_ids[0] if sp_ids else False
+        return res
+    
     def action_open_allocated_expense(self, cr, uid, ids, *args):
         interface_string = 'Allocated Expense'
         if ids:
@@ -365,7 +373,8 @@ class kderp_other_expense(osv.osv):
                 'expense_type': lambda self, cr, uid, context={}:'expense' ,
                 'account_analytic_id': _get_job,
                 'section_incharge_id': _get_section_incharge,
-                'paid_auto':lambda self, cr, uid, context  = {}: context.get('paid_auto', False)
+                'paid_auto':lambda self, cr, uid, context  = {}: context.get('paid_auto', False),
+                'partner_id':_get_partner
                 }
           
     def onchange_allocate_ge(self, cr, uid, ids, allocated_to, section_incharge_id, general_expense=False):
