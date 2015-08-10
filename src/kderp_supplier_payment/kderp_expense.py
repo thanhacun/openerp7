@@ -73,10 +73,15 @@ class kderp_other_expense(osv.osv):
             tax_ids=[]
             for tax_id in koe.taxes_id:
                 tax_ids.append(tax_id.id)
-                
+            code_ge=koe.name
+           
+            
             if not self.pool.get('ir.model.access').check_groups(cr, uid, "kderp_supplier_payment.group_kderp_supplier_payment_haiphong"):
                 rop_date = time.strftime('%Y-%m-%d')
-                rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date(cr, uid, [], rop_date, '')['value']                
+                if code_ge[:3]=='HGE':
+                    rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date_ge(cr, uid, [], rop_date, '')['value']    
+                else:
+                    rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date(cr, uid, [], rop_date, '')['value']          
                 duedate = rValue.get('due_date', False)
                 newcode = rValue.get('name', False)
             else:
