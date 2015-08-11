@@ -43,7 +43,7 @@ class kderp_other_expense(osv.osv):
             'amount': amount*percent/100.0
         })
         
-    def action_expense_create_supplier_payment_expense(self, cr, uid, ids, *args):
+    def action_expense_create_supplier_payment_expense(self, cr, uid,ids,*args):
         res = {}
         kspe_ids=[]
         
@@ -52,7 +52,6 @@ class kderp_other_expense(osv.osv):
                 return True
             payment_details = []
             progress = 0.0
-
             payment_details = []
             cr.execute("Select\
                             account_analytic_id,\
@@ -69,16 +68,13 @@ class kderp_other_expense(osv.osv):
                 new_description = koe.description
             else:
                 new_description = ""
-            
             tax_ids=[]
             for tax_id in koe.taxes_id:
                 tax_ids.append(tax_id.id)
-            code_ge=koe.name
-           
-            
+            general_expense=koe.account_analytic_id.general_expense
             if not self.pool.get('ir.model.access').check_groups(cr, uid, "kderp_supplier_payment.group_kderp_supplier_payment_haiphong"):
                 rop_date = time.strftime('%Y-%m-%d')
-                if code_ge[:3]=='HGE':
+                if general_expense:
                     rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date_ge(cr, uid, [], rop_date, '')['value']    
                 else:
                     rValue = self.pool.get('kderp.supplier.payment.expense').onchange_date(cr, uid, [], rop_date, '')['value']          
