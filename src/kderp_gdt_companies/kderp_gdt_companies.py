@@ -12,56 +12,22 @@ class gdt_companies_wizard(osv.TransientModel):
     _description = 'GDT Companies Search'
     
     def _query_data_from_gdt(self, tax_code):
-        """
-        Su dung lib request de lay du lieu
-        requests, BeautifulSoup
-        apt-get install python-requests
-        argument page su dung de lam deep search
-        """
-        from urllib import urlopen
-        import urllib2, sys
-        from bs4 import BeautifulSoup
+        import requests
+        url = 'http://mst-thanhacun-1.c9.io/mst/'
         
         result = {'tax_code':'','name':'','address':'','status':''}
-        
-        site= "http://www.thongtincongty.com/search/%s/"%(tax_code[0:10])
-        hdr = {'User-Agent': 'Mozilla/5.0'}
-        req = urllib2.Request(site,headers=hdr)
-        soup_check = BeautifulSoup(urllib2.urlopen(req))
-        all_rows_check = soup_check.find('div',{'class':'jumbotron'})
-        var_list = []
-        
-        if not all_rows_check: 
-            result['tax_code']=tax_code
-            result['name']=''
-            result['address']=''
-            result['status'] = 'NA'
-        
-        if all_rows_check:
-            for br in all_rows_check.findAll('br'):
-                text_line = str(br.nextSibling.encode('utf-8')).strip()
-                if text_line:
-                    var_list.append(br.nextSibling)
-            name = all_rows_check.find('h4').getText()
-            a = var_list[0]
-            address = a[a.find(': ')+1:len(a)].strip()
-    
-        text = urlopen('http://www.hosocongty.vn/search.php?key=%s&ot=0&p=0&d=0'%(tax_code)).read()
-        soup = BeautifulSoup(text)
-        all_rows = soup.find('div',{'class':'box_com'}).findChildren('li')
-        
-        if all_rows_check and not all_rows: 
-            result['tax_code']=tax_code
-            result['name']=name
-            result['address']=address
-            result['status'] = '00'
-            
-        for i in range(len(all_rows)):   
-            if all_rows[i].findChildren('a')[1].getText()==tax_code and all_rows_check: 
+        try:
+            r = requests.get(url + tax_code)
+            if r.status_code == 200:
+                var = r.json()
                 result['tax_code']=tax_code
-                result['name']=all_rows[i].findChildren('a')[0].getText()
-                result['address']=all_rows[i].findChildren('em')[0].getText()
-                result['status']='00'
+                result['name']=var['ten']
+                result['address']=var['diachi']
+                result['status']=var['trangthai']
+            else:
+                raise osv.except_osv("KDERP Warning",'Contact Administrator')
+        except requests.exceptions.ConnectionError:
+            raise osv.except_osv("KDERP Warning",'Contact Administrator')
         return result
         
     def _get_tax_code_ids(self, cr, uid, ids, context):
