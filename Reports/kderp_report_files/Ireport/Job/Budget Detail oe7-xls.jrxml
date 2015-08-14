@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Budget Balance Sheet" language="groovy" pageWidth="1150" pageHeight="802" orientation="Landscape" columnWidth="1150" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="1.5000000000000004"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="369"/>
 	<property name="ireport.y" value="0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;kderp_budget_data_line/detail_budget&apos;] "/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<parameter name="pCodeBudget" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -113,6 +114,12 @@
 	</field>
 	<field name="contracted_amount_usd" class="java.lang.Double">
 		<fieldDescription><![CDATA[Contracted_Amount_USD-contracted_amount_usd]]></fieldDescription>
+	</field>
+	<field name="eff_date" class="java.util.Date">
+		<fieldDescription><![CDATA[kderp_budget_data_line/detail_budget/eff_date]]></fieldDescription>
+	</field>
+	<field name="expense_date" class="java.util.Date">
+		<fieldDescription><![CDATA[kderp_budget_data_line/detail_budget/date]]></fieldDescription>
 	</field>
 	<sortField name="JobNumber"/>
 	<sortField name="ParentBudgetCategory"/>
@@ -1161,7 +1168,7 @@ Contract]]></text>
 					<text><![CDATA[Description]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Opaque" x="511" y="13" width="156" height="21" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="553" y="13" width="114" height="21" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -1232,7 +1239,7 @@ Contract]]></text>
 					<text><![CDATA[(3)=(1)-(2)]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Opaque" x="444" y="13" width="67" height="21" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="486" y="13" width="67" height="21" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -1287,6 +1294,20 @@ Contract No.]]></text>
 						<font size="6" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<text><![CDATA[(3)/(1)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="444" y="13" width="42" height="21" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Eff. Date]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -1652,7 +1673,7 @@ Contract No.]]></text>
 :($F{planned_amount}==null?0:$F{planned_amount})/$F{total_budget_amount}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="444" y="0" width="67" height="16" isPrintWhenDetailOverflows="true"/>
+					<reportElement stretchType="RelativeToBandHeight" x="486" y="0" width="67" height="16" isPrintWhenDetailOverflows="true"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -1674,7 +1695,7 @@ Contract No.]]></text>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement stretchType="RelativeToBandHeight" x="511" y="0" width="156" height="16" isPrintWhenDetailOverflows="true"/>
+					<reportElement stretchType="RelativeToBandHeight" x="553" y="0" width="114" height="16" isPrintWhenDetailOverflows="true"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -1741,6 +1762,17 @@ Contract No.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement stretchType="RelativeToBandHeight" x="1018" y="0" width="66" height="16" isPrintWhenDetailOverflows="true"/>
+					<box>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="444" y="0" width="42" height="16" isPrintWhenDetailOverflows="true"/>
 					<box>
 						<topPen lineWidth="0.75"/>
 						<leftPen lineWidth="0.75"/>
@@ -1830,7 +1862,7 @@ Contract No.]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToBandHeight" x="444" y="0" width="67" height="16"/>
+				<reportElement stretchType="RelativeToBandHeight" x="486" y="0" width="67" height="16"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.0"/>
@@ -1844,7 +1876,7 @@ Contract No.]]></text>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Po_Number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToBandHeight" x="511" y="0" width="156" height="16"/>
+				<reportElement stretchType="RelativeToBandHeight" x="553" y="0" width="114" height="16"/>
 				<box leftPadding="2">
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.0"/>
@@ -1952,6 +1984,20 @@ Contract No.]]></text>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[($F{AmountToVnd}==null?0:$F{AmountToVnd})-($F{payment_amount}==null?0:$F{payment_amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="444" y="0" width="42" height="16"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{eff_date}==null?$F{expense_date}:$F{eff_date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
