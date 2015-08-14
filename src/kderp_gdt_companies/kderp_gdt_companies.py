@@ -26,6 +26,8 @@ class gdt_companies_wizard(osv.TransientModel):
                 result['status']=info_company['trangthai']
             else:
                 raise osv.except_osv("KDERP Warning",'Contact Administrator')
+        except requests.exceptions.ConnectionError:
+            raise osv.except_osv("KDERP Warning",'Contact Administrator')
         except requests.exceptions.Timeout:
             raise osv.except_osv("KDERP Warning",'Please try again')
         except:
