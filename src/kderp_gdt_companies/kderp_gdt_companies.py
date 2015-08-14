@@ -17,16 +17,18 @@ class gdt_companies_wizard(osv.TransientModel):
         
         result = {'tax_code':'','name':'','address':'','status':''}
         try:
-            r = requests.get(url + tax_code)
-            if r.status_code == 200:
-                var = r.json()
+            response = requests.get(url + tax_code, timeout=2)
+            if response.status_code == 200:
+                info_company = response.json()
                 result['tax_code']=tax_code
-                result['name']=var['ten']
-                result['address']=var['diachi']+', '+var['phuong']+', '+var['quan']+', '+var['thanhpho']
-                result['status']=var['trangthai']
+                result['name']=info_company['ten']
+                result['address']=info_company['diachi']+', '+info_company['phuong']+', '+info_company['quan']+', '+info_company['thanhpho']
+                result['status']=info_company['trangthai']
             else:
                 raise osv.except_osv("KDERP Warning",'Contact Administrator')
-        except requests.exceptions.ConnectionError:
+        except requests.exceptions.Timeout:
+            raise osv.except_osv("KDERP Warning",'Please try again')
+        except:
             raise osv.except_osv("KDERP Warning",'Contact Administrator')
         return result
         
