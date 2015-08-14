@@ -864,13 +864,6 @@
 					</textElement>
 					<text><![CDATA[Settlement]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="1" y="24" width="820" height="16"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Cash Payment                                              Cash Payment                                                 Cash Payment                                                 Cash Payment                                           Cash Payment ]]></text>
-				</staticText>
 				<textField>
 					<reportElement x="678" y="517" width="124" height="17"/>
 					<textElement textAlignment="Center" verticalAlignment="Bottom">
