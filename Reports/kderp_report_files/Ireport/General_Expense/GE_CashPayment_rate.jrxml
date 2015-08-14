@@ -876,7 +876,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Bottom">
 						<font size="9" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{Staff_In_Charge}.toUpperCase()]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Secsion_In_Charge}.toUpperCase()]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
