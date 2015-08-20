@@ -22,7 +22,7 @@ class gdt_companies_wizard(osv.TransientModel):
                 info_company = response.json()
                 result['tax_code']=tax_code
                 result['name']=info_company['ten']
-                result['address']=info_company['diachi']+', '+info_company['phuong']+', '+info_company['quan']+', '+info_company['thanhpho']
+                result['address']=(info_company['diachi']+', '+info_company['phuong']+', '+info_company['quan']+', '+info_company['thanhpho']).replace(' ,','')
                 result['status']=info_company['trangthai']
             else:
                 raise osv.except_osv("KDERP Warning",'Contact Administrator')
