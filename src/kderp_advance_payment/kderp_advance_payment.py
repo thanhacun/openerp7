@@ -627,7 +627,7 @@ class kderp_advance_payment(osv.osv):
         write_done_ids=[]
                 
         for adv in self.browse(cr, uid, ids, context={}):
-            if adv.state=='waiting_for_complete' and adv.date_acc_recv_cashbook and adv.advance_buying!='cash':
+            if adv.date_acc_recv_cashbook and ((adv.state=='waiting_for_complete' and adv.advance_buying!='cash') or (adv.state=='cash_received' and adv.advance_buying=='cash')):
                 write_done_ids.append(adv.id)
             else:
                 res = False
