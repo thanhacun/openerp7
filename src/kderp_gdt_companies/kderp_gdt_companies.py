@@ -20,9 +20,10 @@ class gdt_companies_wizard(osv.TransientModel):
             response = requests.get(url + tax_code, timeout=2)
             if response.status_code == 200:
                 info_company = response.json()
-                result['tax_code']=tax_code
+                result['tax_code']=info_company['mst']
                 result['name']=info_company['ten']
-                result['address']=(info_company['diachi']+', '+info_company['phuong']+', '+info_company['quan']+', '+info_company['thanhpho']).replace(' ,','')
+                if info_company['mst']!='':
+                    result['address']=(info_company['diachi']+', '+info_company['phuong']+', '+info_company['quan']+', '+info_company['thanhpho']).replace(' ,','')
                 result['status']=info_company['trangthai']
             else:
                 raise osv.except_osv("KDERP Warning",'Contact Administrator')
@@ -87,8 +88,10 @@ class gdt_companies_wizard(osv.TransientModel):
                 tax_code_id = gdt_company.search(cr,uid,[('tax_code','=',tax_code)])
                 #search_res = self._query_data_from_gdt(tax_code)
                 action = self._check_for_update(cr, uid, search_res)
-                if action == 'update':
+                if action == 'update' and ''.join(search_res.values())!='':
                     gdt_company.write(cr,uid,tax_code_id,search_res,context)
+                elif action == 'update' and ''.join(search_res.values())=='':
+                    gdt_company.read(cr,uid,tax_code_id,search_res,context)
                 elif action == 'create':
                     gdt_company.create(cr,uid,search_res,context)
                 elif action == 'nothing':
