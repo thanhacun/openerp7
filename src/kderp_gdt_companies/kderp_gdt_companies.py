@@ -94,13 +94,10 @@ class gdt_companies_wizard(osv.TransientModel):
                 tax_code_id = gdt_company.search(cr,uid,[('tax_code','=',tax_code)])
                 #search_res = self._query_data_from_gdt(tax_code)
                 action = self._check_for_update(cr, uid, search_res)
-                if action == 'update' and ''.join(search_res.values()) !='':
+                #Bo phan and ...
+                if action == 'update':
                     gdt_company.write(cr,uid,tax_code_id,search_res,context)
                     tax_code_list_error.append(tax_code + ':OK')
-                    self.write(cr, uid, ids[0],{'error_codes':'\n'.join(tax_code_list_error)})
-                elif action == 'update' and ''.join(search_res.values()) =='':
-                    gdt_company.read(cr,uid,tax_code_id,search_res,context)
-                    tax_code_list_error.append(tax_code + ':error')
                     self.write(cr, uid, ids[0],{'error_codes':'\n'.join(tax_code_list_error)})
                 elif action == 'create':
                     gdt_company.create(cr,uid,search_res,context)
