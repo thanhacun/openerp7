@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<record id="action_server_module_gdt_company_update" model="ir.actions.server">
+           <field name="name">Gdt Company Update</field>
+           <field name="condition">True</field>
+           <field name="type">ir.actions.server</field>
+           <field name="model_id" ref="model_gdt_companies" />
+           <field name="state">code</field>
+           <field name="code">self.action_update(cr, uid, context.get('active_ids', []), context=context)</field>
+       </record>
+
+       <record model="ir.values" id="action_module_gdt_company_update">
+           <field name="name">action_module_gdt_company_update</field>
+           <field name="action_id" ref="action_server_module_gdt_company_update" />
+           <field name="value" eval="'ir.actions.server,' + str(ref('action_server_module_gdt_company_update'))" />
+           <field name="key">action</field>
+           <field name="model_id" ref="model_gdt_companies" />
+           <field name="model">gdt.companies</field>
+           <field name="key2">client_action_multi</field>
+       </record>
+        
+    </data>
+</openerp>
