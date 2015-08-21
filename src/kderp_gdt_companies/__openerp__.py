@@ -13,7 +13,8 @@
     'data':[                      
             "security/kderp_gdt_companies_security.xml",           
             "security/ir.model.access.csv",
-            "kderp_gdt_companies.xml"
+            "kderp_gdt_companies.xml",
+            "kderp_update_view.xml"
             ],
     'demo':[],
     'css': ['static/src/css/*.css'],

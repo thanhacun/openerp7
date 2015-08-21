@@ -12,12 +12,13 @@ class gdt_companies_wizard(osv.TransientModel):
     _description = 'GDT Companies Search'
     #su dung 1 bien global _raise_error = True de xac dinh co popup thong bao loi hay khong
     raise_error = True
-    def _query_data_from_gdt(self, tax_code):
+    def _query_data_from_gdt(self, tax_code, popup=True):
         import requests
         url = 'http://mst-thanhacun-1.c9.io/mst/'
         result = {'tax_code':'','name':'','address':'','status':''}
+        
         try:
-            response = requests.get(url + tax_code, timeout=2.5)
+            response = requests.get(url + tax_code, timeout=5)
             if response.status_code == 200:
                 info_company = response.json()
                 result['tax_code']=info_company['mst']
@@ -26,16 +27,16 @@ class gdt_companies_wizard(osv.TransientModel):
                     result['address']=(info_company['diachi']+', '+info_company['phuong']+', '+info_company['quan']+', '+info_company['thanhpho']).replace(' ,','')
                 result['status']=info_company['trangthai']
             else:
-                if self.raise_error:
+                if self.raise_error and popup:
                     raise osv.except_osv("KDERP Warning",'Contact Administrator')
         except requests.exceptions.ConnectionError:
-            if self.raise_error:
+            if self.raise_error and popup:
                 raise osv.except_osv("KDERP Warning",'Contact Administrator')
         except requests.exceptions.Timeout:
-            if self.raise_error:
+            if self.raise_error and popup:
                 raise osv.except_osv("KDERP Warning",'Please try again')
         except:
-            if self.raise_error:
+            if self.raise_error and popup:
                 raise osv.except_osv("KDERP Warning",'Contact Administrator')
         return result
         
@@ -97,11 +98,14 @@ class gdt_companies_wizard(osv.TransientModel):
                 #Bo phan and ...
                 if action == 'update':
                     gdt_company.write(cr,uid,tax_code_id,search_res,context)
-                    tax_code_list_error.append(tax_code + ':OK')
+                    tax_code_list_error.append(tax_code + ':updated')
                     self.write(cr, uid, ids[0],{'error_codes':'\n'.join(tax_code_list_error)})
                 elif action == 'create':
                     gdt_company.create(cr,uid,search_res,context)
+                    tax_code_list_error.append(tax_code + ':created')
+                    self.write(cr, uid, ids[0],{'error_codes':'\n'.join(tax_code_list_error)})
                 elif action == 'nothing':
+                    #TODO
                     tax_code_list_error.append(tax_code + ':error')
                     self.write(cr, uid, ids[0],{'error_codes':'\n'.join(tax_code_list_error)})
                     continue
@@ -133,7 +137,8 @@ class gdt_companies_wizard(osv.TransientModel):
                 else:
                     if (item.keys()[0]=='address'):#Voi truong hop address se kiem tra ky hon
                         if (item.values()[0].find(values[item.keys()[0]]) != -1): #Address tim kiem la mot phan cua address luu tren csdl
-                            action = 'nothing'
+                            #action = 'nothing'
+                            action = 'update'
                         else:
                             return 'create'
                     else:
@@ -187,11 +192,16 @@ class gdt_companies(osv.Model):
     _name = 'gdt.companies'
     _description = 'GDT Companies'
     _rec_name = 'tax_code'
-    
+#     
     def update_data(self, cr, uid, ids, context):
+        #self.pool.get("gdt.companies.wizard").raise_error = False
         tax_code = self.browse(cr, uid, ids[0], context).tax_code
         tax_code_id = self.search(cr, uid, [('tax_code','=',tax_code)])
-        search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code)
+        
+        if len(ids)==1:
+            search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code, True)
+        else:
+            search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code, False)
         if search_res:
             #gdt_company = self.pool.get("gdt.companies")
             #tax_code_id = gdt_company.search(cr,uid,[('tax_code','=',tax_code)])
@@ -204,6 +214,7 @@ class gdt_companies(osv.Model):
             elif action == 'nothing':
                 return False
         #self.write(cr,uid,tax_code_id,data_to_update,context)
+        #self.pool.get("gdt.companies.wizard").raise_error = True
         return True
 
     
@@ -243,4 +254,9 @@ class gdt_companies(osv.Model):
                 }
 
 gdt_companies()
+
+                                     
+        
+
+
     
