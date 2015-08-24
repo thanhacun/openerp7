@@ -192,16 +192,23 @@ class gdt_companies(osv.Model):
     _name = 'gdt.companies'
     _description = 'GDT Companies'
     _rec_name = 'tax_code'
-#     
+#    
+    def action_update(self, cr, uid, ids, context):
+        a=[]
+        for id in ids:
+            a.append(id)
+        for gdt_id in ids:
+            if len(a)==1:
+                self.update_data(cr, uid, [gdt_id], context)
+            else :
+                self.update_data_many(cr, uid, [gdt_id], context)
+        return True
+    
     def update_data(self, cr, uid, ids, context):
         #self.pool.get("gdt.companies.wizard").raise_error = False
         tax_code = self.browse(cr, uid, ids[0], context).tax_code
         tax_code_id = self.search(cr, uid, [('tax_code','=',tax_code)])
-        
-        if len(ids)==1:
-            search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code, True)
-        else:
-            search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code, False)
+        search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code,popup=True)
         if search_res:
             #gdt_company = self.pool.get("gdt.companies")
             #tax_code_id = gdt_company.search(cr,uid,[('tax_code','=',tax_code)])
@@ -215,6 +222,20 @@ class gdt_companies(osv.Model):
                 return False
         #self.write(cr,uid,tax_code_id,data_to_update,context)
         #self.pool.get("gdt.companies.wizard").raise_error = True
+        return True
+    
+    def update_data_many(self, cr, uid, ids, context):
+        tax_code = self.browse(cr, uid, ids[0], context).tax_code
+        tax_code_id = self.search(cr, uid, [('tax_code','=',tax_code)])
+        search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code,popup=False)
+        if search_res:
+            action = self.pool.get("gdt.companies.wizard")._check_for_update(cr, uid, search_res)
+            if action == 'update':
+                self.write(cr,uid,tax_code_id,search_res,context)
+            elif action == 'create':
+                self.create(cr,uid,search_res,context)
+            elif action == 'nothing':
+                return False
         return True
 
     
