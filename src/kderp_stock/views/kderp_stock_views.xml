@@ -74,7 +74,8 @@
 						<group string="Stock Info." col="4" colspan="4">
 							<field name='stock_manager_id'/>
 							<field name="usage"/>
-	            			<field name="partner_id"/>	            			
+	            			<field name="partner_id"/>	         
+	            			<field name="general_stock"/>   			
 	            		</group>
 	            		<notebook>
 	            			<page string='Storekeeper(s)'>

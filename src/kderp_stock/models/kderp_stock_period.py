@@ -32,6 +32,7 @@ class StockPeriodYear(models.Model):
     _name = 'kderp.stock.period.year'
     SY_STATE = [('open','Open'),
                 ('closed','Closed')]
+    
     # Fields declaration
     _columns = {
                 'name':fields.char("Stock Year", size=16, required = True, states = {'open':[('readonly', False)]}, readonly = 1),
@@ -107,7 +108,30 @@ class StockPeriodYear(models.Model):
             else:
                 return []
         return ids
-
+    
+    def action_close(self, cr, uid, ids, *args):
+        mode = 'closed'        
+        val = {'state':mode}
+        for py in self.browse(cr, uid, ids):
+            for period in py.stock_period_ids:
+                period.action_close()                
+            py.write(val)        
+#         #cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
+#         cr.execute('update stock_period set state=%s where id in %s', (mode, tuple(ids),))
+        return True
+    
+    def action_open(self, cr, uid, ids, *args):
+        mode = 'open'        
+        val = {'state':mode}
+        for py in self.browse(cr, uid, ids):
+            for period in py.stock_period_ids:
+                if period.state == 'closed':
+                    period.action_open()
+            py.write(val)
+#         #cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
+#         cr.execute('update stock_period set state=%s where id in %s', (mode, tuple(ids),))
+        return True
+    
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
@@ -129,7 +153,7 @@ class StockPeriod(models.Model):
     
     # Fields declaration
     _columns = {
-                'name':fields.char("Period Name", size=16, required = True, states = {'open':[('readonly', False)]}, readonly = 1),
+                'name':fields.char("Period Name", size=32, required = True, states = {'open':[('readonly', False)]}, readonly = 1),
                 'start_date':fields.date("Start of Period", required = True, states = {'open':[('readonly', False)]}, readonly = 1),
                 'stop_date':fields.date("End of Period", required = True, states = {'open':[('readonly', False)]}, readonly = 1),
                 'opening_closing':fields.boolean("Opening/Closing", states = {'open':[('readonly', False)]}, readonly = 1),
@@ -192,14 +216,141 @@ class StockPeriod(models.Model):
         if not result:
             raise osv.except_osv(_('Error!'), _('There is no stock period defined for this date: %s.\nPlease create one.')%dt)
         return result
+    
+    def find_pre(self, cr, uid, dt=None, context=None):
+        if context is None: context = {}
+        if not dt:
+            dt = fields.date.context_today(self, cr, uid, context=context)
+        args = [('start_date', '<=' ,dt), ('stop_date', '>=', dt)]
+        
+        result = []
+        #WARNING: in next version the default value for account_periof_prefer_normal will be True
+        if context.get('stock_period_prefer_normal'):
+            # look for non-special periods first, and fallback to all if no result is found
+            result = self.search(cr, uid, args + [('opening_closing', '=', False)], context=context)
+        if not result:
+            result = self.search(cr, uid, args, context=context)
+        if not result:
+            raise osv.except_osv(_('Error!'), _('There is no stock period defined for this date: %s.\nPlease create one.')%dt)
+        return result
+    
+    def find_pre_period_closed(self, cr, uid, dt=None, context=None):
+        """
+            Return current period, previous closed, range date list to search
+                {'from_date':date, 'to_date': date, 'pre_period_id': int}"""
+        
+        if context is None: context = {}
+        if not dt:
+            dt = fields.date.context_today(self, cr, uid, context=context)
+        sqlCommand = """Select  
+                            id,
+                            state,
+                            start_date,
+                            opening_closing
+                        from 
+                            kderp_stock_period ksp    
+                        where
+                            ('%s' between start_date and stop_date and start_date=stop_date and opening_closing) or
+                            ('%s' between start_date and stop_date and start_date!='%s');""" % (dt, dt, dt)
+        cr.execute(sqlCommand)
+        result = False        
+        if cr.rowcount:
+            sql_res = cr.dictfetchone()
+            curr_period_id = sql_res['id']
+            closed = sql_res['state'] =='closed'
+            open_close = sql_res['opening_closing']
+            start_date = sql_res['start_date']
 
-    def action_draft(self, cr, uid, ids, *args):
-        mode = 'draft'
+            if open_close and closed: #If current period near Opening               
+                result = {'from_date': start_date,
+                          'to_date': dt,
+                          'pre_period_id': curr_period_id}
+            else:                
+                sqlCommand = """Select                                    
+                                    ksp_p.id,
+                                    stop_date,
+                                    opening_closing
+                                from 
+                                    kderp_stock_period ksp_p 
+                                where
+                                    state='closed' and
+                                    ksp_p.stop_date = (select max(stop_date) from kderp_stock_period where state='closed' and stop_date <= '%s' and id <> %s) and
+                                    id<>%s """ % (dt, curr_period_id, curr_period_id)
+                cr.execute(sqlCommand)        
+                if cr.rowcount:
+                    sql_res = cr.dictfetchone()                    
+                    if sql_res['opening_closing']:
+                        from_date = sql_res['stop_date']  
+                    else:
+                        import datetime                    
+                        start_date_date = datetime.datetime.strptime(sql_res['stop_date'],'%Y-%m-%d').date() + datetime.timedelta(days=1)
+                        from_date = start_date_date.strftime('%Y-%m-%d')
+                        
+                    result = {'from_date': from_date,
+                          'to_date': dt,
+                          'pre_period_id': sql_res['id']}
+        if not result:
+            sqlCommand = "Select min(date)::date from stock_move"
+            from_date = cr.dictfetchone()[0] if cr.rowcount else dt
+            result = {'from_date': from_date,
+                        'to_date': dt,
+                        'pre_period_id': False}            
+        return result        
+
+    def action_open(self, cr, uid, ids, *args):
+        from kderp_stock_base import getSQLCommand
+        mode = 'open'
+        stock_will_open_ids = self.pool.get('stock.location').search(cr, uid, [('general_stock','=', True)])
+        stock_closed_obj = self.pool.get('kderp.stock.period.closed')        
+        
         for period in self.browse(cr, uid, ids):
-            if period.stock_year_id.state == 'done':
-                raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed stock fiscal year'))
-        #cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
-        cr.execute('update stock_period set state=%s where id in %s', (mode, tuple(ids),))
+            if period.state=='closed':
+                start_date = period.start_date
+                stop_date = period.stop_date
+                if period.stock_year_id.state == 'done':
+                    raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed stock fiscal year'))
+                
+                for stock_id in stock_will_open_ids:                    
+                    stock_closed_obj.update_stock_period_closed(cr, uid, [{'location_id':stock_id,'stock_period_id':period.id}], action='delete')
+                
+        cr.execute('update kderp_stock_period set state=%s where id in %s', (mode, tuple(ids),))
+        return True
+    
+    def action_close(self, cr, uid, ids, *args):
+        if type(ids) == type(0):
+            ids = [ids]
+        context = filter(lambda arg: type(arg) == type({}), args)
+        mode = 'closed'
+        from kderp_stock_base import getSQLCommand
+        stock_will_closed_ids = self.pool.get('stock.location').search(cr, uid, [('general_stock','=', True)])
+        stock_closed_obj = self.pool.get('kderp.stock.period.closed')
+        
+        for period in self.browse(cr, uid, ids, context):
+            if period.state<>'closed':            
+                period.write({'state':mode})
+                start_date = period.start_date
+                stop_date = period.stop_date
+                curr_id = period.id
+                sqlCommand = """Select                                    
+                                    ksp_p.id,
+                                    state,
+                                    opening_closing,
+                                    name
+                                from 
+                                    kderp_stock_period ksp_p 
+                                where  
+                                    ksp_p.stop_date = (select max(stop_date) from kderp_stock_period where stop_date <= '%s' and id <> %s) and
+                                    id<>%s """ % (start_date, curr_id, curr_id)
+                cr.execute(sqlCommand)
+                res = cr.fetchone()
+                pre_state= res[1] if res else False
+                pre_name = res[3] if res else False
+                if pre_state<>mode and pre_state:
+                    raise osv.except_osv(_('KDERP Warning!'), _("This period %s can't close because previous period %s not yet closed") % (period.name, pre_name))
+                for stock_id in stock_will_closed_ids:
+                    stock_closed_rec = getSQLCommand(self.pool, cr, uid, stock_id, start_date, stop_date, period.id)
+                    if stock_closed_rec:
+                        stock_closed_obj.update_stock_period_closed(cr, uid, stock_closed_rec)
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -229,3 +380,33 @@ class StockPeriod(models.Model):
         if period_from.opening_closing:
             return self.search(cr, uid, [('start_date', '>=', period_date_start), ('stop_date', '<=', period_date_stop)])
         return self.search(cr, uid, [('start_date', '>=', period_date_start), ('stop_date', '<=', period_date_stop), ('opening_closing', '=', False)])
+    
+class StockPeriodClosed(models.Model):
+    """
+    Stock Year Period Closed
+    Stock Quantity Available from Previous Period
+    """
+    _name = 'kderp.stock.period.closed'
+    
+    def update_stock_period_closed(self, cr, uid, stock_closed_recs, action='update'):            
+        check_key = (stock_closed_recs[0]['stock_period_id'],stock_closed_recs[0]['location_id'])        
+        sqlCommand = """Delete from kderp_stock_period_closed where (stock_period_id,location_id) = %s """ %  str(check_key)
+        # Delete record if exist
+        cr.execute(sqlCommand)                
+        if action=='delete':
+            return True
+        new_ids = []
+        for stock_closed_rec in stock_closed_recs: 
+            new_ids.append(self.create(cr, uid, stock_closed_rec))        
+        return new_ids
+    
+    _columns = {
+                'stock_period_id': fields.many2one('kderp.stock.period','Stock Period', required = True, ondelete='restrict'),
+                'location_id': fields.many2one('stock.location','Stock', required = True, ondelete='restrict'),
+                'product_id': fields.many2one('product.product','Products', required = True, ondelete='restrict'),
+                'product_uom': fields.many2one('product.uom','Unit', required = True, ondelete='restrict'),
+                'product_qty': fields.float('Qty.'),
+                }
+    _sql_constraints = [('unique_stock_closed_product', 'unique (stock_period_id, location_id, product_id, product_uom)', 'Stock, period and Product, Product UOM must be unique !')]
+    
+    
