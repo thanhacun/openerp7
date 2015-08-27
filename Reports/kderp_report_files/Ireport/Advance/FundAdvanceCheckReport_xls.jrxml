@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FundAdvCheckReport" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.7715610000000017"/>
+	<property name="ireport.zoom" value="1.771561000000002"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="347"/>
+	<property name="ireport.y" value="432"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<queryString language="xPath">
-		<![CDATA[]]>
+		<![CDATA[/data/record]]>
 	</queryString>
 	<field name="id" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/id]]></fieldDescription>
@@ -19,36 +19,61 @@
 	<field name="Period_name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Months-period_id/Period_Name-name]]></fieldDescription>
 	</field>
+	<field name="Closing" class="java.lang.Double">
+		<fieldDescription><![CDATA[closing_balance]]></fieldDescription>
+	</field>
+	<field name="closing_balance_other_cur" class="java.lang.Double">
+		<fieldDescription><![CDATA[closing_balance_other_cur]]></fieldDescription>
+	</field>
+	<field name="closing_balance_inword_vn" class="java.lang.String">
+		<fieldDescription><![CDATA[closing_balance_inword_vn]]></fieldDescription>
+	</field>
+	<field name="closing_balance_inword_en" class="java.lang.String">
+		<fieldDescription><![CDATA[closing_balance_inword_en]]></fieldDescription>
+	</field>
+	<field name="closing_balance_other_inword_vn" class="java.lang.String">
+		<fieldDescription><![CDATA[closing_balance_other_inword_vn]]></fieldDescription>
+	</field>
+	<field name="closing_balance_other_inword_en" class="java.lang.String">
+		<fieldDescription><![CDATA[closing_balance_other_inword_en]]></fieldDescription>
+	</field>
+	<field name="cur" class="java.lang.String">
+		<fieldDescription><![CDATA[currency_id/name]]></fieldDescription>
+	</field>
 	<group name="grpPeriodName">
 		<groupExpression><![CDATA[$F{Period_name}]]></groupExpression>
 		<groupFooter>
-			<band height="761">
+			<band height="764" splitType="Stretch">
 				<staticText>
-					<reportElement x="0" y="676" width="143" height="20"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<reportElement x="0" y="679" width="143" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
 					<text><![CDATA[Chief Accoutant]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="746" width="143" height="15"/>
+					<reportElement x="0" y="749" width="143" height="15"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[LE THU TRANG]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="360" y="746" width="135" height="15"/>
+					<reportElement x="360" y="749" width="135" height="15"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[TRINH THANH HANG]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="360" y="676" width="135" height="20"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<reportElement x="360" y="679" width="135" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
 					<text><![CDATA[Cashier]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="696" width="555" height="50"/>
+					<reportElement x="0" y="699" width="555" height="50"/>
 					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
@@ -130,72 +155,64 @@
 					<textElement>
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.util.Date"><![CDATA["Today, "+(new SimpleDateFormat("dd MMMMM yyyy").format($F{date_stop}))]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Today, "+(new SimpleDateFormat("dd MMMMM yyyy").format($F{date_stop}))]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="65" y="210" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[No.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="143" y="210" width="117" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[Denominations ( VND )]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="260" y="210" width="100" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[Pieces ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="360" y="210" width="135" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[Amount ( VND )]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="65" y="231" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[1]]></text>
@@ -203,11 +220,11 @@
 				<staticText>
 					<reportElement x="65" y="251" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[2]]></text>
@@ -215,11 +232,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="251" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[200000]]></textFieldExpression>
@@ -227,11 +244,11 @@
 				<staticText>
 					<reportElement x="65" y="271" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[3]]></text>
@@ -239,11 +256,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="271" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[100000]]></textFieldExpression>
@@ -251,11 +268,11 @@
 				<staticText>
 					<reportElement x="65" y="291" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[4]]></text>
@@ -263,11 +280,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="291" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[50000]]></textFieldExpression>
@@ -275,11 +292,11 @@
 				<staticText>
 					<reportElement x="65" y="311" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[5]]></text>
@@ -287,11 +304,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="311" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[20000]]></textFieldExpression>
@@ -299,11 +316,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="351" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[5000]]></textFieldExpression>
@@ -311,11 +328,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="371" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[2000]]></textFieldExpression>
@@ -323,11 +340,11 @@
 				<staticText>
 					<reportElement x="65" y="371" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[8]]></text>
@@ -335,11 +352,11 @@
 				<staticText>
 					<reportElement x="65" y="331" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[6]]></text>
@@ -347,11 +364,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="391" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[1000]]></textFieldExpression>
@@ -359,11 +376,11 @@
 				<staticText>
 					<reportElement x="65" y="391" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[9]]></text>
@@ -371,11 +388,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="411" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[500]]></textFieldExpression>
@@ -383,11 +400,11 @@
 				<staticText>
 					<reportElement x="65" y="411" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[10]]></text>
@@ -395,11 +412,11 @@
 				<staticText>
 					<reportElement x="65" y="351" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[7]]></text>
@@ -407,11 +424,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="331" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[10000]]></textFieldExpression>
@@ -422,156 +439,148 @@
 					<text><![CDATA[1.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="15" y="466" width="50" height="29"/>
+					<reportElement x="15" y="467" width="50" height="30"/>
 					<textElement/>
 					<text><![CDATA[In words]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="451" width="15" height="15"/>
+					<reportElement x="0" y="452" width="15" height="15"/>
 					<textElement textAlignment="Center" verticalAlignment="Top"/>
 					<text><![CDATA[2.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="15" y="451" width="50" height="15"/>
+					<reportElement x="15" y="452" width="50" height="15"/>
 					<textElement/>
 					<text><![CDATA[The USD]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="636" width="78" height="20"/>
+					<reportElement x="65" y="639" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[7]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="360" y="495" width="135" height="20"/>
+					<reportElement x="360" y="498" width="135" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
-					<text><![CDATA[Amount ( VND )]]></text>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Amount ( USD )]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="495" width="78" height="20"/>
+					<reportElement x="65" y="498" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[No.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="556" width="78" height="20"/>
+					<reportElement x="65" y="559" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[3]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="616" width="78" height="20"/>
+					<reportElement x="65" y="619" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[6]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="516" width="78" height="20"/>
+					<reportElement x="65" y="519" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[1]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="143" y="495" width="117" height="20"/>
+					<reportElement x="143" y="498" width="117" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[Denominations ( USD )]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="536" width="78" height="20"/>
+					<reportElement x="65" y="539" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[2]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="260" y="495" width="100" height="20"/>
+					<reportElement x="260" y="498" width="100" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="2.5" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="2.0" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<paragraph lineSpacing="Single"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[Pieces ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="576" width="78" height="20"/>
+					<reportElement x="65" y="579" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[4]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="596" width="78" height="20"/>
+					<reportElement x="65" y="599" width="78" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<text><![CDATA[5]]></text>
@@ -579,11 +588,11 @@
 				<staticText>
 					<reportElement x="65" y="431" width="295" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
@@ -591,13 +600,13 @@
 					<text><![CDATA[TOTAL]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="65" y="656" width="295" height="20"/>
+					<reportElement x="65" y="659" width="295" height="20"/>
 					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
 						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
@@ -612,15 +621,13 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="231" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="231" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -630,25 +637,23 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="231" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="291" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="291" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -656,15 +661,13 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="271" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="271" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -672,15 +675,13 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="311" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="311" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -690,11 +691,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="251" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -702,11 +703,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="291" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -714,11 +715,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="271" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -726,11 +727,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="331" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -738,11 +739,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="351" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -750,11 +751,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="311" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -762,11 +763,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="371" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -774,11 +775,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="391" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -786,11 +787,11 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="260" y="411" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
@@ -798,25 +799,37 @@
 				<textField pattern="#,##0;-#,##0">
 					<reportElement x="143" y="231" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[500000]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="431" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="SUM(INDIRECT(ADDRESS(ROW()-10,COLUMN())&amp;&quot;:&quot;&amp;ADDRESS(ROW()-1,COLUMN())))"/>
-					</reportElement>
+				<textField pattern="[$VND] #,##0" isBlankWhenNull="false">
+					<reportElement x="360" y="431" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
+					<reportElement x="360" y="331" width="135" height="20"/>
+					<box rightPadding="1">
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -824,15 +837,13 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="331" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="411" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -840,15 +851,13 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="411" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="391" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -856,63 +865,41 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="391" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="371" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="371" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="599" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="596" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="519" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="10"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
-				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="516" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
-					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -920,51 +907,49 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="260" y="636" width="100" height="20"/>
+					<reportElement x="260" y="639" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="260" y="536" width="100" height="20"/>
+					<reportElement x="260" y="539" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="260" y="556" width="100" height="20"/>
+					<reportElement x="260" y="559" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="576" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="579" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -972,51 +957,49 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="260" y="616" width="100" height="20"/>
+					<reportElement x="260" y="619" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="260" y="516" width="100" height="20"/>
+					<reportElement x="260" y="519" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="260" y="576" width="100" height="20"/>
+					<reportElement x="260" y="579" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="616" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="619" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -1024,27 +1007,25 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="260" y="596" width="100" height="20"/>
+					<reportElement x="260" y="599" width="100" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="556" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="559" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -1052,99 +1033,111 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="143" y="636" width="117" height="20"/>
+					<reportElement x="143" y="639" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[1]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="143" y="596" width="117" height="20"/>
+					<reportElement x="143" y="599" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[5]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="143" y="516" width="117" height="20"/>
+					<reportElement x="143" y="519" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[100]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="143" y="576" width="117" height="20"/>
+					<reportElement x="143" y="579" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[10]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="143" y="536" width="117" height="20"/>
+					<reportElement x="143" y="539" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[50]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="143" y="616" width="117" height="20"/>
+					<reportElement x="143" y="619" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[2]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0">
-					<reportElement x="143" y="556" width="117" height="20"/>
+					<reportElement x="143" y="559" width="117" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none"/>
 					<textFieldExpression class="java.lang.Double"><![CDATA[20]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="656" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="SUM(INDIRECT(ADDRESS(ROW()-7,COLUMN())&amp;&quot;:&quot;&amp;ADDRESS(ROW()-1,COLUMN())))"/>
-					</reportElement>
+				<textField pattern="[$USD] #,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="659" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="639" width="135" height="20"/>
+					<box rightPadding="1">
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -1152,15 +1145,13 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="636" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="251" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
@@ -1168,52 +1159,70 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="251" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+					<reportElement x="360" y="351" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="351" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement x="360" y="539" width="135" height="20"/>
 					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
-					<reportElement x="360" y="536" width="135" height="20">
-						<property name="net.sf.jasperreports.export.xls.formula" value="indirect(address(row(),column()-2))*indirect(address(row(),column()-1))"/>
-					</reportElement>
-					<box rightPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="10"/>
+				<textField pattern="#,##0">
+					<reportElement x="65" y="165" width="490" height="15"/>
+					<textElement>
+						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[0]]></textFieldExpression>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{cur}=="VND"?$F{Closing}:$F{closing_balance_other_cur}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="65" y="452" width="490" height="15"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{cur}=="VND"?$F{closing_balance_other_cur}:$F{Closing}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="65" y="180" width="490" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cur}=="VND"?$F{closing_balance_inword_en}:$F{closing_balance_other_inword_en}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="65" y="195" width="490" height="15"/>
+					<textElement>
+						<font fontName="Arial" isItalic="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cur}=="VND"?$F{closing_balance_inword_vn}:$F{closing_balance_other_inword_vn}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="65" y="482" width="490" height="15"/>
+					<textElement>
+						<font fontName="Arial" isItalic="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cur}=="VND"?$F{closing_balance_other_inword_vn}:$F{closing_balance_inword_vn}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="65" y="467" width="490" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cur}=="VND"?$F{closing_balance_other_inword_en}:$F{closing_balance_inword_en}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -1222,9 +1231,9 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<lastPageFooter>
-		<band/>
+		<band splitType="Stretch"/>
 	</lastPageFooter>
 	<summary>
-		<band/>
+		<band splitType="Stretch"/>
 	</summary>
 </jasperReport>
