@@ -50,7 +50,7 @@ class kderp_cashonhand_report_wizard(osv.osv_memory):
     
     def onchange_date(self, cr, uid, ids, date_start,date_stop, one_year, currency_id, location,context={}):
         result={}
-        if date_start and date_stop:                
+        if date_start and date_stop and currency_id:                
             cr.execute("""Select 
                             kdca.id
                         from 
@@ -253,8 +253,111 @@ class kderp_cashonhand_report_wizard(osv.osv_memory):
             result=cr.dictfetchone()
 
             if result:
-                res[obj.id]=result                         
+                res[obj.id]=result
+            curr_vn = u' \u0111\u1ed3ng' if obj.currency_id.name == 'VND' else ' dollar'
+            curr_en = 'dongs' if obj.currency_id.name == 'VND' else 'dollar'
+            res[obj.id]['closing_balance_inword_vn'] = amount_to_text(abs(result['closing_balance']),'vn', curr_vn).capitalize()
+            res[obj.id]['closing_balance_inword_en'] = amount_to_text(abs(result['closing_balance']),"en",curr_en).capitalize()                         
         return res
+    
+#In other currency (Temporary VND <==> USD)
+    def _get_total_in_list_other(self, cr, uid, ids, name, args, context={}):
+        res={}
+        curr_obj = self.pool.get('res.currency')
+        curr_ids = curr_obj.search(cr, uid, [('name','in',('VND','USD'))])
+        
+        for obj in self.browse(cr, uid, ids, context):
+            date_start=obj.date_start
+            date_stop=obj.date_stop
+            location=obj.location
+            currency_id = filter(lambda curr_id: curr_id <> obj.currency_id.id, curr_ids)[0]             
+                
+            res[obj.id]={'closing_balance_other_cur':0,
+                         'balance_other_cur':0,
+                         'opening_balance_other_cur':0}
+            if obj.one_year:
+                new_condition="kdca.date>='%s' and kdca.date<'%s'" % (date_start[:4]+"-01-01",date_start)
+                condition_one_year = "date_stop<'%s'" % (date_start[:4]+"-01-01")
+            else:
+                new_condition="kdca.date<'%s'" % date_start
+                condition_one_year = "False"
+            SQL = """
+                        Select                            
+                            sum(coalesce(debit,0)-coalesce(credit,0)) as balance_other_cur,
+                            sum(coalesce(debit,0)-coalesce(credit,0))+coalesce(opening_balance,0) + coalesce(closing_balance,0) as closing_balance_other_cur,
+                            coalesce(opening_balance,0) + coalesce(closing_balance,0) as opening_balance_other_cur
+                        from
+                            kderp_cashonhand_report kcrw
+                        left join 
+                            kderp_detail_cash_advance kdca on kdca.date between '%s' and '%s' and %s = kdca.currency_id and
+                                                              substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1) ilike 
+                                                              case when kcrw.location='haiphong' then 'P' else case when kcrw.location='hanoi' then 'H' else '_' end end
+                        left join
+                            (Select
+                                case when upper('%s') = 'HANOI' then --HANOI
+                                    case when rc.name='VND' then
+                                        closing_balance_vnd_hanoi
+                                    else
+                                        closing_balance_usd_hanoi                                        
+                                    end
+                                else --HAIPHONG
+                                    case when rc.name='VND' then
+                                        closing_balance_vnd_haiphong
+                                    else
+                                        closing_balance_usd_haiphong
+                                    end                                
+                                end as closing_balance                                    
+                            from
+                                kderp_cash_fiscalyear kcf
+                            left join
+                                res_currency rc on rc.id=%s
+                            where    
+                                kcf.date_stop = (select 
+                                            max(date_stop) 
+                                           from 
+                                            kderp_cash_fiscalyear kcf 
+                                           where
+                                            %s )) vwsub_openning on 1 = 1
+                        left join
+                            (Select
+                                sum(coalesce(debit,0)-coalesce(credit,0)) as opening_balance
+                            from 
+                                kderp_detail_cash_advance kdca                                
+                            left join
+                                res_currency rc on kdca.currency_id=rc.id
+                            left join
+                                res_users ru on substring(kdca.name from (case when type='cash' then 2 else 3 end) for 1) ilike case when location_user='haiphong' then 'P' else case when location_user='hanoi' then 'H' else '_' end end
+                            where
+                                %s and
+                                currency_id=%s and 
+                                ru.id=%s
+                            ) vwopenning on 1=1
+                        left join
+                            res_currency rc on %s = rc.id 
+                        where
+                            kcrw.id = %s
+                        group by
+                            opening_balance,
+                            closing_balance""" % (date_start,date_stop,
+                                                  currency_id,
+                                                  location,
+                                                  currency_id,
+                                                  condition_one_year,
+                                                  new_condition,
+                                                  currency_id,uid,
+                                                  currency_id,
+                                                  obj.id)
+            cr.execute(SQL)
+            result=cr.dictfetchone()
+
+            if result:
+                res[obj.id]=result
+            curr_vn = u' \u0111\u1ed3ng' if obj.currency_id.name == 'USD' else ' dollar'
+            curr_en = 'dongs' if obj.currency_id.name == 'USD' else 'dollar'
+            res[obj.id]['closing_balance_other_inword_vn'] = amount_to_text(abs(result['closing_balance_other_cur']),'vn', curr_vn).capitalize()
+            res[obj.id]['closing_balance_other_inword_en'] = amount_to_text(abs(result['closing_balance_other_cur']),"en",curr_en).capitalize()
+            
+        return res    
       
     _columns = {
                 'period_id':fields.many2one('kderp.cash.period','Months'),
@@ -268,6 +371,14 @@ class kderp_cashonhand_report_wizard(osv.osv_memory):
                 'opening_balance':fields.function(_get_total_in_list,type='float',string='Opening Balance',method=True,multi='_get_balance'),
                 'closing_balance':fields.function(_get_total_in_list,type='float',string='Closing Balance',method=True,multi='_get_balance'),
                 'balance':fields.function(_get_total_in_list,type='float',string='Balance',method=True,multi='_get_balance'),
+                'closing_balance_inword_vn':fields.function(_get_total_in_list,type='char',string='Closing Balance In Word VN',method=True,multi='_get_balance'),
+                'closing_balance_inword_en':fields.function(_get_total_in_list,type='char',string='Closing Balance In Word EN',method=True,multi='_get_balance'),
+                
+                'opening_balance_other_cur':fields.function(_get_total_in_list_other,type='float',string='Opening Balance Other Cur.',method=True,multi='_get_balance_other'),
+                'closing_balance_other_cur':fields.function(_get_total_in_list_other,type='float',string='Closing Balance Other Cur.',method=True,multi='_get_balance_other'),
+                'balance_other_cur':fields.function(_get_total_in_list_other,type='float',string='Balance Other Cur.',method=True,multi='_get_balance_other'),
+                'closing_balance_other_inword_vn':fields.function(_get_total_in_list_other,type='char',string='Closing Balance Other In Word VN',method=True,multi='_get_balance_other'),
+                'closing_balance_other_inword_en':fields.function(_get_total_in_list_other,type='char',string='Closing Balance Other In Word EN',method=True,multi='_get_balance_other'),
                 }
     _defaults = {
                 'one_year':True,
