@@ -265,8 +265,8 @@ class gdt_companies(osv.Model):
 
     _columns = {
                 'tax_code':fields.char('Tax Code', size=15),
-                'name':fields.char('Name',size=100),
-                'address':fields.char('Address', size=100),
+                'name':fields.char('Name',size=256),
+                'address':fields.char('Address', size=256),
                 'status':fields.selection(_status_desc, 'Status', size=2),
                 'write_date':fields.date('Updated Date', readonly=True),
                 'stop_date':fields.date('Stop Date', readonly=True),
