@@ -237,7 +237,7 @@ class gdt_companies(osv.Model):
             elif action == 'nothing':
                 return False
         return True
-
+    
     
     def gdt_link(self, cr, uid, ids, context):
         #tax_code = self.browse(cr, uid, ids[0]).tax_code
@@ -275,6 +275,24 @@ class gdt_companies(osv.Model):
                 }
 
 gdt_companies()
+
+class wizard_gdt_companies(osv.osv_memory):
+    _name='wizard.gdt.companies'
+    _description='Wizard Update Tax Code'
+    
+    def action_update(self, cr, uid, ids, context): 
+        if context is None:
+            context={}
+        record_ids =  context.get('active_ids',[])
+        if record_ids:
+            gdt_obj = self.pool.get('gdt.companies')
+        for gdt_id in gdt_obj.browse(cr, uid, record_ids, context=context):
+            gdt_obj.action_update(cr, uid, [gdt_id.id], context)
+            
+        return True
+
+wizard_gdt_companies()
+
 
                                      
         
