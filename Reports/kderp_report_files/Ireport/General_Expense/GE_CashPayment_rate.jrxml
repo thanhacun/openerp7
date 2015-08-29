@@ -741,7 +741,7 @@
 				<textField>
 					<reportElement x="459" y="433" width="190" height="29"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Supplier_Name}]]></textFieldExpression>
 				</textField>
