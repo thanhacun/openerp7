@@ -47,7 +47,7 @@
                     </h1>
                     <group>
   						<group colspan="4" col="4">
-							<field name="date" on_change="onchange_date(date,name)" default_focus="1"/>
+							<field name="date" on_change="onchange_date_ge(date,name)" default_focus="1"/>
 							<field name="due_date"/>
 							<field name="expense_id" />
 							<field name="supplier_id"/>
