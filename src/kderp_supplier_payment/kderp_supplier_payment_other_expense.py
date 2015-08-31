@@ -1005,7 +1005,7 @@ class kderp_supplier_payment_expense(osv.osv):
             "res_id": ids[0] if ids else False,
             "view_type": "form",
             "view_mode": 'form,tree',
-            'context':context,
+            'context': context,
             "target":"current",
             'nodestroy': True,
             'domain': "[('id','in',%s)]" % ids
