@@ -60,7 +60,7 @@
 				write({'state':'cancel'})</field>
 		</record>
 		
-	<!-- Transcation -->
+	<!-- Transaction -->
         <record id="trans_draft_final_quotation" model="workflow.transition">
             <field name="act_from" ref="purchase.act_draft"/>
             <field name="act_to" ref="act_final_quotation"/>
