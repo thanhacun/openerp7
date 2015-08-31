@@ -46,7 +46,6 @@ class kderp_other_expense(osv.osv):
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)
         return result
-
     
     def name_get(self, cr, uid, ids, context=None):
         if context is None:

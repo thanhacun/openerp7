@@ -12,6 +12,7 @@ class kderp_supplier_payment_expense(osv.osv):
             for pge in ge.supplier_payment_expense_ids:
                 res[pge.id] = True
         return res.keys()
+    
     def onchange_date_ge(self, cr, uid, ids, date, oldno):
         cr.execute("Select location_user from res_users where id=%s" % uid)
         res = cr.fetchone()[0]
@@ -83,3 +84,29 @@ class kderp_supplier_payment_expense(osv.osv):
                                                     'kderp.other.expense': (_get_payment_from_ge, ['section_incharge_id'], 15),
                                                     }),
               }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if not context:
+            context = {}        
+        if not view_id:            
+            ge = False
+            active_model = context['active_model'] if 'active_model' in context else False 
+            if 'active_id' in context:
+                active_id = context['active_id']
+            elif 'active_ids' in context:
+                active_id = context['active_ids'][0]
+            else: 
+                active_id = False
+            if active_id and active_model:
+                active_obj = self.pool.get(active_model)
+                if active_model=='kderp.supplier.payment.expense':
+                    ge = active_obj.browse(cr, uid, context['active_id']).expense_id.account_analytic_id.general_expense
+                elif active_model=='kderp.other.expense':
+                    ge = active_obj.browse(cr, uid, context['active_id']).account_analytic_id.general_expense
+                elif active_model=='account.analytic.account':
+                    ge = active_obj.browse(cr, uid, context['active_id']).general_expense                    
+            if context.get('general_expense', False) or ge:
+                views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','kderp.supplier.payment.ge.%s' % view_type)])
+                if views_ids:
+                    view_id = views_ids[0]             
+        return super(kderp_supplier_payment_expense, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
