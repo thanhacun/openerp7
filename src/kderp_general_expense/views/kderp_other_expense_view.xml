@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>	 
+    <data>
+    	 
  		<record id="view_kderp_other_expense_inherit_add_ge_form" model="ir.ui.view">
             <field name="name">view.kderp.other.expense.inherit.add.ge.form</field>
             <field name="model">kderp.other.expense</field>
@@ -55,6 +56,7 @@
 				</group>
             </field>
         </record>  
+        
        <record id="view_kderp_other_expense_inherit_search" model="ir.ui.view">
             <field name="name">kderp.other.expense.inherit.search</field>
             <field name="model">kderp.other.expense</field>
@@ -72,6 +74,7 @@
 				</filter>
             </field>
         </record>
+        
         <record id="view_kderp_other_expense_form_add_payment_vat_inherit" model="ir.ui.view">
             <field name="name">view.kderp.other.expense.form.add.payment.vat.inherit</field>
             <field name="model">kderp.other.expense</field>
@@ -112,5 +115,6 @@
 	            </page>
             </field>
         </record> 
+        
 	</data>
 </openerp>
