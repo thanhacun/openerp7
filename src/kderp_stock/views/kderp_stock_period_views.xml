@@ -31,6 +31,8 @@
 	            					<field name='stop_date'/>
 	            					<field name='opening_closing'/>
 	            					<field name='state'/>
+	            					<button name="action_close" string="Close Period" type="object" class="oe_highlight" states='open' icon='gtk-convert' groups='kderp_stock.kderp_stock_close_and_open_year'/>
+									<button name="action_open" string="Open Period" type="object" class="oe_highlight" states='closed' icon='gtk-convert' groups='kderp_stock.kderp_stock_close_and_open_year'/>
 	            				</tree>
 	            			</field>
 	            		</group>	            			

@@ -298,18 +298,30 @@ class StockPeriod(models.Model):
         return result        
 
     def action_open(self, cr, uid, ids, *args):
-        from kderp_stock_base import getSQLCommand
+        
         mode = 'open'
         stock_will_open_ids = self.pool.get('stock.location').search(cr, uid, [('general_stock','=', True)])
-        stock_closed_obj = self.pool.get('kderp.stock.period.closed')        
-        
+        stock_closed_obj = self.pool.get('kderp.stock.period.closed')
         for period in self.browse(cr, uid, ids):
             if period.state=='closed':
                 start_date = period.start_date
                 stop_date = period.stop_date
                 if period.stock_year_id.state == 'done':
                     raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed stock fiscal year'))
+                curr_id = period.id
                 
+                #Check Next Period Closed or Not
+                sqlCommand = """Select                                    
+                                    ksp_p.id,
+                                    state
+                                from 
+                                    kderp_stock_period ksp_p 
+                                where  
+                                    ksp_p.start_date = (select min(start_date) from kderp_stock_period where start_date >= '%s' and id <> %s) and
+                                    id<>%s and state='closed'""" % (stop_date, curr_id, curr_id)
+                cr.execute(sqlCommand)
+                if cr.rowcount:
+                    raise osv.except_osv(_('Warning!'), _('You can not re-open a period which next period already closed'))
                 for stock_id in stock_will_open_ids:                    
                     stock_closed_obj.update_stock_period_closed(cr, uid, [{'location_id':stock_id,'stock_period_id':period.id}], action='delete')
                 
@@ -388,7 +400,8 @@ class StockPeriodClosed(models.Model):
     """
     _name = 'kderp.stock.period.closed'
     
-    def update_stock_period_closed(self, cr, uid, stock_closed_recs, action='update'):            
+    def update_stock_period_closed(self, cr, uid, stock_closed_recs, action='update'):
+        
         check_key = (stock_closed_recs[0]['stock_period_id'],stock_closed_recs[0]['location_id'])        
         sqlCommand = """Delete from kderp_stock_period_closed where (stock_period_id,location_id) = %s """ %  str(check_key)
         # Delete record if exist

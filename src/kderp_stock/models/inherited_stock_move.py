@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from json.decoder import _CONSTANTS
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -36,6 +35,7 @@ class stock_move(osv.osv):
         'location_id': fields.many2one('stock.location', 'Source Location', select=True,states={'done': [('readonly', True)]}),
         'location_dest_id': fields.many2one('stock.location', 'Destination Location',states={'done': [('readonly', True)]}, ),
     }
+    
     def _check_product_id(self, cr, uid, ids, context=None):
         """
             Kiem tra product id and purchase_line_id
@@ -68,4 +68,5 @@ class stock_move(osv.osv):
             'product_uom': prod_uom_po
             }}
         return result
+    
 stock_move()

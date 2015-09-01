@@ -26,4 +26,6 @@ import inherited_stock_location
 
 import kderp_stock_period
 
+import inherited_purchase_order
+
 import kderp_stock_base

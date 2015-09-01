@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from json.decoder import _CONSTANTS
 
 #
 # Inherit of picking to add the link to the PO
@@ -76,3 +75,22 @@ class stock_picking(osv.osv):
     _defaults = {
                  'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
                 }
+    
+    def action_confirm(self, cr, uid, ids, context=None):
+        """ Confirms picking.
+        @return: True
+        """
+        pickings = self.browse(cr, uid, ids, context=context)
+        self.write(cr, uid, ids, {'state': 'confirmed'})
+        todo = []
+        for picking in pickings:
+            if picking.purchase_id:
+                if not picking.purchase_id.state in ('waiting_for_delivery','waiting_for_payment','done','revising'):
+                    raise osv.except_osv("KDERP Warning", """Can't receive this picking because purchase belong not yet approved""")
+            for r in picking.move_lines:
+                if r.state == 'draft':
+                    todo.append(r.id)
+        todo = self.action_explode(cr, uid, todo, context)
+        if len(todo):
+            self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
+        return True

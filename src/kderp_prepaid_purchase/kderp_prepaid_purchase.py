@@ -180,17 +180,17 @@ class kderp_prepaid_purchase_order(osv.osv):
                 'amount_untaxed':fields.function(_amount_all, digits_compute= dp.get_precision('Amount'),string='Amount',type='float', method=True, multi="kderp_expense_total",
                                                   store={
                                                           'kderp.prepaid.purchase.order.line': (_get_prepaid_from_detail, ['price_unit', 'product_qty'], 20),
-                                                          'kderp.prepaid.purchase.order':(lambda cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
+                                                          'kderp.prepaid.purchase.order':(lambda self, cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
                                                          }),
                 'amount_tax':fields.function(_amount_all, digits_compute= dp.get_precision('Amount'),string='VAT',type='float', method=True, multi="kderp_expense_total",
                                                   store={
                                                          'kderp.prepaid.purchase.order.line': (_get_prepaid_from_detail, ['price_unit', 'product_qty'], 20),
-                                                         'kderp.prepaid.purchase.order':(lambda cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
+                                                         'kderp.prepaid.purchase.order':(lambda self, cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
                                                          }),
                 'amount_total':fields.function(_amount_all, digits_compute= dp.get_precision('Amount'), string='Total',type='float', method=True, multi="kderp_expense_total",
                                                 store={
                                                         'kderp.prepaid.purchase.order.line': (_get_prepaid_from_detail, ['price_unit', 'product_qty'], 20),
-                                                        'kderp.prepaid.purchase.order':(lambda cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
+                                                        'kderp.prepaid.purchase.order':(lambda self, cr, uid, ids, context = {}: ids, ['taxed_ids'], 20)
                                                        }),
               }
     
@@ -419,7 +419,7 @@ class kderp_prepaid_purchase_order_line(osv.osv):
               
               'subtotal':fields.function(_get_subtotal, type='float', digits=(16,2), method= True, string='Sub-Total',
                                          store={
-                                                'kderp.prepaid.purchase.order.line': (lambda cr, uid, ids, context = {}: ids, ['product_qty', 'price_unit','prepaid_order_id'], 15) 
+                                                'kderp.prepaid.purchase.order.line': (lambda self, cr, uid, ids, context = {}: ids, ['product_qty', 'price_unit','prepaid_order_id'], 15) 
                                                 })
               }
     _defaults = {
