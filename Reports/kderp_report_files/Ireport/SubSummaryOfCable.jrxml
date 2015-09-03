@@ -97,7 +97,7 @@
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle"/>
@@ -139,9 +139,9 @@
 					<reportElement mode="Opaque" x="334" y="0" width="100" height="20" backcolor="#FFFFFF"/>
 					<box>
 						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid"/>
 						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
