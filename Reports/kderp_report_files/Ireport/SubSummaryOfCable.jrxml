@@ -178,12 +178,6 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch"/>
-	</title>
-	<pageHeader>
-		<band splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="20"/>
@@ -256,7 +250,10 @@
 				<text><![CDATA[Allocated Amount]]></text>
 			</staticText>
 		</band>
-	</columnHeader>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
 	<pageFooter>
 		<band splitType="Stretch"/>
 	</pageFooter>
