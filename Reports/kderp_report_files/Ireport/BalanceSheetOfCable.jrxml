@@ -116,7 +116,7 @@
 				<staticText>
 					<reportElement x="47" y="89" width="250" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[NGUYEN DUC LINH]]></text>
 				</staticText>
@@ -137,7 +137,7 @@
 				<staticText>
 					<reportElement x="297" y="89" width="240" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[NGUYEN MINH CHAU]]></text>
 				</staticText>
@@ -148,7 +148,7 @@
 		<groupExpression><![CDATA[$F{Product}]]></groupExpression>
 	</group>
 	<pageHeader>
-		<band height="180">
+		<band height="190">
 			<image>
 				<reportElement x="211" y="0" width="130" height="65"/>
 				<imageExpression class="java.lang.String"><![CDATA["OpenerpLogo.jpg"]]></imageExpression>
@@ -189,35 +189,36 @@
 				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="17" y="110" width="520" height="30"/>
+				<reportElement x="17" y="110" width="520" height="40"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="11" isBold="true"/>
+					<font fontName="Arial" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BALANCE SHEET OF CABLE QUANTITY TAKING FROM CONSIGMENT STOCK]]></text>
+				<text><![CDATA[BALANCE SHEET OF CABLE QUANTITY
+TAKING FROM CONSIGMENT STOCK]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="17" y="140" width="98" height="20"/>
+				<reportElement x="17" y="150" width="98" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="9"/>
 				</textElement>
 				<text><![CDATA[Consigment stock]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="17" y="160" width="98" height="20"/>
+				<reportElement x="17" y="170" width="98" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="9"/>
 				</textElement>
 				<text><![CDATA[Deadline]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="115" y="140" width="422" height="20"/>
+				<reportElement x="115" y="150" width="422" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[": "+$F{Supplier}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="115" y="160" width="422" height="20"/>
+				<reportElement x="115" y="170" width="422" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="9"/>
 				</textElement>
@@ -325,7 +326,7 @@
 					<bottomPen lineWidth="0.75"/>
 					<rightPen lineWidth="0.75"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Allocated_Qty}==null?0:$F{Allocated_Qty}]]></textFieldExpression>
@@ -353,7 +354,7 @@
 					<bottomPen lineWidth="0.75"/>
 					<rightPen lineWidth="0.75"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Quantity-product_qty}==null?0:$F{Quantity-product_qty}]]></textFieldExpression>
