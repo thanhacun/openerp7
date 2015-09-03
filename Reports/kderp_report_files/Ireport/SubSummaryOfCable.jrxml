@@ -49,7 +49,7 @@
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
@@ -61,7 +61,7 @@
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement verticalAlignment="Middle"/>
@@ -127,9 +127,9 @@
 					<reportElement mode="Opaque" x="0" y="0" width="100" height="20" backcolor="#FFFFFF"/>
 					<box>
 						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid"/>
 						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
@@ -151,9 +151,9 @@
 					<reportElement mode="Opaque" x="100" y="0" width="234" height="20" backcolor="#FFFFFF"/>
 					<box>
 						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid"/>
 						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
@@ -258,6 +258,13 @@
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="1">
+			<line>
+				<reportElement x="0" y="0" width="630" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
 	</summary>
 </jasperReport>
