@@ -139,7 +139,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<text><![CDATA[NGUYEN MINH CHAU]]></text>
+					<text><![CDATA[NGUYEN DINH CHAU]]></text>
 				</staticText>
 			</band>
 		</groupFooter>
