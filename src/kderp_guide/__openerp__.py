@@ -33,7 +33,7 @@
     - Customize Interface""",
    # 'css': ['static/doc/_static/*.css'],
    # 'html': ['static/doc/*.html'],
-    'js':['static/src/js/*.js'],
+    #'js':['static/src/js/*.js'],
     #'data':['res_users_view.xml'],
     'qweb':['static/src/xml/kderp_guide.xml'],
    # 'demo':[],
