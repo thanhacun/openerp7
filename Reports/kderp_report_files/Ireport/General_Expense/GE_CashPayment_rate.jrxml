@@ -87,6 +87,9 @@
 	<field name="Secsion_In_Charge" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/user_applicant_id/name]]></fieldDescription>
 	</field>
+	<field name="expense_type" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/expense_id/expense_type]]></fieldDescription>
+	</field>
 	<sortField name="series number"/>
 	<variable name="NumberOfBudget" class="java.lang.Integer" resetType="Group" resetGroup="PaymentNoGroup" incrementType="Group" incrementGroup="BudgetCode" calculation="Count">
 		<variableExpression><![CDATA[$V{NumberOfBudget}+1]]></variableExpression>
@@ -538,26 +541,6 @@
 					<text><![CDATA[Job cost]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="581" y="244" width="60" height="15" forecolor="#000000"/>
-					<box leftPadding="3"/>
-					<textElement verticalAlignment="Middle">
-						<font size="9"/>
-					</textElement>
-					<text><![CDATA[General Exp.]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="563" y="245" width="12" height="12" forecolor="#000000"/>
-					<box>
-						<pen lineWidth="0.75"/>
-						<topPen lineWidth="0.75"/>
-						<leftPen lineWidth="0.75"/>
-						<bottomPen lineWidth="0.75"/>
-						<rightPen lineWidth="0.75"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<staticText>
 					<reportElement x="562" y="262" width="79" height="15" forecolor="#000000"/>
 					<box>
 						<pen lineWidth="0.0" lineColor="#0066FF"/>
@@ -870,6 +853,27 @@
 						<font size="9" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Secsion_In_Charge}.toUpperCase()]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="581" y="244" width="60" height="15" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{expense_type}=="fixed_asset"?"FA & TE":($F{expense_type}=="prepaid"?"Prepaid":"General Exp.")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="563" y="245" width="12" height="12" forecolor="#000000"/>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75"/>
+						<leftPen lineWidth="0.75"/>
+						<bottomPen lineWidth="0.75"/>
+						<rightPen lineWidth="0.75"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{expense_type}=="fixed_asset"?"V":($F{expense_type}=="prepaid"?"V":($F{expense_type}=="expense"?"V":""))]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
