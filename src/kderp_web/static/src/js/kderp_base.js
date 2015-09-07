@@ -1741,7 +1741,7 @@ setTimeout(function(){
 	     * Huong dan su dung cua KDVN
 	     */
 	    on_menu_help: function() {
-	        window.open('https://docs.google.com/document/d/1nLNlWfbR8gCEodgGw9xjeYElTvnmoT_gac5ADejRn0s/pub', '_blank');
+	        window.open('kderp_guide/static/doc/index.html', '_blank');
 	    },
 	    
 	    on_menu_password: function() {
