@@ -1,0 +1,927 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hướng dẫn Quản lý chi phí chung &mdash; kdvn kdvn documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinx13.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'kdvn',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="kdvn kdvn documentation" href="index.html" />
+    <link rel="next" title="KINDEN VIETNAM OpenERP guide" href="kdvn_openerp_guide.html" />
+    <link rel="prev" title="Welcome to kdvn’s documentation!" href="index.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+      
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();sphinxsidebar
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head>
+  <body role="document">
+<div class="pageheader">
+  <ul> 
+      <li><a href="kdvn_openerp_guide.html">Openerp Guide</a></li>
+      <li><a href="#">General Expense</a></li>
+  </ul>
+<div>
+    <a href="index.html">
+      <img src="_static/company_logo.png" alt="KDVN" />
+    </a>
+  </div>
+  
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="kdvn_openerp_guide.html" title="KINDEN VIETNAM OpenERP guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to kdvn’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="kdvn_openerp_guide.html">Openerp Guide</a>&nbsp;|</li>
+        <li><a href="#">General Expense</a> &raquo;</li>
+ 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Hướng dẫn Quản lý chi phí chung</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#giao-dien-chung">1. Giao diện chung</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dang-nhap">1.1 Đăng Nhập</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gioi-thieu-giao-dien">1.2 Giới thiệu giao diện</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nhap-lieu-thong-tin">2. Nhập liệu Thông tin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#yearly-budget">2.1 Yearly Budget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#budget">2.2 Budget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#department">2.3 Department</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#expense-payment">2.4 Expense &amp; Payment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tim-kiem">3.      Tìm Kiếm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tim-kiem-nhanh">3.1     Tìm kiếm nhanh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tim-kiem-chi-tiet-advance-search">3.2 Tìm kiếm chi tiết (Advance Search)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kdvn_openerp_guide.html">KINDEN VIETNAM OpenERP guide</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="huong-dan-quan-ly-chi-phi-chung">
+<h1>Hướng dẫn Quản lý chi phí chung<a class="headerlink" href="#huong-dan-quan-ly-chi-phi-chung" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="giao-dien-chung">
+<h2>1. Giao diện chung<a class="headerlink" href="#giao-dien-chung" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dang-nhap">
+<h3>1.1 Đăng Nhập<a class="headerlink" href="#dang-nhap" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><img alt="_images/IMG_login.png" src="_images/IMG_login.png" />
+<p class="centered">
+<strong>Màn hình đăng nhập</strong></p></div></blockquote>
+</div>
+<div class="section" id="gioi-thieu-giao-dien">
+<h3>1.2 Giới thiệu giao diện<a class="headerlink" href="#gioi-thieu-giao-dien" title="Permalink to this headline">¶</a></h3>
+<p>Trong OpenERP có các loại giao diện Tree, Form, Graph, Calendar, Kaban. Hiện tại chỉ sử dụng chủ yếu 02 loại giao diện là Tree và Form</p>
+<div class="section" id="giao-dien-chinh-va-giao-dien-tree">
+<h4>1.2.1 Giao diện chính và giao diện Tree<a class="headerlink" href="#giao-dien-chinh-va-giao-dien-tree" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="_images/2_IMG_ge.png" src="_images/2_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện Tree view Payment</strong></p><dl class="docutils">
+<dt>Giải thích các ô đánh số trong khung mầu đỏ trên giao diện</dt>
+<dd><p class="first">1: Menu G.E &amp; Expense: Là Menu nằm trên thanh ngang của hệ thống, Menu hiện thị danh mục các bảng dữ liệu thuộc phần chi phí
+2: Danh mục bảng dữ liệu thuộc G.E &amp; Expense</p>
+<blockquote>
+<div>G.E &amp; Expense: Dùng để nhập và lưu trữ thông tin về chi phí
+Supplier Payment: Dùng để nhập và Lưu trữ thông tin về thanh toán Yearly G.E Budget: Giao diện tổng hợp về Chi Phí Chung (Nhập budget và các thông tin cơ bản chi phí chung của 01 năm)
+Budgets: Dùng để nhập và lưu trữ Budget
+Departments: Dùng để nhập và lưu trữ nhân viên thuộc bộ phận phòng ban
+Update Allocated Expense: Dùng để tự động cập nhật trạng thái phân bổ chi phí.</div></blockquote>
+<p>3: Nút Create: Dùng để tạo mới bản ghi
+4: Nút Import: Dùng đưa dữ liệu vào hệ thống bằng file csv trong excel
+5: Report/From, Action</p>
+<blockquote>
+<div>Report /Form: Hiện thị danh sách báo cáo liên quan đến bảng dữ liệu
+Action: Hiện thị các chức năng xóa bản ghi, nhập xuất dữ liệu, Nhật ký nhập liệu. ...</div></blockquote>
+<p>6: Ô Search: Nhập nội dung tìm kiếm dữ liệu
+7: Hiện thị số bản ghi trên Treeview
+8: Lựa chọn các cách xem dữ liệu</p>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>Chon List view   để xem dữ liệu kiểu Tree</dt>
+<dd><img alt="_images/1_IMG_ge_list_view.png" class="first last" src="_images/1_IMG_ge_list_view.png" />
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Chọn Form view  để xem dữ liệu dạng Form</dt>
+<dd><img alt="_images/1_IMG_ge_form_view.png" class="first last" src="_images/1_IMG_ge_form_view.png" />
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p class="last">9: List bản ghi hiện thị ở dạng Treeview</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="giao-dien-va-cac-chuc-nang-tren-form">
+<h4>1.2.2 Giao diện và các chức năng trên Form<a class="headerlink" href="#giao-dien-va-cac-chuc-nang-tren-form" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="kdvnstatic/3_IMG_ge.png" src="kdvnstatic/3_IMG_ge.png" />
+<ol class="arabic simple">
+<li>Nút Save: Dùng để lưu dữ liệu sau khi nhập mới hoặc sửa lại dữ liệu.</li>
+<li>Nút Discard: Dùng để hủy bỏ dữ liệu sau khi nhập mới hoặc sửa dữ liệu, nếu không muốn lưu dữ liệu vào hệ thống.</li>
+<li>Các nút xử lý quy trình dữ liệu</li>
+<li>Attachment(s): Dùng để đính kèm tài liệu vào bản ghi dữ liệu</li>
+<li>Nút dịch chuyển thứ tự trước sau của bản ghi dữ liệu</li>
+<li>Hiện thị trạng thái của dữ liệu theo quy trình</li>
+<li>Hiện thị các trang dữ liệu trong Form view</li>
+<li>Khu vực nhập dữ liệu</li>
+</ol>
+<ul>
+<li><dl class="first docutils">
+<dt>Chú ý :</dt>
+<dd><p class="first last">Trong khu vực nhập liệu 8, khi trường dữ liệu có màu vàng nhạt có nghĩa là bạn phải nhập dữ liệu vào không được bỏ trống, các trường khác có thể bỏ trống.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+<div class="section" id="nhap-lieu-thong-tin">
+<h2>2. Nhập liệu Thông tin<a class="headerlink" href="#nhap-lieu-thong-tin" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="yearly-budget">
+<h3>2.1 Yearly Budget<a class="headerlink" href="#yearly-budget" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="giao-dien-yearly-budget">
+<h4>2.1.1 Giao diện Yearly Budget<a class="headerlink" href="#giao-dien-yearly-budget" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="_images/5_IMG_ge.png" src="_images/5_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện khi ấn vào Yearly G.E Budget</strong></p></div></blockquote>
+</div>
+<div class="section" id="thong-tin-nhap-lieu">
+<h4>2.1.2 Thông tin nhập liệu<a class="headerlink" href="#thong-tin-nhap-lieu" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="_images/6_IMG_ge.png" src="_images/6_IMG_ge.png" />
+<p>Code Budget: Hệ thống tự động tạo Code theo năm.
+Start Date: Ngày bắt đầu phân bổ chi phí
+Closed Date: Ngày kết thúc phân bổ chi phí
+Currencies: Đơn vị tỷ giá
+Trang G.E. Amount Info.: Hiển thị thông tin tổng chi phí trong năm</p>
+<img alt="_images/1_IMG_ge_yearly_amount.png" src="_images/1_IMG_ge_yearly_amount.png" />
+<p class="centered">
+<strong>Giao diện dữ liệu trang G.E. Amount Info. trong Yearly G.E Budget</strong></p><p>Total Budget: Tổng chi phí dự kiến trong năm
+Expense: Tổng chi phí Trong năm
+Payment: Tổng trả cho chi phí trong năm
+Trang Budget</p>
+<blockquote>
+<div><p>Code: Nhập Budget Code
+Amount: Nhập dự toán chi phí
+Expense: Chi phí theo khoảng thời gian (tính từ Start Date đến Closed Date)
+Payment: Chi phí phải trả theo khoảng thời gian (tính từ Start Date đến Closed Date)
+Balance: Chi phi còn lại theo khoảng thời gian (tính từ Start Date đến Closed Date)
+Over: Thông báo chi phí vượt quá dự toán hay không (Yes: là vượt quá chi phí và có màu đỏ, No là không quá chi phí)</p>
+<img alt="_images/7_IMG_ge.png" src="_images/7_IMG_ge.png" />
+</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="budget">
+<h3>2.2 Budget<a class="headerlink" href="#budget" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="giao-dien-budget">
+<h4>2.2.1 Giao diện Budget<a class="headerlink" href="#giao-dien-budget" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="_images/8_IMG_ge.png" src="_images/8_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện Budget</strong></p></div></blockquote>
+</div>
+<div class="section" id="id1">
+<h4>2.2.2 Thông tin nhập liệu<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="_images/9_IMG_ge.png" src="_images/9_IMG_ge.png" />
+<ul class="simple">
+<li>Name: Tên Budget</li>
+<li>Code: Code Budget</li>
+<li>Category: Danh mục Budget</li>
+<li>Active: Tích chọn Code có dùng hay không</li>
+<li>General Expense: Tích chọn thuộc chi phí chung hay không</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="department">
+<h3>2.3 Department<a class="headerlink" href="#department" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>Dùng để lưu trữ phòng ban</div></blockquote>
+<div class="section" id="giao-dien-manh-hinh-department">
+<h4>2.3.1 Giao diện mành  hình Department<a class="headerlink" href="#giao-dien-manh-hinh-department" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="_images/10_IMG_ge.png" src="_images/10_IMG_ge.png" />
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h4>2.3.2 Thông tin nhập liệu<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><img alt="_images/11_IMG_ge.png" src="_images/11_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện tạo mới một Department</strong></p><ul class="simple">
+<li>Code: Mã bộ phận phòng ban</li>
+<li>Department Name: Tên bộ phận phòng ban</li>
+<li>Manager: Người quản lý bộ phận phong ban</li>
+<li>2nd Manager: Phó bộ phận phòng ban</li>
+<li>G.E in Charges: Tích chọn để hệ thống điền tự động Section in Charges trong chi phí hay không</li>
+<li>Parent Department: Trực thuộc phòng</li>
+<li>Trang Expense: Hiện thị chi phí budget code trong năm của riêng bộ phận phòng ban</li>
+<li>Trang Member: Nhập nhân viên thuộc bộ phận phong ban</li>
+</ul>
+<img alt="_images/12_IMG_ge.png" src="_images/12_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện sau khi ấn vào trang Members</strong></p><p>Ấn vào nút Add để thêm nhân viên</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="expense-payment">
+<h3>2.4 Expense &amp; Payment<a class="headerlink" href="#expense-payment" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><img alt="_images/13_IMG-ge.png" src="_images/13_IMG-ge.png" />
+<p class="centered">
+<strong>Giao diện khi ấn vào General Expense trên danh mục Menu</strong></p><img alt="_images/14_IMG_ge.png" src="_images/14_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện khi ấn vào Supplier Payment trên danh mục Menu</strong></p><p>General Expense được chia làm 4 loại chi phí</p>
+<blockquote>
+<div><ul class="simple">
+<li>Expense: Chi phí chung</li>
+<li>Prepaid : Chi phí trả trước</li>
+<li>Fixed Asset : Chi phí cho tài sản cố định</li>
+<li>Allocated Expense: Chi phí phân bổ cho trả trước và tài sản cố định</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<div class="section" id="nhap-lieu-chi-phi-truong-hop-type-la-fixed-asset">
+<h4>2.4.1 Nhập liệu chi phí trường hợp Type là Fixed Asset<a class="headerlink" href="#nhap-lieu-chi-phi-truong-hop-type-la-fixed-asset" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id3">
+<h5>2.4.1.1 Thông tin nhập liệu<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h5>
+<blockquote>
+<div><img alt="_images/15_IMg_ge.png" src="_images/15_IMg_ge.png" />
+<p class="centered">
+<strong>Giao diện tạo mới một General Expense</strong></p><p>Giao diện có 3 trang chính</p>
+<img alt="_images/16_IMG_ge.png" src="_images/16_IMG_ge.png" />
+<img alt="_images/17_IMG_ge.png" src="_images/17_IMG_ge.png" />
+<p>Trang Expense Details: Nhập thông tin về chi phí</p>
+<blockquote>
+<div><img alt="_images/19_IMG_ge.png" src="_images/19_IMG_ge.png" />
+</div></blockquote>
+<p>Trang Allocation Sheet: Hiện thị phân bổ chi phi</p>
+<blockquote>
+<div><img alt="_images/20_IMG_ge.png" src="_images/20_IMG_ge.png" />
+</div></blockquote>
+<p>Trang Payment &amp; VAT Invoice: Hiện thị thông tin thanh toán và hóa đơn</p>
+</div></blockquote>
+</div>
+<div class="section" id="quy-trinh-nhap-lieu">
+<h5>2.4.2.2 Quy Trình nhập liệu<a class="headerlink" href="#quy-trinh-nhap-lieu" title="Permalink to this headline">¶</a></h5>
+<blockquote>
+<div><dl class="docutils">
+<dt>Quy Trình tạo chi phí có Type là Prepaid hoặc Fixed Asset</dt>
+<dd><ul class="first">
+<li><p class="first">Quy trình chi phí</p>
+</li>
+<li><p class="first">Quy trình thanh toán:</p>
+<blockquote>
+<div><img alt="_images/1_IMG_ge_process_1.png" src="_images/1_IMG_ge_process_1.png" />
+</div></blockquote>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Bước 1: Tạo Chi phí gồm thông tin:</dt>
+<dd><ul class="first last simple">
+<li>Expense No: Mã số chi phí</li>
+<li>Type: Kiểu chi phí</li>
+<li>Exp/Allocated Date: Ngày chi phí</li>
+<li>Section in Charges: Phòng ban của người tạo chi phí</li>
+<li>Supplier: Nhà cung cấp</li>
+<li>Address: Địa chỉ nhà cung cấp</li>
+<li>Scope of Work: Diễn giải chi phí</li>
+<li>Currency: Tiền tệ</li>
+<li>Ex.Rate: Tỉ giá</li>
+<li>Advance No: Mã số Advance</li>
+<li>Desc.: Diễn giải</li>
+<li>Amount: Số tiền chi phí</li>
+<li>Sau khi tạo một chi phí hoàn thành thông tin, ấn nút Submit để yêu cầu BOD ký duyệt. Trạng thái chi phí từ Daft sang Wait for Payment</li>
+</ul>
+</dd>
+</dl>
+<p>Bước 2: Sau khi được BOD ký tiến hành làm Quotation, Trường hợp không được ký duyệt người dùng ấn vào   trên Form chi phí để hủy bỏ yêu cầu chi phí.
+Nhập thông tin đầy đủ cho thanh toán.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Payment No: Mã thanh toán</li>
+<li>R.O.P. Date: Ngày thanh toán</li>
+<li>Due Date: Ngày hết hạn thanh toán</li>
+<li>Expense No.: Mã chi phí</li>
+<li>Payment type: Kiểu thanh toán</li>
+<li>Supplier: Nhà cung cấp</li>
+<li>Applicant User: Người sử dụng</li>
+<li>Payee: Người trả</li>
+<li>Force Period: Thời kỳ kế toán</li>
+<li>Description: Diễn giải</li>
+<li>Job: Dự án</li>
+<li>Amount: Số tiền</li>
+</ul>
+</div></blockquote>
+<p>Bước 3: Sau khi tạo một thanh toán ấn Submit đợi BOD ký duyệt, trạng thái thanh toán chuyển từ Draft sang BOD Checking.</p>
+<dl class="last docutils">
+<dt>Bước 4: Sau khi được BOD ký duyệt ấn nút BOD approved để tiến hành làm thanh toán mua bán, Trạng thái thanh toán chuyển từ BOD checking sang BOD approved.</dt>
+<dd><dl class="first docutils">
+<dt>Trường hợp không được ký duyệt người dùng ấn vào nút   trên Form Supplier Payment để hủy bỏ.Nhập thông tin trên trang</dt>
+<dd><ul class="first">
+<li><dl class="first docutils">
+<dt>Trang VAT Invoices:</dt>
+<dd><ul class="first last simple">
+<li>VAT Inv. No.: Số hóa đơn VAT</li>
+<li>Date: Ngày hóa đơn</li>
+<li>Cur.: Loại tiền</li>
+<li>Sub-Total: Tiền trước thuế</li>
+<li>VAT (%): % thuế</li>
+<li>VAT: Tiền thuế</li>
+<li>Total: Tiền sau thuế</li>
+<li>In VND: Tiền VND</li>
+<li>&#64;: Kiểu đơn vị tiền</li>
+<li>Received Date: Ngày nhận hóa đơn</li>
+<li>To Accounting Date: Ngày kế toán</li>
+<li>Returned Date: Ngày hoàn trả</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Trang Paid:</dt>
+<dd><ul class="first last simple">
+<li>Date: Ngày trả</li>
+<li>Journal: Kiểu thanh toán</li>
+<li>Period: Thời kỳ kế toán</li>
+<li>Currency: Kiểu tiền</li>
+<li>Bank: Ngân hàng</li>
+<li>Amount: Số tiền</li>
+<li>Ex.Rate: Tỷ giá</li>
+<li>State: Trạng thái</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Sau bước 4: Trạng Thái thanh toán BOD approved sẽ chuyển sang Paid khi
+(1)     Total Amount = (2) Total VAT = (3) Total Paid</p>
+<img alt="_images/21_IMG_ge.png" src="_images/21_IMG_ge.png" />
+<img alt="_images/22_IMG_ge.png" src="_images/22_IMG_ge.png" />
+<p>Trạng thái của chi phí sau bước 4 trạng thái chuyển sang Paid khi
+(1) Total Amount = (2) Total VAT = (3) Total Paid = (4) Total GE</p>
+<img alt="_images/23_IMG_ge.png" src="_images/23_IMG_ge.png" />
+<p class="centered">
+<strong>Một chi phí kết thúc khi trạng thái ở Completed.</strong></p><p>Trên hình trên chi phí chưa Completed do Amount G.E &lt;&gt; Amount phân bổ chi phí.Để chi phí Completed, tiến hành phân bổ chi Phí (Create Allocation Sheet)</p>
+<img alt="_images/24_IMG_ge.png" class="last" src="_images/24_IMG_ge.png" />
+</dd>
+</dl>
+<p>Ấn nút  trên giao diện để phân bổ chi phí</p>
+<img alt="_images/25_IMG_ge.png" src="_images/25_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện tạo một phân bổ chi phí</strong></p><dl class="docutils">
+<dt>Nhập thông tin phân bổ chi phí:</dt>
+<dd><ul class="first last simple">
+<li>Start Date: Ngày bắt đầu tính phân bổ chi phí</li>
+<li>Number of month: Tống số tháng phân bổ chi phí</li>
+<li>Allocated to Section: Bộ phận sử dụng</li>
+<li>Budget: Code Budget</li>
+<li>Select: Lựa chọn số tháng được phân bổ trước (1 month, For And of this Year, Custom)</li>
+<li>1 Month: hệ thông sẽ phân bổ 1 tháng lấy tháng nhập trong Start Date</li>
+<li>For and of this Year : phân bổ cho các thang trong năm tính từ tháng nhập trong Start Date.</li>
+<li>Custom: người dùng nhập tổng số tháng muốn phân bổ</li>
+</ul>
+</dd>
+</dl>
+<img alt="_images/26_IMG_ge.png" src="_images/26_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện sau khi nhập và ấn Create Allocation Sheet trên giao diện Create Allocation Sheet</strong></p><img alt="_images/27_IMG_ge.png" src="_images/27_IMG_ge.png" />
+<img alt="_images/28_IMG_ge.png" src="_images/28_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện sau tạo một thông tin Payment &amp; Invoice, Paid</strong></p><p>General Expense chuyển trạng thái Completed khi
+(1) Total Amount = (2) Total VAT = (3) Total Paid = (4) Total G.E
+Và (5) Amount G.E (Allocated) = (6) Amount G.E
+Và Trạng Thái General Expense Allocated Completed</p>
+<p><a href="#id4"><span class="problematic" id="id5">*</span></a>Ghi chú:</p>
+<blockquote>
+<div><img alt="_images/1_IMG_ge_note_1.png" src="_images/1_IMG_ge_note_1.png" />
+</div></blockquote>
+<img alt="_images/29_IMG_ge.png" src="_images/29_IMG_ge.png" />
+<p class="last centered">
+<strong>Giao diện hướng dẫn mở phân bổ chi phí</strong></p></dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="nhap-general-expense-truong-hop-type-la-expense">
+<h4>2.4.2 Nhập General Expense trường hợp Type là Expense<a class="headerlink" href="#nhap-general-expense-truong-hop-type-la-expense" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id6">
+<h5>2.4.2.1 Thông tin nhập liệu<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h5>
+<blockquote>
+<div><ul>
+<li><p class="first">Expense No.: Hệ thống tự tạo sau khi người dùng chọn Job/G.E</p>
+</li>
+<li><p class="first">Job/G.E: Hệ thống tự động điền Code năm hiện tại (có thể thay đổi khi lựa chọn lại Job Code).</p>
+</li>
+<li><p class="first">Exp. /Allocated Date: Hệ thống tự động điền ngày hiện tại (Có thể nhập khác ngày)</p>
+</li>
+<li><p class="first">Section in Charges: Hệ thống tự điện bộ phận phòng ban của nhân viên nhập liệu</p>
+</li>
+<li><dl class="first docutils">
+<dt>Trang Expense Detail:</dt>
+<dd><ul class="first last simple">
+<li>Supplier: Nhập nhà cung cấp</li>
+<li>Address: Địa chỉ nhà cung cấp</li>
+<li>Scope of Works: Diễn giải chi phí</li>
+<li>Currency: Tỷ giá giao dịch</li>
+<li>Advance No.: Nhập Code Advance</li>
+<li>Job/G.E: Nhập Job Code</li>
+<li>dget Code: Nhập Budget Code</li>
+<li>located Section: Nhập bộ phận phòng ban yêu cầu</li>
+<li>Amount: Nhập số tiền chi phí</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Trang Payment &amp; VAT Invoice: Hiện thị thông tin mua và trả của chi phí</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id7">
+<h5>2.4.2.2 Quy Trình nhập liệu<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h5>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>Quy trình chi phí:</dt>
+<dd><img alt="_images/1_IMG_ge_process_2.png" class="first last" src="_images/1_IMG_ge_process_2.png" />
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Quy trình thanh toán:</dt>
+<dd><img alt="_images/1_IMG_ge_process_3.png" class="first last" src="_images/1_IMG_ge_process_3.png" />
+</dd>
+</dl>
+</li>
+</ul>
+<img alt="_images/30_IMG_ge.png" src="_images/30_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện tạo một chi phí có Type là Expense</strong></p><p>Bước 1: Tạo chi phí gồm thông tin nhập liệu trên, ấn Submit trạng thái chi phí chuyển từ Draft từ sang Waiting for Payment, đợi BOD ký duyệt</p>
+<blockquote>
+<div><img alt="_images/31_IMG_ge.png" src="_images/31_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện sau khi tạo một chi phí</strong></p><p>Sau khi ấn trên giao diện, trạng thái chuyển từ Draft sang Waiting for Payment</p>
+<img alt="_images/32_IMG_ge.png" src="_images/32_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện khi ấn nút Submit trên General Expense</strong></p></div></blockquote>
+<p>Bước 2: Sau khi được BOD ký duyệt tiến hành làm Quotation</p>
+<blockquote>
+<div><img alt="_images/33_IMG_ge.png" src="_images/33_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện khi ấn vào trang Payment &amp; VAT Invoice trên General Expense</strong></p><p>Click vào  để tạo Payment</p>
+<img alt="_images/34_IMG_ge.png" src="_images/34_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện sau khi ấn vào nút mở Payment</strong></p><dl class="docutils">
+<dt>Nhập thông tin đầy đủ cho thanh toán:</dt>
+<dd><ul class="first last simple">
+<li>Payment No: Mã thanh toán</li>
+<li>R.O.P. Date: Ngày thanh toán</li>
+<li>Due Date: Ngày hết hạn thanh toán</li>
+<li>Expense No.: Mã chi phí</li>
+<li>Payment type: Kiểu thanh toán</li>
+<li>Supplier: Nhà cung cấp</li>
+<li>Applicant User: Người sử dụng</li>
+<li>Payee: Người trả</li>
+<li>Force Period: Thời kỳ kế toán</li>
+<li>Description: Diễn giải</li>
+<li>Job: Dự án</li>
+<li>Amount: Số tiền</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p>Bước 3: Sau khi hoàn tất điền thông tin chi phí ấn Submit đợi BOD ký duyệt chi phí, Trạng thái thanh toán chuyển từ Draft sang BOD checking. Trong trường hợp không được ký duyệt thì ấn nút Reject để hủy bỏ Payment.</p>
+<p>Bước 4: Sau khi được BOD ký duyệt ấn nút BOD approved để tiến hành làm thanh toán mua bán, Trạng thái lúc này chuyển từ BOD checking sang BOD approved, trong trường hợp không được BOD ký duyệt ấn nút Reject để hủy bỏ Payment.</p>
+<dl class="docutils">
+<dt>Nhập thông tin trên trang:</dt>
+<dd><ul class="first">
+<li><dl class="first docutils">
+<dt>VAT Invoices:</dt>
+<dd><ul class="first last simple">
+<li>VAT Inv. No.: Số hóa đơn VAT</li>
+<li>Date: Ngày hóa đơn</li>
+<li>Cur.: Loại tiền</li>
+<li>Sub-Total: Tiền trước thuế</li>
+<li>VAT (%): % thuế</li>
+<li>VAT: Tiền thuế</li>
+<li>Total: Tiền sau thuế</li>
+<li>In VND: Tiền VND</li>
+<li>&#64;: Kiểu đơn vị tiền</li>
+<li>Received Date: Ngày nhận hóa đơn</li>
+<li>To Accounting Date: Ngày kế toán</li>
+<li>Returned Date: Ngày hoàn trả</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Paid:</dt>
+<dd><ul class="first last simple">
+<li>Date: Ngày trả</li>
+<li>Journal: Kiểu thanh toán</li>
+<li>Period: Thời kỳ kế toán</li>
+<li>Currency: Kiểu tiền</li>
+<li>Bank: Ngân hàng</li>
+<li>Amount: Số tiền</li>
+<li>Ex.Rate: Tỷ giá</li>
+<li>State: Trạng thái</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="last docutils">
+<dt>Sau bước 4:</dt>
+<dd><p class="first">Trạng Thái BOD approved sẽ chuyển sang Paid khi
+(1) Total Amount = (2) Total VAT = (3) Total Paid</p>
+<img alt="_images/35_IMG_ge.png" src="_images/35_IMG_ge.png" />
+<img alt="_images/36_IMG_ge.png" src="_images/36_IMG_ge.png" />
+<p>Trạng thái của chi phí sau bước 4 sẽ là Paid khi
+(1)     Total Amount = (2) Total VAT = (3) Total Paid = (4) Total GE</p>
+<img alt="_images/37_IMg_ge.png" src="_images/37_IMg_ge.png" />
+<ul class="last simple">
+<li>Ghi chú:</li>
+<li>Sau khi chi phí Completed, và thanh toán ở trạng thái Paid người dùng muốn sửa click vào nút Open để mở và sửa dữ liệu.</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="quy-trinh-nhap-lieu-truong-hop-la-allocated-expense">
+<h4>2.4.3 Quy Trình nhập liệu trường hợp là Allocated Expense<a class="headerlink" href="#quy-trinh-nhap-lieu-truong-hop-la-allocated-expense" title="Permalink to this headline">¶</a></h4>
+<p>Trường hợp Allocated Expense là trường hợp dùng để phân bổ chí phí cho trường hợp Prepaid và Fixed Asset.</p>
+<div class="section" id="id8">
+<h5>2.4.3.1 Thông tin nhập liệu<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h5>
+<blockquote>
+<div><img alt="_images/39_IMG_ge.png" src="_images/39_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện tạo một chi phí chọn Type là Allocated Expense</strong></p><ul>
+<li><p class="first">Expense No.: Hệ thống tự tạo sau khi người dùng chọn Job/G.E</p>
+</li>
+<li><p class="first">Job/G.E: Hệ thống tự động điền Code năm hiện tại (có thể thay đổi khi lựa chọn lại Job Code.)</p>
+</li>
+<li><p class="first">Exp. /Allocated Date: Hệ thống tự động điền ngày hiện tại (Có thể nhập khác ngày)</p>
+</li>
+<li><p class="first">Section in Charges: Chọn section của người đăng nhập</p>
+</li>
+<li><dl class="first docutils">
+<dt>Trang Expense Detail:</dt>
+<dd><ul class="first last simple">
+<li>Scope of Works: Diễn giải chi phí phân bổ</li>
+<li>Currency: Tỉ giá giao dịch</li>
+<li>Job/G.E: Nhập Job Code</li>
+<li>Budget Code: Nhập Budget Code</li>
+<li>Allocated Section: Nhập bộ phận phòng ban yêu cầu</li>
+<li>Fixed Amount/Prepaid</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id9">
+<h5>2.4.3.2 Quy trình nhập liệu<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h5>
+<blockquote>
+<div><p>Quy trình chi phí</p>
+<img alt="_images/1_IMG_ge_process_4.png" src="_images/1_IMG_ge_process_4.png" />
+<p>Để phân bổ chi phí có thể làm theo 2 cách.
+Cách 1: Là phân bổ luôn trên giao diện Chi phí có Type là Prepaid hoặc Fixed Asset.</p>
+<img alt="_images/40_IMG_ge.png" src="_images/40_IMG_ge.png" />
+<p>Cách 2: Tạo Chi phí như thông thường và chọn Type là Allocated Expense</p>
+<img alt="_images/41_IMG_ge.png" src="_images/41_IMG_ge.png" />
+<p>Cách 1 đã được hướng dẫn chi tiết trong phần 2.4.1 Nhập chi phí trường hợp Type là Fixed Asset, dưới đây là hướng dẫn cách 2.</p>
+<p>Bước 1: Tạo phân bổ chi phi, ấn nút Submit để phân bổ chi phí cho Prepaid hay Fixed Asset.</p>
+<blockquote>
+<div><img alt="_images/42_IMG_ge.png" src="_images/42_IMG_ge.png" />
+</div></blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Ghi chú:</dt>
+<dd><ul class="first simple">
+<li>Sau khi chi phí đã completed người dùng muốn sửa, ấn vào nút Open</li>
+</ul>
+<img alt="_images/43_IMG_Ge.png" class="last" src="_images/43_IMG_Ge.png" />
+</dd>
+</dl>
+</li>
+</ul>
+<p>Sau khi ấn Open giao diện xuất hiện 2 nút Reject và Close</p>
+<img alt="_images/44_IMG_Ge.png" src="_images/44_IMG_Ge.png" />
+<p>Ấn nút Close để kết thúc chi phí
+Ấn nút Reject để đưa về Draft hoặc cancel chi phí</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="nhap-general-expense-truong-hop-allocated-to-la-job-general-expense">
+<h4>2.4.4 Nhập General Expense trường hợp Allocated to là Job &amp; General Expense<a class="headerlink" href="#nhap-general-expense-truong-hop-allocated-to-la-job-general-expense" title="Permalink to this headline">¶</a></h4>
+<p>Là những chi phí phát sinh được phân bổ cho Job dự án</p>
+<blockquote>
+<div><img alt="_images/45_IMG_ge.png" src="_images/45_IMG_ge.png" />
+</div></blockquote>
+<div class="section" id="id10">
+<h5>2.4.4.1 Thông tin nhập liệu<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h5>
+<blockquote>
+<div><ul>
+<li><p class="first">Expense No.: Hệ thống tự tạo sau khi người dùng chọn Job/G.E</p>
+</li>
+<li><p class="first">Type: Lựa chọn 1 trong các loại chi phí (Expense, Fixed Asset, Prepaid, Allocated Expense)</p>
+</li>
+<li><p class="first">Allocated To: Chọn Job &amp; General Expense</p>
+</li>
+<li><p class="first">Job/G.E: Hệ thống tự động điền Code năm hiện tại (có thể thay đổi khi lựa chọn lại Job Code)</p>
+</li>
+<li><p class="first">Exp. /Allocated Date: Hệ thống tự động điền ngày hiện tại (Có thể nhập khác ngày)</p>
+</li>
+<li><p class="first">Section in Charges: Hệ thống tự điện bộ phận phòng ban của nhân viên nhập liệu</p>
+</li>
+<li><dl class="first docutils">
+<dt>Trang Expense Detail:</dt>
+<dd><ul class="first last simple">
+<li>Supplier: Nhập nhà cung cấp</li>
+<li>Address: Địa chỉ nhà cung cấp</li>
+<li>Scope of Works: Diễn giải chi phí</li>
+<li>Currency: Tỉ giá giao dịch</li>
+<li>Advance No.: Nhập Code Advance</li>
+<li>Job/G.E: Nhập Job Code dự án (có thể nhập Job Code General Expense)</li>
+<li>Budget Code: Nhập Budget Code</li>
+<li>Allocated Section: Nhập bộ phận phòng ban yêu cầu</li>
+<li>Amount: Nhập số tiền chi phí</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Trang Payment &amp; VAT Invoice: Hiện thi thông tin mua và trả của chi phí</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id11">
+<h5>2.4.4.2 Quy Trình nhập liệu<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h5>
+<p>Quy trình xử lý theo loại chi phí. Và các loại chi phí đã được trình bày diễn giải trên, người dùng xem trên các phần 2.4.1, 2.4.2 và 2.4.3.
+Dưới đây là các bước chung cho chi phí được phân bổ cho Job dự án.
+Bước 1: Tạo Chi phí gồm thông tin nhập liệu trên, ấn nút Submit trạng thái chi phí chuyển từ Draft sang Waiting for Payment đợi BOD ký duyệt.</p>
+<p>Bước 2: Sau khi được BOD ký duyệt, tiến hành làm Quotation.
+Nhập thông tin đầy đủ cho thanh toán:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Payment No: Mã thanh toán</li>
+<li>R.O.P. Date: Ngày thanh toán</li>
+<li>Due Date: Ngày hết hạn thanh toán</li>
+<li>Expense No.: Mã chi phí</li>
+<li>Payment type: Kiểu thanh toán</li>
+<li>Supplier: Nhà cung cấp</li>
+<li>Applicant User: Người sử dụng</li>
+<li>Payee: Người trả</li>
+<li>Force Period: Thời kỳ kế toán</li>
+<li>Description: Diễn giải</li>
+<li>Job: Dự án</li>
+<li>Amount: Số tiền</li>
+</ul>
+</div></blockquote>
+<p>Bước 3: Ấn nút Submit trên thanh toán, trạng thái thanh toán chuyển từ Draft sang BOD checking.</p>
+<blockquote>
+<div><img alt="_images/46_IMG_Ge.png" src="_images/46_IMG_Ge.png" />
+<p class="centered">
+<strong>Giao diện ấn nút Submit</strong></p></div></blockquote>
+<p>Sau khi được BOD ký duyệt tiến hành thực hiện mua bán, ấn BOD approved trạng thái chuyển từ BOD checking sang BOD approved, trong trường hợp không được ký duyệt thì ấn nút Reject để hủy bỏ Payment.</p>
+<blockquote>
+<div><img alt="_images/47_IMG_ge.png" src="_images/47_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện sau khi ấn nút Submit</strong></p></div></blockquote>
+<p>Bước 4: Nhập thông tin VAT</p>
+<blockquote>
+<div><img alt="_images/48_IMG_ge.png" src="_images/48_IMG_ge.png" />
+</div></blockquote>
+<dl class="docutils">
+<dt>Thanh toán tự động chuyển trạng thái từ BOD approved sang Paid khi</dt>
+<dd>Payment Amount = VAT Amount = Paid Amount</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="tim-kiem">
+<h2>3.      Tìm Kiếm<a class="headerlink" href="#tim-kiem" title="Permalink to this headline">¶</a></h2>
+<p>Tìm kiếm được sử dụng ở giao diện Listview, có 2 cách tìm kiếm:</p>
+<blockquote>
+<div><img alt="_images/49_IMG_ge.png" src="_images/49_IMG_ge.png" />
+<p class="centered">
+<strong>Giao diện tìm kiếm</strong></p></div></blockquote>
+<div class="section" id="tim-kiem-nhanh">
+<h3>3.1     Tìm kiếm nhanh<a class="headerlink" href="#tim-kiem-nhanh" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><img alt="_images/50_IMG_ge.png" src="_images/50_IMG_ge.png" />
+</div></blockquote>
+<p>Cách nhập nội dung tìm kiếm cơ bản</p>
+<p>Khi bạn nhập vào nôi dung cần tìm, OpenERP sẽ liệt kê ra các tiêu chí tìm kiếm và bạn chọn đúng trường thích hợp theo miêu tả (bằng cách dịch chuyển mũi tên lên xuống ↑↓) rồi ấn Enter. OpenERP sẽ lọc hết các dòng dữ liệu phù hợp</p>
+<blockquote>
+<div><img alt="_images/51_IMG_Ge.png" src="_images/51_IMG_Ge.png" />
+</div></blockquote>
+<p>Khi click chuột vào ô tìm kiếm</p>
+<p>Ví dụ khi nhập thanh toán tiền taxi vào ô tìm kiếm.</p>
+<blockquote>
+<div><img alt="_images/52_IMG_Ge.png" src="_images/52_IMG_Ge.png" />
+</div></blockquote>
+<p>chọn trường tìm kiếm
+trong ô tìm kiếm sẽ hiển thị các trường như trên. Dữ liệu này có thể nằm ở trong trường Description bạn chọn vào đây. OpenERP sẽ hiển thị ra các Description có từ này</p>
+<blockquote>
+<div><img alt="_images/53_IMG_ge.png" src="_images/53_IMG_ge.png" />
+</div></blockquote>
+<p>hiển thị dữ liệu tìm kiếm
+Hiện tại trong phần tìm kiếm cơ bản bạn có thể tìm kiếm theo các trường Expense No., Description, Supplier, Budget, Detail/Job/Amount, Expense Date, Exp. /Allocated Date.
+Bạn có thể kết hợp nhiều điều kiện tìm kiếm.</p>
+<blockquote>
+<div><img alt="_images/54_IMG_Ge.png" src="_images/54_IMG_Ge.png" />
+</div></blockquote>
+<p>kết hợp điều kiện tìm kiếm cơ bản
+Tìm kiếm các thanh toán có ngày Expense Date là 25-03-2015. thì sẽ được kết quả tìm kiếm như trên.</p>
+</div>
+<div class="section" id="tim-kiem-chi-tiet-advance-search">
+<h3>3.2 Tìm kiếm chi tiết (Advance Search)<a class="headerlink" href="#tim-kiem-chi-tiet-advance-search" title="Permalink to this headline">¶</a></h3>
+<p>Khi muốn biết cần tìm chính xác chi phí nào có giá trị nào, bạn vào Advance Search. Phần này có hầu hết các trường cần tìm kiếm.</p>
+<blockquote>
+<div><img alt="_images/55_IMG_Ge.png" src="_images/55_IMG_Ge.png" />
+</div></blockquote>
+<p>Khu vực tìm kiếm chi tiết
+Ví dụ bạn muốn tìm kiếm các chi phí có Currency là USD.</p>
+<blockquote>
+<div><img alt="_images/56_IMG_ge.png" src="_images/56_IMG_ge.png" />
+</div></blockquote>
+<p>Dữ liệu sau khi tìm kiếm</p>
+<p>Lọc dữ liệu (Filters)
+Phần này để khoanh vùng các dữ liệu tìm kiếm và làm việc.</p>
+<blockquote>
+<div><img alt="_images/57_IMG_ge.png" src="_images/57_IMG_ge.png" />
+</div></blockquote>
+<p>Vùng lọc dữ liệu
+1 - Working Expense: Khi bạn vào G.E. &amp; Expense sẽ mặc định trong filter. Phần này lọc tất cả các chi phí chưa hoàn thành (không ở trạng thái complete).
+2 - Working Allocation Sheet: Phần này lọc các các chi phí ở dạng phân bổ chi phí ở trạng thái Draft.
+3 - Draft Expense: Lọc các chi phí ở trạng thái Draft.
+4 - Waiting for Payment: Lọc các chi phí ở trạng thái chờ thanh toán.
+5 - Completed Expense: Lọc các chi phí ở trạng thái Complete.
+6 - Cancel Expense: Lọc các chi phí sau khi đã hoàn thành.
+7 - Expense: Lọc các cho phí ở dạng Expense.
+8 - Allocation Sheet: Lọc tất cả các chi phí ở dạng Phân bổ chi phí.
+9 - Prepaid &amp; Fix Asset: Lọc các chi phí ở dạng trả tiền trước (ứng trước).
+10 - General Expense: Lọc các chi phí chỉ là chi phí chung.
+11 - Job &amp; General Expense: Lọc các chi phí gồm cả chi phí chung và chi phí dự án.</p>
+<blockquote>
+<div><img alt="_images/58_IMG_ge.png" src="_images/58_IMG_ge.png" />
+</div></blockquote>
+<p>Working Expense (lọc các chi phí chưa hoàn thành)</p>
+<p>Giống như phần tìm kiếm nhanh. Bạn có thể kết hợp nhiều filter hay kết hợp filter và tìm kiếm nhanh.</p>
+<blockquote>
+<div><img alt="_images/60_IMG_ge.png" src="_images/60_IMG_ge.png" />
+</div></blockquote>
+<p>Lọc các chi phí đang hoạt động, ở dạng phân bổ chi phí.
+Ví dụ như trên là lọc các chi phí đang hoạt động, ở dạng phân bổ chi phí.</p>
+<p>Lưu lại điều kiện tìm kiếm.</p>
+<blockquote>
+<div><img alt="_images/61_IMG_ge.png" src="_images/61_IMG_ge.png" />
+</div></blockquote>
+<p>Vùng lưu điều kiện tim kiếm</p>
+<p>Ví dụ bạn muốn lưu lại điều kiện tìm kiếm. Chi phí General Expense, là VND, và Tiền sau thuế lớn hơn 1,000,000. và lưu lại với tên là GE_VND</p>
+<blockquote>
+<div><img alt="_images/62_IMG_ge.png" src="_images/62_IMG_ge.png" />
+</div></blockquote>
+<p>Chi phí chung, tiền VND, Tiền sau thuế lớn hơn 1,000,000, và lưu lại với tên là GE_VND
+Sau khi lưu mỗi lần vào sẽ không phải nhập lại điều kiện tìm kiếm này nữa. Mà chỉ cần click vào tên đã lưu.</p>
+<blockquote>
+<div><img alt="_images/63_IMg_ge.png" src="_images/63_IMg_ge.png" />
+</div></blockquote>
+<p>Giữ nguyên điều kiện tìm kiếm</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="kdvn_openerp_guide.html" title="KINDEN VIETNAM OpenERP guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to kdvn’s documentation!"
+             >previous</a> |</li>
+        <li><a href="kdvn_openerp_guide.html">Openerp Guide</a>&nbsp;|</li>
+        <li><a href="#">General Expense</a> &raquo;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, KDERP IT-Dev. Team.
+    </div>
+  </body>
+</html>
