@@ -391,14 +391,19 @@ class purchase_order_line(osv.osv):
     
     def write(self, cr, uid, ids, vals, context = {}):
         res = super(purchase_order_line, self).write(cr, uid, ids, vals, context)
-        if 'plan_qty' in vals or 'product_uom' in vals:
-            todo_moves = []
+        if 'plan_qty' in vals or 'product_uom' in vals or 'product_id' in vals or 'name' in vals:
+            todo_moves = {}
             for pol in self.browse(cr, uid, ids):
-                if pol.order_id.state not in ('draft','waiting_for_roa') and pol.order_id.allocate_order:
-                    raise osv.except_osv("KDVN Warning", "Can't change quantity in this status")
-                for sm in filter(lambda move: move.state!='cancel' and pol.order_id.allocate_order and move.product_qty<>pol.plan_qty, pol.move_ids):
-                    val = {'product_qty': pol.plan_qty}
-                    sm.write(val, context = context)
-                    todo_moves.append(sm.id)
-            check_error = self.pool.get('stock.location.product.detail').check_prepaid_product_availability(cr, uid, todo_moves)
+                if pol.order_id.allocate_order:
+                    if 'name' in vals or 'product_id' in vals or 'product_uom' in vals:
+                        raise osv.except_osv("KDVN Warning", "Can't change Product in Allocated Order")
+                    elif pol.order_id.state not in ('draft','waiting_for_roa'):
+                        raise osv.except_osv("KDVN Warning", "Can't change Allocated Order in this status")
+                    val =  {}                    
+                    for sm in filter(lambda move: move.state!='cancel' and pol.order_id.allocate_order and move.product_qty<>pol.plan_qty, pol.move_ids):
+                        val={'product_qty':pol.plan_qty}                            
+                        todo_moves[sm.id] = True
+                        sm.write(val, context = context)
+                            
+                    check_error = self.pool.get('stock.location.product.detail').check_prepaid_product_availability(cr, uid, todo_moves.keys())
         return res

@@ -19,13 +19,6 @@
 #
 ##############################################################################
 
-import stock_init
-
-import kderp_prepaid_purchase
-import kderp_purchase_order
-import stock
-import wizard
-import kderp_prepaid_purchase_line_detail
-
-import report
+import kderp_summary_cable_talking_from_stock
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
