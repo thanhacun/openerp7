@@ -10,6 +10,9 @@
 				<field name="supplier_id" position='replace'>
 					<field name="supplier_id" string="Supplier"/>
 				</field>
+				<field name="supplier_id" position='before'>
+					<field name="expense_id" string="Expense No" filter_domain="[('expense_id','ilike',self)]"/>
+				</field>
 			</field>
 		</record>  
 <!-- 		<record id="view_kderp_supplier_payment_expense_inherit" model="ir.ui.view"> -->
@@ -40,6 +43,17 @@
  				<field name="base_on_line" position='after'>
  					<field name="state_budget"/>
  				</field>
+ 			</field>
+ 		</record> 
+ 		
+ 		<record id="view_kderp_supplier_payment_search_inherit" model="ir.ui.view">
+        	<field name="name">kderp.supplier.payment.search.inherit</field>
+            <field name="model">kderp.supplier.payment</field>
+            <field name='inherit_id' ref='kderp_supplier_payment.view_kderp_supplier_payment_filter'/>
+            <field name="arch" type="xml">                 
+ 				<field name="supplier_id" position='before'>
+					<field name="order_id" string="Order No" filter_domain="[('order_id','ilike',self)]"/>
+				</field>
  			</field>
  		</record> 
 	</data>
