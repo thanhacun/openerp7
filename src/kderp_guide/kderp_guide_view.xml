@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+       <record model="ir.actions.act_url" id="kderp_guide_url">
+        <field name="name">Kderp Guide</field>
+        <field eval="150" name="sequence"/>
+        <field name="url">/kderp_guide/static/doc/index.html</field>
+    	</record>
+   	 
+		<menuitem id="kderp_guide_url" name="Guide"
+        action="kderp_guide_url" sequence="100" />
+
+	</data>
+  
+</openerp>

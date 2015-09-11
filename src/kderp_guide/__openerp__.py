@@ -25,17 +25,16 @@
     'images' : [''],
     'summary':"Customize Web module",
     'category':"KDERP Apps",
-    'depends':['base','web','share','base_import','document'],
+    'depends':['kderp_web'],
     'doc': ['static/doc/index.html'], 
     'description': """
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
-   # 'css': ['static/doc/_static/*.css'],
-   # 'html': ['static/doc/*.html'],
-    #'js':['static/src/js/*.js'],
-    #'data':['res_users_view.xml'],
+    'css': ['static/src/css/*.css'],
+    'js':['static/src/js/kderp_guide.js'],
+    'data':['kderp_guide_view.xml'],
     'qweb':['static/src/xml/kderp_guide.xml'],
-   # 'demo':[],
+    'demo':[],
     'installable':True
 }
