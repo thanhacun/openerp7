@@ -34,7 +34,7 @@
     'css': ['static/src/css/*.css'],
     'js':['static/src/js/kderp_guide.js'],
     'data':[],
-    'qweb':['static/scr/xml/kderp_guide.xml'],
+    'qweb':['static/src/xml/kderp_guide.xml'],
     'demo':[],
     'installable':True,
     'application': True,
