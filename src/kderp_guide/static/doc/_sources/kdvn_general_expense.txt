@@ -46,6 +46,7 @@ Trong OpenERP có các loại giao diện Tree, Form, Graph, Calendar, Kaban. Hi
 ------------------------------------------
 
 	.. image:: kdvnstatic/3_IMG_ge.png
+	
 	.. centered::Giao diện hiện thị các chức năng của chương trình 
 
 	1. Nút Save: Dùng để lưu dữ liệu sau khi nhập mới hoặc sửa lại dữ liệu.

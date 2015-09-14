@@ -57,7 +57,7 @@ Log in
 
 	Please input your new password in to “Password” filed, then click “Change Password”. After saving the new password, you are required to logout and re-login by the new password to confirm that it has worked properly. 
 
- Note: 
+	Note: 
 
 	1.    The system OpenERP of Kinden Vietnam Co., Ltd. contains very important information of company’s business. Therefore, for security purpose, users can only access to the system by company’s registered computers via company’s LAN/Wifi . Users have responsibilities to keep TOP SECRET of their own login passwords to avoid information leak out to any third parties.  
 
@@ -155,7 +155,7 @@ How to search and view your needed information
 Quotation
 =========
 
-	When you choose  “Quotation” (by click Project & Contract, then Quotation), the follow screen will appear.
+	When you choose  "Quotation" (by click Project & Contract, then Quotation), the follow screen will appear.
 Quotation – List view screen
 
 
