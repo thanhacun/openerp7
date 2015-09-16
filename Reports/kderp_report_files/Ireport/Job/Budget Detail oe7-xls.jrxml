@@ -6,6 +6,7 @@
 	<property name="OPENERP_RELATIONS" value="[&apos;kderp_budget_data_line/detail_budget&apos;] "/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<parameter name="pCodeBudget" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -116,6 +117,9 @@
 	</field>
 	<field name="eff_date" class="java.util.Date">
 		<fieldDescription><![CDATA[kderp_budget_data_line/detail_budget/eff_date]]></fieldDescription>
+	</field>
+	<field name="expense_date" class="java.util.Date">
+		<fieldDescription><![CDATA[kderp_budget_data_line/detail_budget/date]]></fieldDescription>
 	</field>
 	<sortField name="JobNumber"/>
 	<sortField name="ParentBudgetCategory"/>
@@ -1993,7 +1997,7 @@ Contract No.]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{eff_date}]]></textFieldExpression>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{eff_date}==null?$F{expense_date}:$F{eff_date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
