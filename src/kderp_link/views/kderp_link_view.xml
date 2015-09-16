@@ -81,6 +81,7 @@
             		<sheet>
 	            		<group string='Link server information' col="4">
 	            			<field name='link_server_id'/>
+	            			<field name='name'/>
 		           			<field name='table_link_name'/>
 		           			<field name='table_definition'/>
 		           			<field name='remote_query'/>		           			

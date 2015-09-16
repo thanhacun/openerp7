@@ -138,7 +138,7 @@
             <li><a href="#" data-menu="logout">Log out</a></li>
         </ul>
 	</t>
-</t>
+</t> 
 
 <!-- Ke thua ViewPager -->
 <t t-extend="ViewPager">

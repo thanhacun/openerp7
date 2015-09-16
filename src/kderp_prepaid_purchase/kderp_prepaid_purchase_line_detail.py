@@ -21,7 +21,7 @@
 
 
 from openerp.osv import fields, osv, orm
-
+    
 class kderp_prepaid_purchase_order_line_detail(osv.osv):
     _auto = False
     _name = 'kderp.prepaid.purchase.order.line.detail'
@@ -30,6 +30,72 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         self.pool.get('kderp.link.server').check_server_connection(cr, uid, [], {})                
         return super(kderp_prepaid_purchase_order_line_detail, self).check_access_rights(cr, uid, operation, raise_exception)
+    
+    def _get_details_ids(self, cr, uid, ids, name, args, context = {}):
+        res = {}
+        kls_obj = self.pool.get('kderp.link.server')
+        link_id = kls_obj.search(cr, uid, [('id','>',0)])[0]
+        
+        connect_string = kls_obj.read(cr, uid,link_id,['connection_string'])['connection_string']
+        obj_relation = self.pool.get(self._columns[name].relation)
+        
+        for kppold in self.browse(cr, uid, ids, context):
+            sqlCommand = """
+                            Select
+                                        po.name as po_number,
+                                        aaa.code as job_code,
+                                        aaa.name as job_name,
+                                        pol.account_analytic_id,
+                                        sum(amount_company_curr) as allocated_amount 
+                                    from 
+                                        purchase_order_line pol
+                                    left join
+                                        purchase_order po on order_id = po.id
+                                    left join
+                                        account_analytic_account aaa on pol.account_analytic_id = aaa.id
+                                    where
+                                        po.name = '%s'
+                                    group by
+                                        po.name,
+                                        aaa.id,
+                                        pol.order_id,
+                                        pol.account_analytic_id
+                                union
+                                    SELECT 
+                                        vwpurchase_order_remote.po_number,
+                                        vwpurchase_order_remote.job_code,
+                                        vwpurchase_order_remote.job_name,
+                                        vwpurchase_order_remote.account_analytic_id,
+                                        vwpurchase_order_remote.allocated  as allocated_amount
+                                    FROM dblink('%s',
+                                    'Select     
+                                        po.name as po_number,
+                                        aaa.code as job_code,
+                                        aaa.name as job_name,
+                                        pol.account_analytic_id,
+                                        sum(amount_company_curr) as allocated
+                                    from 
+                                        purchase_order_line pol
+                                    left join
+                                        purchase_order po on order_id = po.id
+                                    left join
+                                        account_analytic_account aaa on pol.account_analytic_id = aaa.id
+                                    where
+                                        po.name= ''%s''
+                                    group by
+                                        po.name,
+                                        aaa.id,
+                                        pol.order_id,
+                                        pol.account_analytic_id'::text) vwpurchase_order_remote(po_number character varying(32), job_code character varying(32), job_name character varying(256), account_analytic_id integer, allocated numeric)
+                               """ % (kppold.po_number,connect_string,kppold.po_number)
+            cr.execute(sqlCommand)
+            res[kppold.id] = []
+            for new_rec in cr.dictfetchall():
+                #Temporary Unused, remove from dict
+                new_rec.pop('account_analytic_id')
+                new_rec.pop('po_number')
+                res[kppold.id].append(obj_relation.create_lookup_id(cr, uid, new_rec))
+        return res
     
     _columns={
               'prepaid_order_line_id':fields.many2one('kderp.prepaid.purchase.order.line','Desc.', required = True),
@@ -41,6 +107,8 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
               'requesting_qty':fields.float('Requesting Qty', digit=(16,2)),
               'product_uom':fields.char('Unit', size = 6),              
               'date':fields.date('Date'),
+              
+              'details_info_ids':fields.function(_get_details_ids,type='one2many',relation='kderp.purchase.job.allocated.combine')
               }
         
     def init(self, cr):
@@ -97,3 +165,30 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
                                 where
                                     coalesce(vsmo.product_qty,0)>0""" % vwName
             cr.execute(sqlCommand)
+
+
+
+class kderp_purchase_job_allocated_combine(osv.osv_memory):
+    """This model for query purchase and job allocated in Hanoi and HCM"""
+    #Note: Not Yet filter Prepaid order only, later if slow will filter
+    _name = 'kderp.purchase.job.allocated.combine'
+    
+    def create_lookup_id(self, cr, uid, new_rec, context = {}):
+        domain = []
+        for key in new_rec:
+            arg = (key,'=', new_rec[key])
+            domain.append(arg)
+        
+        ids = self.search(cr, uid, domain)
+        if ids:
+            id = ids[0]
+        else:
+            id = self.create(cr, uid, new_rec)
+        return id
+    
+    _columns = {
+                #'po_number':fields.char('PO. No.', size=32),
+                'job_code':fields.char('Job No.', size=32),
+                'job_name':fields.char('Job Name', size=256),
+                'allocated_amount':fields.float("Allocated Amount")
+                }

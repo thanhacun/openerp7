@@ -202,7 +202,7 @@ class kderp_prepaid_purchase_order(osv.osv):
                  'taxes_id':_get_tax_default
                  }
     
-    _sql_constraints=[('kderp_prepaid_purchase_code_unique','unique(code)','Prepaid Purchase Code must be unique !')]
+    _sql_constraints=[('kderp_prepaid_purchase_code_unique','unique(name)','Prepaid Purchase Code must be unique !')]
     
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')

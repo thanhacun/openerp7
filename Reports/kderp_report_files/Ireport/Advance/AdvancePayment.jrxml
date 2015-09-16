@@ -3,7 +3,7 @@
 	<property name="OPENERP_RELATIONS" value="[&apos;advance_line&apos;]"/>
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="384"/>
+	<property name="ireport.y" value="0"/>
 	<queryString language="xPath">
 		<![CDATA[]]>
 	</queryString>
@@ -45,6 +45,9 @@
 	</field>
 	<field name="Remarks-remarks" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Expense_Details-advance_line/Remarks-remarks]]></fieldDescription>
+	</field>
+	<field name="Descriptions" class="java.lang.String">
+		<fieldDescription><![CDATA[description]]></fieldDescription>
 	</field>
 	<sortField name="id"/>
 	<group name="Dummy Name Group">
@@ -244,8 +247,9 @@
 				</staticText>
 				<textField>
 					<reportElement x="0" y="60" width="125" height="24"/>
-					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single" markup="none">
+					<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
 						<font fontName="Arial" size="10" isBold="true" isStrikeThrough="false" pdfFontName="Helvetica-Bold"/>
+						
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Advance_No.-name}]]></textFieldExpression>
 				</textField>
@@ -311,7 +315,7 @@
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="8"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{Department-department_name}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Descriptions}==""?$F{Department-department_name}:($F{Department-department_name}+" ( "+$F{Descriptions}+" ) ")]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="95" y="160" width="228" height="20"/>
