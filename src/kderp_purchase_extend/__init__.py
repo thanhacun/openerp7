@@ -22,4 +22,5 @@
 import kderp_purchase_general_contract
 import report
 import res_config
+import inherited_expense_budget_line
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
