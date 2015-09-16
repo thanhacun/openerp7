@@ -31,7 +31,7 @@
     - Customize Procedure
     - Customize Interface""",
     'css': ['static/src/css/*.css'],
-    'js':['static/src/js/*.js'],
+    'js':['static/src/js/.js'],
     'data':['res_users_view.xml'],
     'qweb':['static/src/xml/kderp_base.xml'],
     'demo':[],

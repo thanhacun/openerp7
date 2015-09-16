@@ -12,6 +12,63 @@ class kderp_supplier_payment_expense(osv.osv):
             for pge in ge.supplier_payment_expense_ids:
                 res[pge.id] = True
         return res.keys()
+    def onchange_date_ge(self, cr, uid, ids, date, oldno):
+        cr.execute("Select location_user from res_users where id=%s" % uid)
+        res = cr.fetchone()[0]
+        chk_ignore =  False
+        due_date = date
+       
+        if due_date and not chk_ignore:
+            #due_date = self.pool.get('kdvn.common.function').check_date(date)
+            due_date = self._onchange_due_date(cr,uid,ids,date)
+        
+        val={}
+        if not oldno and date:
+            cr.execute("""SELECT 
+                            wnewcode.pattern || 
+                            btrim(to_char(max(substring(wnewcode.code::text, length(wnewcode.pattern) + 1,padding )::integer) + 1,lpad('0',padding,'0'))) AS newcode
+                        from
+                            (
+                            SELECT 
+                            isq.name,
+                            isq.code as seq_code,
+                            isq.prefix || to_char(DATE '%s', suffix || lpad('_',padding,'_')) AS to_char, 
+                            CASE WHEN cnewcode.code IS NULL 
+                            THEN isq.prefix::text || to_char(DATE '%s', suffix || lpad('0',padding,'0'))
+                            ELSE cnewcode.code
+                            END AS code, 
+                            isq.prefix::text || to_char(DATE '%s', suffix) AS pattern,
+                            padding,
+                            prefix
+                            FROM 
+                                ir_sequence isq
+                            LEFT JOIN 
+                            (SELECT 
+                                kderp_supplier_payment_expense.name AS code
+                            FROM 
+                                kderp_supplier_payment_expense
+                            WHERE
+                                length(kderp_supplier_payment_expense.name::text)=
+                                ((SELECT 
+                                length(prefix || suffix) + padding AS length
+                                FROM 
+                                ir_sequence
+                                WHERE 
+                                ir_sequence.code::text = 'kderp.supplier.payment.ge.code'::text LIMIT 1))
+                            ) cnewcode ON cnewcode.code::text ~~ (isq.prefix || to_char(DATE '%s',  suffix || lpad('_',padding,'_')))
+                            WHERE isq.code::text = 'kderp.supplier.payment.ge.code'::text AND isq.active) wnewcode
+                        GROUP BY 
+                            pattern, 
+                            name,
+                            seq_code,
+                            prefix,
+                            padding;""" %(date,date,date,date))
+            res = cr.fetchone()
+            if res:
+                val={'name':res[0]}
+        if due_date:
+            val['due_date']=due_date
+        return {'value':val}
     
     _columns={              
               #Relation Field
