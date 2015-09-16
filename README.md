@@ -1,2 +1,2 @@
-KINDEN VIETNAM Customize, Create & Deploy Module on OpenERP 7
+KINDEN VIETNAM Customize & Deploy OpenERP 7  - Addons
 =====================================================
