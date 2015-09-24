@@ -18,11 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+import kderp_list_method
 
-import kderp_purchase_general_contract
-import inherited_purchase_order
-
-import report
-import res_config
-import inherited_expense_budget_line
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+#import kderp_search

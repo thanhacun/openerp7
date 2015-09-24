@@ -1,54 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-    	
-    	<record id="act_assign_move_picking" model="workflow.activity">
-	        <field name="wkf_id" ref="purchase.purchase_order"/>
-	        <field name="name">assign_move_picking</field>
-			<field name="kind">function</field>
-			<field name="action">act_assign_move_picking()</field>
-		</record>
-				
-    	<record id="act_received_move_picking" model="workflow.activity">
-	        <field name="wkf_id" ref="purchase.purchase_order"/>
-	        <field name="name">receive_move_picking</field>
-			<field name="kind">function</field>
-			<field name="action">action_receive_picking()</field>
-		</record>
-    	
-    	<!-- Trans -->    	
-        <record id="kderp_purchase.trans_final_quotation_roa_completed" model="workflow.transition">
-            <field name="act_from" ref="kderp_purchase.act_final_quotation"/>
-            <field name="act_to" ref="kderp_purchase.act_roa_completed"/>
-            <field name="signal">btn_final_quotation_roa_completed</field>
-            <field name="condition">allocate_order==False</field>
-        </record>
-        
-        <record id="kderp_purchase.trans_final_quotation_done_prepaid_case" model="workflow.transition">
-            <field name="act_from" ref="kderp_purchase.act_final_quotation"/>
-            <field name="act_to" ref="act_assign_move_picking"/>
-            <field name="signal">btn_final_quotation_roa_completed</field>
-            <field name="condition">allocate_order==True</field>
-        </record>       
-        <!-- 
-        <record id="kderp_purchase.trans_roa_completed_delivered_one_delivery" model="workflow.transition">
-            <field name="act_from" ref="kderp_purchase.act_roa_completed"/>
-            <field name="act_to" ref="kderp_purchase.act_delivered"/>
-            <field name="signal">btn_roa_completed_delivered</field>
-            <field name="condition">allocate_order==False and special_case==False</field>
-        </record>
-         -->
-        <record id="trans_receive_move_picking_done_po" model="workflow.transition">
-            <field name="act_from" ref="act_assign_move_picking"/>
-            <field name="act_to" ref="act_received_move_picking"/>
-            <field name="signal">btn_roa_completed_delivered</field>
-            <field name="condition">allocate_order==True</field>
-        </record>
-        
-        <record id="trans_received_move_done_po" model="workflow.transition">
-            <field name="act_from" ref="act_received_move_picking"/>
+    <data>    	
+        <!-- Auto PAID when allocated Order -->
+        <record id="trans_received_move_done_po_allocated_order" model="workflow.transition">
+            <field name="act_from" ref="kderp_purchase.act_delivered"/>
             <field name="act_to" ref="kderp_purchase.act_done"/>
-            <field name="condition">True</field>
+            <field name="condition">allocate_order==True</field>
         </record>
 
     </data>

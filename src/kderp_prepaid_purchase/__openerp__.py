@@ -38,7 +38,7 @@
              'wizard/allocate_to_job_view.xml',
              "views/kderp_prepaid_purchase_view.xml",
              'views/stock_view.xml',             
-             #"views/kderp_purchase_inherit_workflow.xml", # Move to kderp_stock
+             "views/kderp_purchase_inherit_workflow.xml", # Move to kderp_stock
              "views/kderp_prepaid_purchase_line_detail_view.xml",
              "report/kderp_summary_cable_talking_from_stock_view.xml"
             ],

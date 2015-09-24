@@ -19,25 +19,18 @@
 #
 ##############################################################################
 {
-    'name':"KDERP Purchase Extend Module",
+    'name':"KDERP List Methods and Attributes",
     'version':"7.0.0",
     'author':"KDERP IT-Dev. Team",
-    'images' : ['images/kinden.png'],
-    'summary':"Add new module Extend Purchase Module for Suiteable Kinden Procedure",
+    'images' : [''],
+    'summary':"Customize Base module",
     'category':"KDERP Apps",
-    'depends':['kderp_extend_module'],
+    'depends':['base'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
-    'data':[
-             "security/kderp_purchase_extend_security.xml",
-             "security/ir.model.access.csv",
-             "res_config_view.xml",
-             "kderp_purchase_general_contract_view.xml",
-             "report/kderp_purchase_materialsub_budget_balancesheet_view.xml",
-             "kderp_purchase_view.xml",
-             "kderp_purchase_inherit_workflow.xml"
+    'data':["kderp_list_method_view.xml"
             ],
     'demo':[],
     'installable':True

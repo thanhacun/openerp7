@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="kderp_view_model_form_inherit" model="ir.ui.view">
+            <field name="model">ir.model</field>
+            <field name="inherit_id" ref='base.view_model_form'/>
+            <field name="arch" type="xml">
+				<notebook position='inside'>
+					<page string='Attribute &amp; Method'>
+						<field name="method_details_ids" colspan="4" nolabel="1"/>
+					</page>
+				</notebook>
+			</field>
+		</record>
+		
+	</data>
+</openerp>
