@@ -217,6 +217,17 @@ class StockPeriod(models.Model):
             raise osv.except_osv(_('Error!'), _('There is no stock period defined for this date: %s.\nPlease create one.')%dt)
         return result
     
+    def check_period(self, cr, uid, dt=None, fields=[], context=None):
+        res = self.find(cr, uid, dt, context)
+        if not res:
+            raise osv.except_osv("KDERP Warning","Can't change the delivery, don't have period for that date")
+        else:
+            res = self.read(cr, uid, res, fields)
+            
+            if res[0]['state']<>'open':
+                raise osv.except_osv("KDERP Warning","Can't change the delivery, period already closed for that date")
+        return True
+    
     def find_pre(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
@@ -337,7 +348,7 @@ class StockPeriod(models.Model):
         stock_will_closed_ids = self.pool.get('stock.location').search(cr, uid, [('general_stock','=', True)])
         stock_closed_obj = self.pool.get('kderp.stock.period.closed')
         
-        for period in self.browse(cr, uid, ids, context):
+        for period in self.browse(cr, uid, ids):
             if period.state<>'closed':            
                 period.write({'state':mode})
                 start_date = period.start_date

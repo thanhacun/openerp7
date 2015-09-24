@@ -95,6 +95,7 @@
             <field name="condition">True</field>
         </record>
         
+        <!-- Back Transaction -->
         <record id="trans_roa_completed_draft" model="workflow.transition">
             <field name="act_from" ref="act_final_quotation"/>
             <field name="act_to" ref="purchase.act_draft"/>
@@ -116,6 +117,7 @@
             <field name="condition">True</field>
         </record>
         
+        <!-- Reject Transaction Area -->
         <record id="trans_draft_cancel" model="workflow.transition">
             <field name="act_from" ref="purchase.act_draft"/>
             <field name="act_to" ref="act_cancel"/>

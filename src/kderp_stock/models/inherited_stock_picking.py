@@ -33,9 +33,31 @@ class stock_picking_in(osv.osv):
             vals['name'] = self.pool.get('stock.picking').get_newcode(cr, user, 'int', context)
         new_id = super(stock_picking_in, self).create(cr, user, vals, context)
         return new_id
+        
+    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for ROA'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Waiting for Delivery'),
+            ('done', 'Received'),
+            ('cancel', 'Cancelled'),]
+    _columns = {        
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
+            ondelete='set null', select=True, required=True),
+        'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1)
+    }
+
+    _defaults = {
+                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
+                }
     
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
+    
+    
+    _columns = {
+                'check_payment':fields.many2one('kderp.supplier.payment', 'Supplier Payment'),
+                'received_date':fields.date('Received Date'),
+                }
     
     def init(self,cr):
         #cr.execute("""Update wkf set on_create=False where on_create=True and osv='stock.picking';""")
@@ -65,16 +87,9 @@ class stock_picking(osv.osv):
         self.write(cr,uid,ids,{'state':'done'})
         return True    
     
-    _columns = {
-        'check_payment':fields.many2one('kderp.supplier.payment', 'Supplier Payment'),
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True, required=True),
-        'received_date':fields.date('Received Date'),
-    }
-
-    _defaults = {
-                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
-                }
+    def update_stock_draft(self,cr, uid, ids, *args):
+        self.write(cr,uid,ids,{'state':'draft'})
+        return True    
     
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms picking.

@@ -947,11 +947,19 @@ class stock_move(osv.osv):
                 todo.append(move.id)
 
         if todo:
-            self.action_confirm(cr, uid, todo, context=context)
+            self.action_confirm(cr, uid, todo, context=context)        
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        date_received =  context.get('date_received',time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        
+        self.write(cr, uid, move_ids, {'state': 'done', 'date': date_received}, context=context)
+        
+        check_period = self.pool.get('kderp.stock.period').find(cr, uid, date_received, context)
+        
+        import ipdb
+        ipdb.set_trace()
+        
         for id in move_ids:
-             wf_service.trg_trigger(uid, 'stock.move', id, cr)
+            wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)

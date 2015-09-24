@@ -2,7 +2,6 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-<<<<<<< HEAD
 #    Copyright (C) 2004-2013 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -30,6 +29,7 @@ from openerp.tools.translate import _
 import time
 import pytz
 
+# TODO: Need change when 
 class purchase_order(osv.osv):
     """
         Add new field Purchase Order
@@ -38,8 +38,35 @@ class purchase_order(osv.osv):
     _inherit = 'purchase.order'
     _description = 'KDERP Purchase Order'
 
+    def _get_move_ids(self, cr, uid, ids, name, args, context):
+        res={}
+        for po in self.browse(cr, uid, ids):
+            sm_ids = {}
+            for sp in po.picking_ids:
+                for sm in sp.move_lines:
+                    sm_ids[sm.id] = True
+            res[po.id] = sm_ids.keys()
+        return res
+    
+    #Fill source_location when partner is supplier
+    def onchange_partner_id(self, cr, uid, ids, partner_id):
+        
+        res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
+        if self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id != partner_id:
+            domain = [('usage','=','supplier')]
+            stock_supplier_ids = self.pool.get('stock.location').search(cr, uid, domain)
+            if stock_supplier_ids:
+                res['value']['source_location_id'] = stock_supplier_ids[0]            
+        return res
+    
     _columns = {
-                'source_location_id':fields.many2one('stock.location','From Stock', ondelete='restrict', states={'done':[('readonly',True)], 'cancel':[('readonly',True)]})
+                'received_details':fields.function(_get_move_ids,
+                                                   type='one2many',
+                                                   relation='stock.move',
+                                                   string='Detail Moves'),
+                'source_location_id':fields.many2one('stock.location','From Stock', domain = [('usage','=','supplier')],
+                                                                                    ondelete='restrict', 
+                                                                                    states={'done':[('readonly',True)], 'cancel':[('readonly',True)]})
                 }
     
     def action_create_picking(self, cr, uid, ids, context = {}):
@@ -54,26 +81,18 @@ class purchase_order(osv.osv):
                 if sp.state!='cancel':
                     wf_service.trg_validate(uid, 'stock.picking', sp.id, 'button_cancel', cr)
         return res
-        
-    def action_draft_to_final_quotation(self, cr, uid, ids, context=None):
+    
+    def action_create_packing(self, cr, uid, ids, context=None):
         if not context:
             context = {}
         todo = []
-        period_obj = self.pool.get('account.period')
+        
         picking_ids = []
         for po in self.browse(cr, uid, ids, context=context):
-            if not po.order_line:
-                raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
-
-            period_id = po.period_id and po.period_id.id or False
-            if not period_id:
-                period_ids = period_obj.find(cr, uid, po.date_order, context)
-                period_id = period_ids and period_ids[0] or False
-            self.write(cr, uid, [po.id], {'state' : 'waiting_for_roa', 'period_id':period_id,'validator' : uid})                        
-            
+                                        
             sp_exists = False
             for sp in po.picking_ids:
                 if sp.state!='cancel':
@@ -84,6 +103,25 @@ class purchase_order(osv.osv):
                 
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         return picking_ids
+    
+    def action_draft_to_final_quotation(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        
+        period_obj = self.pool.get('account.period')
+        
+        for po in self.browse(cr, uid, ids, context=context):
+            if not po.order_line:
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))           
+
+            period_id = po.period_id and po.period_id.id or False
+            if not period_id:
+                period_ids = period_obj.find(cr, uid, po.date_order, context)
+                period_id = period_ids and period_ids[0] or False
+            self.write(cr, uid, [po.id], {'state' : 'waiting_for_roa', 'period_id':period_id,'validator' : uid})
+                                   
+        res = self.action_create_packing(cr, uid, ids, context)                
+        return res
     
     def act_assign_move_picking(self, cr, uid, ids, context = {}):
         todo_moves = []
@@ -138,7 +176,7 @@ class purchase_order(osv.osv):
     def _prepare_order_picking(self, cr, uid, order, context=None, type='in'):
         return {
             'name': self.pool.get('stock.picking').get_newcode(cr, uid, type, context),
-            'origin': order.name,
+            'origin': order.origin,
             'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.partner_id.id,
             'invoice_state': 'none', 
@@ -146,6 +184,7 @@ class purchase_order(osv.osv):
             'purchase_id': order.id,
             #'company_id': order.company_id.id,
             'move_lines' : [],
+            
         }
     
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None, type = type):
@@ -154,7 +193,7 @@ class purchase_order(osv.osv):
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
 #            price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
         error = ""
-        if (not order_line.location_id and not order.source_location_id) or  (not order_line.location_dest_id and not order.location_id):             
+        if self.has_stockable_product(cr, uid, [order.id], context) and ((not order_line.location_id and not order.source_location_id) or  (not order_line.location_dest_id and not order.location_id)):             
                 error = _("""Not Available From Stock or To Stock, could you please check""")
         if error:
             raise osv.except_osv(_("KDERP Warning"), error)
@@ -219,14 +258,43 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []
-        for order in self.browse(cr, uid, ids):
-            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))
-
-        # Must return one unique picking ID: the one to connect in the subflow of the purchase order.
-        # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
-        # one that should trigger the advancement of the purchase workflow.
-        # By default we will consider the first one as most important, but this behavior can be overridden.
+        #Ignore create packing if all products is service
+        if self.has_stockable_product(cr, uid, ids):
+            for order in self.browse(cr, uid, ids):
+                picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))
+    
+            # Must return one unique picking ID: the one to connect in the subflow of the purchase order.
+            # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
+            # one that should trigger the advancement of the purchase workflow.
+            # By default we will consider the first one as most important, but this behavior can be overridden.
         return picking_ids[0] if picking_ids else False
+    
+    def has_stockable_product(self, cr, uid, ids, *args):
+        for order in self.browse(cr, uid, ids):
+            for order_line in order.order_line:
+                if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
+                    return True
+        return False
+    
+    def check_product_shipped(self, cr, uid, ids, *args):
+        res = True
+        for order in self.browse(cr, uid, ids):
+            for pol in order.order_line:
+                if pol.product_qty != pol.received_qty or not pol.received_qty:
+                    return False
+        return res
+    
+    def get_po_ids(self, cr, uid, ids, *args):
+        return ids
+    
+    #Return PO ID for Trigger Workflow
+    def get_po_from_stock_move_ids(self, cr, uid, ids, *args):
+        sm_ids = []
+        for po in self.browse(cr, uid, ids):
+            for pol in po.order_line:
+                for sm in pol.move_ids:
+                    sm_ids.append(sm.id)                    
+        return list(set(sm_ids))
     
 purchase_order()
 
@@ -238,35 +306,39 @@ class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     _description = 'Purchase Order Line'
     
+    def _get_product_received_qty(self, cr, uid, ids, fileds, arg, context=None):
+        res = {}
+        pol_list=[]
+        #TODO: Later If using convert product unit must convert this one too
+        for pol in self.browse(cr, uid, ids, context=context):
+            if pol.product_id.type in ('product', 'consu'):
+                ################
+                #Later Get from Stock Move 
+                #################
+                pol_list.append(pol.id)
+                res[pol.id]=0
+            else:
+                res[pol.id] = pol.plan_qty
+        if pol_list:                
+            pol_ids=",".join(map(str,pol_list))
+            cr.execute("""select 
+                            pol.id,
+                            sum(coalesce(sm.product_qty,0))
+                        from 
+                            purchase_order_line pol
+                        left join
+                            stock_move sm on pol.id=purchase_line_id
+                        left join
+                            stock_picking sp on sm.picking_id=sp.id
+                        where
+                            sm.state='done' and pol.id in (%s) and sp.state not in ('draft','cancel')
+                        Group by pol.id""" % (pol_ids))
+            for id,qty in cr.fetchall():
+                res[id]=qty
+        return res
+    
     _columns = {                
                 'location_id':fields.many2one('stock.location', 'From Stock'),
-                'location_dest_id':fields.many2one('stock.location', 'To Stock'),                
-                }   
-=======
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
-from openerp.osv import fields, osv
-
-#
-
-#
-   
-class purchase_order_line(osv.osv):
-    _inherit = 'purchase.order.line'        
-    
->>>>>>> refs/remotes/origin/master
+                'location_dest_id':fields.many2one('stock.location', 'To Stock'),
+                'received_qty': fields.function(_get_product_received_qty,type='float',string='Qty.',method=True),
+                }
