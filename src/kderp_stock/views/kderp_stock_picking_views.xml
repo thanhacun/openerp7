@@ -102,6 +102,7 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="filter" eval="True"/>
         </record>
+
         <!-- Link Action Window with view -->
 		<record model='ir.actions.act_window.view' id="action_windows_picking_in_form_view">
 			<field name="sequence" eval="10"/>
