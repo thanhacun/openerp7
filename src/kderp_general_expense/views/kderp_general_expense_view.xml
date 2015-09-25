@@ -218,8 +218,7 @@
 					
 					<separator/>
 					<filter groups="kderp_general_expense.group_kderp_other_expense_ge_tel_fee" string="Special Case - Around 01 Week"
-                         domain="[('ref_number','!=',False),('date','&gt;=',(context_today()-datetime.timedelta(context_today().day)).strftime('%%Y-%%m-07')),
-                                                ('date','&lt;=',context_today().strftime('%%Y-%%m-07'))]" name="special_case"/>
+                         domain="[('ref_number','!=',False),('date','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" name="special_case"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
