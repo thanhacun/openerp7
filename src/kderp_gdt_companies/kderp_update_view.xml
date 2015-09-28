@@ -28,7 +28,7 @@
                 <form string="Gdt Company Update" version="7.0">
                     <h3>Do you want to update?</h3>
                     <footer>
-                    	<button name="action_update" string="Update" type="object" class="oe_highlight"/>
+                    	<button name="action_update_companies" string="Update" type="object" class="oe_highlight"/>
                     	or
                     	<button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
