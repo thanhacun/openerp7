@@ -313,7 +313,7 @@
 							<group string="Job Information" col="4" colspan="4">
 								<group colspan="2" col="4" class="kdvn_align_right">
 									<separator string="Electrical Breakdown" colspan="4"/>
-									<field colspan="4" mode="tree" name="order_line" nolabel="1" readonly="1">
+									<field colspan="4" mode="tree" name="order_line" nolabel="1">
 										<tree editable="bottom">
 											<field name="currency_id"/>
 											<field name="price_unit"/>
@@ -321,7 +321,7 @@
 											<field name="name"/>
 										</tree>
 									</field>
-									<field name="job_e_id" colspan="4" readonly="1"/>
+									<field name="job_e_id" colspan="4"/>
 									<field name="q_budget_no_e" readonly="1"/>
 									<field name="q_exrate_e" readonly="1"/>
 									<field name="q_prj_budget_amount_e" colspan="4" readonly="1"/>
@@ -331,7 +331,7 @@
 								</group>
 								<group colspan="2" col="4">
 									<separator string="Mechanical Breakdown" colspan="4"/>
-									<field colspan="4" mode="tree" name="order_line_m" nolabel="1" readonly="1">
+									<field colspan="4" mode="tree" name="order_line_m" nolabel="1">
 										<tree editable="bottom">
 											<field name="currency_id"/>
 											<field name="price_unit"/>
@@ -339,7 +339,7 @@
 											<field name="name"/>
 										</tree>
 									</field>
-									<field name="job_m_id" colspan="4" readonly="1"/>
+									<field name="job_m_id" colspan="4"/>
 									<field name="q_budget_no_m" readonly="1"/>
 									<field name="q_exrate_m" readonly="1"/>
 									<field name="q_prj_budget_amount_m" colspan="4" readonly="1"/>
