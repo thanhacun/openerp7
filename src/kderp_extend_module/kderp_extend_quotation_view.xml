@@ -200,7 +200,7 @@
 				<!-- Them Breakdown temp vao truoc Breakdown -->
 				<separator string="Electrical Breakdown" colspan="4" position="before">				
 					<separator string="Electrical Breakdown (Temp)" colspan="4"/>
-	            	<field colspan="4" mode="tree" name="kderp_quotation_temporary_line" nolabel="1" readonly="1">
+	            	<field colspan="4" mode="tree" name="kderp_quotation_temporary_line" nolabel="1">
 	                 	<tree editable="top">
 	                     	<field name="currency_id"/>
 	                        <field name="price_unit"/>
@@ -211,7 +211,7 @@
 			        </separator> 
 				<separator string="Mechanical Breakdown" colspan="4" position="before">						 
 					<separator string="Mechanical Breakdown (Temp)" colspan="4"/>
-	            	<field colspan="4" mode="tree" name="kderp_quotation_temporary_line_m" nolabel="1" readonly="1">
+	            	<field colspan="4" mode="tree" name="kderp_quotation_temporary_line_m" nolabel="1">
 	                 	<tree editable="top">
 	                     	<field name="currency_id"/>
 	                        <field name="price_unit"/>
