@@ -254,7 +254,7 @@
 									<field name="partner_invoice_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
 									<field name="completion_date"/>
 									<field name="completion_date_contract"/>
-									<field readonly="1" name="contract_id"/>
+									<field name="contract_id"/>
 								</group>
 							</div>
 							<div class="oe_button_box kdvn_button_left">
@@ -399,7 +399,7 @@
 								<field readonly="1" name="partner_invoice_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
 								<field readonly="1" name="completion_date"/>
 								<field name="completion_date_contract"/>
-								<field name="contract_id"/>
+								<field name="contract_id" readonly="1"/>
 							</group>
 						</div>
 						<div class="oe_button_box kdvn_button_left">
