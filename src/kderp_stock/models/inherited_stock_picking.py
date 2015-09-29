@@ -24,73 +24,46 @@ from openerp.osv import fields, osv
 #
 # Inherit of picking to add the link to the PO
 #
-
-class stock_picking_in(osv.osv):
-    _inherit = 'stock.picking.in'
-    
-    def create(self, cr, user, vals, context=None):
-        if ('name' not in vals) or (vals.get('name')=='/'):            
-            vals['name'] = self.pool.get('stock.picking').get_newcode(cr, user, 'int', context)
-        new_id = super(stock_picking_in, self).create(cr, user, vals, context)
-        return new_id
-        
-    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for ROA'),
-            ('auto', 'Waiting Another Operation'),
-            ('confirmed', 'Waiting Availability'),
-            ('assigned', 'Waiting for Delivery'),
-            ('done', 'Received'),
-            ('cancel', 'Cancelled'),]
-    _columns = {        
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True, required=True),
-        'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1)
-    }
-
-    _defaults = {
-                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
-                }
-    
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
-    
-    
     _columns = {
+                'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True),
                 'check_payment':fields.many2one('kderp.supplier.payment', 'Supplier Payment'),
                 'received_date':fields.date('Received Date'),
                 }
-    
+
     def init(self,cr):
         #cr.execute("""Update wkf set on_create=False where on_create=True and osv='stock.picking';""")
         pass
-    
+
     def get_newcode(self, cr, uid, type = 'internal', context = {} ):
         if not context:
             context = {}
         type = 'int' if type == 'internal' else type
-        cr.execute("""SELECT 
+        cr.execute("""SELECT
                         replace(prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')) ||lpad((max(substring(coalesce(sp.name, replace(prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')) || lpad('0',padding,'0')) from length(replace(prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')))+1 for padding)::integer) + 1)::text, padding, '0')
-                    FROM 
+                    FROM
                         (select case when location_code = '4' then 'H' else 'S' end as location_code from res_company limit 1) vwcompany
                     left join
                         ir_sequence isq on 1=1
-                    left join    
-                         stock_picking sp on sp.name ilike replace(isq.prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')) || lpad('_',padding,'_') 
+                    left join
+                         stock_picking sp on sp.name ilike replace(isq.prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')) || lpad('_',padding,'_')
                     WHERE
                         isq.code ilike 'kderp_stock_picking_code_%%%s'
-                    group by    
+                    group by
                         isq.id,
                         location_code""" % type)
         new_code = cr.fetchone()
         return new_code[0] if new_code else False
-        
+
     def update_stock_received(self,cr, uid, ids, *args):
         self.write(cr,uid,ids,{'state':'done'})
-        return True    
-    
+        return True
+
     def update_stock_draft(self,cr, uid, ids, *args):
         self.write(cr,uid,ids,{'state':'draft'})
-        return True    
-    
+        return True
+
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms picking.
         @return: True
@@ -109,3 +82,33 @@ class stock_picking(osv.osv):
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
         return True
+
+class stock_picking_in(osv.osv):
+    _inherit = 'stock.picking.in'
+
+    PICKING_TYPE = 'in'
+    
+    def create(self, cr, user, vals, context=None):
+        if ('name' not in vals) or (vals.get('name')=='/'):            
+            vals['name'] = self.pool.get('stock.picking').get_newcode(cr, user, 'in', context)
+        new_id = super(stock_picking_in, self).create(cr, user, vals, context)
+        return new_id
+        
+    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for ROA'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Waiting for Delivery'),
+            ('done', 'Received'),
+            ('cancel', 'Cancelled'),]
+
+    _columns = {
+        'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True),
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
+            ondelete='set null', select=True, required=True),
+        'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1)
+    }
+
+    _defaults = {
+                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
+                 'name': lambda self, cr, uid, context ={}: self.pool.get('stock.picking').get_newcode(cr, uid, self.PICKING_TYPE)
+                }
