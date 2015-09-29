@@ -81,7 +81,7 @@
                     <header>
                     	<button confirm="Are you sure you want to approve this quotation?" icon="gtk-execute" name="action_work_received" states="draft" groups="kderp_quotation.group_confirm_kinden_quotation" string="Work Received" type="object"/>
                     	<button name="action_done_draft" icon="gtk-go-back" attrs="{'invisible': [ ('state','!=', 'done')]}" groups="kderp_quotation.group_confirm_kinden_quotation" string="Back" type="object"/>
-                    	<button confirm="Are you sure you want to cancel this quotation?" icon="gtk-cancel" class="oe_cancel" name="action_cancel" attrs="{'invisible': [[ 'state','not in', ['draft','done']]]}" string="Failed" type="object"/>
+                    	<button confirm="Are you sure you want to cancel this quotation?" icon="gtk-cancel" class="oe_cancel" name="action_cancel" attrs="{'invisible': [[ 'state','not in', ['draft','done']]]}" string="Failed" type="object" groups="kderp_quotation.group_kderp_quotation_cancel"/>
 						<button name="action_cancel_draft" icon="gtk-convert" states="cancel" string="Revise" class="oe_cancel" type="object" groups="kderp_quotation.group_kderp_quotation_cancel"/>
 						<button name="%(action_open_attachment_from_quotation)d" icon="gtk-paste-v" string="Attachment" class="oe_cancel" type="action"/>
                        	<field name="state" widget="statusbar" statusbar_visible="draft,cancel,done"/>
@@ -235,7 +235,7 @@
                     <header>
                     	<button confirm="Are you sure you want to approve this quotation?" icon="gtk-execute" name="action_work_received" states="draft" groups="kderp_quotation.group_confirm_kinden_quotation" string="Work Received" type="object"/>
                     	<button name="action_done_draft" icon="gtk-go-back" attrs="{'invisible': [ ('state','!=', 'done')]}" groups="kderp_quotation.group_confirm_kinden_quotation" string="Back" type="object"/>
-                    	<button confirm="Are you sure you want to cancel this quotation?" icon="gtk-cancel" class="oe_cancel" name="action_cancel" attrs="{'invisible': [[ 'state','not in', ['draft','done']]]}" string="Failed" type="object"/>
+                    	<button confirm="Are you sure you want to cancel this quotation?" icon="gtk-cancel" class="oe_cancel" name="action_cancel" attrs="{'invisible': [[ 'state','not in', ['draft','done']]]}" string="Failed" type="object" groups="kderp_quotation.group_kderp_quotation_cancel"/>
 						<button name="action_cancel_draft" icon="gtk-convert" states="cancel" string="Revise" class="oe_cancel" type="object" groups="kderp_quotation.group_kderp_quotation_cancel"/>
 						<button name="%(action_open_attachment_from_quotation)d" icon="gtk-paste-v" string="Attachment" class="oe_cancel" type="action"/>
                  
@@ -245,128 +245,128 @@
                         <label for="name" string="Quotation No." class="oe_edit_only"/>
 						<h1><field name="name"/></h1>
 						<label for="dateofregistration" string="Registered on" class="oe_edit_only"/>
-						<h2><field readonly="1" name="dateofregistration" class="oe_inline"/></h2>
-                    <group>
-                        <div col="4" colspan="4">
-							<group string="Client Info." colspan="4" col="4">
-								<field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options="{&quot;always_reload&quot;: True}"/>
-								<field name="partner_address_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
-								<field name="partner_invoice_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
-								<field name="completion_date"/>
-								<field name="completion_date_contract"/>
-								<field readonly="1" name="contract_id"/>
+						<h2><field name="dateofregistration" class="oe_inline"/></h2>
+						<group>
+							<div col="4" colspan="4">
+								<group string="Client Info." colspan="4" col="4">
+									<field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options="{&quot;always_reload&quot;: True}"/>
+									<field name="partner_address_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+									<field name="partner_invoice_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+									<field name="completion_date"/>
+									<field name="completion_date_contract"/>
+									<field readonly="1" name="contract_id"/>
+								</group>
+							</div>
+							<div class="oe_button_box kdvn_button_left">
+								<button context="{'contract_id':contract_id,'client_id':partner_id,'owner_id':owner_id,'project_name':project_name,'description':description,'order_id':active_id}" icon="gtk-execute" name="%(action_quotation_to_contract)d" groups="kderp_quotation.group_create_contract_from_quotation" states="draft,cancel,done" string="Create" attrs="{'readonly':[('contract_id','&gt;',0)]}" type="action"/>
+							</div>
+								<!-- Field for Onchange Partner -->
+							<group>
+								<field readonly="1" name="partner_shipping_id" invisible="1"/>
+								<field readonly="1" name="fiscal_position" invisible="1"/>
+								<field readonly="1" name="payment_term" invisible="1"/>
+								<field readonly="1" name="user_id" invisible="1"/>
+								<field readonly="1" name="pricelist_id" invisible="1"/>
 							</group>
-						</div>
-						<div class="oe_button_box kdvn_button_left">
-							<button context="{'contract_id':contract_id,'client_id':partner_id,'owner_id':owner_id,'project_name':project_name,'description':description,'order_id':active_id}" icon="gtk-execute" name="%(action_quotation_to_contract)d" groups="kderp_quotation.group_create_contract_from_quotation" states="draft,cancel,done" string="Create" attrs="{'readonly':[('contract_id','&gt;',0)]}" type="action"/>
-						</div>
-							<!-- Field for Onchange Partner -->
-                        <group>
-							<field readonly="1" name="partner_shipping_id" invisible="1"/>
-                            <field readonly="1" name="fiscal_position" invisible="1"/>
-                            <field readonly="1" name="payment_term" invisible="1"/>
-                            <field readonly="1" name="user_id" invisible="1"/>
-                            <field readonly="1" name="pricelist_id" invisible="1"/>
-                        </group>
-                        <div col="4" colspan="4">
-							<group string="Quotation Information" colspan="4" col="4" class="h4">
-								<field  name="owner_id" on_change="onchange_owner_id(owner_id)"/>
-								<field  name="location_id" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
-								<field  name="project_name"/>
-								<field  name="registered_by"/>
-								<field  name="estimation_e_manager_j"/>
-								<field  name="estimation_m_manager_j"/>
-								<field  name="estimation_e_manager_v"/>
-								<field  name="estimation_m_manager_v"/>
-								<field  name="project_manager_id"/>
-								<field  name="project_manager_m_id"/>
-								<field  name="site_manager_e_id"/>
-								<field  name="site_manager_m_id"/>
-								<field  name="description"/>
-								<field  name="remarks"/>
+							<div col="4" colspan="4">
+								<group string="Quotation Information" colspan="4" col="4" class="h4">
+									<field name="owner_id" on_change="onchange_owner_id(owner_id)"/>
+									<field name="location_id" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+									<field name="project_name"/>
+									<field name="registered_by"/>
+									<field name="estimation_e_manager_j"/>
+									<field name="estimation_m_manager_j"/>
+									<field name="estimation_e_manager_v"/>
+									<field name="estimation_m_manager_v"/>
+									<field name="project_manager_id"/>
+									<field name="project_manager_m_id"/>
+									<field name="site_manager_e_id"/>
+									<field name="site_manager_m_id"/>
+									<field name="description"/>
+									<field name="remarks"/>
+								</group>
+							</div>
+							<group string="Quotation Attachment" colspan="4" col="8" class="h4">
+								<field name="q_attached"/>
+								<field name="q_attached_be"/>
+								<field name="q_attached_bm"/>
+								<field name="q_attached_qcombine"/>
 							</group>
-						</div>
-                        <group string="Quotation Attachment" colspan="4" col="8" class="h4">
-                        	<field name="q_attached"/>
-                        	<field name="q_attached_be"/>
-                        	<field name="q_attached_bm"/>
-                        	<field name="q_attached_qcombine"/>
-                        </group>
-                        <group string="Submit Info." col="4" colspan="3">
-                        	<field name="quotation_type"/>
-                        	<field name="date_order"/>
-                        	<field name="quotation_submit_line" nolabel="1" string="Detail of Submission" colspan="4">
-                        		<tree string="Detail of Submission" editable="bottom" min_rows="2">
-                        			<field name="currency_id"/>
-                        			<field name="amount"/>
-                        			<field name="tax_id" widget="many2many_tags">
-                        				<tree>
-                        					<field name="name"/>
-                        				</tree>
-                        			</field>
-                        			<field name="tax_amount"/>
-                        			<field name="subtotal"/>
-                        			<field name="note"/>
-                        		</tree>
-                        	</field>
-                        </group>
-                        <group string="Job Information" col="4" colspan="4">
-                        	<group colspan="2" col="4" class="kdvn_align_right">
-                        		<separator string="Electrical Breakdown" colspan="4"/>
-                        		<field colspan="4" mode="tree" name="order_line" nolabel="1">
-	                        		<tree editable="bottom">
-	                        			<field name="currency_id"/>
-	                        			<field name="price_unit"/>
-	                        			<field name="discount"/>
-	                        			<field name="name"/>
+							<group string="Submit Info." col="4" colspan="3">
+								<field name="quotation_type"/>
+								<field name="date_order"/>
+								<field name="quotation_submit_line" nolabel="1" string="Detail of Submission" colspan="4">
+									<tree string="Detail of Submission" editable="bottom" min_rows="2">
+										<field name="currency_id"/>
+										<field name="amount"/>
+										<field name="tax_id" widget="many2many_tags">
+											<tree>
+												<field name="name"/>
+											</tree>
+										</field>
+										<field name="tax_amount"/>
+										<field name="subtotal"/>
+										<field name="note"/>
 									</tree>
-	                        	</field>
-	                        	<field name="job_e_id" colspan="4"/>
-								<field name="q_budget_no_e"/>
-								<field name="q_exrate_e"/>
-								<field name="q_prj_budget_amount_e" colspan="4"/>
-								<field name="budget_state_e"/>
- 								<field name="temp_percentage_e"/>
-<!-- 								<field name="temp_percentage_e" widget="progressbar" class="oe_save_only"/> -->
-                        	</group>
-                        	<group colspan="2" col="4">
-								<separator string="Mechanical Breakdown" colspan="4"/>
-	                        	<field colspan="4" mode="tree" name="order_line_m" nolabel="1">
-	                        		<tree editable="bottom">
-	                        			<field name="currency_id"/>
-	                        			<field name="price_unit"/>
-	                        			<field name="discount"/>
-	                        			<field name="name"/>
-	                        		</tree>
-	                        	</field>
-	                        	<field name="job_m_id" colspan="4"/>
-								<field name="q_budget_no_m"/>
-								<field name="q_exrate_m"/>
-								<field name="q_prj_budget_amount_m" colspan="4"/>
-								<field name="budget_state_m"/>
-								<field name="temp_percentage_m"/>
-                        	</group>
-                        	<group string="Working Budget" col="4" colspan="2">
-                        		<field name="q_attached_je"/>
-								<field name="q_attached_jm"/>
-								<field name="q_attached_jcombine"/>
-								<field name="total_working_budget"/>
-                        	</group>
-							<group string="Approved" col="4" colspan="2">
-                        		<field name="summary_quotation_ids" mode="tree" min_rows="3" nolabel="1">
-                        			<tree>
-                        				<field name="currency_id"/>
-                        				<field name="amount"/>
-                        			</tree>
-                        		</field>
-                        	</group>
-                        </group>
-                    </group>
-				</sheet>
-				<div class="oe_chatter">
-                    <!-- <field name="message_follower_ids" widget="mail_followers"/> -->
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
+								</field>
+							</group>
+							<group string="Job Information" col="4" colspan="4">
+								<group colspan="2" col="4" class="kdvn_align_right">
+									<separator string="Electrical Breakdown" colspan="4"/>
+									<field colspan="4" mode="tree" name="order_line" nolabel="1" readonly="1">
+										<tree editable="bottom">
+											<field name="currency_id"/>
+											<field name="price_unit"/>
+											<field name="discount"/>
+											<field name="name"/>
+										</tree>
+									</field>
+									<field name="job_e_id" colspan="4" readonly="1"/>
+									<field name="q_budget_no_e" readonly="1"/>
+									<field name="q_exrate_e" readonly="1"/>
+									<field name="q_prj_budget_amount_e" colspan="4" readonly="1"/>
+									<field name="budget_state_e" readonly="1"/>
+									<field name="temp_percentage_e" readonly="1"/>
+	<!-- 								<field name="temp_percentage_e" widget="progressbar" class="oe_save_only"/> -->
+								</group>
+								<group colspan="2" col="4">
+									<separator string="Mechanical Breakdown" colspan="4"/>
+									<field colspan="4" mode="tree" name="order_line_m" nolabel="1" readonly="1">
+										<tree editable="bottom">
+											<field name="currency_id"/>
+											<field name="price_unit"/>
+											<field name="discount"/>
+											<field name="name"/>
+										</tree>
+									</field>
+									<field name="job_m_id" colspan="4" readonly="1"/>
+									<field name="q_budget_no_m" readonly="1"/>
+									<field name="q_exrate_m" readonly="1"/>
+									<field name="q_prj_budget_amount_m" colspan="4" readonly="1"/>
+									<field name="budget_state_m" readonly="1"/>
+									<field name="temp_percentage_m" readonly="1"/>
+								</group>
+								<group string="Working Budget" col="4" colspan="2">
+									<field name="q_attached_je" readonly="1"/>
+									<field name="q_attached_jm" readonly="1"/>
+									<field name="q_attached_jcombine" readonly="1"/>
+									<field name="total_working_budget" readonly="1"/>
+								</group>
+								<group string="Approved" col="4" colspan="2">
+									<field name="summary_quotation_ids" mode="tree" min_rows="3" nolabel="1">
+										<tree>
+											<field name="currency_id"/>
+											<field name="amount"/>
+										</tree>
+									</field>
+								</group>
+							</group>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+						<!-- <field name="message_follower_ids" widget="mail_followers"/> -->
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
                 </form>
             
             </field>
@@ -381,23 +381,23 @@
                     <header>
                     	<button readonly="1" confirm="Are you sure you want to approve this quotation?" icon="gtk-execute" name="action_work_received" states="draft" groups="kderp_quotation.group_confirm_kinden_quotation" string="Work Received" type="object"/>
                     	<button readonly="1" name="action_done_draft" icon="gtk-go-back" attrs="{'invisible': [ ('state','!=', 'done')]}" groups="kderp_quotation.group_confirm_kinden_quotation" string="Back" type="object"/>
-                    	<button readonly="1" confirm="Are you sure you want to cancel this quotation?" icon="gtk-cancel" class="oe_cancel" name="action_cancel" attrs="{'invisible': [[ 'state','not in', ['draft','done']]]}" string="Failed" type="object"/>
+                    	<button readonly="1" confirm="Are you sure you want to cancel this quotation?" icon="gtk-cancel" class="oe_cancel" name="action_cancel" attrs="{'invisible': [[ 'state','not in', ['draft','done']]]}" string="Failed" type="object" groups="kderp_quotation.group_kderp_quotation_cancel"/>
 						<button readonly="1" name="action_cancel_draft" icon="gtk-convert" states="cancel" string="Revise" class="oe_cancel" type="object" groups="kderp_quotation.group_kderp_quotation_cancel"/>
 						<button  name="%(action_open_attachment_from_quotation)d" icon="gtk-paste-v" string="Attachment" class="oe_cancel" type="action"/>
 						<field readonly="1" name="state" widget="statusbar" statusbar_visible="draft,cancel,done"/>
                 	</header>				
 					<sheet>
-                        <label readonly="1" for="name" string="Quotation No." class="oe_edit_only"/>
+                        <label for="name" string="Quotation No." class="oe_edit_only"/>
 						<h1><field readonly="1" name="name"/></h1>
-						<label readonly="1" for="dateofregistration" string="Registered on" class="oe_edit_only"/>
-						<h2><field  readonly="1" name="dateofregistration" class="oe_inline"/></h2>
+						<label for="dateofregistration" string="Registered on" class="oe_edit_only"/>
+						<h2><field readonly="1" name="dateofregistration" class="oe_inline"/></h2>
                     <group> 
                         <div col="4" colspan="4">
 							<group string="Client Info." colspan="4" col="4">
-								<field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options="{&quot;always_reload&quot;: True}"/>
-								<field name="partner_address_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
-								<field name="partner_invoice_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
-								<field name="completion_date"/>
+								<field readonly="1" name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options="{&quot;always_reload&quot;: True}"/>
+								<field readonly="1" name="partner_address_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+								<field readonly="1" name="partner_invoice_id" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options="{&quot;always_reload&quot;: True}"/>
+								<field readonly="1" name="completion_date"/>
 								<field name="completion_date_contract"/>
 								<field name="contract_id"/>
 							</group>
