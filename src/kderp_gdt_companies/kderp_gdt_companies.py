@@ -204,6 +204,13 @@ class gdt_companies(osv.Model):
                 self.update_data_many(cr, uid, [gdt_id], context)
         return True
     
+    def check_data(self, cr, uid, ids, context):
+        tax_code = self.browse(cr, uid, ids[0], context).tax_code
+        search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code,popup=False)
+        if search_res:  
+            return self.pool.get("gdt.companies.wizard")._check_for_update(cr, uid, search_res)
+        
+    
     def update_data(self, cr, uid, ids, context):
         #self.pool.get("gdt.companies.wizard").raise_error = False
         tax_code = self.browse(cr, uid, ids[0], context).tax_code
@@ -287,13 +294,24 @@ class wizard_gdt_companies(osv.osv_memory):
         if record_ids:
             gdt_obj = self.pool.get('gdt.companies')
         a=[]
+        action_list=[]
         for gdt_id in gdt_obj.browse(cr, uid, record_ids, context=context):
             a.append(gdt_id.id)
         for gdt_id in gdt_obj.browse(cr, uid, record_ids, context=context):
+            tax_code = gdt_id.tax_code
             if len(a)==1:
                 gdt_obj.update_data(cr, uid, [gdt_id.id], context)
             else :
                 gdt_obj.update_data_many(cr, uid, [gdt_id.id], context)
+                
+            action = gdt_obj.check_data(cr, uid, [gdt_id.id], context)
+            if action == 'nothing':
+                action = 'error_codes : '+tax_code
+                action_list.append(action)
+
+        if action_list!=[]:
+            cr.commit()
+            raise osv.except_osv("KDERP Warning",'\n'.join(action_list))
         return True
 
 wizard_gdt_companies()
