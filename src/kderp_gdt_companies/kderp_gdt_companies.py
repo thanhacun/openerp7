@@ -193,41 +193,25 @@ class gdt_companies(osv.Model):
     _description = 'GDT Companies'
     _rec_name = 'tax_code'
 #    
-    def action_update(self, cr, uid, ids, context):
-        a=[]
-        for id in ids:
-            a.append(id)
-        for gdt_id in ids:
-            if len(a)==1:
-                self.update_data(cr, uid, [gdt_id], context)
-            else :
-                self.update_data_many(cr, uid, [gdt_id], context)
-        return True
-    
-    def update_data(self, cr, uid, ids, context):
+#     def action_update(self, cr, uid, ids, context):
+#         
+#         for gdt_id in ids:
+#             if len(ids) == 1:
+#                 self.update_data(cr, uid, [gdt_id], context, popup=True)
+#             else :
+#                 self.update_data(cr, uid, [gdt_id], context, popup=False)
+#         return True
+        
+    def update_data(self, cr, uid, ids, context, popup=True):
+        """
+        Tra cuu du lieu cong ty tu TCT
+        Quyet dinh: update, tao moi, hay khong lam gi do voi du lieu duoc tra cuu
+        Tra ve: True neu co update, False neu khong co update
+        """
         #self.pool.get("gdt.companies.wizard").raise_error = False
         tax_code = self.browse(cr, uid, ids[0], context).tax_code
         tax_code_id = self.search(cr, uid, [('tax_code','=',tax_code)])
-        search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code,popup=True)
-        if search_res:
-            #gdt_company = self.pool.get("gdt.companies")
-            #tax_code_id = gdt_company.search(cr,uid,[('tax_code','=',tax_code)])
-            #search_res = self._query_data_from_gdt(tax_code)
-            action = self.pool.get("gdt.companies.wizard")._check_for_update(cr, uid, search_res)
-            if action == 'update':
-                self.write(cr,uid,tax_code_id,search_res,context)
-            elif action == 'create':
-                self.create(cr,uid,search_res,context)
-            elif action == 'nothing':
-                return False
-        #self.write(cr,uid,tax_code_id,data_to_update,context)
-        #self.pool.get("gdt.companies.wizard").raise_error = True
-        return True
-    
-    def update_data_many(self, cr, uid, ids, context):
-        tax_code = self.browse(cr, uid, ids[0], context).tax_code
-        tax_code_id = self.search(cr, uid, [('tax_code','=',tax_code)])
-        search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code,popup=False)
+        search_res = self.pool.get("gdt.companies.wizard")._query_data_from_gdt(tax_code, popup)
         if search_res:
             action = self.pool.get("gdt.companies.wizard")._check_for_update(cr, uid, search_res)
             if action == 'update':
@@ -237,11 +221,13 @@ class gdt_companies(osv.Model):
             elif action == 'nothing':
                 return False
         return True
-    
     
     def gdt_link(self, cr, uid, ids, context):
-        #tax_code = self.browse(cr, uid, ids[0]).tax_code
-        url = 'http://tracuunnt.gdt.gov.vn/tcnnt/mstdn.jsp'
+        """
+        Duong dan lay thong tin cua ma so thue
+        """
+        tax_code = self.browse(cr, uid, ids[0]).tax_code
+        url = 'http://tracuunnt.gdt.gov.vn/tcnnt/mstdn.jsp?action=action&id=%s'%(tax_code)
         return {
                 'type':'ir.actions.act_url',
                 'url': url,
@@ -280,20 +266,24 @@ class wizard_gdt_companies(osv.osv_memory):
     _name='wizard.gdt.companies'
     _description='Wizard Update Tax Code'
     
-    def action_update_companies(self, cr, uid, ids, context): 
+    def action_update_companies(self, cr, uid, ids, context):
+        """
+        Tao wizard de xac nhan co update hay khong
+        """ 
         if context is None:
             context={}
         record_ids =  context.get('active_ids',[])
+        #select bang gdt_company
         if record_ids:
             gdt_obj = self.pool.get('gdt.companies')
-        a=[]
+#         import pdb
+#         pdb.set_trace()
+        #thuc hien update vao database
         for gdt_id in gdt_obj.browse(cr, uid, record_ids, context=context):
-            a.append(gdt_id.id)
-        for gdt_id in gdt_obj.browse(cr, uid, record_ids, context=context):
-            if len(a)==1:
-                gdt_obj.update_data(cr, uid, [gdt_id.id], context)
+            if len(record_ids) == 1:
+                gdt_obj.update_data(cr, uid, [gdt_id.id], context, popup=True)
             else :
-                gdt_obj.update_data_many(cr, uid, [gdt_id.id], context)
+                gdt_obj.update_data(cr, uid, [gdt_id.id], context, popup=False)
         return True
 
 wizard_gdt_companies()
