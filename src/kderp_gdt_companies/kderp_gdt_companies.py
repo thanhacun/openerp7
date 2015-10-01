@@ -202,7 +202,7 @@ class gdt_companies(osv.Model):
 #                 self.update_data(cr, uid, [gdt_id], context, popup=False)
 #         return True
         
-    def update_data(self, cr, uid, ids, context, popup):
+    def update_data(self, cr, uid, ids, context, popup=True):
         """
         Tra cuu du lieu cong ty tu TCT
         Quyet dinh: update, tao moi, hay khong lam gi do voi du lieu duoc tra cuu
