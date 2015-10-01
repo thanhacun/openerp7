@@ -18,15 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import inherited_res_company
 
-import inherited_stock_move
-import inherited_stock_picking
-#import inherited_stock_picking_in
-import inherited_stock_location
-
-import kderp_stock_period
-
-import inherited_purchase_order
-
-import kderp_stock_base
+import inherited_stock_picking_in
+import inherited_ir_sequence

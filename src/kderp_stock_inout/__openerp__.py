@@ -15,18 +15,25 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     d
 #
 ##############################################################################
-import inherited_res_company
-
-import inherited_stock_move
-import inherited_stock_picking
-#import inherited_stock_picking_in
-import inherited_stock_location
-
-import kderp_stock_period
-
-import inherited_purchase_order
-
-import kderp_stock_base
+{
+    'name':"KDERP Stock IN/OUT/Move",
+    'version':"7.0.0",
+    'author':"KDERP IT-Dev. Team",
+    'images' : ['images/kinden.png'],
+    'summary':"Customize Purchase Module for Suiteable Kinden Procedure",
+    'category':"KDERP Apps",
+    'depends':['kderp_stock'],
+    'description': """
+    - Customize Database structure and function
+    - Customize Procedure
+    - Customize Interface""",
+    'data':[
+            'views/kderp_stock_picking_inout_views.xml',
+            "views/kderp_stock_move_views.xml"
+            ],
+    'demo':[],
+    'installable':True
+}

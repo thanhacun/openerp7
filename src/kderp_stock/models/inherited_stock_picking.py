@@ -20,18 +20,46 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp import netsvc
 
-#
-# Inherit of picking to add the link to the PO
-#
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
+    _name = 'stock.picking'
+
+    def action_cancel_draft(self, cr, uid, ids, context=None):
+        """ Revise picking status.
+        @return: True
+        """
+        if not len(ids):
+            return False
+        wf_service = netsvc.LocalService("workflow")
+
+        for pick in self.browse(cr, uid, ids, context=context):
+            ids2 = [move.id for move in pick.move_lines]
+            self.pool.get('stock.move').action_cancel_draft(cr, uid, ids2, context)
+            wf_service.trg_delete(uid, 'stock.picking', pick.id, cr)
+            wf_service.trg_create(uid, 'stock.picking', pick.id, cr)
+        self.write(cr, uid, ids, {'state': 'draft'})
+        return True
+
     _columns = {
                 'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True),
                 'check_payment':fields.many2one('kderp.supplier.payment', 'Supplier Payment'),
                 'received_date':fields.date('Received Date'),
+                #Set location required
+                'location_id': fields.many2one('stock.location', 'Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
+                                                            "Set a location if you produce at a fixed location. This can be a partner location " \
+                                                            "if you subcontract the manufacturing operations.", select=True, required=True),
+                'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True, required=True),
+
+                'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
+                    ondelete='set null', select=True, required=True),
+                'received_by_uid':fields.many2one('hr.employee','Received by', required=True, readonly=1, states={'draft':[('readonly', False)]}),
                 }
 
+    _defaults = {
+
+    }
     def init(self,cr):
         #cr.execute("""Update wkf set on_create=False where on_create=True and osv='stock.picking';""")
         pass
@@ -82,33 +110,3 @@ class stock_picking(osv.osv):
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
         return True
-
-class stock_picking_in(osv.osv):
-    _inherit = 'stock.picking.in'
-
-    PICKING_TYPE = 'in'
-    
-    def create(self, cr, user, vals, context=None):
-        if ('name' not in vals) or (vals.get('name')=='/'):            
-            vals['name'] = self.pool.get('stock.picking').get_newcode(cr, user, 'in', context)
-        new_id = super(stock_picking_in, self).create(cr, user, vals, context)
-        return new_id
-        
-    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for ROA'),
-            ('auto', 'Waiting Another Operation'),
-            ('confirmed', 'Waiting Availability'),
-            ('assigned', 'Waiting for Delivery'),
-            ('done', 'Received'),
-            ('cancel', 'Cancelled'),]
-
-    _columns = {
-        'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True),
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True, required=True),
-        'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1)
-    }
-
-    _defaults = {
-                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False),
-                 'name': lambda self, cr, uid, context ={}: self.pool.get('stock.picking').get_newcode(cr, uid, self.PICKING_TYPE)
-                }

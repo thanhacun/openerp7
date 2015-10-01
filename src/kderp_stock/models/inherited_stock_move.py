@@ -157,5 +157,19 @@ class stock_move(osv.osv):
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
         return True
-        
+
+    # Revise move => draft others move and pickings
+    #
+    def action_cancel_draft(self, cr, uid, ids, context=None):
+        """ Revise all the moves
+        @return: True
+        """
+        if not len(ids):
+            return True
+        if context is None:
+            context = {}
+
+        self.write(cr, uid, ids, {'state': 'draft'})
+        return True
+
 stock_move()

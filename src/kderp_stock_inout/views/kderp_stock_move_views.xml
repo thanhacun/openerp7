@@ -1,0 +1,23 @@
+<openerp>
+    <data>
+
+		 <record id="kderp_view_packing_detail_tree" model="ir.ui.view">
+            <field name="name">kderp.view.packing.detail.tree</field>
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <tree string="Packing Detail" editable="top">
+                    <field colspan="4" name="product_id" domain="[('type','!=','service')]" invisible="1"/>
+                    <field name="purchase_line_id" string="Desc." domain="[('order_id','=',parent.purchase_id),('product_id.type','!=','service')]" on_change="purchase_order_line_change(purchase_line_id)" required="1" select="1"/>
+                    <field name="product_qty" select="1" string="Qty."/>
+                    <field name="product_uom" select="1" string="Unit"/>
+                    <field name="location_dest_id"/>
+                    <field name="date_expected"/>
+                    <field name="state" string="State"/>
+                </tree>
+            </field>
+        </record>
+               
+    </data>
+</openerp>

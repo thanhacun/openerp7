@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,18 +15,26 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import inherited_res_company
 
-import inherited_stock_move
-import inherited_stock_picking
-#import inherited_stock_picking_in
-import inherited_stock_location
+from openerp.osv import fields, osv
 
-import kderp_stock_period
+#
+# Inherit of Sequence change code default stock picking
+#
+class ir_sequence(osv.osv):
+    _inherit = "ir.sequence"
 
-import inherited_purchase_order
+    def get(self, cr, uid, seqCode, context={}):
+        """
+            Check if get new code for Stock Picking will apply custom code in Kinden
+        """
 
-import kderp_stock_base
+        obj_check = 'stock.picking'
+        if seqCode.find(obj_check)>=0:
+            posFind = seqCode.rfind('.') if seqCode.rfind('.') else seqCode.rfind('_')
+            return self.pool.get(obj_check).get_newcode(cr, uid, seqCode[posFind+1:])
+        else:
+            return super(ir_sequence, self).get(cr, uid, seqCode, context)
