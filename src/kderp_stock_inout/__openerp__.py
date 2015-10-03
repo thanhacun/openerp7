@@ -31,8 +31,10 @@
     - Customize Procedure
     - Customize Interface""",
     'data':[
-            'views/kderp_stock_picking_inout_views.xml',
-            "views/kderp_stock_move_views.xml"
+            'security/ir.model.access.csv',
+            "views/kderp_stock_move_views.xml",
+            'views/kderp_stock_picking_in_views.xml',
+            'views/kderp_stock_picking_out_views.xml'
             ],
     'demo':[],
     'installable':True

@@ -23,26 +23,26 @@ from openerp.osv import fields, osv, orm
 from openerp import tools
 
 #
-# Inherit of picking to add Info to Picking In
+# Inherit of picking to add Info to Picking Out
 #
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _name = 'stock.picking'
 
-    def _default_location_source(self, cr, uid, context=None):
-        """ Gets default Location Source if In -> Supplier
+    def _default_location_destination(self, cr, uid, context=None):
+        """ Gets default Location Source Dest if Out -> Customer
         @return: Location ID or False
         """
         if context is None:
             context = {}
+
         mod_obj = self.pool.get('ir.model.data')
         picking_type = context.get('picking_type')
         location_id = False
 
         location_xml_id = False
-        if picking_type == 'in':
-            location_xml_id = 'stock_location_suppliers'
-
+        if picking_type == 'out':
+            location_xml_id = 'stock_location_customers'
         if location_xml_id:
             try:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
@@ -52,14 +52,16 @@ class stock_picking(osv.osv):
                 location_id = False
 
         return location_id
-
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},
-                    ondelete='set null', select=True)
-    }
+                'approved_by_uid':fields.many2one('hr.employee','Approved By', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},
+                    ondelete='restrict', required=True),
+                'request_by_uid':fields.many2one('hr.employee','Request By', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},
+                    ondelete='restrict', required=True),
+                'received_by': fields.many2one('kderp.user.related', 'Received By', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+                }
 
     _defaults = {
                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False) or context.get('purchase_id', False),
-                'location_id': _default_location_source
+                'location_dest_id':_default_location_destination
                 }
 

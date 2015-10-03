@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,17 +15,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import inherited_res_company
 
-import inherited_stock_move
-import inherited_stock_picking
-import inherited_stock_location
+from openerp.osv import fields, osv
+from openerp import netsvc
 
-import kderp_stock_period
 
-import inherited_purchase_order
+import time
+from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 
-import kderp_stock_base
+class stock_move(osv.osv):
+    _inherit = 'stock.move'
+    _name="stock.move"
+
+    _defaults = {
+       'location_id':lambda self, cr, uid, context = {}: context.get('location_id',False) if context else False,
+       'location_dest_id':lambda self, cr, uid, context = {}: context.get('location_dest_id',False) if context else False
+   }

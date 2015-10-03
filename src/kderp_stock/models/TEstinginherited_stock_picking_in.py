@@ -49,12 +49,12 @@ class stock_picking_in(osv.osv):
 
     _columns = {
         'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True),
-        'received_by_uid':fields.many2one('hr.employee','Received by', required=True, readonly=1, states={'draft':[('readonly', False)]}),
+        'storekeeper_incharge_id':fields.many2one('hr.employee','Storekeeper Incharge', required=True, readonly=1, states={'draft':[('readonly', False)]}),
         'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1),
     }
 
     _defaults = {
                 'name': lambda self, cr, uid, context ={}: self.pool.get('stock.picking').get_newcode(cr, uid, self.PICKING_TYPE),
-                'received_by_uid': _get_received_by_id,
+                'storekeeper_incharge_id': _get_received_by_id,
                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False) or context.get('purchase_id', False),
                 }

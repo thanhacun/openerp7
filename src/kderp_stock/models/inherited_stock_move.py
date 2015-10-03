@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp import netsvc
-from openerp import pooler
+from openerp import tools
 
 import time
 from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
@@ -46,7 +46,7 @@ class stock_move(osv.osv):
                 name = line.product_id.code
             res.append((line.id, name))
         return res
-    
+
     _columns = {
         #'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
                 
@@ -55,10 +55,10 @@ class stock_move(osv.osv):
         'name': fields.char('Description', select=True),
         'date': fields.datetime('Date', select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]}, select=True, help="Scheduled date for the processing of this move"),
-        'location_id': fields.many2one('stock.location', 'Source Location', select=True,states={'done': [('readonly', True)]}),
-        'location_dest_id': fields.many2one('stock.location', 'Destination Location',states={'done': [('readonly', True)]}, ),
+        'location_id': fields.many2one('stock.location', 'Source Location', select=True,states={'done': [('readonly', True)]}, required=True),
+        'location_dest_id': fields.many2one('stock.location', 'Destination Location',states={'done': [('readonly', True)]}, required=True),
     }
-        
+
     def _check_product_id(self, cr, uid, ids, context=None):
         """
             Kiem tra product id and purchase_line_id
@@ -171,5 +171,3 @@ class stock_move(osv.osv):
 
         self.write(cr, uid, ids, {'state': 'draft'})
         return True
-
-stock_move()

@@ -19,5 +19,9 @@
 #
 ##############################################################################
 
-import inherited_stock_picking_in
+import kderp_user_related
 import inherited_ir_sequence
+
+import inherited_stock_picking_in
+import inherited_stock_picking_out
+import inherited_stock_move
