@@ -30,11 +30,13 @@
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
+    'css': ['static/src/css/*.css'],
     'data':[
             'security/ir.model.access.csv',
             "views/kderp_stock_move_views.xml",
             'views/kderp_stock_picking_in_views.xml',
-            'views/kderp_stock_picking_out_views.xml'
+            'views/kderp_stock_picking_out_views.xml',
+            'views/kderp_product_views.xml'
             ],
     'demo':[],
     'installable':True
