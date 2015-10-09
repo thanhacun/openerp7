@@ -37,6 +37,7 @@
     				<field name="address"/>
     				<field name="status"/>
     				<field name="stop_date"/>
+    				<field name="change_date"/>
     				<field name="write_date"/>
     				<button name="update_data" string="Force update" type="object" icon="save-document" confirm="Do you want to force update?"/>
     				<button name="gdt_link" string="Open GDT website" type="object" icon="gtk-open"/>

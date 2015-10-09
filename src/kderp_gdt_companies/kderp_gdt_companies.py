@@ -2,7 +2,7 @@
 from openerp.osv import osv, fields
 #from osv.orm import intersect
 #from openerp import tools
-
+import datetime
 class gdt_companies_wizard(osv.TransientModel):
     """
     Wizard ho tro tim kiem va update du lieu cac cong ty
@@ -13,30 +13,41 @@ class gdt_companies_wizard(osv.TransientModel):
     #su dung 1 bien global _raise_error = True de xac dinh co popup thong bao loi hay khong
     raise_error = True
     def _query_data_from_gdt(self, tax_code, popup=True):
+        """
+        Ham lay du lieu tu web mst
+        """
         import requests
         url = 'http://mst-kdvn.herokuapp.com/mst/'
-        result = {'tax_code':'','name':'','address':'','status':''}
-        
+        #url = 'http://192.168.0.38:3880/mst/'
+        result = {'tax_code':'', 'name':'', 'address':'', 'status':''}
         try:
             response = requests.get(url + tax_code, timeout=5)
             if response.status_code == 200:
                 info_company = response.json()
                 result['tax_code']=info_company['mst']
                 result['name']=info_company['ten']
-                if info_company['mst']!='':
-                    result['address']=(info_company['diachi']+', '+info_company['phuong']+', '+info_company['quan']+', '+info_company['thanhpho']).replace(' ,','')
+                result['address']=info_company['diachi']
                 result['status']=info_company['trangthai']
+                #giai thich: neu co du lieu dong mst thi them vao result
+                if info_company['dongmst']:
+                    result['stop_date']=datetime.datetime.strptime(info_company['dongmst'],'%d-%m-%Y').date().strftime("%Y-%m-%d")
+                #giai thich: neu co du lieu thany doi thi them vao tu dien result
+                if info_company['thaydoi']:
+                    result['change_date']=datetime.datetime.strptime(info_company['thaydoi'],'%d-%m-%Y').date().strftime("%Y-%m-%d")
+
             else:
                 if self.raise_error and popup:
-                    raise osv.except_osv("KDERP Warning",'Contact Administrator')
+                    raise osv.except_osv("KDERP Warning",'Contact Administrator, [MST server error]')
+        # if popup
         except requests.exceptions.ConnectionError:
             if self.raise_error and popup:
-                raise osv.except_osv("KDERP Warning",'Contact Administrator')
+                raise osv.except_osv("KDERP Warning",'Contact Administrator [OpenERP server error]')
         except requests.exceptions.Timeout:
             if self.raise_error and popup:
                 raise osv.except_osv("KDERP Warning",'Please try again')
         except:
             if self.raise_error and popup:
+                
                 raise osv.except_osv("KDERP Warning",'Contact Administrator')
         return result
         
@@ -130,7 +141,7 @@ class gdt_companies_wizard(osv.TransientModel):
         gdt_company = self.pool.get('gdt.companies')
         tax_code_id = gdt_company.search(cr, uid,[('tax_code','=',values['tax_code'])])
         if tax_code_id:
-            rec_to_comp = gdt_company.read(cr, uid, tax_code_id, ['tax_code','name','address','status'])
+            rec_to_comp = gdt_company.read(cr, uid, tax_code_id, ['tax_code','name','address','status','stop_date','change_date'])
             for item in rec_to_comp:
                 if (item.values()[0]==values[item.keys()[0]]):
                     action = 'update'
@@ -256,6 +267,7 @@ class gdt_companies(osv.Model):
                 'status':fields.selection(_status_desc, 'Status', size=2),
                 'write_date':fields.date('Updated Date', readonly=True),
                 'stop_date':fields.date('Stop Date', readonly=True),
+                'change_date':fields.date('Change Date', readonly=True)
                 }
     _defaults = {
                 }
