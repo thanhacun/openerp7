@@ -36,7 +36,8 @@
             "views/kderp_stock_move_views.xml",
             'views/kderp_stock_picking_in_views.xml',
             'views/kderp_stock_picking_out_views.xml',
-            'views/kderp_product_views.xml'
+            'views/kderp_product_views.xml',
+            'wizard\kderp_open_stock_products_views.xml'
             ],
     'demo':[],
     'installable':True

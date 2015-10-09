@@ -263,7 +263,8 @@ class StockPeriod(models.Model):
                             ('%s' between start_date and stop_date and start_date=stop_date and opening_closing) or
                             ('%s' between start_date and stop_date and start_date!='%s');""" % (dt, dt, dt)
         cr.execute(sqlCommand)
-        result = False        
+        result = False
+
         if cr.rowcount:
             sql_res = cr.dictfetchone()
             curr_period_id = sql_res['id']
@@ -300,8 +301,10 @@ class StockPeriod(models.Model):
                           'to_date': dt,
                           'pre_period_id': sql_res['id']}
         if not result:
-            sqlCommand = "Select min(date)::date from stock_move"
-            from_date = cr.dictfetchone()[0] if cr.rowcount else dt
+            sqlCommand = "Select min(date)::date from stock_move where state not in ('draft','cancel')"
+            cr.execute(sqlCommand)
+            sqlMinDate = cr.fetchone()
+            from_date = sqlMinDate[0] if sqlMinDate else dt
             result = {'from_date': from_date,
                         'to_date': dt,
                         'pre_period_id': False}            

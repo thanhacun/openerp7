@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-TODAY OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,9 +15,18 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import inherited_stock_partial_picking
 
-import kderp_open_stock_products
+from openerp.osv import fields, osv
+
+class wizard_kderp_open_stock_proudcts(osv.osv_memory):
+    """This model is Wizard model, using for select """
+    _name = "kderp.open.stock.proudcts"
+
+    _columns = {
+        'stock_id':fields.many2many('stock.location','location_id','open_product_id',"Stocks",help='Please select Job Stock or General Stock, not allow select Job and General Stock one time')
+        'from_date':fields.date('From Date'),
+        'to_date':fields.date('To Date')
+    }

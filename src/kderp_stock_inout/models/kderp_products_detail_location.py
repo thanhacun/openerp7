@@ -49,8 +49,6 @@ class product_product(osv.osv):
             context = {}
 
         location_obj = self.pool.get('stock.location')
-        warehouse_obj = self.pool.get('stock.warehouse')
-        shop_obj = self.pool.get('sale.shop')
         stock_period_obj = self.pool.get('kderp.stock.period')
         
         states = context.get('states',[])
@@ -72,6 +70,11 @@ class product_product(osv.osv):
             location_ids = location_obj.search(cr, uid, [('general_stock','=',True)])
             if not location_ids:
                 return res
+        #Check if select general stock and job stock
+        cr.execute("""Select DISTINCT COALESCE(general_stock, False) from stock_location where id in (%s)""" % ",".join(map(str, location_ids)))
+        if cr.rowcount>1:
+            raise osv.except_osv("KDERP Warning", "Can't select general stock with job stock !, you can select general stock or Job Stock")
+        general_stock_selected = cr.fetchone()[0]
 
         logger = logging.getLogger(__name__)
         logger.info("Stock Locaiton %s" % location_ids)
@@ -90,7 +93,6 @@ class product_product(osv.osv):
             child_location_ids = location_obj.search(cr, uid, [('id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
 
-
         # this will be a dictionary of the product UoM by product id
         product2uom = {}
         uom_ids = []
@@ -104,16 +106,63 @@ class product_product(osv.osv):
 
         results = []
         results2 = []
-
+        # results3 = [] #In Opening
+        # results4 = [] #Out Opening
+        import ipdb
+        ipdb.set_trace()
         # FIXME: If need using Date with time
         from_date = context.get('from_date',False)
         to_date = context.get('to_date',False) if context.get('to_date',False) else time.strftime("%Y-%m-%d %H:%M:%S")
+
+
         # Find nearest period closed
-        pre_period_closed = False
-        if not from_date:
-            pre_closed_info = stock_period_obj.find_pre_period_closed(cr, uid)
-            from_date = pre_closed_info['from_date']
-            pre_period_closed = pre_closed_info['pre_period_id']
+        pre_closed_info = stock_period_obj.find_pre_period_closed(cr, uid, from_date)
+        pre_period_closed = pre_closed_info['pre_period_id']
+        from_date_opening = pre_closed_info['from_date']
+
+        # Get from_date if not available From Date = (Min Date in stock move else next date of previous closed)
+        from_date = from_date_opening if not from_date else from_date
+
+        if general_stock_selected and pre_period_closed:
+            # In case for General Stock have Period :)
+            if from_date_opening != from_date:
+                where_opening_date = "where date >= '%s' and date<'%s'" % (from_date_opening, from_date)
+            else:
+                where_opening_date = ''
+        else:
+            # In case for General Stock not have Period :)
+            where_opening_date = "where date < '%s' " % from_date
+
+        if where_opening_date and context.get('opening_qty', False) and from_date<>from_date_opening:
+            sqlCommand = """
+                            Select
+                                sum(product_qty), product_id, product_uom
+                            FROM
+                                stock_move sm
+                            %s and location_dest_id in (%s) and product_id in (%s)
+                            group by
+                                product_id, product_uom
+                         """ % (where_opening_date,
+                                ",".join(map(str, location_ids)),
+                                ",".join(map(str, ids))
+                                )
+
+            cr.execute(sqlCommand)
+            results = cr.fetchall()
+            sqlCommand = """
+                            Select
+                                sum(product_qty), product_id, product_uom
+                            FROM
+                                stock_move sm
+                            %s and location_id in (%s) and product_id in (%s)
+                            group by
+                                product_id, product_uom
+                         """ % (where_opening_date,
+                                ",".join(map(str, location_ids)),
+                                ",".join(map(str, ids))
+                                )
+            cr.execute(sqlCommand)
+            results2 = cr.fetchall()
 
         date_str = False
         date_values = False
@@ -142,7 +191,7 @@ class product_product(osv.osv):
                                     location_dest_id IN %s
                                     and product_id IN %s
                                     and state IN %s """  + (date_str and 'and '+ date_str + ' ' or '')  + """ group by product_id,product_uom""", tuple(where))
-            results = cr.fetchall()
+            results.extend(cr.fetchall())
 
         if 'out' in what:
             # all moves from a location in the set to a location out of the set
@@ -153,10 +202,10 @@ class product_product(osv.osv):
                 'and product_id  IN %s '\
                 'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' ' +
                 'group by product_id,product_uom',tuple(where))
-            results2 = cr.fetchall()
+            results2.extend(cr.fetchall())
 
         #In Case get Opening Qty lookup on StockPeriodClosed
-        if context.get('opening_qty', False):
+        if context.get('opening_qty', False) and pre_period_closed:
             product_str_ids = ",".join(map(str, ids))
             location_str_ids = ",".join(map(str, location_ids))
             sqlCommand = """Select
