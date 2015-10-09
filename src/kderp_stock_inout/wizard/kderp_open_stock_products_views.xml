@@ -1,14 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-        <record id="view_packing_to_create_payment" model="ir.ui.view">
-            <field name="name">Create Payment</field>
-            <field name="model">kderp.wizard.packing.payment</field>
+
+        <record id="view_open_stock_prducts_form" model="ir.ui.view">
+            <field name="name">Products</field>
+            <field name="model">kderp.open.stock.products</field>
             <field name="arch" type="xml">
                 <form string="Create Payment" version="7.0">
-                    <h3>You want create supplier payment?</h3>
+                    <group string="Select Stock and date" colspan="4" col="4">
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                        <field name="stock_ids" widget="many2many_tags" colspan="4"/>
+                    </group>
                     <footer>
-                    	<button name="create_packing_payment" string="Create" type="object" class="oe_highlight"/>
+                    	<button name="create_packing_payment" string="Open" type="object" class="oe_highlight"/>
                     	or
                     	<button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -16,12 +21,16 @@
             </field>
         </record>
 
-    <act_window name="Create Payment"
-            res_model="kderp.wizard.packing.payment"
-            src_model="stock.picking"
+    <act_window name="Products"
+            res_model="kderp.open.stock.products"
             view_mode="form"
             target="new"
             key2="client_action_multi"
-            id="action_view_packing_to_create_payment"/>
+            id="action_view_wizard_open_stock_products"/>
+
+        <menuitem id="kderp_product_for_stock_menu"
+                  parent="kderp_stock.menu_kderp_stock"
+                  sequence="20"
+                  action="action_view_wizard_open_stock_products"/>
     </data>
 </openerp>

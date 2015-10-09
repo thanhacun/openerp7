@@ -23,10 +23,10 @@ from openerp.osv import fields, osv
 
 class wizard_kderp_open_stock_proudcts(osv.osv_memory):
     """This model is Wizard model, using for select """
-    _name = "kderp.open.stock.proudcts"
+    _name = "kderp.open.stock.products"
 
     _columns = {
-        'stock_id':fields.many2many('stock.location','location_id','open_product_id',"Stocks",help='Please select Job Stock or General Stock, not allow select Job and General Stock one time')
+        'stock_ids':fields.many2many('stock.location','location_id','open_product_id',string="Stocks",help='Please select Job Stock or General Stock, not allow select Job and General Stock one time'),
         'from_date':fields.date('From Date'),
         'to_date':fields.date('To Date')
     }

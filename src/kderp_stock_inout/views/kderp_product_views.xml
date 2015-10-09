@@ -62,10 +62,5 @@
             <field name="context">{'default_filter_product_stock':1}</field>
         </record>
 
-        <menuitem id="kderp_product_for_stock_menu"
-                  parent="kderp_stock.menu_kderp_stock"
-                  sequence="20"
-                  action="act_open_product_for_stock_view"/>
-
     </data>
 </openerp>
