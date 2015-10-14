@@ -37,19 +37,7 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "KDERP Customize Employee"
     _inherit = "hr.employee"
-    
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        reads = self.read(cr, uid, ids, ['name','staffno'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['staffno']:
-                name = "%s - %s" % (name,record['staffno'])
-            res.append((record['id'], name))
-        return res
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -85,12 +73,27 @@ class hr_department(osv.osv):
     _name = "hr.department"
     _inherit = "hr.department"
     
+    def _dept_name_get_fnc(self, cr, uid, ids, name=None, args=None, context=None):
+        if context == None:
+            context = {}
+        res = {}
+        for hr in self.browse(cr, uid, ids, context=context):
+            res[hr.id] = "%s - %s" % (hr.code,hr.name)
+        return res
+    
+    _rec_name='complete_name' 
     _columns={
               'manager_2nd_id':fields.many2one('res.users','2nd Manager'),
-              'code':fields.char('Code',size=8)
-              }        
+              'code':fields.char('Code',size=8),
+              'complete_name':fields.function(_dept_name_get_fnc,type='char',size=64,method=True, string='Name',
+                                            store={
+                                                   'hr.department': (lambda self, cr, uid, ids, c={}: ids, ['code','name'], 5),
+                                                   })
+              
+              }
+  
+         
 hr_department()
-
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
