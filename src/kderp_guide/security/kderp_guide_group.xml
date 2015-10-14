@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+		<record model="ir.module.category" id="module_category_kderp_guide">
+	      	<field name="name">KDERP Guide</field>
+	       	<field name="sequence">300</field>
+		</record>
+		
+	
+	   <record id='group_model_kderp_guide_attachment' model='res.groups'>
+	        <field name='name'>KDERP - Guide / Attachment</field>
+	        <field name="category_id" ref="module_category_kderp_guide"/>
+	     	 <field name="users" eval="[(4, ref('base.user_root'))]"/>
+  	   </record>
+  	   
+    </data>
+</openerp>

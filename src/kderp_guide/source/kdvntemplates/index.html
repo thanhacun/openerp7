@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% set title = _('Overview') %}
+{% block body %}
+  <h1>{{ _('Welcome') }}</h1>
+   <h2 style="margin-bottom: 0">{%trans%}KDVN Documentation{%endtrans%}</h2>
+
+  <table class="contentstable" align="center" style="margin-left: 30px"><tr>
+  	<td width="50%">
+     
+      <p class="biglink"><a class="biglink" href="{{ pathto("contents") }}">{%trans%}Openerp Guide{%endtrans%}</a><br/>
+         <span class="linkdescr">{%trans%}for a complete overview{%endtrans%}</span></p>
+       
+       
+    </td>
+   
+  </table>
+  
+
+{% endblock %}

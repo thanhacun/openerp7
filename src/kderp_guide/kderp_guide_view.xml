@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_kderp_guide_root" name="KDERP Guide" sequence="60"/>
+        <menuitem id="menu_kderp_guide_menu" name="Build" sequence="5" parent="menu_kderp_guide_root"/>
+		 
+		 <record id="action_open_attachment_from_kderp_guide" model="ir.actions.act_window">
+            <field name="name">Attachment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="src_model">kderp.guide</field>
+            <field name="view_type">form</field> 
+       	</record>
+   
+		 <record id="view_kderp_guide_form" model="ir.ui.view">
+            <field name="name">kderp.guide.form</field>
+            <field name="model">kderp.guide</field>
+            <field name="arch" type="xml">
+            	<form string='Kderp Guide' version="7.0"> 
+            		<header>
+            			<button name='action_submit' type='object' icon='gtk-execute' string='Build'/>
+            		<!-- <button name='get_id_guide_attachment' type='object' icon='gtk-execute' string='test'/> -->
+					<!-- <button name="%(action_open_attachment_from_kderp_guide)d" icon="gtk-paste-v" string="Attachment" class="oe_cancel" type="action"/> -->
+            		</header>
+            		<sheet>
+						 <group>
+						 	<field name="name"/>
+						 	<field name="date"/>
+						 	<field name="user_id"/>
+						 	<field name="attachment_lines"  string ='List of upload'  mode='tree' domain="['res_model','=','kderp.guide']" context="{'res_model':'kderp.guide'}" view_mode="tree" >
+			            		<tree editable='top'>
+					            	<field name="name"  invisible="1"/>
+									<field name="type" invisible="1"/>
+					                <field name="datas_fname" select="1" on_change="onchange_name_guide(datas_fname)"/>
+					                <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}" colspan="4" col="4"/>
+					                <field name="url" widget="url" invisible="1"/>
+					                <field name="res_model" invisible="1"/> 
+								</tree>
+	                     	</field>
+	                     	<field name="note" string="Note" rowspan="10" 
+								style="'resize':'none'; 'overflow-y':'scroll'"
+								placeholder="when you want to apparent image on ducoment , you have to path  Image as Ex '.. image:: kdvnstatic/1_IMG_qoutation.png' " help="Image path as Ex "/>
+	                    </group>
+					</sheet>
+            	</form>				
+			</field>
+		</record>
+		
+		<record id="view_kderp_guide_tree" model="ir.ui.view">
+            <field name="name">view.kderp.guide.tree</field>
+            <field name="model">kderp.guide</field>
+            <field name="priority" eval="30"/>
+            <field name="arch" type="xml">
+            	<tree string="Kderp Guide">
+            		<field name="name"/>
+            		<field name="date"/>
+            	</tree>
+            </field>
+		</record>
+
+		<record id="kderp_action_guide" model="ir.actions.act_window">
+            <field name="name">Kderp Guide</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="res_model">kderp.guide</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_kderp_guide_tree"/>
+        </record>
+        
+         <record id="action_window_view_kderp_guide_tree" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_kderp_guide_tree"/>
+            <field name="act_window_id" ref="kderp_action_guide"/>
+        </record>
+      
+		<menuitem 
+        		action="kderp_action_guide" 
+        		id="kderp_menu_guide" 
+        		parent="menu_kderp_guide_menu" sequence="5"/>
+	</data>
+</openerp>
