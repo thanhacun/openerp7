@@ -25,16 +25,21 @@
     'images' : [''],
     'summary':"Customize Web module",
     'category':"KDERP Apps",
-     'depends':['base','web','share','base_import','document'],
-    'doc': ['static/doc/index.html'], 
+    'depends':['kderp_base'],
+#     'doc': ['static/doc/index.html'], 
     'description': """
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
     'css': ['static/src/css/*.css'],
     'js':['static/src/js/kderp_guide.js'],
-    'data':[],
+    
     'qweb':['static/src/xml/kderp_guide.xml'],
+    'data':[
+            "security/kderp_guide_group.xml",
+            "security/ir.model.access.csv",
+            'kderp_guide_view.xml'
+            ],
     'demo':[],
     'installable':True,
     'application': True,
