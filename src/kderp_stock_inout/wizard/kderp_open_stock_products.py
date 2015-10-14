@@ -41,9 +41,7 @@ class wizard_kderp_open_stock_proudcts(osv.osv_memory):
         context['tree_view_ref'] = 'kderp_stock_inout.view_kderp_product_for_stock_tree'
         context['from_date'] = open_form_data.from_date
         context['to_date'] = open_form_data.to_date
-        import ipdb
-        ipdb.set_trace()
-        context['location'] = [stock.id for stock in open_form_data.stock_ids]
+        context['location'] = open_form_data.stock_ids and open_form_data.stock_ids[0]
 
         return {
                     'type': 'ir.actions.act_window',

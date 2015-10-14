@@ -58,7 +58,8 @@ class product_product(osv.osv):
         res = {}.fromkeys(ids, 0.0)
         if not ids:
             return res
-
+        import ipdb
+        ipdb.set_trace()
         if context.get('location', False):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
