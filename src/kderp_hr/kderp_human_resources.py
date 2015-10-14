@@ -72,25 +72,10 @@ hr_employee()
 class hr_department(osv.osv):
     _name = "hr.department"
     _inherit = "hr.department"
-    
-    def _dept_name_get_fnc(self, cr, uid, ids, name=None, args=None, context=None):
-        if context == None:
-            context = {}
-        res = {}
-        for hr in self.browse(cr, uid, ids, context=context):
-            res[hr.id] = "%s - %s" % (hr.code,hr.name)
-        return res
-    
-    _rec_name='complete_name' 
     _columns={
               'manager_2nd_id':fields.many2one('res.users','2nd Manager'),
               'code':fields.char('Code',size=8),
-              'complete_name':fields.function(_dept_name_get_fnc,type='char',size=64,method=True, string='Name',
-                                            store={
-                                                   'hr.department': (lambda self, cr, uid, ids, c={}: ids, ['code','name'], 5),
-                                                   })
-              
-              }
+                   }
   
          
 hr_department()
