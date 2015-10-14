@@ -37,50 +37,7 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "KDERP Customize Employee"
     _inherit = "hr.employee"
-    
-    def name_get(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
-        res=[]
-        if type(ids).__name__!='list':
-            ids=[ids]
-                        
-        if context.get('show_field',[]):
-            list_field = context.get('show_field',[])
-            if 'state' in list_field:
-                prj_states = self.fields_get(cr, uid, ['state'],{})['state']['selection']
-                prj_states = dict((x,y) for x,y in prj_states)
-            for aaa in self.read(cr, uid, ids, list_field):
-                display_name = ''
-                aaa_id=aaa.pop('id')
-                
-                for f in list_field:
-                    if f=='state':
-                        tmp_value=prj_states[aaa[f]]
-                    else:
-                        tmp_value=aaa[f]    
-                    if display_name:
-                        display_name=display_name + " - " + tmp_value
-                    else:
-                        display_name= tmp_value
-                res.append((aaa_id,display_name))
-            return res
-        
-        if not context.get('show_child_parent',False):
-            for aaa in self.browse(cr, uid, ids, context=context):
-                res.append((aaa.id,aaa.full_name))
-            return res
-        
-        if not ids:
-            return res
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for id in ids:
-            elmt = self.browse(cr, uid, id, context=context)
-            res.append((id, self._get_one_full_name(elmt)))
-        return res
-    
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
