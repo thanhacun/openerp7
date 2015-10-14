@@ -26,7 +26,31 @@ class wizard_kderp_open_stock_proudcts(osv.osv_memory):
     _name = "kderp.open.stock.products"
 
     _columns = {
-        'stock_ids':fields.many2many('stock.location','location_id','open_product_id',string="Stocks",help='Please select Job Stock or General Stock, not allow select Job and General Stock one time'),
+        'stock_ids':fields.many2many('stock.location',"kderp_open_stock_open_products",'open_product_id','location_id',string="Stocks",help='Please select Job Stock or General Stock, not allow select Job and General Stock one time'),
         'from_date':fields.date('From Date'),
         'to_date':fields.date('To Date')
     }
+
+    def open_products(self, cr, uid, ids, context):
+        #TODO later add domain (only product using for stock) 'domain': "[('id','=',%s)]" % expense_ida
+
+        if not context:
+            context = {}
+        open_form_data = self.browse(cr, uid, ids[0],context)
+
+        context['tree_view_ref'] = 'kderp_stock_inout.view_kderp_product_for_stock_tree'
+        context['from_date'] = open_form_data.from_date
+        context['to_date'] = open_form_data.to_date
+        import ipdb
+        ipdb.set_trace()
+        context['location'] = [stock.id for stock in open_form_data.stock_ids]
+
+        return {
+                    'type': 'ir.actions.act_window',
+                    'name': "Products",
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'context': context,
+                    'res_model': 'product.product',
+                    'domain': [('default_code','=','10220163')]
+                    }

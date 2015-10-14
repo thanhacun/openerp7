@@ -108,8 +108,7 @@ class product_product(osv.osv):
         results2 = []
         # results3 = [] #In Opening
         # results4 = [] #Out Opening
-        import ipdb
-        ipdb.set_trace()
+
         # FIXME: If need using Date with time
         from_date = context.get('from_date',False)
         to_date = context.get('to_date',False) if context.get('to_date',False) else time.strftime("%Y-%m-%d %H:%M:%S")
