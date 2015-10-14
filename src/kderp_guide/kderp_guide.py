@@ -12,72 +12,6 @@ from openerp import pooler
 import shutil
 class kderp_guide(osv.osv):
     _name = 'kderp.guide'
-#     def get_id_guide_attachment(self, cr, uid, ids, context):
-#         if not context:
-#             context={}
-#         res={}
-#         current_file = 'c/a'
-#         current_dir = os.path.dirname(current_file)
-#         name_database = cr.dbname
-#         #att_path = os.path.normpath(os.path.join(current_dir, '../..')+ "/filestore/"+name_database)
-#         ad = os.path.abspath(os.path.join(tools.ustr(config['root_path']), u'filestore'))
-#         att_path = (ad)+'/'+ name_database
-#        
-#         if ids:
-#             cur_obj=self.pool.get('ir.attachment')
-#             att_ids = cur_obj.search(cr, uid,(('res_model','=','kderp.guide'),('res_id','=',ids)))
-#             if att_ids:
-#                 att = cur_obj.read(cr, uid, att_ids, ['datas_fname','store_fname'])
-#                 res_name = []
-#                 res_location=[]
-#                 for record in att:
-#                     name =record['datas_fname']
-#                     res_name.append(name)
-#                     location= os.path.normpath(os.path.join(record['store_fname'], '../'))
-#                     #res_location.append(att_path+'/'+location)
-#                     src_dir  = os.path.dirname(att_path)+'/'+name_database +'/'+location
-#                     
-#                     #src_dir = k[1:]
-#                     
-#                     dir_file = os.path.realpath(__file__) 
-#                     if name[-4:]=='.rst':
-#                         dst_dir = os.path.dirname(dir_file)+'/doc'
-#                     else:
-#                         dst_dir = os.path.dirname(dir_file)+'/doc/kdvntemplates'
-#                     for file in os.listdir(src_dir):
-#               
-#                         src_file = os.path.join(src_dir, file)
-#                         shutil.copy(src_file,dst_dir) 
-#                         dst_file = os.path.join(dst_dir, file)
-#                         new_dst_file_name = os.path.join(dst_dir, name)
-#                         os.rename(dst_file, new_dst_file_name)
-# #                     for i in range(len(name)):
-# #                         res.append(name)
-#                     #for i in append([dir_file, name]):
-#                         
-#                 #dt = os.path.dirname(os.path.abspath(k[1]))
-#                 #a =k[2]
-# #                     local_file = os.path.realpath(dir_file)
-# #                     curent_dir = os.path.dirname(local_file)
-#                 #raise osv.except_osv("KDERP Warning",curent_dir)
-#                 
-# #                 for i in att:
-# #                 import pdb 
-# #                     pdb.set_trace()
-# #                     k =i.values()
-# #                     raise osv.except_osv("KDERP Warning",k)
-# #         
-#         
-# #         for kg in att_ids:
-# #             t = kg.id
-# #             raise osv.except_osv("KDERP Warning",t)
-# #             kg_ids.append(kg.id)
-# #         args.append((('id', 'in',  kg_ids)))     
-#           
-#         import pdb 
-#         pdb.set_trace()
-#         return True
-#                     
    
     def _get_guide_attachment(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -123,12 +57,6 @@ class kderp_guide(osv.osv):
                 'note':fields.char('Description'),
                 
                 }
-#     def import_file(self, cr, uid, ids, context=None):
-#         fileobj = TemporaryFile('w+')
-#         fileobj.write(base64.decodestring(data)) 
-#     
-#         # your treatment
-#         return
     
     def action_submit(self, cr, uid, ids, context):
         if not context:
