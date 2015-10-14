@@ -39,16 +39,47 @@ class hr_employee(osv.osv):
     _inherit = "hr.employee"
     
     def name_get(self, cr, uid, ids, context=None):
+        if not context:
+            context={}
+        res=[]
+        if type(ids).__name__!='list':
+            ids=[ids]
+                        
+        if context.get('show_field',[]):
+            list_field = context.get('show_field',[])
+            if 'state' in list_field:
+                prj_states = self.fields_get(cr, uid, ['state'],{})['state']['selection']
+                prj_states = dict((x,y) for x,y in prj_states)
+            for aaa in self.read(cr, uid, ids, list_field):
+                display_name = ''
+                aaa_id=aaa.pop('id')
+                
+                for f in list_field:
+                    if f=='state':
+                        tmp_value=prj_states[aaa[f]]
+                    else:
+                        tmp_value=aaa[f]    
+                    if display_name:
+                        display_name=display_name + " - " + tmp_value
+                    else:
+                        display_name= tmp_value
+                res.append((aaa_id,display_name))
+            return res
+        
+        if not context.get('show_child_parent',False):
+            for aaa in self.browse(cr, uid, ids, context=context):
+                res.append((aaa.id,aaa.full_name))
+            return res
+        
         if not ids:
-            return []
-        reads = self.read(cr, uid, ids, ['name','staffno'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['staffno']:
-                name = "%s - %s" % (name,record['staffno'])
-            res.append((record['id'], name))
+            return res
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for id in ids:
+            elmt = self.browse(cr, uid, id, context=context)
+            res.append((id, self._get_one_full_name(elmt)))
         return res
+    
     
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -85,12 +116,27 @@ class hr_department(osv.osv):
     _name = "hr.department"
     _inherit = "hr.department"
     
+    def _dept_name_get_fnc(self, cr, uid, ids, name=None, args=None, context=None):
+        if context == None:
+            context = {}
+        res = {}
+        for hr in self.browse(cr, uid, ids, context=context):
+            res[hr.id] = "%s - %s" % (hr.code,hr.name)
+        return res
+    
+    _rec_name='complete_name' 
     _columns={
               'manager_2nd_id':fields.many2one('res.users','2nd Manager'),
-              'code':fields.char('Code',size=8)
-              }        
+              'code':fields.char('Code',size=8),
+              'complete_name':fields.function(_dept_name_get_fnc,type='char',size=64,method=True, string='Name',
+                                            store={
+                                                   'hr.department': (lambda self, cr, uid, ids, c={}: ids, ['code','name'], 5),
+                                                   })
+              
+              }
+  
+         
 hr_department()
-
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
