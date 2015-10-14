@@ -77,12 +77,25 @@ class hr_department(osv.osv):
                 name = "%s - %s" % (name,record['name'])
             res.append((record['id'], name))
         return res
-
+    
+    def _dept_name_get_fnc(self, cr, uid, ids, name=None, args=None, context=None):
+        if context == None:
+            context = {}
+        res = {}
+        for hr in self.browse(cr, uid, ids, context=context):
+            res[hr.id] = "%s - %s" % (hr.code,hr.name)
+        return res
+    
+    _rec_name='complete_name' 
     _columns={
               'general_incharge':fields.boolean('G.E. In Charges'),
               #'expense_ids':fields.one2many('kderp.other.expense.line','section_id','Expenses'),
               'expense_ids':fields.function(_get_expense_ids, type='one2many', relation='kderp.other.expense.line',
                                             string='Expenses'),
+              'complete_name':fields.function(_dept_name_get_fnc,type='char',size=64,method=True, string='Name',
+                                            store={
+                                                   'hr.department': (lambda self, cr, uid, ids, c={}: ids, ['code','name'], 5),
+                                                   })
               
               }
 hr_department()
