@@ -11,48 +11,13 @@ from tools.config import config
 from openerp import pooler
 import shutil
 class kderp_guide(osv.osv):
-    _name = 'kderp.guide'
-   
-    def _get_guide_attachment(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        if ids:
-            kg_id_list = ",".join(map(str,ids))
-            cr.execute("""Select
-                           kg.id as id,
-                           case when sum(case when coalesce(ia.rst_file,False) then 1 else 0 end) >0 then 1 else 0 end as rst_file
-                         
-                       from
-                           kderp_guide kg
-                       left join
-                           ir_attachment ia on kg.id=ia.res_id and res_model='kderp.guide'
-                       where
-                           kg.id in (%s) 
-                       group by 
-                            kg.id""" % (kg_id_list))
-            for kgl in cr.dictfetchall():
-                res[kgl.pop('id')]=kgl
-        return res
-       
-    def _get_attachement_link(self, cr, uid, ids, context=None):
-        res={}
-        for att_obj in self.pool.get('ir.attachment').browse(cr,uid,ids):
-            if att_obj.res_model=='kderp.guide' and att_obj.res_id:
-                res[att_obj.res_id] = True
-        return res.keys()
-     
+    _name = 'kderp.guide'   
+    
     _columns = {
                 'name':fields.char('Description',size=250),
                 'date':fields.date('Date',select=1,required=True),
                 'user_id': fields.many2one('res.users', 'User Upload',select=1),
-                'rst_file':fields.function(_get_guide_attachment,method=True,string='Rst File',readonly=True,type='boolean',multi='Kderp Guide Attachment',
-                                             store={
-                                                    'kderp.guide':(lambda self, cr, uid, ids, c={}: ids, None, 5),
-                                                    'ir.attachment':(_get_attachement_link,['res_model','res_id','rst_file'],20)}),
-               
-                
-               
                 'attachment_lines':fields.one2many('ir.attachment','res_id',context={'res_model':'kderp.guide'},domain=[('res_model','=','kderp.guide')]),
-           
                 'data': fields.binary('File'),
                 'note':fields.char('Description'),
                 
@@ -87,9 +52,9 @@ class kderp_guide(osv.osv):
                     # truong hop file la rst thi luu vao /opt/oe7/openerp/addons/kderp_guide/doc
                     # khac file .rst thi luu vao /opt/oe7/openerp/addons/kderp_guide/doc/kdvntemplates
                     if  name[-4:]=='.rst' or name[-3:]=='.py' :
-                        dst_dir = os.path.dirname(dir_file)+'/doc'
+                        dst_dir = os.path.dirname(dir_file)+'/source'
                     else:
-                        dst_dir = os.path.dirname(dir_file)+'/doc/kdvntemplates'
+                        dst_dir = os.path.dirname(dir_file)+'/source/kdvntemplates'
                     for file in os.listdir(src_dir):
                         src_file = os.path.join(src_dir, file)
                         shutil.copy(src_file,dst_dir) 
@@ -99,7 +64,7 @@ class kderp_guide(osv.osv):
         
 #         current_file = os.path.isfile(path)(path).realpath(__file__)   
             current_dir_build = os.path.dirname(dir_file)
-            p= subprocess.call('sphinx-build -b html ' + current_dir_build+'/doc ' +current_dir_build +'/static/doc',shell=True) 
+            p= subprocess.call('sphinx-build -b html ' + current_dir_build+'/source' +current_dir_build +'/static/doc',shell=True) 
         return True
        
     _defaults={
@@ -118,13 +83,3 @@ class kderp_guide(osv.osv):
                 val={}
             return val
     
-    class kderp_guide_upload(osv.osv):
-        _name = 'kderp.guide.upload'
-        
-        _columns = {
-               # 'attachment_id':fields.many2one("ir.attachment","Code",required=True,select=1),
-                'guide_id':fields.many2one('kderp.guide',required=True,ondelete='cascade'),
-                
-              
-        }
-#         raise osv.except_osv ("Please refresh the form")   
