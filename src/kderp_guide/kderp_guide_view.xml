@@ -3,15 +3,6 @@
     <data>
         <menuitem id="menu_kderp_guide_root" name="KDERP Guide" sequence="60"/>
         <menuitem id="menu_kderp_guide_menu" name="Build" sequence="5" parent="menu_kderp_guide_root"/>
-		 
-		 <record id="action_open_attachment_from_kderp_guide" model="ir.actions.act_window">
-            <field name="name">Attachment</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.attachment</field>
-            <field name="src_model">kderp.guide</field>
-            <field name="view_type">form</field> 
-       	</record>
-   
 		 <record id="view_kderp_guide_form" model="ir.ui.view">
             <field name="name">kderp.guide.form</field>
             <field name="model">kderp.guide</field>
@@ -19,8 +10,6 @@
             	<form string='Kderp Guide' version="7.0"> 
             		<header>
             			<button name='action_submit' type='object' icon='gtk-execute' string='Build'/>
-            		<!-- <button name='get_id_guide_attachment' type='object' icon='gtk-execute' string='test'/> -->
-					<!-- <button name="%(action_open_attachment_from_kderp_guide)d" icon="gtk-paste-v" string="Attachment" class="oe_cancel" type="action"/> -->
             		</header>
             		<sheet>
 						 <group>
