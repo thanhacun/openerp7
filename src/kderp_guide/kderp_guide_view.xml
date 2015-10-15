@@ -36,7 +36,7 @@
 		</record>
 		
 		<record id="view_kderp_guide_tree" model="ir.ui.view">
-            <field name="name">view.kderp.guide.tree</field>
+            <field name="name">view.kderp.guide.tree</field>s
             <field name="model">kderp.guide</field>
             <field name="priority" eval="30"/>
             <field name="arch" type="xml">
