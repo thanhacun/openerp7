@@ -10,7 +10,9 @@
                     <group string="Select Stock and date" colspan="4" col="4">
                         <field name="from_date"/>
                         <field name="to_date"/>
-                        <field name="stock_ids" widget="many2many_tags" colspan="4"/>
+                        <field name="stock_ids" colspan="4"/>
+                        <field name="compute_child" colspan="4"/>
+                        <field name="all_product" colspan="4"/>
                     </group>
                     <footer>
                     	<button name="open_products" string="Open" type="object" class="oe_highlight"/>

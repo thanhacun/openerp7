@@ -62,4 +62,3 @@ class stock_picking(osv.osv):
                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False) or context.get('purchase_id', False),
                 'location_id': _default_location_source
                 }
-

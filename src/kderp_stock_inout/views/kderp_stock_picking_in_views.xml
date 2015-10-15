@@ -47,7 +47,7 @@
 			<field name="inherit_id" ref="kderp_stock.kderp_view_picking_form"/>
 			<field name="arch" type="xml">
                 <field name="partner_id" position="before">
-                    <field name="purchase_id"/>
+                    <field name="purchase_id" required="True"/>
                 </field>
                 <field name="partner_id" position="attributes">
                     <attribute name="string">Supplier</attribute>
@@ -59,7 +59,8 @@
                      <field name="move_lines" string="Detail Packing"
                             context="{'address_in_id': partner_id,'location_id': location_id,'location_dest_id': location_dest_id,
                                         'tree_view_ref':'kderp_stock_inout.kderp_view_packing_detail_in_tree',
-                                         'picking_type': 'in'}" options='{"reload_on_button": true}'/>
+                                         'picking_type': 'in',
+                                         'show_productCode': True}" options='{"reload_on_button": true}'/>
                 </field>
           </field>
 		</record>

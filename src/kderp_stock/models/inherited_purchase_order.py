@@ -342,3 +342,14 @@ class purchase_order_line(osv.osv):
                 'location_dest_id':fields.many2one('stock.location', 'To Stock'),
                 'received_qty': fields.function(_get_product_received_qty,type='float',string='Qty.',method=True),
                 }
+
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            full_name = (record.product_id.default_code + " - " + record.name) if context.get('show_productCode', False) else record.name
+            res.append((record.id, full_name))
+        return res

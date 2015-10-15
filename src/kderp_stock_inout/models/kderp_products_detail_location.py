@@ -58,41 +58,27 @@ class product_product(osv.osv):
         res = {}.fromkeys(ids, 0.0)
         if not ids:
             return res
-        import ipdb
-        ipdb.set_trace()
-        if context.get('location', False):
-            if type(context['location']) == type(1):
-                location_ids = [context['location']]
-            elif type(context['location']) in (type(''), type(u'')):
-                location_ids = location_obj.search(cr, uid, [('name','ilike',context['location'])], context=context)
+
+        if context.get('location_ids', False):
+            if type(context['location_ids']) == type(1):
+                location_ids = [context['location_ids']]
+            elif type(context['location_ids']) in (type(''), type(u'')):
+                location_ids = location_obj.search(cr, uid, [('name','ilike',context['location_ids'])], context=context)
             else:
-                location_ids = context['location']
+                location_ids = context['location_ids']
         else:
             location_ids = location_obj.search(cr, uid, [('general_stock','=',True)])
             if not location_ids:
                 return res
-        #Check if select general stock and job stock
-        cr.execute("""Select DISTINCT COALESCE(general_stock, False) from stock_location where id in (%s)""" % ",".join(map(str, location_ids)))
-        if cr.rowcount>1:
-            raise osv.except_osv("KDERP Warning", "Can't select general stock with job stock !, you can select general stock or Job Stock")
-        general_stock_selected = cr.fetchone()[0]
-
-        logger = logging.getLogger(__name__)
-        logger.info("Stock Locaiton %s" % location_ids)
-            #REmove unsed copy from Original
-            #wids = warehouse_obj.search(cr, uid, [], context=context)
-            #if not wids:
-
-            #    return res
-            #for w in warehouse_obj.browse(cr, uid, wids, context=context):
-            #    location_ids.append(w.lot_stock_id.id)
 
         # build the list of ids of children of the location given by id
-        # import ipdb
-        # ipdb.set_trace()
-        if context.get('compute_child',True):
+        if context.get('compute_child', True):
             child_location_ids = location_obj.search(cr, uid, [('id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
+
+        location_dict_ids = {True:[],False:[]} #True is General, False is Job
+        for stock in location_obj.browse(cr, uid, location_ids):
+            location_dict_ids[stock.general_stock].append(stock.id)
 
         # this will be a dictionary of the product UoM by product id
         product2uom = {}
@@ -114,7 +100,6 @@ class product_product(osv.osv):
         from_date = context.get('from_date',False)
         to_date = context.get('to_date',False) if context.get('to_date',False) else time.strftime("%Y-%m-%d %H:%M:%S")
 
-
         # Find nearest period closed
         pre_closed_info = stock_period_obj.find_pre_period_closed(cr, uid, from_date)
         pre_period_closed = pre_closed_info['pre_period_id']
@@ -123,108 +108,114 @@ class product_product(osv.osv):
         # Get from_date if not available From Date = (Min Date in stock move else next date of previous closed)
         from_date = from_date_opening if not from_date else from_date
 
-        if general_stock_selected and pre_period_closed:
-            # In case for General Stock have Period :)
-            if from_date_opening != from_date:
-                where_opening_date = "where date >= '%s' and date<'%s'" % (from_date_opening, from_date)
+        #Using for check stock general or job
+        for locationKey in filter(lambda loc: location_dict_ids[loc]<>[], location_dict_ids):
+            location_ids = location_dict_ids[locationKey]
+
+            general_stock_selected = locationKey
+
+            if general_stock_selected and pre_period_closed:
+                # In case for General Stock have Period :)
+                if from_date_opening != from_date:
+                    where_opening_date = "where date >= '%s' and date<'%s'" % (from_date_opening, from_date)
+                else:
+                    where_opening_date = ''
             else:
-                where_opening_date = ''
-        else:
-            # In case for General Stock not have Period :)
-            where_opening_date = "where date < '%s' " % from_date
+                # In case for General Stock not have Period :)
+                where_opening_date = "where date < '%s' " % from_date
 
-        if where_opening_date and context.get('opening_qty', False) and from_date<>from_date_opening:
-            sqlCommand = """
-                            Select
-                                sum(product_qty), product_id, product_uom
-                            FROM
-                                stock_move sm
-                            %s and location_dest_id in (%s) and product_id in (%s)
-                            group by
-                                product_id, product_uom
-                         """ % (where_opening_date,
-                                ",".join(map(str, location_ids)),
-                                ",".join(map(str, ids))
-                                )
-
-            cr.execute(sqlCommand)
-            results = cr.fetchall()
-            sqlCommand = """
-                            Select
-                                sum(product_qty), product_id, product_uom
-                            FROM
-                                stock_move sm
-                            %s and location_id in (%s) and product_id in (%s)
-                            group by
-                                product_id, product_uom
-                         """ % (where_opening_date,
-                                ",".join(map(str, location_ids)),
-                                ",".join(map(str, ids))
-                                )
-            cr.execute(sqlCommand)
-            results2 = cr.fetchall()
-
-        date_str = False
-        date_values = False
-        where = [tuple(location_ids),tuple(ids),tuple(states)]
-        if from_date and to_date:
-            date_str = "date>=%s and date<=%s"
-            where.append(tuple([from_date]))
-            where.append(tuple([to_date]))
-        elif from_date:
-            date_str = "date>=%s"
-            date_values = [from_date]
-        elif to_date:
-            date_str = "date<=%s"
-            date_values = [to_date]
-        if date_values:
-            where.append(tuple(date_values))
-
-        # TODO: perhaps merge in one query.
-        if 'in' in what:
-            # all moves from a location out of the set to a location in the set
-            #
-            cr.execute("""select
+            if where_opening_date and context.get('opening_qty', False) and from_date<>from_date_opening:
+                sqlCommand = """
+                                Select
                                     sum(product_qty), product_id, product_uom
-                              from stock_move
-                              where
-                                    location_dest_id IN %s
-                                    and product_id IN %s
-                                    and state IN %s """  + (date_str and 'and '+ date_str + ' ' or '')  + """ group by product_id,product_uom""", tuple(where))
-            results.extend(cr.fetchall())
+                                FROM
+                                    stock_move sm
+                                %s and location_dest_id in (%s) and product_id in (%s) and state='done'
+                                group by
+                                    product_id, product_uom
+                             """ % (where_opening_date,
+                                    ",".join(map(str, location_ids)),
+                                    ",".join(map(str, ids))
+                                    )
 
-        if 'out' in what:
-            # all moves from a location in the set to a location out of the set
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom '\
-                'from stock_move '\
-                'where location_id IN %s '\
-                'and product_id  IN %s '\
-                'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' ' +
-                'group by product_id,product_uom',tuple(where))
-            results2.extend(cr.fetchall())
+                cr.execute(sqlCommand)
+                results.extend(cr.fetchall())
+                sqlCommand = """
+                                Select
+                                    sum(product_qty), product_id, product_uom
+                                FROM
+                                    stock_move sm
+                                %s and location_id in (%s) and product_id in (%s) and state='done'
+                                group by
+                                    product_id, product_uom
+                             """ % (where_opening_date,
+                                    ",".join(map(str, location_ids)),
+                                    ",".join(map(str, ids))
+                                    )
+                cr.execute(sqlCommand)
+                results2.extend(cr.fetchall())
 
-        #In Case get Opening Qty lookup on StockPeriodClosed
-        if context.get('opening_qty', False) and pre_period_closed:
-            product_str_ids = ",".join(map(str, ids))
-            location_str_ids = ",".join(map(str, location_ids))
-            sqlCommand = """Select
-                                sum(product_qty),
-                                product_id,
-                                product_uom
-                            FROM
-                                kderp_stock_period_closed
-                            where
-                                location_id in (%s) and
-                                product_id in (%s) and
-                                stock_period_id =  %s
-                            group by
-                                product_id,
-                                product_uom""" % (location_str_ids,
-                                                  product_str_ids,
-                                                  pre_period_closed)
-            cr.execute(sqlCommand)
-            results.extend(cr.fetchall())
+            date_str = False
+            date_values = False
+            where = [tuple(location_ids),tuple(ids),tuple(states)]
+            if from_date and to_date:
+                date_str = "date>=%s and date<=%s"
+                where.append(tuple([from_date]))
+                where.append(tuple([to_date]))
+            elif from_date:
+                date_str = "date>=%s"
+                date_values = [from_date]
+            elif to_date:
+                date_str = "date<=%s"
+                date_values = [to_date]
+            if date_values:
+                where.append(tuple(date_values))
+
+            # TODO: perhaps merge in one query.
+            if 'in' in what:
+                # all moves from a location out of the set to a location in the set
+                #
+                cr.execute("""select
+                                        sum(product_qty), product_id, product_uom
+                                  from stock_move
+                                  where
+                                        location_dest_id IN %s
+                                        and product_id IN %s
+                                        and state IN %s """  + (date_str and 'and '+ date_str + ' ' or '')  + """ group by product_id,product_uom""", tuple(where))
+                results.extend(cr.fetchall())
+
+            if 'out' in what:
+                # all moves from a location in the set to a location out of the set
+                cr.execute(
+                    'select sum(product_qty), product_id, product_uom '\
+                    'from stock_move '\
+                    'where location_id IN %s '\
+                    'and product_id  IN %s '\
+                    'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' ' +
+                    'group by product_id,product_uom',tuple(where))
+                results2.extend(cr.fetchall())
+
+            #In Case get Opening Qty lookup on StockPeriodClosed
+            if context.get('opening_qty', False) and pre_period_closed:
+                product_str_ids = ",".join(map(str, ids))
+                location_str_ids = ",".join(map(str, location_ids))
+                sqlCommand = """Select
+                                    sum(product_qty),
+                                    product_id,
+                                    product_uom
+                                FROM
+                                    kderp_stock_period_closed
+                                where
+                                    location_id in (%s) and
+                                    product_id in (%s) and
+                                    stock_period_id =  %s
+                                group by
+                                    product_id,
+                                    product_uom""" % (location_str_ids,
+                                                      product_str_ids,
+                                                      pre_period_closed)
+                cr.execute(sqlCommand)
+                results.extend(cr.fetchall())
 
         # Get the missing UoM resources
         uom_obj = self.pool.get('product.uom')
@@ -236,7 +227,7 @@ class product_product(osv.osv):
             uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
             for o in uoms:
                 uoms_o[o.id] = o
-                
+
         #TOCHECK: before change uom of product, stock move line are in old uom.
         context.update({'raise-exception': False})
         # Count the incoming quantities
@@ -401,5 +392,126 @@ class product_product(osv.osv):
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
+
+    def find_product_in_period(self, cr, uid, location_ids, context):
+        """
+            (location_ids, context) --> Product IDS ([])
+
+            Find all product using in period
+        """
+        if not context:
+            context = {}
+        results = {}
+
+        stock_period_obj = self.pool.get('kderp.stock.period')
+        location_obj = self.pool.get('stock.location')
+
+        if not location_ids:
+            location_ids = location_obj.search(cr, uid, [('general_stock','=',True)])
+            if not location_ids:
+                return []
+        elif location_ids==-1:
+            return []
+        elif type(location_ids) == type(1):
+            location_ids = [location_ids]
+        elif type(location_ids)!=type([]):
+            raise osv.except_osv("KDERP Warning","Stock ID  must be Integer or list of integer")
+
+        # build the list of ids of children of the location given by id
+        if context.get('compute_child', True):
+            child_location_ids = location_obj.search(cr, uid, [('id', 'child_of', location_ids)])
+            location_ids = child_location_ids or location_ids
+            stock_job = []
+            stock_general = []
+            for stock in location_obj.browse(cr, uid, location_ids):
+                if stock.general_stock:
+                    stock_general.append(stock.id)
+                else:
+                    stock_job.append(stock.id)
+
+            new_context = context.copy()
+            new_context['compute_child'] = False
+            for prd in self.find_product_in_period(cr, uid, stock_job or -1, new_context):
+                results[prd] = True
+            for prd in self.find_product_in_period(cr, uid, stock_general or -1, new_context):
+                results[prd] = True
+
+        general_stock = location_obj.browse(cr, uid, location_ids[0]).general_stock
+        location_ids_str = ",".join(map(str, location_ids))
+
+        #Find all product for this period
+        from_date = context.get('from_date', False)
+        to_date = context.get('to_date', False)
+
+        # Find nearest period closed
+        pre_closed_info = stock_period_obj.find_pre_period_closed(cr, uid, from_date)
+        pre_period_closed = pre_closed_info['pre_period_id']
+        from_date_opening = pre_closed_info['from_date']
+
+        # Get from_date if not available From Date = (Min Date in stock move else next date of previous closed)
+        from_date = from_date or from_date_opening
+
+        where_opening_date = ''
+        if general_stock and pre_period_closed:
+            # In case for General Stock have Period :)
+            if from_date_opening != from_date:
+                where_opening_date = "where date >= '%s' and date<'%s'" % (from_date_opening, from_date)
+        else:
+            # In case for General Stock not have Period :)
+            where_opening_date = "where date < '%s' " % from_date
+
+        #Check product from "closed period date" to from date OPENING QTY
+        if where_opening_date and from_date<>from_date_opening:
+            sqlCommand = """
+                            Select
+                                distinct product_id
+                            FROM
+                                stock_move sm
+                            %s and (location_dest_id in (%s) or location_id in (%s)) and state = 'done'
+                         """ % (where_opening_date,
+                                location_ids_str,
+                                location_ids_str)
+
+            cr.execute(sqlCommand)
+            for prd in cr.fetchall():
+                results[prd[0]] = True
+
+        #In Case get Opening Qty lookup on StockPeriodClosed
+        if pre_period_closed:
+            location_str_ids = ",".join(map(str, location_ids))
+            sqlCommand = """Select
+                                distinct
+                                product_id
+                            FROM
+                                kderp_stock_period_closed
+                            where
+                                location_id in (%s) and
+                                stock_period_id = %s""" % (location_str_ids,
+                                                            pre_period_closed)
+            cr.execute(sqlCommand)
+            for prd in cr.fetchall():
+                results[prd[0]] = True
+
+        date_str = False
+
+        if from_date and to_date:
+            date_str = "date>='%s' and date<='%s'" % (from_date, to_date)
+        elif from_date:
+            date_str = "date>='%s'" % from_date
+        elif to_date:
+            date_str = "date<='%s'" % to_date
+        sqlCommand = """Select
+                                distinct product_id
+                            FROM
+                                stock_move sm
+                            where (location_dest_id in (%s) or location_id in (%s)) and state = 'done' and %s""" % (location_ids_str,
+                                                                                                                    location_ids_str,
+                                                                                                                    date_str)
+        cr.execute(sqlCommand)
+        for prd in cr.fetchall():
+            results[prd[0]] = True
+
+        return results.keys()
+
 
 product_product()
