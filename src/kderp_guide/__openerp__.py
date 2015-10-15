@@ -33,7 +33,6 @@
     - Customize Interface""",
     'css': ['static/src/css/*.css'],
     'js':['static/src/js/kderp_guide.js'],
-    
     'qweb':['static/src/xml/kderp_guide.xml'],
     'data':[
             "security/kderp_guide_group.xml",
