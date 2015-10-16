@@ -82,4 +82,10 @@ class kderp_supplier_payment_expense(osv.osv):
                                                     'kderp.supplier.payment.expense': (lambda self, cr, uid, ids, c={}: ids, ['expense_id'], 15),
                                                     'kderp.other.expense': (_get_payment_from_ge, ['section_incharge_id'], 15),
                                                     }),
+              'supplier_id': fields.related('expense_id', 'partner_id', type='many2one',relation='res.partner', size=32, string='Supplier', select = 1,
+                                             store={
+                                                    'kderp.supplier.payment.expense': (lambda self, cr, uid, ids, c={}: ids, ['expense_id'], 15),
+                                                    'kderp.other.expense': (_get_payment_from_ge, ['partner_id'], 15),
+                                                    }),
+              
               }
