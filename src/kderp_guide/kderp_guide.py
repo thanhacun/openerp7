@@ -54,7 +54,7 @@ class kderp_guide(osv.osv):
                     if  name[-4:]=='.rst' or name[-3:]=='.py' :
                         dst_dir = os.path.dirname(dir_file)+'/source'
                     else:
-                        dst_dir = os.path.dirname(dir_file)+'/source/kdvntemplates'
+                        dst_dir = os.path.dirname(dir_file)+'/source/kdvnstatic'
                     for file in os.listdir(src_dir):
                         src_file = os.path.join(src_dir, file)
                         shutil.copy(src_file,dst_dir) 
