@@ -46,7 +46,7 @@ class StockMove(osv.osv):
         return res
 
     _columns ={
-        'qty_inout':fields.function(_get_qty_inout,type='float',string='Qty. IN/Out')
+        'qty_inout':fields.function(_get_qty_inout,type='float',string='Qty. In/Out')
     }
 
     _defaults = {

@@ -19,8 +19,8 @@
                  </tree>
              </field>
         </record>
-    
-		<!-- Inherit Stock Picking Form View Main - Customize for Out Form -->
+
+        <!-- Copy Stock Picking Form View Main - Customize for Out Form -->
        <record model="ir.ui.view" id="kderp_stock_picking_out_form">
 			<field name="name">kderp.stock.picking.out.form</field>
 			<field name="model">stock.picking</field>
