@@ -64,7 +64,7 @@ class kderp_guide(osv.osv):
         
 #         current_file = os.path.isfile(path)(path).realpath(__file__)   
             current_dir_build = os.path.dirname(dir_file)
-            p= subprocess.call('sphinx-build -b html ' + current_dir_build+'/source' +current_dir_build +'/static/doc',shell=True) 
+            p= subprocess.call('sphinx-build -b html ' + current_dir_build+'/source'+' ' +current_dir_build +'/static/doc/',shell=True) 
         return True
        
     _defaults={
@@ -72,7 +72,9 @@ class kderp_guide(osv.osv):
                'date' :fields.date.context_today,
               
                }
-    class ir_attachment(osv.osv):
+kderp_guide()
+
+class ir_attachment(osv.osv):
         _name = 'ir.attachment'
         _inherit ="ir.attachment"  
         
@@ -82,4 +84,7 @@ class kderp_guide(osv.osv):
             else:
                 val={}
             return val
+        
+ir_attachment()
+
     
