@@ -32,6 +32,20 @@ class product_product(osv.osv):
     _inherit = "product.product"
     _name = 'product.product'
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if not context:
+            context = {}
+        # TODO Later convert Using must be revise this one and other
+        if 'filter_by_location_id' in context:
+            location_id = context.get('filter_by_location_id',False)
+            if not location_id:
+                return []
+            pr_ids = self.find_product_in_period(cr, uid, location_id, context.copy())
+            new_domain =  [('id','in',pr_ids),('qty_available','>',0)]
+            new_pr_ids = super(product_product, self).search(cr, uid, new_domain + args, offset=offset, limit=limit, order=order, context=context, count=False)
+            return new_pr_ids
+        return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
+
     def view_header_get(self, cr, user, view_id, view_type, context=None):
         if context is None:
             context = {}
@@ -39,6 +53,99 @@ class product_product(osv.osv):
         if res: return res
         if (context.get('active_id', False)) and (context.get('active_model') == 'stock.location'):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
+        return res
+
+    def _get_detail_moves(self, cr, uid, ids, name, args, context ={}):
+        if not context:
+            context ={}
+        res = {}
+
+        location_obj = self.pool.get('stock.location')
+        stock_period_obj = self.pool.get('kderp.stock.period')
+
+        if not ids:
+            return res
+
+        for id in ids:
+            res[id] = []
+
+        if context.get('location_ids', False):
+            if type(context['location_ids']) == type(1):
+                location_ids = [context['location_ids']]
+            elif type(context['location_ids']) in (type(''), type(u'')):
+                location_ids = location_obj.search(cr, uid, [('name','ilike',context['location_ids'])], context=context)
+            else:
+                location_ids = context['location_ids']
+        else:
+            location_ids = location_obj.search(cr, uid, [('general_stock','=',True)])
+            if not location_ids:
+                return res
+
+        # build the list of ids of children of the location given by id
+        if context.get('compute_child', True):
+            child_location_ids = location_obj.search(cr, uid, [('id', 'child_of', location_ids)])
+            location_ids = child_location_ids or location_ids
+
+        location_ids_str = ",".join(map(str, location_ids))
+        product_ids_str = ",".join(map(str, ids))
+
+        # FIXME: If need using Date with time
+        from_date = context.get('from_date',False)
+        to_date = context.get('to_date',False) if context.get('to_date',False) else time.strftime("%Y-%m-%d %H:%M:%S")
+
+        # Find nearest period closed
+        pre_closed_info = stock_period_obj.find_pre_period_closed(cr, uid, from_date)
+        from_date_opening = pre_closed_info['from_date']
+
+        # Get from_date if not available From Date = (Min Date in stock move else next date of previous closed)
+        from_date = from_date_opening if not from_date else from_date
+
+        if from_date and to_date:
+            date_str = "date>='%s' and date<='%s'" % (from_date, to_date)
+        elif from_date:
+            date_str = "date>='%s'" % from_date
+        elif to_date:
+            date_str = "date<='%s'" % to_date
+
+        cr.execute("""select
+                                distinct
+                                pp.id,
+                                sm.id
+                        from product_product pp
+                        left join stock_move sm on pp.id = sm.product_id
+                        where
+                                    (location_dest_id IN (%s) or
+                                    location_id in (%s)) and
+                                    product_id IN (%s) and
+                                    %s""" % (location_ids_str,location_ids_str,
+                                             product_ids_str,
+                                             date_str))
+        for product_id, sm_id in cr.fetchall():
+            res[product_id].append(sm_id)
+        return res
+
+    def _product_available_stock_search(self, cr, uid, obj, name, args, context=None):
+        """ Searches product have qty > 0
+        @return: Ids of Products
+        This method using when search Qty Available
+        """
+        if not context:
+            context = {}
+        c = context.copy()
+        res = []
+        if name=='qty_available':
+            c.update({ 'states': ('done',), 'what': ('in', 'out'),'opening_qty':1 })
+            loc_ids = [c.get('filter_by_location_id', False)]
+            prd_ids = self.find_product_in_period(cr, uid, loc_ids, context)
+            prd_ids_with_qty = self.get_product_available(cr, uid, prd_ids, context=c)
+            compare = args[0][1]
+            comVal = args[0][2]
+            def filter_dict(compareVal, compare, compareWith):
+                compare = '==' if compare=='=' else compare
+                return eval('%s%s%s' % (compareVal, compare, compareWith))
+
+            prd_ids = [prd_id for prd_id in prd_ids_with_qty if filter_dict(prd_ids_with_qty[prd_id], compare, comVal)]
+            res = [('id','in',prd_ids)]
         return res
 
     def get_product_available(self, cr, uid, ids, context=None):
@@ -270,7 +377,6 @@ class product_product(osv.osv):
                 c['opening_qty'] = 1
             if f =='qty_available':
                 c.update({ 'states': ('done',), 'what': ('in', 'out'),'opening_qty':1 })
-
             if f == 'virtual_available':
                 c.update({ 'states': ('confirmed','waiting','assigned','done'), 'what': ('in', 'out'),'opening_qty':1})
 
@@ -288,10 +394,12 @@ class product_product(osv.osv):
         return res
 
     _columns = {
+        'stock_move_ids':fields.function(_get_detail_moves,type='one2many', relation='stock.move', string='Moves'),
+
         'opening_qty': fields.function(_get_product_qty_info, type='float',string = 'Opening Qty.',multi='get_qty_available',select=1),
         'in_qty': fields.function(_get_product_qty_info, type='float', select=1, string = 'In Qty.', multi='get_qty_available'),
         'out_qty': fields.function(_get_product_qty_info,  type='float', string = 'Out Qty.', multi='get_qty_available'),
-        'qty_available': fields.function(_get_product_qty_info, multi='get_qty_available',
+        'qty_available': fields.function(_get_product_qty_info, fnct_search=_product_available_stock_search, multi='get_qty_available',
             type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
             help="Current quantity of products.\n"

@@ -20,17 +20,37 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 
-
-import time
-from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
-
-class stock_move(osv.osv):
+class StockMove(osv.osv):
     _inherit = 'stock.move'
     _name="stock.move"
+
+    def _get_qty_inout(self, cr, uid, ids, name, args, context):
+        if not context:
+            context = {}
+        res = {}
+        location_ids = context.get('location_ids', False)
+        if type(location_ids) == type(1):
+            location_ids = [location_ids]
+        elif type(location_ids) != type([]):
+            location_ids = []
+        if not location_ids:
+            location_obj = self.pool.get('stock.location')
+            location_ids = location_obj.search(cr, uid, [('general_stock','=',True)])
+        for sm in self.browse(cr, uid, ids, context):
+            #If stock source -> Negative number (In case move negative pls consider later)
+            if sm.location_id.id in location_ids:
+                res[sm.id] = - sm.product_qty
+            else:
+                res[sm.id] = sm.product_qty
+        return res
+
+    _columns ={
+        'qty_inout':fields.function(_get_qty_inout,type='float',string='Qty. IN/Out')
+    }
 
     _defaults = {
        'location_id':lambda self, cr, uid, context = {}: context.get('location_id',False) if context else False,
        'location_dest_id':lambda self, cr, uid, context = {}: context.get('location_dest_id',False) if context else False
-   }
+        }
+

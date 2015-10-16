@@ -45,11 +45,19 @@ class wizard_kderp_open_stock_proudcts(osv.osv_memory):
 
         location_ids = []
         check_stock_type = {}
+        stock_string = ""
         for stock in open_form_data.stock_ids:
             location_ids.append(stock.id)
+            stock_string = stock.name if not stock.code else (stock.code + "-" + stock.name)
             check_stock_type[stock.general_stock] = True
             if len(check_stock_type.keys())>1:
                 raise osv.except_osv("KDERP Warning", "Can't select general stock with job stock !, you can select general stock or Job Stock")
+        if not location_ids:
+            location_ids = self.pool.get('stock.location').search(cr, uid, [('general_stock','=',True)])
+            stock = location_ids and self.pool.get('stock.location').browse(cr, uid, location_ids[0])
+            stock_string = stock.name if not stock.code else (stock.code + "-" + stock.name)
+
+        stock_string = ("%d Stocks" % len(location_ids)) if len(location_ids)>1 else stock_string
 
         context['tree_view_ref'] = 'kderp_stock_inout.view_kderp_product_for_stock_tree'
         context['from_date'] = open_form_data.from_date
@@ -57,6 +65,7 @@ class wizard_kderp_open_stock_proudcts(osv.osv_memory):
         context['location'] = location_ids and location_ids[0]
         context['location_ids'] = location_ids
         context['compute_child'] = open_form_data.compute_child
+
         pp_obj = self.pool.get('product.product')
         domain = [('type','!=','service')]
         if not open_form_data.all_product:
@@ -65,7 +74,7 @@ class wizard_kderp_open_stock_proudcts(osv.osv_memory):
 
         return {
                     'type': 'ir.actions.act_window',
-                    'name': "Products",
+                    'name': "Products @ %s" % stock_string,
                     'view_type': 'form',
                     'view_mode': 'tree,form',
                     'context': context,

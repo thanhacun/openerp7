@@ -19,6 +19,30 @@
             </field>
         </record>
 
+        <record id="view_product_product_inherit_add_stock_form" model="ir.ui.view">
+            <field name="name">view.product.product.inherit.add.stock.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+            <field name="arch" type="xml">
+                <page string="Inventory" position="replace">
+                    <page string="Stock Info">
+                        <group colspan="4" col="2" string="Detail Product Moves">
+                            <field name="stock_move_ids" nolabel="1" context="{'location_ids': context.get('location_ids',False)}">
+                                <tree>
+                                    <field name="date" widget="date"/>
+                                    <field name="qty_inout"/>
+                                    <field name="product_uom"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
         <record id="view_kderp_product_for_stock_search" model="ir.ui.view">
             <field name="name">kderp.product.for.stock.view.search</field>
             <field name="model">product.product</field>
@@ -46,13 +70,6 @@
             <field name="domain">[]</field>
             <field name="context">{}</field>
         </record>
-
-        <!--<record model="ir.actions.act_window.view" id="act_open__view_form">-->
-            <!--<field name="act_window_id" ref="act_open_product_for_stock_view"/>-->
-            <!--<field name="sequence" eval="20"/>-->
-            <!--<field name="view_mode">form</field>-->
-            <!--<field name="view_id" ref="view__form"/>-->
-        <!--</record>-->
 
         <record model="ir.actions.act_window.view" id="act_open_product_for_stock_view_tree">
             <field name="act_window_id" ref="act_open_product_for_stock_view"/>
