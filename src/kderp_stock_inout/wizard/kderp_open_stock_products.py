@@ -54,8 +54,10 @@ class wizard_kderp_open_stock_proudcts(osv.osv_memory):
                 raise osv.except_osv("KDERP Warning", "Can't select general stock with job stock !, you can select general stock or Job Stock")
         if not location_ids:
             location_ids = self.pool.get('stock.location').search(cr, uid, [('general_stock','=',True)])
-            stock = location_ids and self.pool.get('stock.location').browse(cr, uid, location_ids[0])
-            stock_string = stock.name if not stock.code else (stock.code + "-" + stock.name)
+            if not location_ids:
+                return False
+        stock = location_ids and self.pool.get('stock.location').browse(cr, uid, location_ids[0])
+        stock_string = stock.name if not stock.code else (stock.code + "-" + stock.name)
 
         stock_string = ("%d Stocks" % len(location_ids)) if len(location_ids)>1 else stock_string
 
