@@ -21,20 +21,27 @@ Trong OpenERP có các loại giao diện Tree, Form, Graph, Calendar, Kaban. Hi
 	.. centered:: Giao diện Tree view Payment 
 
 	Giải thích các ô đánh số trong khung mầu đỏ trên giao diện
-		1: Menu G.E & Expense: Là Menu nằm trên thanh ngang của hệ thống, Menu hiện thị danh mục các bảng dữ liệu thuộc phần chi phí
+		1: Menu G.E & Expense: Là Menu nằm trên thanh ngang của hệ thống, Menu hiện thị danh mục các bảng dữ liệu thuộc phần chi phí.
+		
 		2: Danh mục bảng dữ liệu thuộc G.E & Expense
 			G.E & Expense: Dùng để nhập và lưu trữ thông tin về chi phí
 			Supplier Payment: Dùng để nhập và Lưu trữ thông tin về thanh toán Yearly G.E Budget: Giao diện tổng hợp về Chi Phí Chung (Nhập budget và các thông tin cơ bản chi phí chung của 01 năm)
 			Budgets: Dùng để nhập và lưu trữ Budget 
 	 		Departments: Dùng để nhập và lưu trữ nhân viên thuộc bộ phận phòng ban
 			Update Allocated Expense: Dùng để tự động cập nhật trạng thái phân bổ chi phí.
+
 		3: Nút Create: Dùng để tạo mới bản ghi
+
 		4: Nút Import: Dùng đưa dữ liệu vào hệ thống bằng file csv trong excel
+
 		5: Report/From, Action
 			Report /Form: Hiện thị danh sách báo cáo liên quan đến bảng dữ liệu
 			Action: Hiện thị các chức năng xóa bản ghi, nhập xuất dữ liệu, Nhật ký nhập liệu. ...
+
 		6: Ô Search: Nhập nội dung tìm kiếm dữ liệu
+
 		7: Hiện thị số bản ghi trên Treeview 
+
 		8: Lựa chọn các cách xem dữ liệu 
 			+ Chon List view   để xem dữ liệu kiểu Tree
 							.. image:: kdvnstatic/1_IMG_ge_list_view.png
@@ -613,16 +620,27 @@ Phần này để khoanh vùng các dữ liệu tìm kiếm và làm việc.
 	.. image:: kdvnstatic/57_IMG_ge.png
 
 Vùng lọc dữ liệu
+
 1 - Working Expense: Khi bạn vào G.E. & Expense sẽ mặc định trong filter. Phần này lọc tất cả các chi phí chưa hoàn thành (không ở trạng thái complete).
+
 2 - Working Allocation Sheet: Phần này lọc các các chi phí ở dạng phân bổ chi phí ở trạng thái Draft.
+
 3 - Draft Expense: Lọc các chi phí ở trạng thái Draft.
+
 4 - Waiting for Payment: Lọc các chi phí ở trạng thái chờ thanh toán.
+
 5 - Completed Expense: Lọc các chi phí ở trạng thái Complete.
+
 6 - Cancel Expense: Lọc các chi phí sau khi đã hoàn thành.
+
 7 - Expense: Lọc các cho phí ở dạng Expense.
+
 8 - Allocation Sheet: Lọc tất cả các chi phí ở dạng Phân bổ chi phí.
+
 9 - Prepaid & Fix Asset: Lọc các chi phí ở dạng trả tiền trước (ứng trước).
+
 10 - General Expense: Lọc các chi phí chỉ là chi phí chung.
+
 11 - Job & General Expense: Lọc các chi phí gồm cả chi phí chung và chi phí dự án.
 
 	.. image:: kdvnstatic/58_IMG_ge.png

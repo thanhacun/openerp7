@@ -105,15 +105,15 @@ Common features of data area
 
 	.. image:: kdvnstatic/IMG_Tree_view.png
 
-Is the view of a list of data in a data area. This is the first screen you see when click a link in the quick links bar. This screen list all the inputted data by row for easy to search for a specific data  .
-- The Search Area is for searching data, just click and start to type information need to be searched. The system will try to guest and recommend search value to choose. If you need to search in more detail or advanced search, click the small traingle button at the far right corner  . 
+Is the view of a list of data in a data area. This is the first screen you see when click a link in the quick links bar. This screen list all the inputted data by row for easy to search for a specific data.
+
+- The Search Area is for searching data, just click and start to type information need to be searched. The system will try to guest and recommend search value to choose. If you need to search in more detail or advanced search, click the small traingle button at the far right corner. 
 
 .. image:: kdvnstatic/IMG_search.png
 
-- In the center of the List view screen is a Report/Form Actions button for quick access to (only appear when at least one row is selected):
- 
-+ REPORTS/FORMS: for print reports or forms
-+ ACTIONS: for several other actions related to selected record(s).
+- In the center of the List view screen is a Report/Form Actions button for quick access to (only appear when at least one row is selected): 
+	+ REPORTS/FORMS: for print reports or forms
+	+ ACTIONS: for several other actions related to selected record(s).
 
 .. image:: kdvnstatic/IMG_Report.png
 
@@ -246,7 +246,7 @@ The related actions (quick links) are:
 The possible attachments are:
 	● Working Budgets
 
-After displaying the needed job(s), user can see the detail information of that job(s) by clicking on the job line or clicking Form on the View mode switches. The screen will change to display the form view of that job(s  ). 
+After displaying the needed job(s), user can see the detail information of that job(s) by clicking on the job line or clicking Form on the View mode switches. The screen will change to display the form view of that job(s). 
  
 .. image:: kdvnstatic/ IMG_job_form_view.png
 
@@ -539,14 +539,11 @@ When you choose  “Other Expense” (by click PO & Expense, then Other Expense)
 
 User can find the information about expenses by typing the Expense No. (internal payment number), or narrow the selection by filtering from the other related information such as   Job No., budget code, supplier name, status of expense payment., amount, etc.
 
-
 .. image:: kdvnstatic/4_IMG_ex_tree.png
 
-
-After displaying the needed expense, user can see the detail information of that expense by clicking on the expense number (in red color) or clicking to Form on the View mode switches. The screen will change to display the form view of that expense
+After displaying the needed expense, user can see the detail information of that expense by clicking on the expense number (in red color) or clicking to Form on the View mode switches. The screen will change to display the form view of that expense.
 
 .. image:: kdvnstatic/4_IMG_ex.png
-
 
 The Form view of an expense includes the below content:
 -       Expense No. : Internal control number, started with “EN”
@@ -562,7 +559,6 @@ Waiting for payment:The expense has been submitted and waiting for payment
 Done: The expense has been paid.
 
 .. image:: kdvnstatic/IMG_4_ex_wfp.png
-
 
 + Request of payments tab: display the current procedure of that expense (State) as well as the VAT invoice issued for the payment.
 	§  Differ from Payment to supplier (of material & subcontract), there are only three (3) simple kinds of payment status for expense:
@@ -585,14 +581,23 @@ APPENDIX I. - PURCHASE ORDER STATUS –HANOI
 APPENDIX II. - STATUS OF PAYMENT FOR MATERIAL & SUBCONTRACT  (DOCUMENT CIRCULATION) - HANOI
 Procurement       BC check        PM check	    BOD check    ACC
 Nine kinds of payment document status:
-1/ Draft
-2/ Procurement checking	
-3/ BC checking
-4/ B.C passed
-5/ PM checking
-6/ BOD checking
-7/ BOD approved
-8/ Paid
-9/ Reject
+
+	1/ Draft
+
+	2/ Procurement checking	
+
+	3/ BC checking
+
+	4/ B.C passed
+
+	5/ PM checking
+
+	6/ BOD checking
+
+	7/ BOD approved
+
+	8/ Paid
+
+	9/ Reject
 
 .. image:: kdvnstatic/IMG_AP_state.jpg
