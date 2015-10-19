@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="views_kderp_ge_wizard_form" model="ir.ui.view">
+			<field name="name">views.kderp.ge.wizard.form</field>
+			<field name="model">kderp.ge.wizard.form</field>
+			<field name="arch" type="xml">
+				<form string="Input Value for GE Statement Form" version="7.0" readonly="1" create="false" >
+					<group colspan="2" col="2">
+						<field name="pdate_start"/>
+						<field name="pdate_end"/>	
+						<field name='file_type'/>	
+					</group>						
+					<footer>
+						<button string='Print' name="print_report" type="object" class="oe_highlight"/>
+						or
+						<button string="Cancel"  special="cancel" class="oe_highlight"/>
+					</footer>					
+				</form>
+			</field>
+		</record>
+		
+        <record id="action_print_ge_statement_form" model="ir.actions.act_window">
+            <field name="name">GE Statement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kderp.ge.wizard.form</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="views_kderp_ge_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+        
+ 		<record model="ir.values" id="action_print_ge_statement_form_values">
+            <field name="model_id" ref="kderp_general_expense.model_kderp_other_expense" />
+            <field name="name">GE Statement</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_print_ge_statement_form'))" />
+            <field name="key">action</field>
+            <field name="model">kderp.other.expense</field>
+        </record>
+    </data>
+</openerp>
