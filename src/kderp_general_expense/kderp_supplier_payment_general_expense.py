@@ -89,7 +89,7 @@ class kderp_supplier_payment_expense(osv.osv):
                                                     'kderp.other.expense': (_get_payment_from_ge, ['partner_id'], 15),
                                                     }),
               
-              }              }
+              }
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
