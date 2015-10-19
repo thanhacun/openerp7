@@ -38,6 +38,18 @@ class hr_employee(osv.osv):
     _description = "KDERP Customize Employee"
     _inherit = "hr.employee"
 
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        reads = self.read(cr, uid, ids, ['name','staffno'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['staffno']:
+                name = "%s - %s" % (name,record['staffno'])
+            res.append((record['id'], name))
+        return res
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
