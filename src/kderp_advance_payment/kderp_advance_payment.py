@@ -460,7 +460,7 @@ class kderp_advance_payment(osv.osv):
                                                                 'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 15),
                                                                }),
                 #Relation Fields
-                'advance_buying':fields.selection([('material','Material'),('others','Others'),('cash','Cash')],'Type',required=True, readonly = True, states={'draft':[('readonly',True)]}),
+                'advance_buying':fields.selection([('material','Material'),('others','Others'),('cash','Cash')],'Type',required=True, readonly = True, states={'draft':[('readonly',False)]}),
                 'type_cash':fields.selection([('payment','Payment'),('receive','Receive')],'Cash type'),
                 
                 'user_id':fields.many2one('hr.employee','User', states={'done':[('readonly',True)], 'cancel':[('readonly',True)],'cash_received':[('readonly',True)],'waiting_for_complete':[('readonly',True)]},ondelete="restrict"),
@@ -627,7 +627,7 @@ class kderp_advance_payment(osv.osv):
         write_done_ids=[]
                 
         for adv in self.browse(cr, uid, ids, context={}):
-            if adv.state=='waiting_for_complete' and adv.date_acc_recv_cashbook and adv.advance_buying!='cash':
+            if adv.date_acc_recv_cashbook and ((adv.state=='waiting_for_complete' and adv.advance_buying!='cash') or (adv.state=='cash_received' and adv.advance_buying=='cash')):
                 write_done_ids.append(adv.id)
             else:
                 res = False

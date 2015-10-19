@@ -383,7 +383,16 @@ class kderp_other_expense(osv.osv):
                 'paid_auto':lambda self, cr, uid, context  = {}: context.get('paid_auto', False),
                 'partner_id':_get_partner
                 }
-          
+    
+    #Get new code when other user use generate code
+    def create(self, cr, uid, vals, context=None):
+        if self.search(cr, uid, [('name','=',vals['name'])]):        
+            new_code = self.new_code(cr, uid, [],vals['account_analytic_id'], 'E', vals['name'])['value']['name']                
+            vals['name'] = new_code            
+        new_obj = super(kderp_other_expense, self).create(cr, uid, vals, context=context)
+        self.pool.get('ir.rule').clear_cache(cr,uid)
+        return new_obj
+    
     def onchange_allocate_ge(self, cr, uid, ids, allocated_to, section_incharge_id, general_expense=False):
         value={}
         warning={}

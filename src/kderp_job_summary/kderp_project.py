@@ -341,8 +341,7 @@ class account_analytic_account(Model):
     def _get_job_received_info(self, cr, uid, ids, name, arg, context=None):
         res={}
         job_ids=",".join(map(str,ids))
-        #Tinh base on tren % cua Job o PO
-
+        #Tinh base on tren % cua Job o PO         
         cr.execute("""Select 
                         vwtemp_job_per.account_analytic_id,
                         sum(job_per*vat_amount*po_final_exrate * case when coalesce(po_id,0)=0 then 1 else rate end) as vat_received_amount,
@@ -479,14 +478,14 @@ class account_analytic_account(Model):
     
     _columns={             
               #Contracted Info
-               'contracted_amount':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Contracted Amount',multi='get_job_amount_summary_info',
+                'contracted_amount':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Contracted Amount',multi='get_job_amount_summary_info',
                                                    store={
                                                           'kderp.contract.currency':(_get_job_contract_from_contract_currency,None,35),
                                                           'kderp.quotation.contract.project.line':(_get_job_contract_from_contract_project_line,None,35),
                                                           'account.invoice':(_get_job_contract_from_client_payment,None,35),
                                                           'account.invoice.line':(_get_job_contract_from_client_payment_line,None,35),
                                                         }),
-               'contracted_amount_usd':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Contracted Amount USD',multi='get_job_amount_summary_info',
+                'contracted_amount_usd':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Contracted Amount USD',multi='get_job_amount_summary_info',
                                                    store={
                                                           'kderp.contract.currency':(_get_job_contract_from_contract_currency,None,35),
                                                           'kderp.quotation.contract.project.line':(_get_job_contract_from_contract_project_line,None,35),
@@ -494,80 +493,80 @@ class account_analytic_account(Model):
                                                           'account.invoice.line':(_get_job_contract_from_client_payment_line,None,35),
                                                         }),
                 
-               'claimed_amount':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Claimed',multi='get_job_amount_summary_info',
+                'claimed_amount':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Claimed',multi='get_job_amount_summary_info',
                                                    store={
                                                           'kderp.contract.currency':(_get_job_contract_from_contract_currency,None,35),
                                                           'kderp.quotation.contract.project.line':(_get_job_contract_from_contract_project_line,None,35),
                                                           'account.invoice':(_get_job_contract_from_client_payment,None,35),
                                                           'account.invoice.line':(_get_job_contract_from_client_payment_line,None,35),
                                                         }),
-               'claimed_amount_usd':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Claimed USD',multi='get_job_amount_summary_info',
+                'claimed_amount_usd':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Claimed USD',multi='get_job_amount_summary_info',
                                                    store={
                                                           'kderp.contract.currency':(_get_job_contract_from_contract_currency,None,35),
                                                           'kderp.quotation.contract.project.line':(_get_job_contract_from_contract_project_line,None,35),
                                                           'account.invoice':(_get_job_contract_from_client_payment,None,35),
                                                           'account.invoice.line':(_get_job_contract_from_client_payment_line,None,35),
                                                         }),
-               
-               'collected_amount':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Collected',multi='get_job_amount_summary_info',
+                
+                'collected_amount':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Collected',multi='get_job_amount_summary_info',
                                                    store={
                                                           'kderp.contract.currency':(_get_job_contract_from_contract_currency,None,35),
                                                           'kderp.quotation.contract.project.line':(_get_job_contract_from_contract_project_line,None,35),
                                                           'account.invoice':(_get_job_contract_from_client_payment,None,35),
                                                           'account.invoice.line':(_get_job_contract_from_client_payment_line,None,35),
                                                         }),
-               'collected_amount_usd':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Collected USD',multi='get_job_amount_summary_info',
+                'collected_amount_usd':fields.function(_get_job_contract_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Collected USD',multi='get_job_amount_summary_info',
                                                    store={
                                                           'kderp.contract.currency':(_get_job_contract_from_contract_currency,None,35),
                                                           'kderp.quotation.contract.project.line':(_get_job_contract_from_contract_project_line,None,35),
                                                           'account.invoice':(_get_job_contract_from_client_payment,None,35),
                                                           'account.invoice.line':(_get_job_contract_from_client_payment_line,None,35),
                                                         }),
-               
-               'need_update':fields.boolean('Need Update Summary Amount'),
-               
-               'cost_vnd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Budget'),method=True,string='Cost VND',multi='get_job_cost_amount_summary_info',
+                
+                'need_update':fields.boolean('Need Update Summary Amount'),
+                
+                'cost_vnd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Budget'),method=True,string='Cost VND',multi='get_job_cost_amount_summary_info',
                                           store={
                                                  'kderp.expense.budget.line':(_get_job_from_job_expense_budget_line,None,50),
                                                  'kderp.job.currency':(_get_job_from_job_currency,None,50),
                                                  'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['need_update'], 50),                                                 
                                                  }),
-               'cost_usd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Cost USD',multi='get_job_cost_amount_summary_info',
+                'cost_usd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Cost USD',multi='get_job_cost_amount_summary_info',
                                           store={
                                                  'kderp.expense.budget.line':(_get_job_from_job_expense_budget_line,None,50),
                                                  'kderp.job.currency':(_get_job_from_job_currency,None,50),
                                                  'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['need_update'], 50),                                                 
                                                  }),
-               'paid_vnd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Paid VND',multi='get_job_cost_amount_summary_info',
+                'paid_vnd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Paid VND',multi='get_job_cost_amount_summary_info',
                                           store={
                                                  'kderp.expense.budget.line':(_get_job_from_job_expense_budget_line,None,50),
                                                  'kderp.job.currency':(_get_job_from_job_currency,None,50),
                                                  'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['need_update'], 50),                                                 
                                                  }),
-               'paid_usd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Paid USD',multi='get_job_cost_amount_summary_info',
+                'paid_usd':fields.function(_get_job_cost_info,type='float',digits_compute=dp.get_precision('Amount'), method=True,string='Paid USD',multi='get_job_cost_amount_summary_info',
                                           store={
                                                  'kderp.expense.budget.line':(_get_job_from_job_expense_budget_line,None,50),
                                                  'kderp.job.currency':(_get_job_from_job_currency,None,50),
                                                  'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['need_update'], 50),                    
                                                  }),
-              
-               'vat_issued_amount':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_issued_vat',
+                
+                'vat_issued_amount':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_issued_vat',
                                                  store={
                                                         'account.invoice':(_get_job_issued_from_from_client_payment,None,35),
                                                         'account.invoice.line':(_get_job_issued_from_client_payment_line,None,35),
                                                         'kderp.payment.vat.invoice':(__get_job_issued_from_vat_allocated,None,35),
                                                         'kderp.invoice':(__get_job_issued_from_vat_invoice,None,35),
                                                       }),
-              
-               'vat_issued_subtotal':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Issued Amount',multi='_get_issued_vat',
+                
+                'vat_issued_subtotal':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Issued Amount',multi='_get_issued_vat',
                                                  store={
                                                         'account.invoice':(_get_job_issued_from_from_client_payment,None,35),
                                                         'account.invoice.line':(_get_job_issued_from_client_payment_line,None,35),
                                                         'kderp.payment.vat.invoice':(__get_job_issued_from_vat_allocated,None,35),
                                                         'kderp.invoice':(__get_job_issued_from_vat_invoice,None,35),
                                                       }),
-              
-              'vat_received_amount':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Received',multi='_get_received_vat',
+                
+                'vat_received_amount':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Received',multi='_get_received_vat',
                                                  store={
                                                         'kderp.supplier.payment':(_get_job_received_from_supplier_payment,['state','tax_base','taxes_id','currency_id','order_id','state','amount','advanced_amount','retention_amount'],35),
                                                         'kderp.supplier.payment.line':(_get_job_received_from_supplier_payment_line,None,35),
@@ -577,8 +576,8 @@ class account_analytic_account(Model):
                                                         'kderp.expense.budget.line':(_get_job_from_job_expense_budget_line,None,50),
                                                         'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['need_update'], 50),
                                                       }),
-              
-               'vat_received_subtotal':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Subtotal',multi='_get_received_vat',
+                
+                'vat_received_subtotal':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Subtotal',multi='_get_received_vat',
                                                  store={
                                                         'kderp.supplier.payment':(_get_job_received_from_supplier_payment,['state','tax_base','taxes_id','currency_id','order_id','state','amount','advanced_amount','retention_amount'],35),
                                                         'kderp.supplier.payment.line':(_get_job_received_from_supplier_payment_line,None,35),

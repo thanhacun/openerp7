@@ -36,7 +36,8 @@
              "res_config_view.xml",
              "kderp_purchase_general_contract_view.xml",
              "report/kderp_purchase_materialsub_budget_balancesheet_view.xml",
-             "kderp_purchase_view.xml"         
+             "kderp_purchase_view.xml",
+             "kderp_purchase_inherit_workflow.xml"
             ],
     'demo':[],
     'installable':True

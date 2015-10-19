@@ -1079,6 +1079,16 @@ class kderp_migrate(osv.osv_memory):
         for id,default in cr.fetchall():
             kcc_obj.write(cr, uid, [id], {})
         return True
+    
+    def update_cash_state(self, cr, uid, ids, context):
+        adv_obj = self.pool.get('kderp.advance.payment')
+        adv_ids = adv_obj.search(cr, uid, [('advance_buying','=','cash'),('state','=','cash_received')])
+        adv_obj.wkf_action_cancel_draft(cr, uid, adv_ids, context)
+        wf_service = netsvc.LocalService("workflow")
+        for kap_id in adv_ids:
+        #for kap in adv_obj.browse(cr, uid, adv_ids, context):            
+            wf_service.trg_validate(uid, 'kderp.advance.payment', kap_id, 'btn_processing_to_wfcomplete', cr)
+        
 kderp_migrate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

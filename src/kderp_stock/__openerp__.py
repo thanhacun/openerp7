@@ -39,7 +39,12 @@
             "wizard/kderp_packing_wizard_view.xml",
             'data/kderp_stock_data_code.xml',
             
-            'views/kderp_stock_period_views.xml'
+            'views/kderp_stock_period_views.xml',
+            'views/kderp_purchase_view.xml',
+            'views/kderp_purchase_inherit_workflow.xml',
+            'views/kderp_stock_workflow.xml',
+            
+            'views/kderp_stock_picking_views.xml'
             ],
     'demo':[],
     'installable':True

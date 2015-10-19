@@ -110,9 +110,9 @@ class kderp_contract_client(osv.osv):
         
         for kcc_id,issued_amount,issued_vat in cr.fetchall():
             res[kcc_id]={
-                         'issued_vat':issued_amount*issued_vat/100.0,
+                         'issued_vat':issued_amount - issued_amount/(1 + issued_vat/100.0),
                          'issued_amount':issued_amount,
-                         'issued_sub_total':issued_amount/ (1 + issued_vat/100.0) 
+                         'issued_sub_total':issued_amount/(1 + issued_vat/100.0)
                          }
         return res 
 

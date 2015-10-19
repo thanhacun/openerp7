@@ -20,6 +20,8 @@
 ##############################################################################
 
 import kderp_purchase_general_contract
+import inherited_purchase_order
+
 import report
 import res_config
 import inherited_expense_budget_line

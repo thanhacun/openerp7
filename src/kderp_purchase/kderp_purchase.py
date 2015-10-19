@@ -551,7 +551,7 @@ class purchase_order_line(osv.osv):
                         left join
                             stock_move sm on pol.id=purchase_line_id
                         left join
-                            stock_picking sp on sm.picking_id=sm.id
+                            stock_picking sp on sm.picking_id=sp.id
                         where
                             sp.state not in ('draft','cancel') and pol.id in (%s)
                         Group by pol.id""" % (pol_ids))

@@ -5,7 +5,7 @@
  		<record id="stock.wkf_picking" model="workflow">
             <field name="name">stock.picking.basic</field>
             <field name="osv">stock.picking</field>
-            <field name="on_create">False</field>
+            <field name="on_create">True</field>
         </record>
         
 	</data>

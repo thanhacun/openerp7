@@ -48,13 +48,13 @@
 	                        		<field name='currency_id'/>
 	                        		<field name='exrate'/>
 	                        		<field name='manual_exrate'/>
-	                        	</group>	                        	
-	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id, 'budget_code':'A99'}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
+	                        	</group>
+	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id,'code':'JD','budget_code':'7000'}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                	<field name="name" string="Desc."/>
 	                                	<field name="amount"/>
 	                                    <field name='account_analytic_id' context="{'code':'JD'}" string='Job/G.E'/>
-	            						<field name='budget_id' string='Budget Code'/>
+	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, }" options='{"always_reload": True}'/>
 	                                </tree>
 	                            </field>         
 	                            <group class="oe_subtotal_footer oe_right"> 
