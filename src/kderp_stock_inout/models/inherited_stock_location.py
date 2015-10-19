@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,17 +15,31 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import kderp_user_related
-import inherited_ir_sequence
+from openerp.osv import fields, osv as models
 
-import inherited_stock_picking_in
-import inherited_stock_picking_out
-import inherited_stock_move
 
-import kderp_products_detail_location
+class StockLocation(models.Model):
+    """
+        Inherit stock location, customize for Kinden Vietnam
+    """
+    _inherit = 'stock.location'
+    _name = 'stock.location'
 
-import inherited_stock_location
+    def _get_products_list(self, cr, uid, ids, name, args, context = {}):
+        """ Return product using for stock in current period
+        """
+        res = {}
+        pp_obj = self.pool.get('product.product')
+        for location_id in ids:
+            pr_ids = pp_obj.find_product_in_period(cr, uid, location_id, context)
+            res[location_id] = pr_ids
+        return res
+
+    # Fields declaration
+    _columns = {
+                'product_ids':fields.function(_get_products_list,type='one2many',relation='product.product',string="Products")
+                }

@@ -47,3 +47,8 @@ class StockLocation(models.Model):
                 'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', ondelete='restrict'),
                 'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', ondelete='restrict')
                 }
+
+    # FIXME: Later remove this init method, this method using for recreate Parent Left, right
+    # def init(self, cr):
+    #     cr.execute("""Alter table stock_location drop column parent_left;
+    #                   Alter table stock_location drop column parent_right;""")
