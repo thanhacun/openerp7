@@ -57,46 +57,46 @@ class res_partner(osv.osv):
               }
 res_partner()
 
-
-class purchase_order(osv.osv):
-    _name = 'purchase.order'
-    _inherit = 'purchase.order'
-    _description = 'Purchase Order'
-    
-    # Them truong hop khi thay doi Supplier thi neu co hop dong chung thi se thay doi hop dong chung va ngay hop dong chung
-    def onchange_partner_id(self, cr, uid, ids, partner_id,date=False):
-        partner = self.pool.get('res.partner')
-
-        if not partner_id:
-            return {'value': {
-                'fiscal_position': False,
-                'payment_term_id': False,
-                'purchase_general_contract_id':False}}
-        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
-        supplier = partner.browse(cr, uid, partner_id)
-        
-        cr.execute("""Select 
-                            id
-                    from 
-                        kderp_purchase_general_contract 
-                    where 
-                        partner_id=%s and date=(select max(date) from kderp_purchase_general_contract where partner_id=%s)""" % (partner_id,partner_id))
-        
-        res = cr.fetchone()
-        purchase_general_contract_id=False
-        
-        if res:
-            purchase_general_contract_id = res[0]
-            
-        return {'value': {
-            'pricelist_id': supplier.property_product_pricelist_purchase.id,
-            'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
-            'payment_term_id': supplier.property_supplier_payment_term.id or False,
-            'address_id': supplier.id or False,
-            'purchase_general_contract_id':purchase_general_contract_id
-            }}
-                     
-    _columns={
-                'purchase_general_contract_id':fields.many2one('kderp.purchase.general.contract','G.C. No.',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),                
-            }
-purchase_order()
+# 
+# class purchase_order(osv.osv):
+#     _name = 'purchase.order'
+#     _inherit = 'purchase.order'
+#     _description = 'Purchase Order'
+#     
+#     # Them truong hop khi thay doi Supplier thi neu co hop dong chung thi se thay doi hop dong chung va ngay hop dong chung
+#     def onchange_partner_id(self, cr, uid, ids, partner_id,date=False):
+#         partner = self.pool.get('res.partner')
+# 
+#         if not partner_id:
+#             return {'value': {
+#                 'fiscal_position': False,
+#                 'payment_term_id': False,
+#                 'purchase_general_contract_id':False}}
+#         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
+#         supplier = partner.browse(cr, uid, partner_id)
+#         
+#         cr.execute("""Select 
+#                             id
+#                     from 
+#                         kderp_purchase_general_contract 
+#                     where 
+#                         partner_id=%s and date=(select max(date) from kderp_purchase_general_contract where partner_id=%s)""" % (partner_id,partner_id))
+#         
+#         res = cr.fetchone()
+#         purchase_general_contract_id=False
+#         
+#         if res:
+#             purchase_general_contract_id = res[0]
+#             
+#         return {'value': {
+#             'pricelist_id': supplier.property_product_pricelist_purchase.id,
+#             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
+#             'payment_term_id': supplier.property_supplier_payment_term.id or False,
+#             'address_id': supplier.id or False,
+#             'purchase_general_contract_id':purchase_general_contract_id
+#             }}
+#                      
+#     _columns={
+#                 'purchase_general_contract_id':fields.many2one('kderp.purchase.general.contract','G.C. No.',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),                
+#             }
+# purchase_order()

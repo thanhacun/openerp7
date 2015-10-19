@@ -43,7 +43,7 @@ class kderp_other_expense(osv.osv):
             'amount': amount*percent/100.0
         })
         
-    def action_expense_create_supplier_payment_expense(self, cr, uid,ids,*args):
+    def action_expense_create_supplier_payment_expense(self, cr, uid, ids, *args):
         res = {}
         kspe_ids=[]
         

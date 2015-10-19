@@ -36,7 +36,7 @@
             <field name="name">cash_received</field>
             <field name="kind">function</field>
             <field name="action">write({'state':'cash_received'})</field>
-            <field name="flow_stop">True</field>      
+            <field name="flow_stop">False</field>
         </record>
         
         <record id="act_kap_done" model="workflow.activity">
@@ -93,6 +93,15 @@
        	 <!-- Waiting for Complete/Reimbursed -> Approved   -->
       	<record id="trans_wfr_done" model="workflow.transition">
             <field name="act_from" ref="act_kap_wfc"/>
+            <field name="act_to" ref="act_kap_done"/>
+            <field name="condition">check_done()</field>
+			<field name="trigger_model">kderp.advance.payment</field>
+            <field name="trigger_expr_id">get_adv_ids()</field>            
+        </record>
+        
+        <!-- Waiting for Complete/Reimbursed -> Approved   -->
+      	<record id="trans_cash_wfr_done" model="workflow.transition">
+            <field name="act_from" ref="act_kcr_wfc"/>
             <field name="act_to" ref="act_kap_done"/>
             <field name="condition">check_done()</field>
 			<field name="trigger_model">kderp.advance.payment</field>

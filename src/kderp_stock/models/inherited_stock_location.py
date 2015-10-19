@@ -35,8 +35,20 @@ class StockLocation(models.Model):
     # Fields declaration
     _columns = {
                 'code':fields.char('Code', required = True, size=8),                
+
+                'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
+                'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
+                'parent_left': fields.integer('Left Parent', select=1),
+                'parent_right': fields.integer('Right Parent', select=1),
+
+                'general_stock':fields.boolean("General Stock?",help="Stock using quantity with period"),
                 
                 'stock_manager_id':fields.many2one('res.users', 'Stock Manager', ondelete='restrict'),
                 'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', ondelete='restrict'),
-                'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', ondelete='restrict'),
+                'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', ondelete='restrict')
                 }
+
+    # FIXME: Later remove this init method, this method using for recreate Parent Left, right
+    # def init(self, cr):
+    #     cr.execute("""Alter table stock_location drop column parent_left;
+    #                   Alter table stock_location drop column parent_right;""")

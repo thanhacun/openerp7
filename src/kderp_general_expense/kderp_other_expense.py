@@ -46,7 +46,6 @@ class kderp_other_expense(osv.osv):
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)
         return result
-
     
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
@@ -145,6 +144,7 @@ class kderp_other_expense(osv.osv):
         return res    
     
     def _get_summary_payment_amount(self, cr, uid, ids, name, args, context=None):#Tinh Requested Amount, Paid Amount, VAT Amount theo Currency Cua Purchase
+        #Not yet move vat_amount received from kderp_payment Please add move vat_amount if using it ########################NOTICE###########################
         if not context: context={}
         res={}
         cur_obj = self.pool.get('res.currency')
@@ -153,10 +153,12 @@ class kderp_other_expense(osv.osv):
         for koe in self.browse(cr, uid, ids):            
             
             koe_currency_id = koe.currency_id.id
+            koe_currency = koe.currency_id
             koe_date = koe.date
             context['date']= koe_date
             total_request_amount = 0.0
             total_vat_amount = 0.0
+            subtotal_vat_amount = 0
             total_payment_amount = 0.0
             
             koe_subtotal_amount = koe.amount_untaxed #koe.amount_total bo
@@ -166,11 +168,13 @@ class kderp_other_expense(osv.osv):
                     total_request_amount = koe.amount_total
                     total_payment_amount = total_request_amount
                     total_vat_amount = total_payment_amount
+                    subtotal_vat_amount = koe.amount_untaxed
                     payment_percentage = 1
                 else:
                     total_request_amount = 0
                     total_payment_amount = 0
                     total_vat_amount = 0
+                    subtotal_vat_amount = 0
                     payment_percentage = 1
             else:
                 for kspe in koe.supplier_payment_expense_ids:
@@ -184,10 +188,13 @@ class kderp_other_expense(osv.osv):
                         #Cal total VAT Amount
                         for kspvi in kspe.kderp_vat_invoice_ids:
                             vat_amount=kspvi.total_amount
+                            vat_subtotal=kspvi.subtotal
                             if company_currency.id == kspvi.currency_id.id and koe_currency_id!=company_currency.id:
-                                total_vat_amount += round(cr, uid, koe.currency_id, koe.exrate*vat_amount)
+                                total_vat_amount += cur_obj.round(cr, uid, koe.currency_id, koe.exrate*vat_amount)
+                                subtotal_vat_amount += cur_obj.round(cr, uid, koe.currency_id, koe.exrate*vat_subtotal)
                             else: 
                                 total_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, vat_amount, round=True, context=context)
+                                subtotal_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, vat_subtotal, round=True, context=context)
                         cal=True
                         koe_subtotal_amount -= kspe.amount
                         for kp in kspe.payment_ids:
@@ -195,7 +202,7 @@ class kderp_other_expense(osv.osv):
                                 cal=False
                                 payment_amount = kp.amount
                                 if company_currency.id == kp.currency_id.id and koe_currency_id!=company_currency.id:
-                                    total_payment_amount += cur_obj.round(cr, uid, koe_currency_id, payment_amount * koe.exrate)
+                                    total_payment_amount += cur_obj.round(cr, uid, koe_currency, payment_amount * koe.exrate)
                                 else:
                                     total_payment_amount += cur_obj.compute(cr, uid, kp.currency_id.id, koe_currency_id, payment_amount, round=True, context=context)
                                 #Sum of total payment
@@ -219,7 +226,8 @@ class kderp_other_expense(osv.osv):
             res[koe.id]={'total_request_amount':total_request_amount,
                         'total_vat_amount':total_vat_amount,
                         'total_payment_amount':total_payment_amount,
-                        'payment_percentage':payment_percentage}
+                        'payment_percentage':payment_percentage,
+                        'subtotal_vat_amount':subtotal_vat_amount}
         self.check_and_make_koe_done(cr, uid, ids, context)
         return res
     
@@ -282,6 +290,13 @@ class kderp_other_expense(osv.osv):
                                                             'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
                                                             'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
                                                            }),
+            'subtotal_vat_amount':fields.function(_get_summary_payment_amount,string='SubStotal Recei. Amt.',
+                                                     method=True,type='float',multi="_get_summary",
+                                                     store={
+                                                            'kderp.other.expense': (lambda self, cr, uid, ids, c={}: ids, ['manual_exrate','currency_id','date','expense_type','state'], 20),
+                                                            'kderp.supplier.payment.expense': (_get_order_from_supplier_payment, ['expense_id','state','kderp_vat_invoice_ids'], 25),
+                                                            'kderp.supplier.vat.invoice': (_get_order_from_supplier_vat, None, 30),
+                                                           }),            
             'total_vat_amount':fields.function(_get_summary_payment_amount,string='Total Invoice Amt.',
                                                      method=True,type='float',multi="_get_summary",
                                                      store={

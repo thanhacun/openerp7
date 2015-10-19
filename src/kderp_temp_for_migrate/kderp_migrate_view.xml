@@ -125,6 +125,9 @@
 	                    <button name='update_contracted_contract_amount_errorbalance' type='object' string='UPDATED CONTRACT BALANCE AMOUNT'/>
 	                    
                     </h3>
+                    <label string="3. Update Cash State"/>
+                    <button name='update_cash_state' type='object' string='3. Update Cash State'/>
+                    
                 </form>
             </field>
         </record>

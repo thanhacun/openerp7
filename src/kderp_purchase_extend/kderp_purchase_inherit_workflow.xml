@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    	<!-- From KSP, Paid and VAT -->
+        <record id="trans_delivered_done_auto_from_ksp" model="workflow.transition">
+            <field name="act_from" ref="kderp_purchase.act_delivered"/>
+            <field name="act_to" ref="kderp_purchase.act_done"/>
+            <field name="condition">check_done()</field>
+			<field name="trigger_model">kderp.supplier.payment</field> 
+			<field name="trigger_expr_id">get_ksp_ids_from_po()</field>
+        </record>
+        
+        <record id="trans_delivered_done_auto_from_paid" model="workflow.transition">
+            <field name="act_from" ref="kderp_purchase.act_delivered"/>
+            <field name="act_to" ref="kderp_purchase.act_done"/>
+            <field name="condition">check_done()</field>
+			<field name="trigger_model">kderp.supplier.payment.pay</field> 
+			<field name="trigger_expr_id">get_kspp_ids_from_po()</field>
+        </record>
+
+		<record id="trans_delivered_done_auto_from_vat" model="workflow.transition">
+            <field name="act_from" ref="kderp_purchase.act_delivered"/>
+            <field name="act_to" ref="kderp_purchase.act_done"/>
+            <field name="condition">check_done()</field>
+			<field name="trigger_model">kderp.supplier.vat.invoice</field> 
+			<field name="trigger_expr_id">get_kspvat_ids_from_po()</field>
+        </record>        
+        
+    </data>
+</openerp>

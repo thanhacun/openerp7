@@ -150,7 +150,7 @@
 	                    												'sub_model':'purchase.order.line','sub_field':'account_analytic_id'}}"/>
 	                    				<field name='base_on_line' invisible="1"/>								
 										<field name='budget_id' attrs="{'required':[('base_on_line','=',True)]}"/>	                    												
-	                    				<field name='amount'/>
+	                    				<field name='amount' sum='Sub-Total'/>
 	                    			</tree>
 	                    		</field>
 	                    	</page>	                    	

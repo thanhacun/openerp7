@@ -135,7 +135,7 @@ class kderp_import_payment(osv.osv):
             for pos in range(len(data)):
                 if data[pos][payment_id_pos].upper().find('IN')>=0:
                     payment_no_list.append(str(data[pos][payment_id_pos]))
-                elif data[pos][payment_id_pos].upper().find('EN')>=0:
+                elif data[pos][payment_id_pos].upper().find('EN')>=0 or data[pos][payment_id_pos].upper().find('GN')>=0:
                     payment_expense_no_list.append(str(data[pos][payment_id_pos]))
             payment_nos =str(payment_no_list if payment_no_list else "['false']" ).replace("[","(").replace("]",")")
             payment_expense_nos=str(payment_expense_no_list if payment_expense_no_list else "['false']").replace("[","(").replace("]",")")
