@@ -39,7 +39,8 @@
             'views/kderp_product_views.xml',
             'views/kderp_stock_picking_internal_views.xml',
             'views/kderp_stock_views.xml',
-            'wizard/kderp_open_stock_products_views.xml'
+            'wizard/kderp_open_stock_products_views.xml',
+            'views/kderp_purchase_view.xml'
             ],
     'demo':[],
     'installable':True

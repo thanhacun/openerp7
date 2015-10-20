@@ -30,7 +30,7 @@
 				</field>
 				<field name="partner_id" position='replace'>
 					<field name="partner_id" on_change="onchange_partner_id(partner_id,date_order)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
-				</field>				
+				</field>
             </field>
         </record>
 

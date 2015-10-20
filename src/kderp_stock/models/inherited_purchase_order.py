@@ -47,28 +47,25 @@ class purchase_order(osv.osv):
                     sm_ids[sm.id] = True
             res[po.id] = sm_ids.keys()
         return res
-    
+
     #Fill source_location when partner is supplier
-    def onchange_partner_id(self, cr, uid, ids, partner_id):
-        
-        res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
-        if self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id != partner_id:
-            domain = [('usage','=','supplier')]
-            stock_supplier_ids = self.pool.get('stock.location').search(cr, uid, domain)
-            if stock_supplier_ids:
-                res['value']['source_location_id'] = stock_supplier_ids[0]            
-        return res
-    
+    def _get_from_location(self, cr, uid, context):
+        domain = [('usage','=','supplier')]
+        stock_supplier_ids = self.pool.get('stock.location').search(cr, uid, domain)
+        return stock_supplier_ids and stock_supplier_ids[0]
+
     _columns = {
                 'received_details':fields.function(_get_move_ids,
                                                    type='one2many',
                                                    relation='stock.move',
                                                    string='Detail Moves'),
-                'source_location_id':fields.many2one('stock.location','From Stock', domain = [('usage','=','supplier')],
+                'source_location_id':fields.many2one('stock.location','From Stock', domain = [('usage','=','supplier',),('global_stock','=',True)],
                                                                                     ondelete='restrict', 
                                                                                     states={'done':[('readonly',True)], 'cancel':[('readonly',True)]})
                 }
-    
+    _defaults = {
+                'source_location_id':_get_from_location
+    }
     def action_create_picking(self, cr, uid, ids, context = {}):
         picking_id = self.action_picking_create(cr, uid, ids, context)
         return picking_id    
@@ -86,7 +83,6 @@ class purchase_order(osv.osv):
         if not context:
             context = {}
         todo = []
-        
         picking_ids = []
         for po in self.browse(cr, uid, ids, context=context):
             for line in po.order_line:
@@ -127,7 +123,7 @@ class purchase_order(osv.osv):
         todo_moves = []
         stock_move = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
-        self.write(cr, uid, ids, {'state' : 'waiting_for_delivery'}) 
+        self.write(cr, uid, ids, {'state' : 'waiting_for_delivery'})
         for po in self.browse(cr, uid, ids, context):
             for sp in po.picking_ids:
                 if sp.state<>'cancel':
