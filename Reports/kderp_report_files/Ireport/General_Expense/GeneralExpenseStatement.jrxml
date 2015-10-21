@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GeneralExpenseStatement" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="2.5937424601000028"/>
-	<property name="ireport.x" value="358"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="pdate_start" class="java.lang.Object">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -55,7 +55,7 @@ order by
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[GENERAL EXPENSR STATEMENT]]></text>
+				<text><![CDATA[GENERAL EXPENSE STATEMENT]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="50" width="305" height="15"/>
