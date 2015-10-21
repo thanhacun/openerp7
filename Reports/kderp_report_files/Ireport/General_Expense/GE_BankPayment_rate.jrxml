@@ -766,7 +766,9 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[new DecimalFormat("#,##0").format(($F{amount_total}==null?0:$F{amount_total})*$F{exrate})]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Cur}!="JPY"?
+(new DecimalFormat("#,##0").format(($F{amount_total}==null?0:$F{amount_total})*$F{exrate})):
+($F{exrate} == 0?0:(new DecimalFormat("#,##0.00").format(($F{amount_total}==null?0:$F{amount_total})/$F{exrate})))]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="523" y="147" width="31" height="27" forecolor="#000000"/>
@@ -878,7 +880,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["VND"]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[(($F{Cur}=="VND") || ($F{Cur}=="USD"))?"VND":"USD"]]></textFieldExpression>
 				</textField>
 				<textField pattern="@ #,##0.00">
 					<reportElement x="554" y="131" width="97" height="16">
