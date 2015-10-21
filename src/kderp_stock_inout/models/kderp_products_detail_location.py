@@ -136,6 +136,7 @@ class product_product(osv.osv):
         if name=='qty_available':
             c.update({ 'states': ('done',), 'what': ('in', 'out'),'opening_qty':1 })
             loc_ids = [c.get('filter_by_location_id', False)]
+            c['location_ids'] = loc_ids #get Product available for LOC_IDS
             prd_ids = self.find_product_in_period(cr, uid, loc_ids, context)
             prd_ids_with_qty = self.get_product_available(cr, uid, prd_ids, context=c)
             compare = args[0][1]

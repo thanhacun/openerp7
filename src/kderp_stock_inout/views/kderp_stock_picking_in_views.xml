@@ -62,6 +62,15 @@
                                          'picking_type': 'in',
                                          'show_productCode': True}" options='{"reload_on_button": true}'/>
                 </field>
+                <header position="inside">
+                    <button name="action_transfer" icon="gtk-convert" string="Transfer" class="oe_cancel" type="object" states="done" context="{'location_dest_id':location_dest_id}"/>
+                </header>
+                <button name="draft_validate" position="replace">
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" class="oe_highlight" groups="kderp_stock.kderp_stock_receive_packing"/>
+                </button>
+                <button name="action_process" position="replace">
+                    <button name="action_process" states="assigned" string="Receive" groups="kderp_stock.kderp_stock_receive_packing" type="object" class="oe_highlight"/>
+                </button>
           </field>
 		</record>
 

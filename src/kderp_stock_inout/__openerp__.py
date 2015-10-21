@@ -34,6 +34,7 @@
     'data':[
             'security/ir.model.access.csv',
             "views/kderp_stock_move_views.xml",
+            "wizard/kderp_wizard_transfer_to.xml",
             'views/kderp_stock_picking_in_views.xml',
             'views/kderp_stock_picking_out_views.xml',
             'views/kderp_product_views.xml',

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2013 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,25 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import inherited_stock_partial_picking
-import kderp_open_stock_products
-import kderp_wizard_transfer_to
+from openerp.osv import fields, osv
+
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from openerp import netsvc, SUPERUSER_ID
+from openerp.tools.translate import _
+
+import time
+import pytz
+
+# TODO: Need change when 
+class purchase_order(osv.osv):
+    """
+        Add new field Purchase Order
+    """
+    _name = 'purchase.order'
+    _inherit = 'purchase.order'
+    _description = 'KDERP Purchase Order'
