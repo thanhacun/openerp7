@@ -15,7 +15,7 @@
 					<footer>
 						<button string='Print' name="print_report" type="object" class="oe_highlight"/>
 						or
-						<button string="Cancel"  special="cancel" class="oe_highlight"/>
+						<button string="Cancel"  special="cancel"/>
 					</footer>					
 				</form>
 			</field>
@@ -30,14 +30,12 @@
             <field name="view_id" ref="views_kderp_ge_wizard_form"/>
             <field name="target">new</field>
         </record>
-        
- 		<record model="ir.values" id="action_print_ge_statement_form_values">
-            <field name="model_id" ref="kderp_general_expense.model_kderp_other_expense" />
-            <field name="name">GE Statement</field>
-            <field name="key2">client_print_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_print_ge_statement_form'))" />
-            <field name="key">action</field>
-            <field name="model">kderp.other.expense</field>
-        </record>
+
+		<menuitem action="action_print_ge_statement_form"
+            id="menu_action_print_ge_statement_form"
+            parent="kderp_general_expense.kderp_working_other_expense_ge_action"
+            sequence="20"
+            groups="kderp_group_update_completion_date"
+            />
     </data>
 </openerp>
