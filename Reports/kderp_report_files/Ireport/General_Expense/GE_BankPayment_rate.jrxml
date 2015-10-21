@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BankPaymentOtherExpense" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="145"/>
+	<property name="ireport.x" value="77"/>
 	<property name="ireport.y" value="18"/>
 	<property name="ireport.layers" value="##Thu Aug 04 15:48:37 ICT 2011\nlayer.1.name=Layer 1\nlayer.1.visible=true\nlayer.1.id=1\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;expense_id/expense_line&apos;]"/>
@@ -738,7 +738,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10" isBold="false" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[($F{sub_total}!=null)&&($F{vat}!=null||$F{Cur}!="VND")?((new DecimalFormat("#,##0").format($F{sub_total}))):""]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{sub_total}!=null)&&($F{vat}!=null||$F{Cur}!="VND")?($F{Cur}!="VND"?(new DecimalFormat("#,##0.00").format($F{sub_total})):(new DecimalFormat("#,##0").format($F{sub_total}))):""]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00;-#,##0.00">
 					<reportElement x="554" y="174" width="97" height="28" forecolor="#000000"/>
@@ -885,7 +885,7 @@
 						<printWhenExpression><![CDATA[$F{exrate}!=1]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{exrate}]]></textFieldExpression>
 				</textField>
