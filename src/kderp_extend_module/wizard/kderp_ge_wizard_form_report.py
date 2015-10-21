@@ -56,6 +56,6 @@ class kderp_ge_wizard_form(osv.osv_memory):
     _defaults={
                "pdate_start": date.today().strftime("%Y-01-01"),
                'pdate_end':date.today().strftime("%Y-12-31"),
-               'file_type':'pdf'
+               'file_type':'xls'
                }
 kderp_ge_wizard_form()
