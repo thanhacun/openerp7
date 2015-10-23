@@ -7,7 +7,7 @@
             <field name="model">stock.location</field>
             <field name="inherit_id" ref="kderp_stock.view_kderp_stock_location_form"/>
             <field name="arch" type="xml">
-            	<page string='Job Related Info.' position="after">
+            	<page string='Storekeeper(s)' position="before">
 					<page string="Products">
 						<group string="Products" colspan="4">
 							<field name="product_ids" nolabel="1" context="{'tree_view_ref':'kderp_stock_inout.view_kderp_product_for_stock_tree','location_ids':active_ids}"/>

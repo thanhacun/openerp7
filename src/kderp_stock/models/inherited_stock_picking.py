@@ -22,6 +22,16 @@
 from openerp.osv import fields, osv
 from openerp import netsvc
 
+from tools.translate import _
+
+EXPLAIN_PACKING_NO = _("""Packing Number:
+                            P(L)(IN)YY-XXXXX,
+                            P: Packing,
+                            (L) Location H: Hanoi, P: Hai Phong, S: Ho Chi Minh,
+                            (IN) Packing in, OUT Packing Out, (INT) Stock Move (Internal),
+                            YY Year,
+                            XXXX is increase number with 5 number """)
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _name = 'stock.picking'
@@ -33,10 +43,13 @@ class stock_picking(osv.osv):
             type = context.get('picking_type', 'internal')
 
         type = 'int' if type == 'internal' else type
+        # Please consider later when location user global (location code)
         cr.execute("""SELECT
                         replace(prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')) ||lpad((max(substring(coalesce(sp.name, replace(prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')) || lpad('0',padding,'0')) from length(replace(prefix,'$',location_code) || to_char(current_date,replace(suffix,'I','"I"')))+1 for padding)::integer) + 1)::text, padding, '0')
                     FROM
-                        (select case when location_code = '4' then 'H' else 'S' end as location_code from res_company limit 1) vwcompany
+                        (select
+                                case when location_user = 'hcm' then 'S' else
+                                    case when location_user = 'haiphong' then 'P' else 'H' end end as location_code from res_users ru where ru.id = %d ) vwcompany
                     left join
                         ir_sequence isq on 1=1
                     left join
@@ -45,7 +58,7 @@ class stock_picking(osv.osv):
                         isq.code ilike 'kderp_stock_picking_code_%%%s'
                     group by
                         isq.id,
-                        location_code""" % type)
+                        location_code""" % (uid,type))
         new_code = cr.fetchone()
         return new_code[0] if new_code else False
 
@@ -96,6 +109,80 @@ class stock_picking(osv.osv):
         res_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid),('department_id','=','S1420')])
         return res_ids[0] if res_ids else False
 
+    #Copy from Original
+    def _set_maximum_date(self, cr, uid, ids, name, value, arg, context=None):
+        """ Calculates planned date if it is greater than 'value'.
+        @param name: Name of field
+        @param value: Value of field
+        @param arg: User defined argument
+        @return: True or False
+        """
+        if not value:
+            return False
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for pick in self.browse(cr, uid, ids, context=context):
+            sql_str = """update stock_move set
+                    date_expected='%s'
+                where
+                    picking_id=%d """ % (value, pick.id)
+            if pick.max_date:
+                sql_str += " and (date_expected='" + pick.max_date + "')"
+            cr.execute(sql_str)
+        return True
+
+    def _set_minimum_date(self, cr, uid, ids, name, value, arg, context=None):
+        """ Calculates planned date if it is less than 'value'.
+        @param name: Name of field
+        @param value: Value of field
+        @param arg: User defined argument
+        @return: True or False
+        """
+        if not value:
+            return False
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for pick in self.browse(cr, uid, ids, context=context):
+            sql_str = """update stock_move set
+                    date_expected='%s'
+                where
+                    picking_id=%s """ % (value, pick.id)
+            if pick.min_date:
+                sql_str += " and (date_expected='" + pick.min_date + "')"
+            cr.execute(sql_str)
+        return True
+
+    def get_min_max_date(self, cr, uid, ids, field_name, arg, context=None):
+        """ Finds minimum and maximum dates for picking.
+        @return: Dictionary of values
+        """
+        res = {}
+        for id in ids:
+            res[id] = {'min_date': False, 'max_date': False}
+        if not ids:
+            return res
+        cr.execute("""select
+                picking_id,
+                min(date_expected),
+                max(date_expected)
+            from
+                stock_move
+            where
+                picking_id IN %s
+            group by
+                picking_id""",(tuple(ids),))
+        for pick, dt1, dt2 in cr.fetchall():
+            res[pick]['min_date'] = dt1
+            res[pick]['max_date'] = dt2
+        return res
+
+    def _get_pickings(self, cr, uid, ids, context=None):
+        res = set()
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_id and not move.picking_id.min_date < move.date_expected < move.picking_id.max_date:
+                res.add(move.picking_id.id)
+        return list(res)
+
     STOCK_PICKING_IN_STATE = [('draft', 'Waiting for ROA'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
@@ -104,20 +191,29 @@ class stock_picking(osv.osv):
             ('cancel', 'Cancelled'),]
 
     _columns = {
-                'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True),
+                'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True, help=EXPLAIN_PACKING_NO),
+                'origin':fields.char('Ref. No.', size=32),
+
                 'check_payment':fields.many2one('kderp.supplier.payment', 'Supplier Payment'),
                 'received_date':fields.date('Received Date'),
 
                 'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1),
 
                 #Set location required
-                'location_id': fields.many2one('stock.location', 'Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
+                'location_id': fields.many2one('stock.location', 'Source Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
                                                             "Set a location if you produce at a fixed location. This can be a partner location " \
                                                             "if you subcontract the manufacturing operations.", select=True, required=True),
-                'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True, required=True),
+                'location_dest_id': fields.many2one('stock.location', 'Dest. Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True, required=True),
 
 
-                'storekeeper_incharge_id':fields.many2one('hr.employee','Storekeeper In Charge', required=True, readonly=1, states={'draft':[('readonly', False)]}),
+                'storekeeper_incharge_id':fields.many2one('hr.employee','Storekeeper', required=True, states={'done':[('readonly', True)]}),
+
+                'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
+                            store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='date', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
+                'date': fields.date('Creation Date', help="Creation date, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+                'date_done': fields.date('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+                'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
+                         store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='date', string='Max. Expected Date', select=2),
                 }
 
     _defaults = {

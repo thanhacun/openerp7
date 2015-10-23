@@ -12,6 +12,7 @@
                     <field name="purchase_line_id" string="Desc." domain="[('order_id','=',parent.purchase_id),('product_id.type','!=','service')]" on_change="purchase_order_line_change(purchase_line_id)" required="1" select="1"/>
                     <field name="product_qty" select="1" string="Qty."/>
                     <field name="product_uom" select="1" string="Unit"/>
+                    <field name="location_id"/>
                     <field name="location_dest_id"/>
                     <field name="date_expected"/>
                     <field name="state" string="State"/>
@@ -29,8 +30,8 @@
                     <field colspan="4" context="{'filter_by_location_id':location_id,'location_ids':location_id,'tree_view_ref':'kderp_stock_inout.view_kderp_product_for_stock_tree'}" name="product_id" domain="[('type','!=','service')]" on_change="onchange_product_id(product_id,location_id,location_dest_id)" required="1" select="1"/>
                     <field name="product_qty" select="1" string="Qty."/>
                     <field name="product_uom" select="1" string="Unit"/>
-                    <field name="location_dest_id"/>
                     <field name="location_id"/>
+                    <field name="location_dest_id"/>
                     <field name="date_expected"/>
                     <field name="state" string="State"/>
                 </tree>
@@ -47,8 +48,8 @@
                     <field colspan="4" context="{'filter_by_location_id':location_id,'location_ids':location_id,'tree_view_ref':'kderp_stock_inout.view_kderp_product_for_stock_tree'}" name="product_id" domain="[('type','!=','service')]" on_change="onchange_product_id(product_id,location_id,location_dest_id)" required="1" select="1"/>
                     <field name="product_qty" select="1" string="Qty."/>
                     <field name="product_uom" select="1" string="Unit"/>
-                    <field name="location_dest_id"/>
                     <field name="location_id"/>
+                    <field name="location_dest_id"/>
                     <field name="date_expected"/>
                     <field name="state" string="State"/>
                 </tree>
@@ -67,8 +68,8 @@
                     <field name="purchase_id"/>
                     <field name="product_qty" select="1" string="Qty."/>
                     <field name="product_uom" select="1" string="Unit"/>
-                    <field name="location_dest_id"/>
                     <field name="location_id"/>
+                    <field name="location_dest_id"/>
                     <field name="date_expected"/>
                     <field name="state" string="State"/>
                 </tree>

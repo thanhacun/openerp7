@@ -79,7 +79,7 @@
 			//var query = "select * from weather.forecast where "+ queryType +" in ("+ locationid +") and u='"+ options.unit +"'";
 			
 			var query = "select * from weather.forecast where  u='"+ options.unit +"' and woeid in (select woeid from geo.placefinder where text='" + pos + "' and gflags='R')"  
-			var api = 'http://query.yahooapis.com/v1/public/yql?q='+ encodeURIComponent(query) +'&rnd='+ now.getFullYear() + now.getMonth() + now.getDay() + now.getHours() +'&format=json&callback=?';
+			var api = 'https://query.yahooapis.com/v1/public/yql?q='+ encodeURIComponent(query) +'&rnd='+ now.getFullYear() + now.getMonth() + now.getDay() + now.getHours() +'&format=json&callback=?';
 			
 			// Request feed data
 			sendRequest(query, api, options);

@@ -57,10 +57,15 @@ class kderp_wizard_transfer_to(osv.osv_memory):
         if 'move_line' in fields:
             picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
             context['filter_by_location_id'] = context.get('location_dest_id', False)
+            context['location_ids'] = [context.get('location_dest_id', False)]
             product_ids = [m.product_id.id for m in picking.move_lines if m.state == 'done' and m.location_dest_id.id==picking.location_dest_id.id]
             search_product = [('id','in', product_ids)]
-            products_available_ids = self.pool.get('product.product').search(cr, uid, search_product, context=context)
-            moves = [self._partial_move_for(cr, uid, m, context=context) for m in picking.move_lines if m.state == 'done' and m.location_dest_id.id==picking.location_dest_id.id and m.product_id.id in products_available_ids]
+            pp_obj = self.pool.get('product.product')
+            products_available_ids = pp_obj.search(cr, uid, search_product, context=context)
+            pp_list = pp_obj.read(cr, uid, products_available_ids, ['qty_available'], context = context)
+            pp_dict = {pp['id']: pp['qty_available'] for pp in pp_list if pp['qty_available']>0}
+
+            moves = [self._partial_move_for(cr, uid, m, context = context, pp_dict = pp_dict) for m in picking.move_lines if m.state == 'done' and m.location_dest_id.id==picking.location_dest_id.id and m.product_id.id in pp_dict]
             res.update(move_line=moves)
 
         # if 'date' in fields:
@@ -68,10 +73,13 @@ class kderp_wizard_transfer_to(osv.osv_memory):
         # res['help_text'] = self.__get_help_text(cr, uid, picking_id, context=context)
         return res
 
-    def _partial_move_for(self, cr, uid, move, context=None):
+    def _partial_move_for(self, cr, uid, move, context = {}, pp_dict = {}):
+        product_id = move.product_id.id
+        #FIX ME: If using many product uom (convert product UOM)
+        qty = move.product_qty if pp_dict[product_id] >= move.product_qty else pp_dict[product_id]
         partial_move = {
-            'product_id' : move.product_id.id,
-            'qty' : move.product_qty if move.state == 'assigned' or move.picking_id.type == 'in' else 0,
+            'product_id' : product_id,
+            'qty' : qty,
             'product_uom' : move.product_uom.id
             # 'location_id' : move.location_id.id,
             # 'location_dest_id' : move.location_dest_id.id,

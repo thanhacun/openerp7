@@ -1195,6 +1195,27 @@ session.web.ActionManager = session.web.ActionManager.extend({
  * Luu y phan this._super(this) vs return this._super(this)
  */
 session.web.form.FieldMany2One = session.web.form.FieldMany2One.extend({
+	//display_string: function(str) {
+	//	var res = this._super(str);
+	//	var objM2O = this.$el.find('.oe_form_uri');
+	//	var self = this;
+	//	if (objM2O.length>0)
+	//	{
+	//		if (self.get("value")) {
+	//			var ctx  = self.build_context();
+	//			ctx.add({'show_title':1});
+	//			var dataset = new session.web.DataSetStatic(this, this.field.relation, ctx);
+	//			var def = this.alive(dataset.name_get([self.get("value")])).done(function (data) {
+	//				if (!data[0]) {
+	//					self.do_warn(_t("Render"), _t("No value found for the field " + self.field.string + " for value " + self.get("value")));
+	//					return;
+	//				}
+	//			objM2O[0].title = data[0][1];
+	//			});
+	//		}
+	//	}
+	//	return res
+	//},
 	render_editable: function() {
         var self = this;
         this.$input = this.$el.find("input");

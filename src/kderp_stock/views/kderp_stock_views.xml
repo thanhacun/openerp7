@@ -17,7 +17,7 @@
             <field name="model">stock.location</field>
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
-            	<form string="Stock Location" version="7.0">
+            	<form string="Warehouse(s)" version="7.0">
             		<header>            			
             		</header>
             		<sheet>
@@ -25,12 +25,12 @@
             			<h2><field name="code"/></h2>
 	            		<label for="name" class="oe_edit_only" string="Name"/>
 						<h2><field name="name"/></h2>
-	            		<label for="location_id" class="oe_edit_only" string="Belong to Location"/>
+	            		<label for="location_id" class="oe_edit_only" string="Belong to Warehouse"/>
 						<h2><field name="location_id"/></h2>
-						<group string="Stock Info." col="4" colspan="4">
+						<group string="Warehouse Info." col="4" colspan="4">
 							<field name='stock_manager_id'/>
-							<field name="usage"/>
-	            			<field name="partner_id"/>	         
+							<field name="usage" string="Warehouse type"/>
+	            			<field name="partner_id" string="Warehouse Address"/>
 	            			<field name="general_stock"/>   			
 	            		</group>
 	            		<notebook>
@@ -52,14 +52,17 @@
             </field>
         </record>
 
-        <record id="view_kderp_stock_location_tree" model="ir.ui.view">
+		<!-- Overwrite default stock tree view -->
+        <record id="stock.view_location_tree2" model="ir.ui.view">
             <field name="name">kderp.stock.location.tree</field>
             <field name="model">stock.location</field>
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
-            	<tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
-            		<field name="complete_name"/>
-            		<field name="usage"/>
+            	<tree string="Warehouse(s)" colors="blue:usage=='view';darkred:usage=='internal'">
+					<field name="code"/>
+            		<field name="name" string="Name"/>
+					<field name="complete_name" string="FullName"/>
+            		<field name="usage" string="Warehouse type"/>
             		<field name="stock_real" invisible="'product_id' not in context"/>
                     <field name="stock_virtual" invisible="'product_id' not in context"/>
             	</tree>
@@ -71,7 +74,7 @@
             <field name="model">stock.location</field>
            <field eval="5" name="priority"/>
             <field name="arch" type="xml">
-                <search string="Stock Locations">
+                <search string="Warehouse(s)">
                     <field name="name" string="Stock Locations" />
                     <field name="location_id" string="Belong to Location"/>
                     <field name="partner_id"/>
@@ -91,7 +94,7 @@
 
 		<!-- All Stock  -->
 		<record id="act_kderp_stock_location" model="ir.actions.act_window">
-            <field name="name">Stock</field>
+            <field name="name">Warehouse(s)</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.location</field>
             <field name="view_mode">tree,form</field>

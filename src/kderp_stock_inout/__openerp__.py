@@ -25,7 +25,7 @@
     'images' : ['images/kinden.png'],
     'summary':"Customize Purchase Module for Suiteable Kinden Procedure",
     'category':"KDERP Apps",
-    'depends':['kderp_stock'],
+    'depends':['kderp_stock','kderp_purchase_extend'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure

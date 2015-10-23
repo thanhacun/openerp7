@@ -53,10 +53,20 @@ class stock_move(osv.osv):
         'purchase_line_id': fields.many2one('purchase.order.line',
             'Purchase Order Line', ondelete='restrict', select=True),
         'name': fields.char('Description', select=True),
-        'date': fields.datetime('Date', select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
-        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]}, select=True, help="Scheduled date for the processing of this move"),
-        'location_id': fields.many2one('stock.location', 'Source Location', select=True,states={'done': [('readonly', True)]}, required=True),
-        'location_dest_id': fields.many2one('stock.location', 'Destination Location',states={'done': [('readonly', True)]}, required=True),
+        'date': fields.date('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
+        'date_expected': fields.date('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
+
+        'location_id': fields.many2one('stock.location', 'Source Warehouse', select=True,states={'done': [('readonly', True)]}, required=True),
+        'location_dest_id': fields.many2one('stock.location', 'Destination Warehouse',states={'done': [('readonly', True)]}, required=True),
+
+        'state': fields.selection([('draft', 'New'),
+                                   ('cancel', 'Cancelled'),
+                                   ('confirmed', 'Waiting for Delivery'),
+                                   ('done', 'Done'),
+                                   ], 'Status', readonly=True, select=True,
+                                 help= "* New: When the stock move is created and not yet confirmed.\n"\
+                                       "* Waiting for Delivery\n"\
+                                       "* Done: When the shipment is processed, the state is \'Done\'."),
     }
 
     def _check_product_id(self, cr, uid, ids, context=None):
