@@ -88,6 +88,40 @@
 	        								(4, ref('group_kderp_stock_packing_out_delete'))]"/>
 		</record>
 
+		<record id="group_kderp_stock_packing_internal_read" model="res.groups">
+	       	<field name="name">KDERP - Stock packing Internal / Read </field>
+	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id="group_kderp_stock_packing_internal_write" model="res.groups">
+	       	<field name="name">KDERP - Stock packing Internal / Write </field>
+	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id="group_kderp_stock_packing_internal_create" model="res.groups">
+	       	<field name="name">KDERP - Stock packing Internal / Create </field>
+	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id="group_kderp_stock_packing_internal_delete" model="res.groups">
+	       	<field name="name">KDERP - Stock packing Internal / Delete </field>
+	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id="group_kderp_stock_packing_internal_full" model="res.groups">
+	       	<field name="name">KDERP - Stock packing Internal/ Full </field>
+	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+	       	 <field name="implied_ids" eval="[(4, ref('group_kderp_stock_packing_internal_read')),
+	          								(4, ref('group_kderp_stock_packing_internal_write')),
+	        								(4, ref('group_kderp_stock_packing_internal_create')),
+	        								(4, ref('group_kderp_stock_packing_internal_delete'))]"/>
+		</record>
+		
 		<!-- Group Menu Stock Product -->
 		<record id="group_menu_stock_product" model="res.groups">
 	       	<field name="name">KDERP Stock / Stock product</field>
