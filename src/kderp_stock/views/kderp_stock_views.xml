@@ -101,7 +101,8 @@
         <menuitem 
         			action="act_kderp_stock_location" 
         			id="kderp_stock_location_menu" 
-        			parent="menu_kderp_stock" sequence="1"/>
+        			parent="menu_kderp_stock" sequence="1"
+        			groups="group_sub_menu_kderp_stock"/>
                
     </data>
 </openerp>
