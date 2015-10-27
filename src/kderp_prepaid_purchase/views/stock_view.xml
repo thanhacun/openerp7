@@ -52,6 +52,7 @@
             		<field name="usage"/>
             		<field name="stock_code"/>
             		<field name="global_stock"/>
+					<field name="state" invisible="1"/>
             		<field name="stock_real" invisible="'product_id' not in context"/>
                     <field name="stock_virtual" invisible="'product_id' not in context"/>
             	</tree>
