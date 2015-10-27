@@ -255,7 +255,8 @@ openerp.kderp_web = function(session) {
         	},
 
     });
-    
+
+    //Hide Delete Attachment in some Model
     session.web.Sidebar = session.web.Sidebar.extend({
     	
         start: function() {
@@ -391,8 +392,7 @@ var check_parent = function (obj,name_class)
 
 
 //Change return value when click to Picker date
-session.web.DateWidget = session.web.DateWidget.extend({
-	
+session.web.DateWidget = session.web.DateWidget.extend ({
     on_picker_select: function(text, instance_) {
         var date = this.picker('getDate');
         this.$input
@@ -400,7 +400,6 @@ session.web.DateWidget = session.web.DateWidget.extend({
             .change()
             .focus();
     },
-    
 	kderp_format_client: function(v) {
 		var normalize_format = function (format) {
 		    return Date.normalizeFormat(session.web.strip_raw_chars(format));
@@ -411,40 +410,43 @@ session.web.DateWidget = session.web.DateWidget.extend({
     },
 });
 
-//Add InputMask for tree editable
-session.web.list.Editor= session.web.list.Editor.extend({
-    _focus_setup: function (focus_field) {
-    	 _super = this._super(focus_field);
-    	 var self=this;
-    	 return $.when(_super,attach_mask_editable(self.$el.find('input'),this.record));
-    },
-    
-});
+////Add InputMask for tree editable
+//session.web.list.Editor= session.web.list.Editor.extend({
+//    _focus_setup: function (focus_field) {
+//    	 _super = this._super(focus_field);
+//    	 var self=this;
+//		return _super;
+//    	// return $.when(_super,attach_mask_editable(self.$el.find('input'),this.record));
+//    },
+//
+//});
 
-session.web.ViewManagerAction = session.web.ViewManagerAction.extend({
-   
-    do_create_view: function(view_type) {
-        var self = this;
-        return this.alive(this._super.apply(this, arguments)).done(function() {
-        	if (view_type==='form')
-        		{
-        		setTimeout(function (){
-        				attach_mask_editable($(self.$el.find('div.oe_form')[0]).find('input[type=text]'));
-        				},500);
-        		}
-        });
-    },
-});
+//session.web.ViewManagerAction = session.web.ViewManagerAction.extend({
+//
+//    do_create_view: function(view_type) {
+//        var self = this;
+//        return this.alive(this._super.apply(this, arguments)).done(function() {
+//        	if (view_type==='form')
+//        		{
+//					return true;
+//        		setTimeout(function (){
+//        				attach_mask_editable($(self.$el.find('div.oe_form')[0]).find('input[type=text]'));
+//        				},500);
+//        		}
+//        });
+//    },
+//});
 
 session.web.FormView =  session.web.FormView.extend({
    
 	check_actual_mode: function(source, options) {
         var self = this;
         var _super=this._super(source, options);
-        if(this.get("actual_mode") !== "view") {
-        	//$("input")
-        	attach_mask_editable(self.$el.find('input'));
-        }
+        //if(this.get("actual_mode") !== "view") {
+        //	//$("input")
+			//return true;
+        //	//attach_mask_editable(self.$el.find('input'));
+        //}
         var showSideBar = function () 
         	{
 	        	if (self.get("actual_mode") !== "view" && self.datarecord.id)
@@ -973,16 +975,17 @@ var open_new_tab = function (data,target,kd_context1)
 		return x_open;
 	};
 
-session.web.form.SelectCreatePopup = session.web.form.SelectCreatePopup.extend({
-	new_object: function() {
- 		var self=this;
- 		return $.when(self._super()).then(function () {
- 				setTimeout(function(){
- 					attach_mask_editable($('div.ui-dialog-content.ui-widget-content').find("input[type='text']"));
- 				},500);
- 				});
- 	},	
-});
+//session.web.form.SelectCreatePopup = session.web.form.SelectCreatePopu1p.extend({
+//	new_object: function() {
+// 		var self=this;
+// 		return $.when(self._super()).then(function () {
+//				return true;
+// 				setTimeout(function(){
+// 					attach_mask_editable($('div.ui-dialog-content.ui-widget-content').find("input[type='text']"));
+// 				},500);
+// 				});
+// 	},
+//});
 	
 //Click to Tree View
 session.web.form.AbstractFormPopup1 = session.web.form.AbstractFormPopup.include({
@@ -1371,6 +1374,34 @@ session.web.form.FieldMany2OneImage = session.web.form.FieldMany2One.extend({
 	},
 });
 
+
+
+/*
+	Add inputmask to float field, Date
+*/
+session.web.form.FieldDate = session.web.form.FieldDate.extend({
+	render_value: function() {
+		var self = this;
+		if (this.get("effective_readonly"))
+			return this._super();
+		else
+			return $.when(this._super(),attach_mask_editable(self.$el.find('input')));
+	},
+});
+
+session.web.form.FieldFloat = session.web.form.FieldFloat.extend({
+	render_value: function() {
+		var self = this;
+		if (this.get("effective_readonly"))
+			return this._super();
+		else
+			return $.when(this._super(),attach_mask_editable(self.$el.find('input')));
+	},
+});
+//
+//session.web.DateWidget = session.web.DateWidget.include({
+//
+//});
 
 //Add widget as a progress bar on readyonly
 //Extend for progressfloat - ke thua thiet ke cua progressbar
@@ -1905,13 +1936,27 @@ setTimeout(function(){
    * Khi click vao mot dieu kien search co the sua duoc de search tiep
    * Luu y: su dung ham trim() de remove cac ky tu thua de gay loi khi search
    * TODO: sua truc tiep tai search value va cap nhat lai search
+   * Ke thua start de them thuoc tinh draggable va event dragstart de bat co dang bat dau keo tha
+   * va se khong thuc hien su kien click khi keo tha
    */
   session.web.search.FacetView.include({
   	init: function(parent, model){
   		var self = this;
   		this._super(parent, model);
+		this.$el.draggable();
+		self.isDragging = false;
+
   		$.extend(this.events,{
+			'dragstart':function(e){
+				console.log("Strated");
+				self.isDragging = true;
+			},
   			'click': function(e){
+				if (self.isDragging) {
+					self.isDragging = false;
+					e.preventDefault();
+					return false;
+				}
   				if ($(e.target).is('.oe_facet_remove')){
   					this.model.destroy();
   					this.$el.focus();
@@ -1926,6 +1971,11 @@ setTimeout(function(){
   			},
   		});
   	},
+	start: function () {
+		var self = this;
+  		var res = this._super();
+		return $.when(res,$('.oe_searchview_facet').draggable());
+	}
   });
   
   /**
