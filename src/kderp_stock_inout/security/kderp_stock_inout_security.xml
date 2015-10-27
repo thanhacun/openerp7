@@ -84,7 +84,7 @@
 	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
 	       	 <field name="implied_ids" eval="[(4, ref('group_kderp_stock_packing_out_read')),
 	          								(4, ref('group_kderp_stock_packing_out_write')),
-	        								(4, ref('group_kderp_stock_packing_out_create')),
+	        								(4, ref('group_kderp_stock_packing_in_full')),
 	        								(4, ref('group_kderp_stock_packing_out_delete'))]"/>
 		</record>
 
@@ -116,7 +116,7 @@
 	       	<field name="name">KDERP - Stock packing Internal/ Full </field>
 	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
 	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
-	       	 <field name="implied_ids" eval="[(4, ref('group_kderp_stock_packing_internal_read')),
+	       	<field name="implied_ids" eval="[(4, ref('group_kderp_stock_packing_internal_read')),
 	          								(4, ref('group_kderp_stock_packing_internal_write')),
 	        								(4, ref('group_kderp_stock_packing_internal_create')),
 	        								(4, ref('group_kderp_stock_packing_internal_delete'))]"/>
@@ -133,6 +133,22 @@
 	       	<field name="name">KDERP Stock / All Moves</field>
 	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
 	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<!-- Group Storekeeper -->
+		<record id="kderp_stock_storekeeper" model="res.groups">
+	       	<field name="name">KDERP Stock / Storekeeper</field>
+	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+	       	<field name="implied_ids" eval="[
+	       									(4, ref('kderp_stock.group_menu_kderp_stock')),
+	          								(4, ref('group_kderp_menu_packing_out')),
+	       									(4, ref('group_kderp_stock_packing_internal_full')),
+	       									(4, ref('group_kderp_stock_packing_out_full')),
+	       									(4, ref('group_kderp_stock_packing_in_full')),
+	          								(4, ref('group_kderp_menu_packing_out')),
+	        								(4, ref('group_kderp_menu_packing_in')),
+	        								(4, ref('group_kderp_menu_packing_internal'))]"/>
 		</record>
     </data>
 </openerp>
