@@ -1948,29 +1948,42 @@ setTimeout(function(){
 
   		$.extend(this.events,{
 			'dragstart':function(e){
-				console.log("Strated");
+                //Set flag for when click disable when click
 				self.isDragging = true;
+                console.log(this);
 			},
   			'click': function(e){
 				if (self.isDragging) {
-					self.isDragging = false;
-					e.preventDefault();
-					return false;
-				}
-  				if ($(e.target).is('.oe_facet_remove')){
-  					this.model.destroy();
-  					this.$el.focus();
-  					return false;
-  				} else {
-	  				var search_value = this.$el.find('.oe_facet_value').text().trim();
-	  				this.model.destroy();
-	  				$('.oe_searchview_input:last-child').focus().text(search_value);
-	  				// self.model_changed();  					
-  				};
-
+                    self.isDragging = false;
+                    e.preventDefault();
+                }
+                //When click close facet remove
+				else if ($(e.target).is('.oe_facet_remove')) {
+                            this.model.destroy();
+                            this.$el.focus();
+                            return false;
+                        }
+                //When click to facet value
+                else if ($.inArray('oe_facet_value', e.target.classList) >= 0) {
+                        var search_value = e.target.textContent.trim();
+                        //When facevalue > more than 1 item
+                        if (this.$el.find('.oe_facet_value').length > 1) {
+                            e.target.remove();
+                            //remove a clicked facet value
+                            this.model.values.models = this.model.values.models.filter(function (item) {
+                                return item.get('value') != search_value;
+                            });
+                            //Refresh search
+                            this.__parentedParent.do_search();
+                        }
+                        else
+                            this.model.destroy();
+                        $('.oe_searchview_input:last-child').focus().text(search_value);
+                    }
   			},
   		});
   	},
+
 	start: function () {
 		var self = this;
   		var res = this._super();
@@ -2076,4 +2089,40 @@ setTimeout(function(){
 			  		getLocation(); })},2000)
   	  }
   	});
+
+    /**
+     * Them dieu kien search hoac (or) cho cac filter da co san
+     * Kiem tra dieu kien search nhap vao neu co chua || thi se them vao domain search
+     * dieu kien hoac
+   */
+    session.web.SearchView = session.web.SearchView.extend({
+        build_search_data: function () {
+            var _super = this._super();
+            var domains = _super.domains;
+            if (domains.length>1 && $.type(domains[domains.length-1])!='string') {
+                var searchValue = domains[domains.length-1].get_eval_context();
+                searchValue = searchValue==""?false:searchValue['self'];
+                if (searchValue.indexOf('||')==0) {
+                    searchValue = searchValue.replace('||', '');
+                    if ($.type(domains[0])==="string")
+                       sDomain0 = py.eval(domains[0]);
+                    else
+                        sDomain0 = domains[0].eval();
+                    domains[domains.length - 1].__eval_context.self = searchValue;
+                    sDomain1 = domains[domains.length - 1].eval();
+                    pos = sDomain0.indexOf('|');
+                    if (pos < 0)
+                        sDomain0.splice(sDomain0.length - 1, 0, '|');
+                    else
+                        sDomain0.splice(pos, 0, '|');
+                    sDomain0 = sDomain0.concat(sDomain1);
+                    domains.pop();
+                    domains[0] = JSON.stringify(sDomain0);
+                }
+			}
+			return _super;
+        },
+    });
+
+
 };
