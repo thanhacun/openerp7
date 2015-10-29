@@ -16,7 +16,7 @@
             		<field name="payment_type"/>
             		<field name="partner_id" string="Supplier" invisible="'partner_id' in context.get('group_by',[])"/>
             		<field name="budgets"/>
-            		<field name="sections"/>
+            		<field name="sections" string="Locations"/>
             		<field name="currency_id"/>
             		<field name="amount_untaxed"/>
             		<field name="amount_tax"/>
@@ -62,7 +62,7 @@
 							<!-- <field name='allocated_to'  on_change="onchange_allocate_ge(allocated_to)" context="{'general_expense': True}" colspan="1" default_focus="1"/> -->
 							<field name="date" colspan="1" string='Exp./Allocated Date'/>
 	                        <field name='section_incharge_id' colspan="1"/>      
-	                        <field name ='ref_number'/>   
+	                        <field name ='ref_number' help="Input Reference No. when General Expense is Telephone"/>    
 	                        <field name="payment_type"/>            
 	                    </group>
 	                    <notebook>
@@ -73,7 +73,7 @@
 	                        		<field name='description' colspan="4"/>
 	                        		<field name='currency_id'/>
 	                        		<field name='exrate'/>
-	                        		<field name='manual_exrate'/>
+	                        		<field name='manual_exrate' string ="Manual Ex.Rate"/>
 	                        	</group>	                        	
 	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">

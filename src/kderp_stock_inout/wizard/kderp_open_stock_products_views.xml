@@ -33,6 +33,7 @@
         <menuitem id="kderp_product_for_stock_menu"
                   parent="kderp_stock.menu_kderp_stock"
                   sequence="20"
-                  action="action_view_wizard_open_stock_products"/>
+                  action="action_view_wizard_open_stock_products"
+                  groups="group_menu_stock_product"/>
     </data>
 </openerp>

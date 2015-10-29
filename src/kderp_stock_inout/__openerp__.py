@@ -33,6 +33,7 @@
     'css': ['static/src/css/*.css'],
     'data':[
             'security/ir.model.access.csv',
+            'security/kderp_stock_inout_security.xml',
             "views/kderp_stock_move_views.xml",
             'views/kderp_stock_picking_in_views.xml',
             'views/kderp_stock_picking_out_views.xml',
