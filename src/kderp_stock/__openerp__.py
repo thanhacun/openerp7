@@ -23,7 +23,7 @@
     'version':"7.0.0",
     'author':"KDERP IT-Dev. Team",
     'images' : ['images/kinden.png'],
-    'summary':"Customize Purchase Module for Suiteable Kinden Procedure",
+    'summary':"Customize Stock Location Stock Move",
     'category':"KDERP Apps",
     'depends':['kderp_purchase','kderp_supplier_payment'],
     'description': """

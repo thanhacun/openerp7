@@ -40,6 +40,9 @@
                             <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}"/>
                         </h1>
                         <group>
+                            <group string="Packing Info.">
+                                <field name="origin" placeholder="Ref. Number" string="Ref. Number" class="oe_inline"/>
+                            </group>
                             <group string="Date Info.">
                                 <field name="date"/>
                                 <field name="min_date" readonly="1" attrs="{'invisible': [('min_date','=',False)]}" string="Scheduled"/>

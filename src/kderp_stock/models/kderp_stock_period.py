@@ -140,7 +140,7 @@ class StockPeriodYear(models.Model):
         else:
             domain = [('name', operator, name)]
         ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)    
+        return self.name_get(cr, user, ids, context=context)
     
 class StockPeriod(models.Model):
     """

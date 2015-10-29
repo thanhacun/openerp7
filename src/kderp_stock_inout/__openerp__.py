@@ -23,7 +23,7 @@
     'version':"7.0.0",
     'author':"KDERP IT-Dev. Team",
     'images' : ['images/kinden.png'],
-    'summary':"Customize Purchase Module for Suiteable Kinden Procedure",
+    'summary':"Customize Stock Picking and Stock Move",
     'category':"KDERP Apps",
     'depends':['kderp_stock','kderp_purchase_extend'],
     'description': """
