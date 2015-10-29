@@ -2,12 +2,14 @@
 <openerp>
     <data>
     
-		 <menuitem id="menu_kderp_stock_management_root" name="Stock" sequence="8" groups="group_menu_kderp_stock"/>
+		 <menuitem id="menu_kderp_stock_management_root" name="Warehouse" sequence="8" groups="group_menu_kderp_stock"/>
     	
+         <menuitem id="menu_kderp_stock" name="Warehouse Management" sequence="10" parent="menu_kderp_stock_management_root"/>
          <menuitem id="menu_kderp_stock" name="Stock Management" sequence="10"  groups="group_menu_stock_management" parent="menu_kderp_stock_management_root"/>
                  	
          <menuitem id="menu_kderp_stock_receive_delivery" name="Receive/Deliver" sequence="3" parent="menu_kderp_stock_management_root"/>
          
+         <menuitem id="menu_kderp_stock_config" name="Warehouse Configuration" sequence="30" parent="menu_kderp_stock_management_root"/>
          <menuitem id="menu_kderp_stock_config" name="Stock Configuration" sequence="30" groups="group_menu_stock_configuration" parent="menu_kderp_stock_management_root"/>
  		
      </data>

@@ -40,6 +40,9 @@
                             <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}"/>
                         </h1>
                         <group>
+                            <group string="Packing Info.">
+                                <field name="origin" placeholder="Ref. Number" string="Ref. Number" class="oe_inline"/>
+                            </group>
                             <group string="Date Info.">
                                 <field name="date"/>
                                 <field name="min_date" readonly="1" attrs="{'invisible': [('min_date','=',False)]}" string="Scheduled"/>
@@ -75,7 +78,7 @@
         </record>
 
 		<record id="act_kderp_stock_picking_internal" model="ir.actions.act_window">
-            <field name="name">Packing Internal</field>
+            <field name="name">Stock Move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,form</field>

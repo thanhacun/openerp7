@@ -255,7 +255,8 @@ openerp.kderp_web = function(session) {
         	},
 
     });
-    
+
+    //Hide Delete Attachment in some Model
     session.web.Sidebar = session.web.Sidebar.extend({
     	
         start: function() {
@@ -391,8 +392,7 @@ var check_parent = function (obj,name_class)
 
 
 //Change return value when click to Picker date
-session.web.DateWidget = session.web.DateWidget.extend({
-	
+session.web.DateWidget = session.web.DateWidget.extend ({
     on_picker_select: function(text, instance_) {
         var date = this.picker('getDate');
         this.$input
@@ -400,7 +400,6 @@ session.web.DateWidget = session.web.DateWidget.extend({
             .change()
             .focus();
     },
-    
 	kderp_format_client: function(v) {
 		var normalize_format = function (format) {
 		    return Date.normalizeFormat(session.web.strip_raw_chars(format));
@@ -411,40 +410,43 @@ session.web.DateWidget = session.web.DateWidget.extend({
     },
 });
 
-//Add InputMask for tree editable
-session.web.list.Editor= session.web.list.Editor.extend({
-    _focus_setup: function (focus_field) {
-    	 _super = this._super(focus_field);
-    	 var self=this;
-    	 return $.when(_super,attach_mask_editable(self.$el.find('input'),this.record));
-    },
-    
-});
+////Add InputMask for tree editable
+//session.web.list.Editor= session.web.list.Editor.extend({
+//    _focus_setup: function (focus_field) {
+//    	 _super = this._super(focus_field);
+//    	 var self=this;
+//		return _super;
+//    	// return $.when(_super,attach_mask_editable(self.$el.find('input'),this.record));
+//    },
+//
+//});
 
-session.web.ViewManagerAction = session.web.ViewManagerAction.extend({
-   
-    do_create_view: function(view_type) {
-        var self = this;
-        return this.alive(this._super.apply(this, arguments)).done(function() {
-        	if (view_type==='form')
-        		{
-        		setTimeout(function (){
-        				attach_mask_editable($(self.$el.find('div.oe_form')[0]).find('input[type=text]'));
-        				},500);
-        		}
-        });
-    },
-});
+//session.web.ViewManagerAction = session.web.ViewManagerAction.extend({
+//
+//    do_create_view: function(view_type) {
+//        var self = this;
+//        return this.alive(this._super.apply(this, arguments)).done(function() {
+//        	if (view_type==='form')
+//        		{
+//					return true;
+//        		setTimeout(function (){
+//        				attach_mask_editable($(self.$el.find('div.oe_form')[0]).find('input[type=text]'));
+//        				},500);
+//        		}
+//        });
+//    },
+//});
 
 session.web.FormView =  session.web.FormView.extend({
    
 	check_actual_mode: function(source, options) {
         var self = this;
         var _super=this._super(source, options);
-        if(this.get("actual_mode") !== "view") {
-        	//$("input")
-        	attach_mask_editable(self.$el.find('input'));
-        }
+        //if(this.get("actual_mode") !== "view") {
+        //	//$("input")
+			//return true;
+        //	//attach_mask_editable(self.$el.find('input'));
+        //}
         var showSideBar = function () 
         	{
 	        	if (self.get("actual_mode") !== "view" && self.datarecord.id)
@@ -973,16 +975,17 @@ var open_new_tab = function (data,target,kd_context1)
 		return x_open;
 	};
 
-session.web.form.SelectCreatePopup = session.web.form.SelectCreatePopup.extend({
-	new_object: function() {
- 		var self=this;
- 		return $.when(self._super()).then(function () {
- 				setTimeout(function(){
- 					attach_mask_editable($('div.ui-dialog-content.ui-widget-content').find("input[type='text']"));
- 				},500);
- 				});
- 	},	
-});
+//session.web.form.SelectCreatePopup = session.web.form.SelectCreatePopu1p.extend({
+//	new_object: function() {
+// 		var self=this;
+// 		return $.when(self._super()).then(function () {
+//				return true;
+// 				setTimeout(function(){
+// 					attach_mask_editable($('div.ui-dialog-content.ui-widget-content').find("input[type='text']"));
+// 				},500);
+// 				});
+// 	},
+//});
 	
 //Click to Tree View
 session.web.form.AbstractFormPopup1 = session.web.form.AbstractFormPopup.include({
@@ -1195,6 +1198,27 @@ session.web.ActionManager = session.web.ActionManager.extend({
  * Luu y phan this._super(this) vs return this._super(this)
  */
 session.web.form.FieldMany2One = session.web.form.FieldMany2One.extend({
+	//display_string: function(str) {
+	//	var res = this._super(str);
+	//	var objM2O = this.$el.find('.oe_form_uri');
+	//	var self = this;
+	//	if (objM2O.length>0)
+	//	{
+	//		if (self.get("value")) {
+	//			var ctx  = self.build_context();
+	//			ctx.add({'show_title':1});
+	//			var dataset = new session.web.DataSetStatic(this, this.field.relation, ctx);
+	//			var def = this.alive(dataset.name_get([self.get("value")])).done(function (data) {
+	//				if (!data[0]) {
+	//					self.do_warn(_t("Render"), _t("No value found for the field " + self.field.string + " for value " + self.get("value")));
+	//					return;
+	//				}
+	//			objM2O[0].title = data[0][1];
+	//			});
+	//		}
+	//	}
+	//	return res
+	//},
 	render_editable: function() {
         var self = this;
         this.$input = this.$el.find("input");
@@ -1350,6 +1374,34 @@ session.web.form.FieldMany2OneImage = session.web.form.FieldMany2One.extend({
 	},
 });
 
+
+
+/*
+	Add inputmask to float field, Date
+*/
+session.web.form.FieldDate = session.web.form.FieldDate.extend({
+	render_value: function() {
+		var self = this;
+		if (this.get("effective_readonly"))
+			return this._super();
+		else
+			return $.when(this._super(),attach_mask_editable(self.$el.find('input')));
+	},
+});
+
+session.web.form.FieldFloat = session.web.form.FieldFloat.extend({
+	render_value: function() {
+		var self = this;
+		if (this.get("effective_readonly"))
+			return this._super();
+		else
+			return $.when(this._super(),attach_mask_editable(self.$el.find('input')));
+	},
+});
+//
+//session.web.DateWidget = session.web.DateWidget.include({
+//
+//});
 
 //Add widget as a progress bar on readyonly
 //Extend for progressfloat - ke thua thiet ke cua progressbar
@@ -1884,27 +1936,59 @@ setTimeout(function(){
    * Khi click vao mot dieu kien search co the sua duoc de search tiep
    * Luu y: su dung ham trim() de remove cac ky tu thua de gay loi khi search
    * TODO: sua truc tiep tai search value va cap nhat lai search
+   * Ke thua start de them thuoc tinh draggable va event dragstart de bat co dang bat dau keo tha
+   * va se khong thuc hien su kien click khi keo tha
    */
   session.web.search.FacetView.include({
   	init: function(parent, model){
   		var self = this;
   		this._super(parent, model);
-  		$.extend(this.events,{
-  			'click': function(e){
-  				if ($(e.target).is('.oe_facet_remove')){
-  					this.model.destroy();
-  					this.$el.focus();
-  					return false;
-  				} else {
-	  				var search_value = this.$el.find('.oe_facet_value').text().trim();
-	  				this.model.destroy();
-	  				$('.oe_searchview_input:last-child').focus().text(search_value);
-	  				// self.model_changed();  					
-  				};
+		this.$el.draggable();
+		self.isDragging = false;
 
+  		$.extend(this.events,{
+			'dragstart':function(e){
+                //Set flag for when click disable when click
+				self.isDragging = true;
+                console.log(this);
+			},
+  			'click': function(e){
+				if (self.isDragging) {
+                    self.isDragging = false;
+                    e.preventDefault();
+                }
+                //When click close facet remove
+				else if ($(e.target).is('.oe_facet_remove')) {
+                            this.model.destroy();
+                            this.$el.focus();
+                            return false;
+                        }
+                //When click to facet value
+                else if ($.inArray('oe_facet_value', e.target.classList) >= 0) {
+                        var search_value = e.target.textContent.trim();
+                        //When facevalue > more than 1 item
+                        if (this.$el.find('.oe_facet_value').length > 1) {
+                            e.target.remove();
+                            //remove a clicked facet value
+                            this.model.values.models = this.model.values.models.filter(function (item) {
+                                return item.get('value') != search_value;
+                            });
+                            //Refresh search
+                            this.__parentedParent.do_search();
+                        }
+                        else
+                            this.model.destroy();
+                        $('.oe_searchview_input:last-child').focus().text(search_value);
+                    }
   			},
   		});
   	},
+
+	start: function () {
+		var self = this;
+  		var res = this._super();
+		return $.when(res,$('.oe_searchview_facet').draggable());
+	}
   });
   
   /**
@@ -2005,4 +2089,40 @@ setTimeout(function(){
 			  		getLocation(); })},2000)
   	  }
   	});
+
+    /**
+     * Them dieu kien search hoac (or) cho cac filter da co san
+     * Kiem tra dieu kien search nhap vao neu co chua || thi se them vao domain search
+     * dieu kien hoac
+   */
+    session.web.SearchView = session.web.SearchView.extend({
+        build_search_data: function () {
+            var _super = this._super();
+            var domains = _super.domains;
+            if (domains.length>1 && $.type(domains[domains.length-1])!='string') {
+                var searchValue = domains[domains.length-1].get_eval_context();
+                searchValue = searchValue==""?false:searchValue['self'];
+                if (searchValue.indexOf('||')==0) {
+                    searchValue = searchValue.replace('||', '');
+                    if ($.type(domains[0])==="string")
+                       sDomain0 = py.eval(domains[0]);
+                    else
+                        sDomain0 = domains[0].eval();
+                    domains[domains.length - 1].__eval_context.self = searchValue;
+                    sDomain1 = domains[domains.length - 1].eval();
+                    pos = sDomain0.indexOf('|');
+                    if (pos < 0)
+                        sDomain0.splice(sDomain0.length - 1, 0, '|');
+                    else
+                        sDomain0.splice(pos, 0, '|');
+                    sDomain0 = sDomain0.concat(sDomain1);
+                    domains.pop();
+                    domains[0] = JSON.stringify(sDomain0);
+                }
+			}
+			return _super;
+        },
+    });
+
+
 };

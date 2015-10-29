@@ -249,7 +249,7 @@ class stock_location_product_detail(osv.osv):
                                             from
                                                 stock_location sl
                                             left join
-                                                stock_move sm on (sl.id = sm.location_dest_id) and state in ('done','assigned') and sm.global_state <> 'done'
+                                                stock_move sm on (sl.id = sm.location_dest_id) and sm.state in ('done','assigned') and sm.global_state <> 'done'
                                             where
                                                 sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(move_code,0)>0                                           
                                         Union
@@ -268,7 +268,7 @@ class stock_location_product_detail(osv.osv):
                                             from
                                                 stock_location sl
                                             left join
-                                                vwstock_move_remote sm on (sl.stock_code = stock_destination) and global_state <> 'done' and state in ('done','assigned')
+                                                vwstock_move_remote sm on (sl.stock_code = stock_destination) and global_state <> 'done' and sm.state in ('done','assigned')
                                             left join
                                                 product_product pp on product_code = pp.default_code
                                             left join
@@ -293,7 +293,7 @@ class stock_location_product_detail(osv.osv):
                                             from
                                                 stock_location sl
                                             left join
-                                                stock_move sm on (sl.id = sm.location_id) and state in ('done','assigned','confirmed') and sm.global_state <> 'done'
+                                                stock_move sm on (sl.id = sm.location_id) and sm.state in ('done','assigned','confirmed') and sm.global_state <> 'done'
                                             where
                                                 sl.global_stock and coalesce(sm.location_dest_id,0) != coalesce(sm.location_id,0) and coalesce(source_move_code,0)>0
                                         Union
