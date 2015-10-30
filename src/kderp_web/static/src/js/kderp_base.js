@@ -538,6 +538,11 @@ session.web.DataSet.include({
 });
 
 session.web.search.InputView = session.web.search.InputView.extend({
+    //init: function (parent, model) {
+    //    this._super(parent,model);
+		//this.$el.draggable();
+		//console.log(this);
+    //},
 	onKeydown: function (e) {
 		var _super=this._super(e);
 		   switch (e.which) {
@@ -556,18 +561,30 @@ session.web.search.InputView = session.web.search.InputView.extend({
  * An cua so search khi di roi con tro chuot
  * Su dung timer de cancel event khi su kien xay ra lien tiep trong khoang thoi gian delay
  * vi du: di chuyen chuot lien tuc vao va ra khoi element
+ * De cho o search co the drag duoc
  * 
  * select_completion
  * Dinh dang cach hien thi Ngay va So khi go o phan search. Them phan tim kiem theo khoang, tim kiem not o phan search 
  * setup_global_completion
  * Dieu chinh phan delay cua search tu 250 xuong 0 -- more responsive
  * TODO
- * 
+ *
+ * build_search_data
+ * Them dieu kien search hoac (or) cho cac filter da co san
+ * Kiem tra dieu kien search nhap vao neu co chua || thi se them vao domain search
+ * dieu kien hoac
  */
+
 session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.SearchView# */{
+	//init: function(parent, dataset, view_id, defaults, options) {
+	//		var _super = this._super(parent, dataset, view_id, defaults, options);
+	//	},
+
     start: function () {
         var self = this;
         this._super(this);
+		this.$el.draggable({containment: this.$el.parents('.oe_header_row')});
+
         time_to_leave = 2500;
         var timer;
         this.$el.find('.oe_searchview_drawer').on('mouseleave', function(){
@@ -819,7 +836,48 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
             delay: 0, //original value is 250
         }).data('autocomplete');
     },
-});
+
+	build_search_data: function () {
+            var _super = this._super();
+            var domains = _super.domains;
+
+            if (domains.length>=1)
+				{
+					//Chuyen domain thanh string
+					convertDomaintoString = function(domain) {
+						if (domain.eval === undefined)
+							if ($.type(domain) === 'string')
+								return domain;
+							else
+								return JSON.stringify(domain);
+						else
+							return JSON.stringify(domain.eval());
+					};
+					var searchDomain = convertDomaintoString(domains[domains.length-1]);
+
+                if (searchDomain.indexOf('"||')>=0 || searchDomain.indexOf("'||")>=0) {
+                    searchDomain = searchDomain.replace(/\'\|\|/g,"'").replace(/\"\|\|/g,'"');
+
+                    sDomain0 = convertDomaintoString(domains[0]);
+					sDomain0 = py.eval(sDomain0);
+					sDomain1 = py.eval(searchDomain);
+
+					pos = sDomain0.indexOf('|');
+                    if (pos < 0)
+                        sDomain0.splice(sDomain0.length - 1, 0, '|');
+                    else
+                        sDomain0.splice(pos, 0, '|');
+                    sDomain0 = sDomain0.concat(sDomain1);
+					//console.log(sDomain0);
+                    domains.pop();
+                    domains[0] = JSON.stringify(sDomain0);
+
+                }
+			}
+			return _super;
+        },
+    });
+
 
 //Chuyen domain cua tung facet vao search
 session.web.search.Field.include({
@@ -1943,22 +2001,22 @@ setTimeout(function(){
   	init: function(parent, model){
   		var self = this;
   		this._super(parent, model);
-		this.$el.draggable();
-		self.isDragging = false;
+		//TODO Later revise it
+		//this.$el.parent().draggable();
+		//self.isDragging = false;
 
   		$.extend(this.events,{
-			'dragstart':function(e){
-                //Set flag for when click disable when click
-				self.isDragging = true;
-                console.log(this);
-			},
+			//'dragstart':function(e){
+             //   //Set flag for when click disable when click
+			//	self.isDragging = true;
+			//},
   			'click': function(e){
-				if (self.isDragging) {
-                    self.isDragging = false;
-                    e.preventDefault();
-                }
+                //if (self.isDragging) {
+                //    self.isDragging = false;
+                //    e.preventDefault();
+                //}
                 //When click close facet remove
-				else if ($(e.target).is('.oe_facet_remove')) {
+				if ($(e.target).is('.oe_facet_remove')) {
                             this.model.destroy();
                             this.$el.focus();
                             return false;
@@ -1984,11 +2042,6 @@ setTimeout(function(){
   		});
   	},
 
-	start: function () {
-		var self = this;
-  		var res = this._super();
-		return $.when(res,$('.oe_searchview_facet').draggable());
-	}
   });
   
   /**
@@ -2089,40 +2142,5 @@ setTimeout(function(){
 			  		getLocation(); })},2000)
   	  }
   	});
-
-    /**
-     * Them dieu kien search hoac (or) cho cac filter da co san
-     * Kiem tra dieu kien search nhap vao neu co chua || thi se them vao domain search
-     * dieu kien hoac
-   */
-    session.web.SearchView = session.web.SearchView.extend({
-        build_search_data: function () {
-            var _super = this._super();
-            var domains = _super.domains;
-            if (domains.length>1 && $.type(domains[domains.length-1])!='string') {
-                var searchValue = domains[domains.length-1].get_eval_context();
-                searchValue = searchValue==""?false:searchValue['self'];
-                if (searchValue.indexOf('||')==0) {
-                    searchValue = searchValue.replace('||', '');
-                    if ($.type(domains[0])==="string")
-                       sDomain0 = py.eval(domains[0]);
-                    else
-                        sDomain0 = domains[0].eval();
-                    domains[domains.length - 1].__eval_context.self = searchValue;
-                    sDomain1 = domains[domains.length - 1].eval();
-                    pos = sDomain0.indexOf('|');
-                    if (pos < 0)
-                        sDomain0.splice(sDomain0.length - 1, 0, '|');
-                    else
-                        sDomain0.splice(pos, 0, '|');
-                    sDomain0 = sDomain0.concat(sDomain1);
-                    domains.pop();
-                    domains[0] = JSON.stringify(sDomain0);
-                }
-			}
-			return _super;
-        },
-    });
-
 
 };
