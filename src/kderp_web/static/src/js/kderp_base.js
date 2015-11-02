@@ -20,10 +20,10 @@ openerp.kderp_web = function(session) {
     //For string in Search
     var less_than_str = _t("Less Than ");
     var greater_than_str = _t("Greater Than ");
-    
+
     session.web.form.widgets.add('many2oneimage','session.web.form.FieldMany2OneImage');
-    
-    //Change link favicon 
+
+    //Change link favicon
     $('link[href="/web/static/src/img/favicon.ico"]').attr('href','/kderp_web/static/src/img/favicon.ico');
     (function() {
         var link = document.createElement('link');
@@ -32,7 +32,7 @@ openerp.kderp_web = function(session) {
         link.href = '/kderp_web/static/src/img/favicon.ico';
         document.getElementsByTagName('head')[0].appendChild(link);
     }());
-    
+
     //Move to Top Page
     var move_top_page = function (move)
     		{
@@ -44,11 +44,11 @@ openerp.kderp_web = function(session) {
 	    			if ($win.scrollTop() == 0)
 	    				move=false;
     				}
-    			
+
     			if (move)
     				return $("html, body").animate({ scrollTop: 0},"fast")
     		};
-    
+
 //Function Attach Input mask
 	var attach_mask_editable= function (obj,record) {
     			var normalize_format = function (format) {
@@ -56,9 +56,9 @@ openerp.kderp_web = function(session) {
     			};
     			var l10n = _t.database.parameters;
     			var date_pattern = normalize_format(_t.database.parameters.date_format);
-    			
+
     			var excepted_list_fields=['due_date2'];
-    			
+
     			$.extend($.inputmask.defaults, {
     			    'clearMaskOnLostFocus': true
     			});
@@ -110,7 +110,7 @@ openerp.kderp_web = function(session) {
     			obj.each( function( index, element ){
     				var main_elem=$( this );
     				elem=main_elem[0];
-    				
+
     				if (excepted_list_fields.indexOf(elem.name)<0)
     					{
     					if ( (typeof(elem.classList) !== 'undefined'))
@@ -128,7 +128,7 @@ openerp.kderp_web = function(session) {
     												}
     											else
     												var date = Date.parseExact(get_date, date_pattern);
-    											
+
     											if (date===null && typeof(elem.value)==='string')
     												date_value=elem.value;
     											else
@@ -147,7 +147,7 @@ openerp.kderp_web = function(session) {
     									}
     								input_mask=normalize_format(l10n.date_format).replace("MMM","mm");
     								main_elem.inputmask(input_mask);
-    								
+
     								main_elem.bind({
     									focusout :function() {
     									  	check_and_complete_date(this,input_mask,date_pattern);
@@ -158,7 +158,7 @@ openerp.kderp_web = function(session) {
 //    									  blur: function() {
 //    										  	check_and_complete_date(this,input_mask,date_pattern);
 //    										  	},
-    									}); 	
+    									});
     							}
     						else
     							if (check_parent(elem,'oe_form_field_float'))
@@ -177,36 +177,36 @@ openerp.kderp_web = function(session) {
 
     			});
     		};
-    		
+
 //    var old_func=session.web.fields_view_get;
 //    session.web.fields_view_get = function (args) {
 //    	console.log(args);
 //    	console.log("ARGS");
 //    	return old_func(args);
 //    };
-    
+
     session.web.DataSetSearch = session.web.DataSetSearch.extend({
     	read_slice: function (fields, options) {
     		var _super=this._super(fields,options);
     		return $.when(_super,move_top_page($(".ui-dialog-content").length<=0));
     	}
-    }); 
+    });
     //End of Move to Top Page
-    
+
     /* Extend the Sidebar to add Share and Embed links in the 'More' menu */
     session.web.Sidebar.include({
     	sort_sidebar: function () {
     		var obj=this;
     		var vsort_by_field='label';
             var sort_by = function(field, reverse, primer){
-            	   var key = primer ? 
-            	       function(x) {return primer(x[field])}: 
+            	   var key = primer ?
+            	       function(x) {return primer(x[field])}:
             	       function(x) {return x[field]};
-            	     
+
             	   reverse = [-1, 1][+!!reverse];
 
             	   return function (a, b) {
-            		   
+
             	       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
             	     }
             	};
@@ -241,13 +241,13 @@ openerp.kderp_web = function(session) {
 	            		}
             	}
         },
-        
+
     	redraw: function() {
             var _super=this._super(this);
             var self =this;
             return $.when(_super).done(self.sort_sidebar());
         },
-        
+
         on_attachments_loaded: function(attachments) {
 		      var self = this;
 		      var _super=self._super(attachments);
@@ -258,12 +258,12 @@ openerp.kderp_web = function(session) {
 
     //Hide Delete Attachment in some Model
     session.web.Sidebar = session.web.Sidebar.extend({
-    	
+
         start: function() {
-        	new session.web.Model("ir.attachment").get_func("has_gorup_hidden")(session.uid).pipe(function(result) { 
+        	new session.web.Model("ir.attachment").get_func("has_gorup_hidden")(session.uid).pipe(function(result) {
         		editmode_attachement=result;});
-        	
-        	new session.web.Model("ir.attachment").get_func("check_location")(session.uid).pipe(function(result) { 
+
+        	new session.web.Model("ir.attachment").get_func("check_location")(session.uid).pipe(function(result) {
     			if (result!=='hcm')
     				{
     				vsort_by_field_att='create_date';
@@ -271,12 +271,12 @@ openerp.kderp_web = function(session) {
     			else
     				vsort_by_field_att='label';
     			});
-        	
+
             var self = this;
             var _super=this._super(this);
             this.exept_model=['sale.order','purchase.order','account.invoice','kderp.contract.client'];
             this.editmode_attachement=editmode_attachement;
-            
+
             self.add_items('other', [
                 {   label: _t('View Log'),
                     callback: self.on_click_view_log,
@@ -284,14 +284,14 @@ openerp.kderp_web = function(session) {
             ]);
             return _super;
         },
-        
+
         on_click_view_log: function(item) {
         	self=this;
             var view = this.getParent();
             this.dataset = view.dataset;
             var ids = view.get_selected_ids();
-        	
-            if (ids.length === 1) {            	
+
+            if (ids.length === 1) {
                 this.dataset.call('perm_read', [ids]).done(function(result) {
                     var dialog = new session.web.Dialog(this, {
                         title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
@@ -302,15 +302,15 @@ openerp.kderp_web = function(session) {
                     })).open();
                 });
             }
-            
+
         },
-        
+
     });
 
 //Check date and number
 var check_and_complete_date = function (obj,input_mask,date_pattern) {
 		var date_string=obj.value;
-		
+
 		var date_separate="";
 //		console.log("OBJ:");
 //		console.log(this);
@@ -322,18 +322,18 @@ var check_and_complete_date = function (obj,input_mask,date_pattern) {
 			{date_separate='/';}
 		else if (date_string.indexOf(".")>=0)
 			{date_separate='.';}
-		
+
 		if (date_separate !=="")
 			{
 				date_array=date_string.split(date_separate);
-				
+
 				first=parseInt(date_array[0]);
 				first=("0" + first).slice(-2);
-				
+
 				second=date_array[1];
 				second=parseInt(second);
 				update=false;
-				
+
 				if (isNaN(second))
 					{
 						//date_array_pattern=input_mask.split(date_separate);
@@ -344,12 +344,12 @@ var check_and_complete_date = function (obj,input_mask,date_pattern) {
 						third=curr_date_str.split(date_separate)[2]
 						update=true
 					}
-				else 
+				else
 					{
 						third=date_array[2];
 						third=parseInt(third);
 						second=("0" + second).slice(-2);
-						
+
 						if (isNaN(third))
 							{
 								var curr_date = new Date();
@@ -370,11 +370,11 @@ var check_and_complete_date = function (obj,input_mask,date_pattern) {
 				if (update && !isNaN(first))
 					{
 					date_value=first + date_separate + second + date_separate + third;
-					
+
 					$(obj).val(date_value)
 													.change();
-					
-					
+
+
 					}
 			}
 };
@@ -385,7 +385,7 @@ var check_parent = function (obj,name_class)
 		if (typeof(obj.parentNode) !== 'undefined')
 			if (typeof(obj.parentNode.classList) !== 'undefined')
 				if (obj.parentNode.classList.contains(name_class))
-					result=true;				
+					result=true;
 		return result;
 	}
 
@@ -438,28 +438,28 @@ session.web.DateWidget = session.web.DateWidget.extend ({
 //});
 
 session.web.FormView =  session.web.FormView.extend({
-   
+
+    on_button_save: function(e) {
+        console.log(this);
+        this._super(e);
+    },
+
 	check_actual_mode: function(source, options) {
         var self = this;
         var _super=this._super(source, options);
-        //if(this.get("actual_mode") !== "view") {
-        //	//$("input")
-			//return true;
-        //	//attach_mask_editable(self.$el.find('input'));
-        //}
-        var showSideBar = function () 
+        var showSideBar = function ()
         	{
 	        	if (self.get("actual_mode") !== "view" && self.datarecord.id)
 	        		self.$sidebar.show();
         	}
         return $.when(_super,showSideBar());
     },
-	
+
 	load_form: function(data)
 		{
 		var self=this;
 		var objj=this;
-		
+
         // DBClick to Edit mode
 		var bind_event= function(evt){
 				objj.$el.find(".oe_form_group_row,.oe_form_field,label").on('dblclick', function (e) {
@@ -469,7 +469,7 @@ session.web.FormView =  session.web.FormView.extend({
 		            }
 		        });
 				$(document).on('keydown',function (e) {
-					if ($(".ui-dialog-content").length<=0 && ($(':focus').length===0) && e.which === 69 && self.get("actual_mode") === "view") //e.ctrlKey && !e.altKey && !e.shiftKey 
+					if ($(".ui-dialog-content").length<=0 && ($(':focus').length===0) && e.which === 69 && self.get("actual_mode") === "view") //e.ctrlKey && !e.altKey && !e.shiftKey
 						{
 						//console.log($(':focus').parent());
 						self.options.$buttons.find(".oe_form_button_edit").click();
@@ -477,7 +477,7 @@ session.web.FormView =  session.web.FormView.extend({
 						}
 					else if (e.ctrlKey && !e.altKey && !e.shiftKey && e.which === 68) //Duplicate when Ctrl+D
 						{
-							e.preventDefault();	
+							e.preventDefault();
 //							console.log(self.options.$sidebar);
 							//return self.guard_active(self.on_button_duplicate(self));
 						}
@@ -506,7 +506,7 @@ session.web.FormView =  session.web.FormView.extend({
 					setTimeout(function(){return self.options.$buttons.find(".oe_form_button_edit").click();},500);
 		        }
 		};
-		
+
 		var _super=this._super(data);
 		return $.when(_super,bind_event())
 	}
@@ -514,11 +514,11 @@ session.web.FormView =  session.web.FormView.extend({
 
 /*
  * Sua phan xoa line o trong List many2one
- * Bi loi khi nhap budget, do list view se cap nhat du lieu theo tu tu sua, vi vay khi them 1 dong vao roi xoa 1 dong 
+ * Bi loi khi nhap budget, do list view se cap nhat du lieu theo tu tu sua, vi vay khi them 1 dong vao roi xoa 1 dong
  * Khi commit ma co rang buoc trung du lieu thi se bao loi do co 2 ban ghi trung nhay
  * Sua lai de cho phan xoa len tren cung
  * */
-session.web.DataSet.include({	
+session.web.DataSet.include({
 	write: function (id, data, options) {
 		 _.each(data, function (dat) {
              if (dat instanceof Object)
@@ -534,7 +534,7 @@ session.web.DataSet.include({
 
                      })});
 		 return this._super(id, data, options);
-	},	
+	},
 });
 
 session.web.search.InputView = session.web.search.InputView.extend({
@@ -553,7 +553,7 @@ session.web.search.InputView = session.web.search.InputView.extend({
 		   }
 		return _super;
 	}
-	
+
 });
 
 /**
@@ -562,9 +562,9 @@ session.web.search.InputView = session.web.search.InputView.extend({
  * Su dung timer de cancel event khi su kien xay ra lien tiep trong khoang thoi gian delay
  * vi du: di chuyen chuot lien tuc vao va ra khoi element
  * De cho o search co the drag duoc
- * 
+ *
  * select_completion
- * Dinh dang cach hien thi Ngay va So khi go o phan search. Them phan tim kiem theo khoang, tim kiem not o phan search 
+ * Dinh dang cach hien thi Ngay va So khi go o phan search. Them phan tim kiem theo khoang, tim kiem not o phan search
  * setup_global_completion
  * Dieu chinh phan delay cua search tu 250 xuong 0 -- more responsive
  * TODO
@@ -576,10 +576,6 @@ session.web.search.InputView = session.web.search.InputView.extend({
  */
 
 session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.SearchView# */{
-	//init: function(parent, dataset, view_id, defaults, options) {
-	//		var _super = this._super(parent, dataset, view_id, defaults, options);
-	//	},
-
     start: function () {
         var self = this;
         this._super(this);
@@ -595,14 +591,13 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
         this.$el.find('.oe_searchview_drawer').on('mouseenter', function(){
         	clearTimeout(timer);
         });
-        //return this._super(this);
     },
-    
+
 	select_completion: function (e, ui) {
 		var filter_value=ui.item.facet.values[0].actual_value;
-		
+
 		var type_value='string';
-		
+
 		if (typeof(filter_value) === 'undefined')
 			{
 			filter_value=ui.item.facet.values[0].value;
@@ -616,7 +611,7 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 					var from_string=filter_value.date.toString('dd-MMM-yyyy');
 					var to_string=filter_value.to_date.toString('dd-MMM-yyyy');
 					var string_label="Range :" + from_string+"~"+to_string;
-					
+
 					filter_value=filter_value.date.toString('yyyy-MM-dd')+"~"+filter_value.to_date.toString('yyyy-MM-dd');
 					type_value='date';
 				}
@@ -624,7 +619,7 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 				{
 				var from_string=filter_value.date.toString('dd-MMM-yyyy');
 				var string_label=greater_than_str + from_string;
-				
+
 				filter_value=filter_value.date.toString('yyyy-MM-dd')+"~";
 				type_value='date';
 				}
@@ -632,7 +627,7 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 				{
 				var to_string=filter_value.to_date.toString('dd-MMM-yyyy');
 				var string_label=less_than_str + to_string;
-				
+
 				filter_value="~"+filter_value.to_date.toString('yyyy-MM-dd');
 				type_value='date';
 				}
@@ -654,17 +649,17 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 						}
 				}
 			}
-		
+
 		var original_value=filter_value;
 		var filter_domain="";
-		
+
 		ui.item.facet.field.view.fields_view.arch.children.forEach(function (value) {
 			if (ui.item.facet.field.attrs['string'] === value.attrs.string && ui.item.facet.field.attrs['name'] === value.attrs.name)
 				{
 				filter_domain=value.attrs.filter_domain;
 				}
 		});
-		
+
 		if (typeof(filter_value)==='string')
 			{
 				var prefix="";
@@ -673,25 +668,25 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 		    		{
 			    		prefix=filter_value.split(/\\(.+)?/)[0];
 			    		range=filter_value.split(/\\(.+)?/)[1];
-			    		
+
 			    		from_value=range.split("~")[0]
 			    		to_value=range.split("~")[1]
-			    	
+
 			    		from_value=prefix.trim()+from_value
 			    		to_value=prefix.trim()+to_value
-			    		
+
 			    		filter_value="\\" + from_value + "~" + to_value;
-			    	
+
 		    		}
 				if (['date','number'].indexOf(type_value)>=0 && filter_value.search("~")>=0)
 					{
-					
+
 					//prefix1=filter_value.split("\\")[0];
 		    		range_value=filter_value;
-		    		
+
 		    		from_value=range_value.split("~")[0]
 		    		to_value=range_value.split("~")[1]
-		    	
+
 		    		field_name=ui.item.facet.field.attrs['name'];
 		    		if (type_value==='number')
 		    			{
@@ -727,9 +722,9 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 			    			filter_domain=filter_domain+",('" + field_name +"','<=','"+to_value+"')]";
 	    				}
 					//ui.item.facet.field.attrs.filter_domain=filter_domain;
-					
+
 					ui.item.facet.category= ui.item.facet.category + new Date().getTime();
-					
+
 					//ui.item.facet.field.attrs.filter_domain=filter_domain;
 					//filter_value = filter_value.replace("!!", "");
 					ui.item.facet.values[0].value = original_value;
@@ -742,16 +737,16 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 						{
 						ui.item.facet.values[0].label=string_label;
 						}
-					
+
 					}
 				else if (filter_value.search(/\\/)===0 && filter_value.search("~")>2)
 						{
 							prefix1=filter_value.split(/\\/)[0];
 				    		range_value=filter_value.split(/\\/)[1];
-				    		
+
 				    		from_value=range_value.split("~")[0]
 				    		to_value=range_value.split("~")[1]
-				    		
+
 				    		field_name=ui.item.facet.field.attrs['name'];
 				    		if (type_value==='number')
 				    			{
@@ -764,9 +759,9 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 				    			filter_domain=filter_domain+",('" + field_name +"','<=','"+to_value+"')]";
 				    			}
 							//ui.item.facet.field.attrs.filter_domain=filter_domain;
-							
+
 							ui.item.facet.category= ui.item.facet.category + new Date().getTime();
-							
+
 							//ui.item.facet.field.attrs.filter_domain=filter_domain;
 							//filter_value = filter_value.replace("!!", "");
 							ui.item.facet.values[0].value = original_value;
@@ -781,7 +776,7 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 								}
 						}
 				//Search NOT
-		    	
+
 		        if (filter_value.search("!!")===0 && typeof(filter_domain)!=='undefined' && typeof(filter_domain)==="string")
 		        	{
 		        		var find_replace_condition = function (filter_domain, vFind, vRplace)
@@ -793,19 +788,19 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 			        		    }
 		        			return tmp_filter_domain.join(vRplace);
 		        		};
-		        	
+
 			        	ui.item.facet.category= ui.item.facet.category + new Date().getTime();
-			        	
+
 			        	filter_domain=filter_domain.split(", ").join(",");
 			        	filter_domain=filter_domain.split(" ,").join(",");
 			        	vfind=",'=',";
 			        	vReplace=",'!=',";
 			        	filter_domain=find_replace_condition(filter_domain,vfind,vReplace);
-			        	
+
 			        	vfind=",'ilike',"
 			        	vReplace=",'not ilike',"
 			        		filter_domain=find_replace_condition(filter_domain,vfind,vReplace);
-			        	
+
 			        	vfind=",'in',"
 			        	vReplace=",'not in',"
 		        		filter_domain=find_replace_condition(filter_domain,vfind,vReplace);
@@ -823,7 +818,7 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
         var _super=this._super(e,ui);
         return _super;
     },
-    
+
     setup_global_completion: function(){
     	this._super();
         var autocomplete = this.$el.autocomplete({
@@ -881,7 +876,7 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
 
 //Chuyen domain cua tung facet vao search
 session.web.search.Field.include({
-	
+
     get_domain: function (facet) {
     	this.attrs['filter_domain']=facet.attributes['filter_domain'];
         return this._super(facet);
@@ -891,7 +886,7 @@ session.web.search.Field.include({
 //Show Number Field if match Pattern
 session.web.search.NumberField = session.web.search.NumberField.include(/** @lends instance.web.search.NumberField# */{
     complete: function (needle) {
-    
+
         var range=_t("");
         if (typeof(needle)==='string')
     		if (needle.search("~")>=0)
@@ -900,7 +895,7 @@ session.web.search.NumberField = session.web.search.NumberField.include(/** @len
     	    			to_amount=needle.split('~')[1].split(" ").join("").split(",").join("")
     	    			var val = this.parse(from_amount);
     	    			var tval = this.parse(to_amount);
-    	    			
+
     	    			if (val && tval) //Neu co ca a~b
     	    				{
     	    					range=_t("Range ");
@@ -917,7 +912,7 @@ session.web.search.NumberField = session.web.search.NumberField.include(/** @len
 	    	    				var return_value={'value_type':'less_number','type':'number','from_number':val,'to_number':tval};
 		    					var number_string= less_than_str + tval.toLocaleString();
     	    				}
-    	    			else        	    			
+    	    			else
     	    				val = undefined
     	    			}
 	    		else
@@ -930,7 +925,7 @@ session.web.search.NumberField = session.web.search.NumberField.include(/** @len
 	    		var val = this.parse(needle.split(" ").join("").split(",").join(""));
 	    		var number_string= val.toLocaleString();
     		}
-        
+
         if (isNaN(val)) { return $.when(); }
         var label = _.str.sprintf(
             _t("Search %(range)s%(field)s for: %(value)s"), {
@@ -959,7 +954,7 @@ session.web.search.DateField = session.web.search.DateField.extend(/** @lends in
     complete: function (needle) {
     	var check_date=false;
     	var range="";
-    	
+
     	if (typeof(needle)==='string')
     		if (needle.search("~")>=0)
     			{
@@ -968,7 +963,7 @@ session.web.search.DateField = session.web.search.DateField.extend(/** @lends in
     			to_date=needle.split('~')[1]
     			var d = Date.parse(from_date);
     			var td = Date.parse(to_date);
-    			
+
     			if (td && d)
     				{
     				check_date=true;
@@ -1026,7 +1021,7 @@ session.web.search.DateField = session.web.search.DateField.extend(/** @lends in
 
 //Open New Tab instead of PopUp
 var open_new_tab = function (data,target,kd_context1)
-	{	
+	{
 //		console.log('NEW');
 		window.kd_context=kd_context1;
 		var x_open = window.open(data['server']+"/?#id="+data['id']+"&view_type=form&model="+data['model'], target);
@@ -1044,21 +1039,21 @@ var open_new_tab = function (data,target,kd_context1)
 // 				});
 // 	},
 //});
-	
+
 //Click to Tree View
 session.web.form.AbstractFormPopup1 = session.web.form.AbstractFormPopup.include({
-	 	
+
 	    display_popup: function() {
 	    	var self=this;
-	    	
+
 	    	if (!(parseInt(this.row_id)>0 && this.options.target!=='new_popup' && ['kderp.supplier.vat.invoice','res.partner'].indexOf(self.model)<0 ))
 	    		{
-    			var no_return="";    			
+    			var no_return="";
     			var revalue= function (obj){
     				if (no_return!=="")
     					self.target=no_return;
     			};
-    			
+
 	    		if (this.target==='new_popup')
 	    			{
 		    			this.target='new';
@@ -1081,10 +1076,10 @@ session.web.form.AbstractFormPopup1 = session.web.form.AbstractFormPopup.include
 });
 
 /**
- * Confirm before Delete a record in List View 
- * 
+ * Confirm before Delete a record in List View
+ *
  * pad_table_to: bo sung de goi floating_header, delay 10ms
- * 
+ *
  * floating_header: JQuery su dung de tao floating header cho tree view
  * header cua 1 bang se co dinh, khong bi cuon theo mouse
  * Bo sung them viec tinh toan lai header khi co gian man hinh
@@ -1107,7 +1102,7 @@ session.web.ListView.List.include({
 	     	self.floating_header(self);
 	     });
 		},
-	
+
 	pad_table_to: function(count){
 		this._super(count);
 		var self = this;
@@ -1127,19 +1122,19 @@ session.web.ListView.List.include({
 
 	floating_header: function(current_list){
 		//Freezing table header in tree view
-		//Clone headers	
+		//Clone headers
 		if ($(".floatingHeader").length >0){ //Kiem tra floatingHeader co ton tai?
 			$(".floatingHeader").remove()
 			};
 
 		if (current_list.options.search_view){
-			//Kiem tra xem co phai la Tree view hay khong: co search view hay khong			
-			//su dung first de han che ap dung cho element dau tien, su dung clone(true) de copy event	
+			//Kiem tra xem co phai la Tree view hay khong: co search view hay khong
+			//su dung first de han che ap dung cho element dau tien, su dung clone(true) de copy event
 			var $floatingHeader = $(".oe_list_header_columns").filter(":first").clone(true);
 			    $floatingHeader.children().width(function (i, val) {
-			    	return $(".oe_list_header_columns").filter(":first").children().eq(i).width();    
+			    	return $(".oe_list_header_columns").filter(":first").children().eq(i).width();
 			    });
-		
+
 		    	$floatingHeader.css({"width":$(".oe_list_header_columns").filter(":first").width()
 		    		, "height":$(".oe_list_header_columns").filter(":first").height()})
 		    		.addClass("floatingHeader");
@@ -1147,14 +1142,14 @@ session.web.ListView.List.include({
 		    	//$floatingHeader.css({"width", $(".oe_list_header_columns").filter(":first").width());
 			    //$floatingHeader.css("height",$(".oe_list_header_columns").filter(":first").height()).addClass("floatingHeader");
 			    $(".oe_list_header_columns").filter(":first").before($floatingHeader);
-		};		  
-	  },	
+		};
+	  },
 });
 
 /*
 //Lost focus khong bi mat gia tri
 session.web.form.One2ManyListView = session.web.form.One2ManyListView.extend({
-	_on_form_blur: function () {		
+	_on_form_blur: function () {
 		this.__ignore_blur = true;
 		return this._super();
     },
@@ -1171,7 +1166,7 @@ session.web.ListView.include({
 			 selected_ids.push($(this).data('id'));
 		 	});
 		 var _super=self._super(this);
-	 
+
 		 return $.when(_super).done( function () {
 			 	list_element_must_be_Check=[];
 			 	$('th.oe_list_record_selector input').closest('tr').each(function (){
@@ -1182,15 +1177,15 @@ session.web.ListView.include({
 			 	});
 			 	self.$el.find('.oe_list_record_selector ').prop('checked',checked_all);
 			 	$(list_element_must_be_Check).prop('checked',true);
-			 	
-			 });	 
+
+			 });
 	 },
 });
 
 	//Windows Action
 //Pass context to Window.open
 session.web.ActionManager = session.web.ActionManager.extend({
-	
+
 	init: function(parent) {
 		var self=this;
 		var _super=self._super.apply(self, arguments);
@@ -1233,7 +1228,7 @@ session.web.ActionManager = session.web.ActionManager.extend({
 				new_tab_data={'id':tmp_action.res_id,'model':tmp_action.res_model,'server':new_tab_server};
 				open_new_tab(new_tab_data, '_blank',{'executor':executor,'options':options});
 				return false;
-				
+
 			}
 		else
 			{
@@ -1248,11 +1243,11 @@ session.web.ActionManager = session.web.ActionManager.extend({
 
 /**
  * Backspace remove all
- * 
+ *
  * this.$input.autocompete() ke thua ham nay de sua loi delay trong khi nhap
  * lieu o form voi cac truong Many2One doi delay: 0
  * Muon cho code gon hon nua TOD
- * 
+ *
  * Luu y phan this._super(this) vs return this._super(this)
  */
 session.web.form.FieldMany2One = session.web.form.FieldMany2One.extend({
@@ -1288,7 +1283,7 @@ session.web.form.FieldMany2One = session.web.form.FieldMany2One.extend({
         		}
         });
         this._super(this);
-        
+
         this.$input.autocomplete({
             source: function(req, resp) {
                 self.get_search_result(req.term).done(function(result) {
@@ -1318,7 +1313,7 @@ session.web.form.FieldMany2One = session.web.form.FieldMany2One.extend({
             minLength: 0,
             delay: 0
         });
-        
+
 //        return this._super(this);
 	},
 });
@@ -1342,23 +1337,23 @@ session.web.form.FieldMany2OneImage = session.web.form.FieldMany2One.extend({
 	  },
 	img_leave: function(){
 		  this.$el.find(".koe_many2one_image").css({'width': '','height':'','position':'initial'});
-	  },	
-	
+	  },
+
 	render_value: function(no_recurse) {
 		var _super=this._super(no_recurse);
 		var self=this;
 		var url;
 		field='image';
-		self.vid=self.get("value");		
-		
+		self.vid=self.get("value");
+
 		if (! no_recurse) {
 			if (!self.get("value"))
-				{	                
+				{
 				self.$el.find('.koe_many2one_image').remove();
 				}
             else
             	{
-	            	var show_image = function (obj, model, vid, field) 
+	            	var show_image = function (obj, model, vid, field)
 	            		{
 		            		dataset=new session.web.DataSetStatic(self, model, self.build_context());
 		            		dataset.set_ids([vid]);
@@ -1379,14 +1374,14 @@ session.web.form.FieldMany2OneImage = session.web.form.FieldMany2One.extend({
 			        			                obj.$el.prepend($img);
 			        			                $img.load(function() {
 			        			                    if (! obj.options.size)
-			        			                        return;			        			                    
+			        			                        return;
 			        			                    $img.css("max-width", "" + self.options.size[0] + "px");
 			        			                    $img.css("max-height", "" + self.options.size[1] + "px");
 			        			                    $img.css("margin-left", "" + (self.options.size[0] - $img.width()) / 2 + "px");
 			        			                    $img.css("margin-top", "" + (self.options.size[1] - $img.height()) / 2 + "px");
-			        			                	});		            						
+			        			                	});
 		            						}
-		            			});		            		
+		            			});
 	            		};
 
 	            	if (self.options.preview_image)
@@ -1414,21 +1409,21 @@ session.web.form.FieldMany2OneImage = session.web.form.FieldMany2One.extend({
 		            			if (self.options.model)
 			            			show_image(self, self.options.model, self.vid, field);
 		            			else
-		            				show_image(self, self.field.model, self.vid, field);	            				
-		            			
-		            			}		            					            			
+		            				show_image(self, self.field.model, self.vid, field);
+
+		            			}
 	            		}
 	            	else
 	            		{
 	            		if (self.options.model)
 	            			show_image(self, self.options.model, self.vid, field);
             			else
-            				show_image(self, self.field.model, self.vid, field);	            		
+            				show_image(self, self.field.model, self.vid, field);
 	            		}
             	};
 		}
-		
-	return _super;	
+
+	return _super;
 	},
 });
 
@@ -1477,9 +1472,9 @@ session.web.form.progressfloat = session.web.form.FieldFloat.extend({
 		        this.$('span').html(formatted_value + '%');
 			}
 		else
-			return this._super();	
+			return this._super();
 	}
-	
+
 });
 
 //
@@ -1530,11 +1525,11 @@ session.web.form.One2ManyList=session.web.form.One2ManyList.extend({
                         self.view.do_add_record();
                     });
                 }));
-        
+
         var $padding = this.$current.find('tr:first');
         var $newrow = $('<tr class="check_added_to_top">').append($cell);
         $padding=this.view.$el.find('thead:first');
-        
+
         if ($padding.length===1 && this.$current.find('tr').length>=6) {
         	if (this.view.$el.find('tr.check_added_to_top').length===0)
         		$padding.append($newrow);
@@ -1547,14 +1542,14 @@ session.web.form.One2ManyList=session.web.form.One2ManyList.extend({
 });
 
 //Sua gia tri cau o Tag
-session.web.form.FieldMany2ManyTags = session.web.form.FieldMany2ManyTags.extend({ 
+session.web.form.FieldMany2ManyTags = session.web.form.FieldMany2ManyTags.extend({
 
 	initialize_content: function() {
 			var _super=this._super(this);
 			var  self = this;
-			self.$text = this.$("textarea");			
-			
-			var bind_x = function () {			
+			self.$text = this.$("textarea");
+
+			var bind_x = function () {
 			self.$text
 				//.textext({ plugins: 'tags' })
 				.bind('tagClick', function(e, tag, value, callback)
@@ -1577,9 +1572,9 @@ session.web.form.FieldMany2ManyTags = session.web.form.FieldMany2ManyTags.extend
 				                self.focus();
 				                self.view.do_onchange(self);
 				                self.trigger('changed_value'); //Cap nhat onchange khi thay doi value
-				            });	
+				            });
 			        });
-				
+
 			self.$text.on('keydown', function (e) {
 				if (e.which === 69 && e.ctrlKey && e.shiftKey)
 					{
@@ -1600,7 +1595,7 @@ session.web.form.FieldMany2ManyTags = session.web.form.FieldMany2ManyTags.extend
 			                self.focus();
 			                self.view.do_onchange(self);
 			                self.trigger('changed_value'); //Cap nhat onchange khi thay doi value
-			            });			           
+			            });
 					}
 			});
 			}
@@ -1627,14 +1622,14 @@ session.web.CrashManager = session.web.CrashManager.extend({
 				{
 				return window.location.reload();
 				};
-			return this._super(error);   
+			return this._super(error);
 		},
 });
 
 
 session.web.WebClient.include({
     bind_hashchange: function() {
-    	$(document).keydown(function (evt) 
+    	$(document).keydown(function (evt)
     			{
 					if (!evt.shiftKey && evt.which===191 && evt.ctrlKey && !evt.altKey)//&& $(':focus').length===0
 						{
@@ -1672,7 +1667,7 @@ session.web.UserMenu =  session.web.UserMenu.extend({
                 self.$el.find('.oe_topbar_name').text(topbar_name);
                 if (!session.session.debug) {
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.session.db);
-                }                
+                }
                 employee_id=false;
                 if (res.employee_id)
                 	employee_id=res.employee_id[0]
@@ -1702,19 +1697,19 @@ var show_help_dialog = function () {
 			        draggable: false,
 			        modal: true,
 			        width: $(window).width()*90/100.0,
-		            height:$(window).height()*90/100.0			       
+		            height:$(window).height()*90/100.0
 			     }).parent()
 			     			.addClass('koe_dialog_help')
 			     			.find('div.ui-dialog-titlebar').attr("id",'koe_dialog_help_title');
-							
-	 
+
+
 	 $(new_dialog).dialog('open');
 	};
 
 //setTimeout template - replace for $(document).ready()
 /*
 setTimeout(function(){
- 	
+
 },500);
  */
 
@@ -1723,7 +1718,7 @@ setTimeout(function(){
 //Cap nhat vi tri cua headers
 function UpdateTableHeaders() {
 	   $(".oe_list_content").each(function() {
-	   
+
 	       var el             = $(this),
 	           offset         = el.offset(),
 	           scrollTop      = $(window).scrollTop()+121,
@@ -1735,7 +1730,7 @@ function UpdateTableHeaders() {
 	       } else {
 	           floatingHeader.css({
 	            "visibility": "hidden"
-	           });      
+	           });
 	       };
 	   });
 	}
@@ -1751,17 +1746,17 @@ setTimeout(function(){
 	greeting = "<span class='greeting'>" + greeting + "</span>"
 	$(".oe_breadcrumb_item:last-child").append(greeting);
 	*/
-	
+
 	//Footer information
 //	footerInfo = "Developed by <span style='color:green;font-weight:bold'>KDVN - IT</span>"
 //	footerInfo = "<div>" + footerInfo + "</div>"
 //	$(".oe_footer").append(footerInfo)
-	
+
 	//Temporary notification - replace the logo position 243x88 | 249x94
 //	$(document).ready( function(){
 //		$.fn.snow();
 //	});
-//	
+//
 	tempNoti = "";
 	tempPic =""; //http link of a picture - dropbox?
 	if(tempPic!=""){ //Kiem tra bien rong hay khong
@@ -1774,18 +1769,18 @@ setTimeout(function(){
 //var tree_ready = function(current_list){
 //	return true;
 //	//Freezing table header in tree view
-//	//Clone headers	
+//	//Clone headers
 //	if ($(".floatingHeader").length >0){ //Kiem tra floatingHeader co ton tai?
 //		$(".floatingHeader").remove()
 //		};
 //
-//	if (current_list.options.search_view){//Kiem tra xem co phai la Tree view o trong form hay khong			
-//		//su dung first de han che ap dung cho element dau tien, su dung clone(true) de copy event	
+//	if (current_list.options.search_view){//Kiem tra xem co phai la Tree view o trong form hay khong
+//		//su dung first de han che ap dung cho element dau tien, su dung clone(true) de copy event
 //		var $floatingHeader = $(".oe_list_header_columns").filter(":first").clone(true);
 //		    $floatingHeader.children().width(function (i, val) {
-//		    	return $(".oe_list_header_columns").filter(":first").children().eq(i).width();    
+//		    	return $(".oe_list_header_columns").filter(":first").children().eq(i).width();
 //		    });
-//	
+//
 //	    	$floatingHeader.css({"width":$(".oe_list_header_columns").filter(":first").width()
 //	    		, "height":$(".oe_list_header_columns").filter(":first").height()})
 //	    		.addClass("floatingHeader");
@@ -1798,9 +1793,9 @@ setTimeout(function(){
 
 
 	/**
-	 * Dieu chinh chieu ngang cua menu topbar cho gon lai de 
+	 * Dieu chinh chieu ngang cua menu topbar cho gon lai de
 	 * dung cho notification
-	 * 
+	 *
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_loaded' event is triggered and on window resizing.
    */
@@ -1813,7 +1808,7 @@ setTimeout(function(){
 	        $more.children('li').insertBefore($more_container);
 	        var $toplevel_items = this.$el.children('li').not($more_container).hide();
 	        $toplevel_items.each(function() {
-	            //var remaining_space = self.$el.parent().width() - $more_container.outerWidth(); 
+	            //var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
 	        	var remaining_space = self.$el.parent().width()*0.8 - $more_container.outerWidth();
 	            self.$el.parent().children(':visible').each(function() {
 	                remaining_space -= $(this).outerWidth();
@@ -1830,13 +1825,13 @@ setTimeout(function(){
 	        if ($toplevel.length === 1) {
 	            $toplevel.hide();
 	        }
-	    }, 
+	    },
   });
-  
+
 
   session.web.UserMenu = session.web.UserMenu.extend({
 	  /**
-	   * Ke thua on_menu_about de khi 
+	   * Ke thua on_menu_about de khi
 	   * click vao About thi chuyen luon sang Developer Mode
 	   */
 	    on_menu_about: function() {
@@ -1845,15 +1840,15 @@ setTimeout(function(){
 	    	} else {
 	    		window.location = window.location.href.replace("debug","");
 	    	};
-	    }, 
-	    
+	    },
+
 	    /**
 	     * Huong dan su dung cua KDVN
 	     */
 	    on_menu_help: function() {
 	        window.open('https://docs.google.com/document/d/1nLNlWfbR8gCEodgGw9xjeYElTvnmoT_gac5ADejRn0s/pub', '_blank');
 	    },
-	    
+
 	    on_menu_password: function() {
 	        var self = this;
 	        if (!this.getParent().has_uncommitted_changes()) {
@@ -1864,7 +1859,7 @@ setTimeout(function(){
 	        }
 	    },
   });
-  
+
   /**
    * Tao su kien hover cho koe_many2one_image
    */
@@ -1880,27 +1875,27 @@ setTimeout(function(){
 		  this.$el.find(".koe_many2one_image").css({width: '',height:''});
 	  }
   });*/
-  
-  
+
+
 
   /**
    * Sua lai ham configure_pager trong ListView
    * Thay the chuoi 1-80 of xxxx bang chuoi 1-80|xxxx cho gon
-   * 
-   * Su dung cu phap $.extend(this.PROPERTY, {NEW VALUE})o trong init 
+   *
+   * Su dung cu phap $.extend(this.PROPERTY, {NEW VALUE})o trong init
    * de them cac value moi vao
-   * 
+   *
    * load_list ke thua de sua loi hien thi so trang
    */
   session.web.ListView.include({
-	  
+
 	  init: function(parent, dataset, view_id, options) {
 	    var self = this;
 	    this._super(parent, dataset, view_id, options);
-	    $.extend(this.events,{'mouseenter thead tr.oe_list_header_columns':'header_hover'}); 
+	    $.extend(this.events,{'mouseenter thead tr.oe_list_header_columns':'header_hover'});
 	    //_.extend(source, destination) dung de them doi tuong vao trong doi tuong
 	  },
-	  
+
 	  configure_pager: function(dataset){
 		this._super(dataset);
 		var spager_replace = this.$pager.find('.oe_list_pager_state').text().replace(" of ","|");
@@ -1910,14 +1905,14 @@ setTimeout(function(){
 	  header_hover: function(){
 		  //console.log("hovering over my head...");
 	  },
-	  
+
 	  load_list: function(data){
 		  var self = this;
 		  this._super(data);
 		  $(".oe_list_header_columns").addClass("TEST");
 //		  console.log(this.$el.find(".oe_list_header_columns");
 	  },
-	  
+
 	  view_loading: function(r){
 		  var self = this;
 		  this._super(r);
@@ -1927,19 +1922,19 @@ setTimeout(function(){
 
   /**
    * Ke thua class WebClient
-   * 
+   *
    * show_login: bo sung kiem tra kich thuoc man hinh
    * co the la 1 loat cac kiem tra khac truoc khi cho chay ung dung:
    * TODO: browser; windows
-   * 
+   *
    * show_application: kiem tra chieu ngang man hinh
-   * 
+   *
    * kderp_drawlayout: de tinh toan gia tri min-width cua oe_lefbar
    * CSS khong hoan hao trong truong hop nay do co 1 so element su dung fixed position
-   * 
+   *
    * kderp_refresh: su dung khi co gian man hinh
    * TODO: can refresh ca floating_header
-   * 
+   *
    */
   session.web.WebClient.include({
 	  start: function(){
@@ -1947,19 +1942,19 @@ setTimeout(function(){
 	  	this._super();
 	  	$(window).resize(function(){
 	  		self.kderp_drawlayout(self);
-	  	});	  	
+	  	});
 	  },
 	  show_login: function(){
 		if (screen.width >= 1024){ //1920?
 	        this.toggle_bars(false);
-	
+
 	        var state = $.bbq.getState(true);
 	        var action = {
 	            type: 'ir.actions.client',
 	            tag: 'login',
 	            _push_me: false,
 	        };
-	
+
 	        this.action_manager.do_action(action);
 	        this.action_manager.inner_widget.on('login_successful', this, function() {
 	            this.show_application();        // will load the state we just pushed
@@ -1976,7 +1971,7 @@ setTimeout(function(){
     	this.kderp_drawlayout(self);
 
     },
-    
+
     kderp_drawlayout: function(container){
     	var window_width = $(window).width();
     	var leftbar_ratio = 18;
@@ -1984,11 +1979,11 @@ setTimeout(function(){
     	container.$el.find(".openerp .oe_leftbar").css({"min-width":leftbar_min_width});
     	container.$el.find(".openerp .oe_logo").width($(".openerp .oe_leftbar").width());
     	$(".openerp .oe_leftbar .koe_leftbar").width($(".openerp .oe_leftbar").width());
-    	$(".openerp .oe_leftbar .koe_leftbar").height($(window).height()-($(".oe_topbar").height()+$(".oe_logo").height()+$(".oe_footer").height()));    	
+    	$(".openerp .oe_leftbar .koe_leftbar").height($(window).height()-($(".oe_topbar").height()+$(".oe_logo").height()+$(".oe_footer").height()));
     },
-    
+
   });
-  
+
   /**
    * Customize Search View
    * Khi click vao mot dieu kien search co the sua duoc de search tiep
@@ -2043,10 +2038,10 @@ setTimeout(function(){
   	},
 
   });
-  
+
   /**
-   * Cho phep dinh nghia so luong ban ghi su dung o dropdown list trong 
-   * truong many2one: options="{'limit':8}" 
+   * Cho phep dinh nghia so luong ban ghi su dung o dropdown list trong
+   * truong many2one: options="{'limit':8}"
    * TODO: bo sung them cac options khac
    */
   session.web.form.CompletionFieldMixin = _.extend(session.web.form.CompletionFieldMixin,{
@@ -2056,16 +2051,16 @@ setTimeout(function(){
   		} else {
   			this.limit = 7;
   			}
-        this.orderer = new session.web.DropMisordered();  		
+        this.orderer = new session.web.DropMisordered();
   	}
   })
-  
-  
+
+
    /**
    * Trinh bay phan custom search list de chi show ra khi click vao Custom Filters
    * Khi co qua nhieu custom search list se lam roi search drawer
    * toggleClass(class,false/true) tuong duong tat/bat
-   */ 
+   */
   session.web.search.CustomFilters = session.web.search.CustomFilters.extend({
   	start: function(){
   		var self = this;
@@ -2077,11 +2072,11 @@ setTimeout(function(){
 			}
 		});
   	},
-  	
+
   	show_custom_filters: function(){
   		$('.openerp .oe_searchview_custom_list').toggle();
   	},
-  	
+
   	append_filter: function(filter){
   		var self = this;
   		this._super(filter);
@@ -2100,7 +2095,7 @@ setTimeout(function(){
 	 * Tim dieu kien trong domain, neu co tu indexOf thi se kiem tra dieu kien theo ham Index
 	 * Kq la True: tra ve dieu kien code!=false (dieu kien luon dung),
 	 * Kq la False: tra ve dieu kien code=false (dieu kien luon sai),
-	 * TODO: ke thua ham chua lam 
+	 * TODO: ke thua ham chua lam
 	 */
   	var old_compute_domain = session.web.form.compute_domain; //Link compute_domain
   	session.web.form.compute_domain = function() {
@@ -2110,7 +2105,7 @@ setTimeout(function(){
 		var vdomain=tmp[0][0];
 		if (typeof vdomain=='object')//Kiem tra domain phai la dang array khong phai la cac ky tu dac biet nhu '|', &, !
 			if (vdomain[1].toLowerCase()==='indexof')
-				{	    						
+				{
 					var field = tmp[1][vdomain[0]];
 					var value = vdomain[2];
 			        if (!field) {
@@ -2118,29 +2113,18 @@ setTimeout(function(){
 			                _t("Unknown field %s in domain %s"),
 			                value, JSON.stringify(value)));
 			        }
-			        var field_value = field.get_value ? field.get_value() : field.value;			        
-			        tmp[0][0][2]='false'			        
+			        var field_value = field.get_value ? field.get_value() : field.value;
+			        tmp[0][0][2]='false'
 			        if (!field_value)
 			        	tmp[0][0][1]='='
 			        else
     				        if (field_value.toLowerCase().indexOf(value.toLowerCase())>=0)
-    				        	tmp[0][0][1]='!='	    				        	
-    				        else	    				        	
+    				        	tmp[0][0][1]='!='
+    				        else
     				        	tmp[0][0][1]='='
 				}
-		};			
-		var result = old_compute_domain.apply(this, tmp);       
+		};
+		var result = old_compute_domain.apply(this, tmp);
 		return result;
   	};
-  	
-  	
-  	session.web.UserMenu =  session.web.UserMenu.extend({
-  	    init: function(parent) {
-  	        this._super(parent);  	        
-		  	//Hien thoi tiet
-		  	setTimeout(function (){$(document).ready(function () {
-			  		getLocation(); })},2000)
-  	  }
-  	});
-
 };

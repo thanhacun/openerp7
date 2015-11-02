@@ -21,15 +21,15 @@
 .weatherFeed a { color: #888; }
 
 #weather:hover {
-	-webkit-transform:scale(2); /* Safari and Chrome */
-	-moz-transform:scale(2); /* Firefox */
-	-ms-transform:scale(2); /* IE 9 */
-	-o-transform:scale(2); /* Opera */
-	transform:scale(2);
+	-webkit-transform:scale(1.5); /* Safari and Chrome */
+	-moz-transform:scale(1.5); /* Firefox */
+	-ms-transform:scale(1.5); /* IE 9 */
+	-o-transform:scale(1.5); /* Opera */
+	transform:scale(1.5);
 	color: White;
 }
 
-#weather:hover .weatherCity{	
+#weather:hover .weatherCity{
 	display: block;
 	position: relative;
 	top: 40px;
@@ -42,9 +42,10 @@ img.weatherItem {
 	max-height:150%;
 	position:absolute;
 }
-.weatherCity {				
-			display: none;
-			}
+.weatherCity
+	{
+		display: none;
+	}
 
 .weatherTemp {
 	font-size: 20px; /* 2.8em; */
