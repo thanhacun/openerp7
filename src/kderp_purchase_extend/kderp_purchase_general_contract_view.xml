@@ -29,7 +29,13 @@
 					<field name="purchase_general_contract_id" domain="[('partner_id','=',partner_id)]" context="{'partner_id':partner_id}"/>
 				</field>
 				<field name="partner_id" position='replace'>
-					<field name="partner_id" on_change="onchange_partner_id(partner_id,date_order)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
+					<field name="partner_id" on_change="onchange_partner_id(partner_id,date_order,origin, account_analytic_id, order_line, discount_amount, taxes_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
+				</field>
+				<field name="order_line" position="attributes">
+					<attribute name="on_change">onchange_partner_id(partner_id,date_order,origin, account_analytic_id, order_line, discount_amount, taxes_id)</attribute>
+				</field>
+				<field name="origin" position="attributes">
+					<attribute name="on_change">onchange_partner_id(partner_id,date_order,origin, account_analytic_id, order_line, discount_amount, taxes_id)</attribute>
 				</field>
             </field>
         </record>

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from openerp.osv import fields, osv, orm
 from openerp import netsvc
 
@@ -31,7 +30,10 @@ class purchase_order(osv.osv):
     _description = 'Purchase Order'
     
     # Them truong hop khi thay doi Supplier thi neu co hop dong chung thi se thay doi hop dong chung va ngay hop dong chung
-    def onchange_partner_id(self, cr, uid, ids, partner_id, date=False):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, date=False, order_ref = False, job_id = False, order_details = [], discount_amount = 0, taxes_id = False):
+        # TODO
+        # Onchange Value, onchange new Code
+
         res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
         if not partner_id:
             return res
@@ -46,13 +48,96 @@ class purchase_order(osv.osv):
         res_sql = cr.fetchone()
         purchase_general_contract_id = res_sql[0] if res_sql else False
      
-        res['value']['purchase_general_contract_id'] = purchase_general_contract_id        
+        res['value']['purchase_general_contract_id'] = purchase_general_contract_id
+
+        #FIXME Please consider Calculator Amount from Line
+        #TODO DNT Vu Add check Order ref and Supplier, Job Warning if exists
+        filterAll = [('state','!=','cancel'),('origin','ilike',order_ref)]
+        filterAll += [('id','!=', ids[0])] if ids else []
+        message = ''
+
+        if order_ref and job_id and order_details:
+            def getAmount(orderLine):
+                #FIXME If using currency for rounding
+                res = {}
+                val = 0
+                for line in orderLine:
+                   val += line['price_unit'] * line['plan_qty']
+
+                for tax in self.pool.get('account.tax').browse(cr, uid, taxes_id[0][2]):
+                    if tax.type=='percent':
+                        val += (val - discount_amount)*tax.amount
+                    elif tax.type=='fixed':
+                        val += tax.amount
+                val = val - discount_amount
+                return val
+            from kderp_base import kderp_base
+
+            lineAmount = kderp_base.get_list_value_from_tree(cr, uid, ids, 'purchase.order.line', order_details, ['price_unit','plan_qty'])
+            amountTotal = getAmount(lineAmount)
+            #Same Job, Quotation and Amount
+            poDomain = [('account_analytic_id','=',job_id),('amount_total','=', amountTotal)] + filterAll
+            po_ids = self.search(cr, uid, poDomain)
+            if po_ids:
+                 message = _("Can not input this quotation, please check Job, Quotation and Amount may be exists")
+            else:
+                #Same Quotation, Amount and different Job
+                poDomain = [('account_analytic_id','!=',job_id),('amount_total','=', amountTotal)] + filterAll
+                po_ids = self.search(cr, uid, poDomain)
+                if po_ids:
+                    message = _("Please check Job, Quotation and Amount may be exists")
+        if not message and order_ref and partner_id:
+            poDomain = [('partner_id','=', partner_id),('origin','ilike',order_ref)]  + filterAll
+            po_ids = self.search(cr, uid, poDomain)
+            if po_ids:
+                message = _("Please check Supplier, Quotation may be exists")
+        if message:
+            po_no = [po['name'] for po in self.read(cr, uid, po_ids,['name'])]
+            res['warning'] = {'title':'KDERP Warning','message': message + ", ".join(po_no)}
         return res
                      
     _columns={
                 'purchase_general_contract_id':fields.many2one('kderp.purchase.general.contract','G.C. No.',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),                
             }
-    
+
+    def _check_duplicate_po_id(self, cr, uid, ids, context=None):
+        """
+            Kiem tra xem po co bi nhap trung hay khong
+        """
+        for po in self.browse(cr, uid, ids, context=context):
+            jobID = po.account_analytic_id.id
+            orderRef = po.origin
+            PartnerID = po.partner_id.id
+            flds = ['amount_tax','amount_untaxed','discount_percent','final_price','amount_total']
+            def getAmount():
+                #FIXME If using currency for rounding
+                res = {}
+                AmountTotal = 0
+                for line in po.order_line:
+                   AmountTotal += line.price_unit * line.plan_qty
+                for tax in po.taxes_id:
+                    if tax.type=='percent':
+                        AmountTotal += (AmountTotal - po.discount_amount)*tax.amount
+                    elif tax.type=='fixed':
+                        AmountTotal += po.amount
+                AmountTotal = AmountTotal - po.discount_amount
+                return AmountTotal
+            AmountTotal = getAmount()
+
+            filterAll = [('state','!=','cancel'),('origin','ilike',orderRef)]
+            filterAll += [('id','not in', ids)] if ids else []
+            poDomain = [('account_analytic_id','=',jobID),('amount_total','=',AmountTotal)] + filterAll
+            po_ids = self.search(cr, uid, poDomain)
+            if po.name.upper().find('PO')>=0 and len(po_ids)>=1:
+                poDomain = [('account_analytic_id','=',jobID),('amount_total','=',AmountTotal),('name','ilike','PO%'),('id','in',po_ids)] + filterAll
+                po_ids = self.search(cr, uid, poDomain)
+                if len(po_ids)>=1:
+                    return False
+            elif len(po_ids)>=1:
+                return False
+        return True
+    _constraints = [(_check_duplicate_po_id, "KDERP Warning, Can't input this PO please check Quotation, Job", ['origin','account_analytic_id','discount_amount','taxes_id','order_line','state'])]
+
     #Check Done for Workflow
     def check_done(self, cr, uid, ids, *args):
         res = True
