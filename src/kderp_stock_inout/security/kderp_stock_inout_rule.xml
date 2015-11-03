@@ -15,7 +15,7 @@
 		 		<field name="name">KDERP Dashboard - General and Site Manager see all Stock Move </field>
 			 	<field name="model_id" ref="model_stock_move"/>
 			 	<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in',"(select sm.id from stock_move sm left join stock_location sl on sm.location_id = sl.id left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (user_id,project_manager_ref,general_project_manager_id)))")]</field>
+		 		<field name="domain_force">[('id','in',"(select sm.id from stock_move sm left join stock_location sl on sm.location_id = sl.id left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (area_site_manager_id,manager_id)))")]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Site Manager Dashboard%')]"/>
 			</record>
 			
@@ -33,7 +33,7 @@
 		 		<field name="name">KDERP Dashboard - General and Site Manager see all Stock Picking </field>
 			 	<field name="model_id" ref="model_stock_picking"/>
 			 	<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in',"(select sp.id from stock_picking sp left join stock_location sl on sp.location_id = sl.id left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (user_id,project_manager_ref,general_project_manager_id)))")]</field>
+		 		<field name="domain_force">[('id','in',"(select sp.id from stock_picking sp left join stock_location sl on sp.location_id = sl.id left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in(area_site_manager_id,manager_id)))")]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Site Manager Dashboard%')]"/>
 			</record>
 			
@@ -43,7 +43,7 @@
 		 		<field name="name">KDERP Dashboard - General and Project Manager see all Stock Location </field>
 			 	<field name="model_id" ref="model_stock_location"/>
 			 	<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in',"(select sl.id from  stock_location sl left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (user_id,project_manager_ref,general_project_manager_id))")]</field>
+		 		<field name="domain_force">[('id','in',"(select sl.id from  stock_location sl left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (user_id,project_manager_ref,general_project_manager_id)))")]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like', '%Project Manager Dashboard%')]"/>
 			</record>
 			
@@ -52,7 +52,7 @@
 		 		<field name="name">KDERP Dashboard - General and Site Manager see all Stock Location </field>
 			 	<field name="model_id" ref="model_stock_location"/>
 			 	<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in',"(select sl.id from  stock_location sl left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (user_id,project_manager_ref,general_project_manager_id))")]</field>
+		 		<field name="domain_force">[('id','in',"(select sl.id from  stock_location sl left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (area_site_manager_id,manager_id)))")]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Site Manager Dashboard%')]"/>
 			</record>
 			
@@ -91,7 +91,7 @@
 			 	<field name="model_id" ref="model_stock_location"/>
 			 	<field name="perm_read" eval="True"/>
 				<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in','(select distinct sl.id from stock_location sl right join ( select location_id from stock_location sl left join storekeeper_user_rel si on si.stock_id =sl.id  where user_id=708 and  location_id>0)qr on qr.location_id =sl.id or qr.location_id =sl.location_id)')]</field>
+		 		<field name="domain_force">[('id','in','(select distinct sl.id from stock_location sl right join ( select location_id from stock_location sl left join storekeeper_user_rel si on si.stock_id =sl.id  where %s=user_id and location_id>0)qr on qr.location_id =sl.id or qr.location_id =sl.location_id)')]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Storekeeper%')]"/>
 			</record>
 			
