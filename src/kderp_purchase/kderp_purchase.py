@@ -1,17 +1,11 @@
-import time
-from datetime import datetime
-
-from dateutil.relativedelta import relativedelta
 
 from openerp.tools import float_round
 
 from openerp.osv import fields, osv
 from openerp import netsvc
-from openerp import pooler
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from openerp.osv.orm import browse_record, browse_null
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class purchase_order(osv.osv):
     _name = 'purchase.order'
@@ -283,7 +277,12 @@ class purchase_order(osv.osv):
     def _get_tax_default(self,cr,uid,context):
         tax_ids = self.pool.get('account.tax').search(cr, uid,[('type_tax_use','=','purchase'),('active','=',True),('default_tax','=',True)])
         return tax_ids
-        
+
+    def _get_default_pricelist(self, cr, uid, context):
+        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+        pricelist_default_id = self.pool.get('product.pricelist').search(cr, uid, [('currency_id', '=', company_currency_id)])
+        return False or (pricelist_default_id and pricelist_default_id[0])
+
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_roa','Wating for R.O.A.'),
                    ('waiting_for_delivery','Waiting for Delivery'),
@@ -404,7 +403,8 @@ class purchase_order(osv.osv):
                'account_analytic_id':_get_job,
                'typeoforder':lambda *x:'m',
                'tax_baseline':lambda *x:False,
-               'taxes_id':_get_tax_default
+               'taxes_id':_get_tax_default,
+               'pricelist_id':_get_default_pricelist
                }
     _sql_constraints = [
         ('purchase_unique_no', 'unique(name)', 'PO Number must be unique !')
