@@ -55,7 +55,7 @@
 		 		<field name="domain_force">[('id','in',"(select sl.id from  stock_location sl left join jobs_stock_rel rsl on sl.id =rsl.stock_id where rsl.account_analytic_id in ( select id from account_analytic_account where %s in (area_site_manager_id,manager_id)))")]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Site Manager Dashboard%')]"/>
 			</record>
-			
+		
 	<!-- 	
 			storekeeper - Rule for Purchase
 			<record model="ir.rule" id="kderp_rule_stockeeper_purchase_order">
