@@ -21,37 +21,27 @@
 
 from openerp.osv import fields, osv
 
+#Add Job to Stock move using for Moving Expense
 class StockMove(osv.osv):
     _inherit = 'stock.move'
     _name="stock.move"
 
-    def _get_qty_inout(self, cr, uid, ids, name, args, context):
-        if not context:
-            context = {}
-        res = {}
-        location_ids = context.get('location_ids', False)
-        if type(location_ids) == type(1):
-            location_ids = [location_ids]
-        elif type(location_ids) != type([]):
-            location_ids = []
-        if not location_ids:
-            location_obj = self.pool.get('stock.location')
-            location_ids = location_obj.search(cr, uid, [('general_stock','=',True)])
-        for sm in self.browse(cr, uid, ids, context):
-            #If stock source -> Negative number (In case move negative pls consider later)
-            if sm.location_id.id in location_ids:
-                res[sm.id] = - sm.product_qty
-            else:
-                res[sm.id] = sm.product_qty
-        return res
+    def _check_job_stock(self, cr, uid, ids, context):
+        for sm in self.browse(cr, uid, ids):
+            if sm.from_analytic_id and sm.location_id:
+                job_source_ids = [job.id for job in sm.location_id.job_related_ids]
+                if sm.from_analytic_id.id not in job_source_ids:
+                    return False
+            if sm.to_analytic_id and sm.location_dest_id:
+                job_dest_ids = [job.id for job in sm.location_dest_id.job_related_ids]
+                if sm.to_analytic_id.id not in job_dest_ids:
+                    return False
+        return True
 
     _columns ={
-        'qty_inout':fields.function(_get_qty_inout,type='float',string='Qty. In/Out'),
-        'purchase_id':fields.related('purchase_line_id','order_id',type='many2one',string='PO. No.',relation='purchase.order')
-    }
-
-    _defaults = {
-       'location_id':lambda self, cr, uid, context = {}: context.get('location_id',False) if context else False,
-       'location_dest_id':lambda self, cr, uid, context = {}: context.get('location_dest_id',False) if context else False
-        }
-
+                'from_analytic_id':fields.many2one('account.analytic.account',"From Job", readonly=True, ondelete="restrict",states={'draft': [('readonly', False)]}),
+                'to_analytic_id':fields.many2one('account.analytic.account',"To Job", readonly=True, ondelete="restrict",states={'draft': [('readonly', False)]}),
+                'expense_state':fields.selection((('internal','Internal'),('public','Public')),'Expense Status', readonly= 1, help='Internal: Expense not yet moved expense, Public: Expenes will move to job'),
+                'budget_id':fields.related('product_id','budget_id', string='Budget', type='many2one',relation='account.budget.post')
+                }
+    _constraints = [(_check_job_stock, "KDERP Warning, Please Warehouse and Job, job and warehouse must be related", ['from_analytic_id','to_analytic_id','location_id','location_dest_id'])]

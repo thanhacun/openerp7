@@ -19,15 +19,6 @@
 #
 ##############################################################################
 
-import kderp_user_related
-import inherited_ir_sequence
-
-import inherited_stock_picking_in
-import inherited_stock_picking_out
 import inherited_stock_move
-
-import kderp_products_detail_location
-
-import inherited_stock_location
-
-import inherited_purchase_order
+import inherited_purchase_order_line
+import inherited_account_analytic_account

@@ -25,23 +25,18 @@
     'images' : ['images/kinden.png'],
     'summary':"Add new Stock Expense, Moving Expenses",
     'category':"KDERP Apps",
-    'depends':['kderp_stock','kderp_purchase_extend'],
+    'depends':['kderp_stock_inout','kderp_prepaid_purchase'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
     'css': ['static/src/css/*.css'],
     'data':[
-            'security/ir.model.access.csv',
-            "views/kderp_stock_move_views.xml",
-            "wizard/kderp_wizard_transfer_to.xml",
-            'views/kderp_stock_picking_in_views.xml',
-            'views/kderp_stock_picking_out_views.xml',
-            'views/kderp_product_views.xml',
-            'views/kderp_stock_picking_internal_views.xml',
-            'views/kderp_stock_views.xml',
-            'wizard/kderp_open_stock_products_views.xml',
-            'views/kderp_purchase_view.xml'
+            "security/kderp_stock_expense_security.xml",
+            "security/ir.model.access.csv",
+            "views/kderp_stock_expense_views.xml",
+            "views/inherited_kderp_job_view.xml",
+            "views/kderp_stock_move_views.xml"
             ],
     'demo':[],
     'installable':True
