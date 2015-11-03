@@ -119,7 +119,7 @@ class purchase_order(osv.osv):
                     if tax.type=='percent':
                         AmountTotal += (AmountTotal - po.discount_amount)*tax.amount
                     elif tax.type=='fixed':
-                        AmountTotal += po.amount
+                        AmountTotal += tax.amount
                 AmountTotal = AmountTotal - po.discount_amount
                 return AmountTotal
             AmountTotal = getAmount()
