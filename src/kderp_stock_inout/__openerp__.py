@@ -32,8 +32,9 @@
     - Customize Interface""",
     'css': ['static/src/css/*.css'],
     'data':[
-            'security/ir.model.access.csv',
             'security/kderp_stock_inout_security.xml',
+            'security/ir.model.access.csv',
+            'security/kderp_stock_inout_rule.xml',
             "views/kderp_stock_move_views.xml",
             'views/kderp_stock_picking_in_views.xml',
             'views/kderp_stock_picking_out_views.xml',
