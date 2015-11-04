@@ -439,11 +439,6 @@ session.web.DateWidget = session.web.DateWidget.extend ({
 
 session.web.FormView =  session.web.FormView.extend({
 
-    on_button_save: function(e) {
-        console.log(this);
-        this._super(e);
-    },
-
 	check_actual_mode: function(source, options) {
         var self = this;
         var _super=this._super(source, options);
