@@ -22,3 +22,5 @@
 import inherited_stock_partial_picking
 import kderp_open_stock_products
 import kderp_wizard_transfer_to
+
+import stock_return_picking
