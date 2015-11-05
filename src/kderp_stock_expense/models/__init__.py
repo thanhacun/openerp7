@@ -22,3 +22,5 @@
 import inherited_stock_move
 import inherited_purchase_order_line
 import inherited_account_analytic_account
+
+import inherited_res_config

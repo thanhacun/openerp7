@@ -113,6 +113,11 @@ class StockLocation(models.Model):
             args += [('state','!=','closed')]
         return super(StockLocation, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
+    def toggle_active(self, cr, uid, ids, context):
+        for wh in self.browse(cr, uid, ids):
+            wh.write({'active': not wh.active})
+        return True
+
     def close_warehouse(self, cr, uid, ids, context):
         return self.write(cr, uid, ids, {'state':'closed'})
 
@@ -150,8 +155,8 @@ class StockLocation(models.Model):
                 'general_stock':fields.boolean("General Stock?",help="Warehouse using quantity with period", states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
                 
                 'stock_manager_id':fields.many2one('res.users', 'Warehouse Manager', ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
-                'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
-                'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', ondelete='restrict',states={'locked':[('readonly', True)], 'closed':[('readonly',True)]})
+                'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', 'Storekeepers', ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
+                'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', 'Job Related', ondelete='restrict',states={'locked':[('readonly', True)], 'closed':[('readonly',True)]})
                 }
     _defaults = {
         'code':get_newcode,
