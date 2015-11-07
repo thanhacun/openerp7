@@ -52,7 +52,7 @@
 		 		<field name="name">KDERP Dashboard -Site and Area Manager see all Stock Location </field>
 			 	<field name="model_id" ref="model_stock_location"/>
 			 	<field name="global" eval="False"/>
-			 	<field name="domain_force">[('id','in',"(select sp.id from account_analytic_account aaa left join jobs_stock_rel rsl on aaa.id = account_analytic_id left join stock_location sp on rsl.stock_id in (sp.id) where %s in (area_site_manager_id,manager_id) and sp.id >0)")]</field>
+			 	<field name="domain_force">[('id','in',"(select sp.id from account_analytic_account aaa left join jobs_stock_rel rsl on aaa.id = account_analytic_id left join stock_location sl on rsl.stock_id in (sl.id) where %s in (area_site_manager_id,manager_id) and sl.id >0)")]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Site Manager Dashboard%')]"/>
 			</record>
 		
@@ -62,7 +62,7 @@
 		 		<field name="name">KDERP Stockeeper - Purchase Order </field>
 			 	<field name="model_id" ref="kderp_purchase.model_purchase_order"/>
 			 	<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in','(select po.id from purchase_order po left join purchase_order_line pol  on po.id = pol.order_id left join stock_location sl on sl.id in (pol.location_id,pol.location_dest_id) left join storekeeper_user_rel rsl  on rsl.stock_id in (pol.location_id,pol.location_dest_id) where %s in (rsl.user_id) and pol.id >0)')]</field>
+		 		<field name="domain_force">[('id','in','(select po.id from purchase_order po left join purchase_order_line pol  on po.id = pol.order_id left join stock_location sl on sl.id in (pol.location_id,pol.location_dest_id) left join storekeeper_user_rel rsl  on rsl.stock_id =sl.id where %s in (rsl.user_id) and pol.id >0)')]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Storekeeper%')]"/>
 			</record>
 			
@@ -71,7 +71,7 @@
 			<record model="ir.rule" id="kderp_rule_stockeeper_stock_move">
 		 		<field name="name">KDERP Stockeeper - Stock Move </field>
 			 	<field name="model_id" ref="model_stock_move"/>
-			 	<field name="domain_force">[('id','in','(select sm.id from stock_move sm left join stock_location sl on sm.location_id = sl.id right join ( select location_id from stock_location sl left join storekeeper_user_rel si on si.stock_id =sl.id  where %s=user_id and location_id>0)qr on qr.location_id =sl.id or qr.location_id =sl.location_id)')]</field>
+			 	<field name="domain_force">[('id','in','(select sm.id  from stock_move  sm left join stock_location sl on sl.id in (sm.location_id,sm.location_dest_id) left join storekeeper_user_rel rsl on rsl.stock_id =sl.id where %s in (rsl.user_id) and sm.id >0)')]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Storekeeper%')]"/>
 			</record> 
 			
@@ -88,7 +88,7 @@
 			 	<field name="model_id" ref="model_stock_location"/>
 			 	<field name="perm_read" eval="True"/>
 				<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in','(select distinct sl.id from stock_location sl right join ( select location_id from stock_location sl left join storekeeper_user_rel si on si.stock_id =sl.id  where %s=user_id and location_id>0)qr on qr.location_id =sl.id or qr.location_id =sl.location_id)')]</field>
+		 		<field name="domain_force">[('id','in','(select sp.id  from stock_picking  sp left join stock_location sl on sl.id in (sp.location_id,sp.location_dest_id) left join storekeeper_user_rel rsl on rsl.stock_id =sl.id where %s in (rsl.user_id) and sp.id >0)')]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Storekeeper%')]"/>
 			</record>
 			
