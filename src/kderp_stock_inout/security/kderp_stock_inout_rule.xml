@@ -56,16 +56,16 @@
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Site Manager Dashboard%')]"/>
 			</record>
 		
-	<!-- 	
-			storekeeper - Rule for Purchase
+		
+		<!-- 	storekeeper - Rule for Purchase -->
 			<record model="ir.rule" id="kderp_rule_stockeeper_purchase_order">
 		 		<field name="name">KDERP Stockeeper - Purchase Order </field>
 			 	<field name="model_id" ref="kderp_purchase.model_purchase_order"/>
 			 	<field name="global" eval="False"/>
-		 		<field name="domain_force">[('id','in','(select id from purchase_order where id in ( select order_id from purchase_order_line pol left join stock_move sm on pol.id =sm.purchase_line_id left join stock_location sl on sm.location_id = sl.id left join storekeeper_user_rel srl on sl.id =srl.stock_id where  %s=srl.user_id))')]</field>
+		 		<field name="domain_force">[('id','in','(select po.id from purchase_order po left join purchase_order_line pol  on po.id = pol.order_id left join stock_location sl on sl.id in (pol.location_id,pol.location_dest_id) left join storekeeper_user_rel rsl  on rsl.stock_id in (pol.location_id,pol.location_dest_id) where %s in (rsl.user_id) and pol.id >0)')]</field>
 		 		<field model="res.groups" name="groups" search="[('name', 'like',' %Storekeeper%')]"/>
 			</record>
-			 -->
+			
 	 		<!-- storekeeper - Rule for Stock Move -->
 	 		
 			<record model="ir.rule" id="kderp_rule_stockeeper_stock_move">
