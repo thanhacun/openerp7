@@ -43,6 +43,7 @@
             "views/kderp_other_expense_view.xml",
             "views/kderp_departments_view.xml",
             "views/kderp_general_expense_tel_fee_view.xml",
+            "views/kderp_general_expense_accounting_import_view.xml",
             "data/kderp_check_update_exp.xml",
             #"views/kderp_batch_update_view.xml",
             "security/kderp_general_expense_rule.xml",
