@@ -64,7 +64,7 @@ class StockMove(osv.osv):
                 'budget_id':fields.related('product_id','budget_id', string='Budget', type='many2one',relation='account.budget.post'),
                 'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Product Price'), readonly=True, states = {'draft': [('readonly', False)]}),
                 'subtotal':fields.function(_get_subtotal, string='Sub-Total', type='float', digits_compute=dp.get_precision('Amount')),
-                'pol_ids':fields.one2many('purchase.order.line','stock_move_id',"POL IDS")
+                'pol_ids':fields.one2many('purchase.order.line','stock_move_id',"POL IDS",readonly=1)
                 }
     _constraints = [(_check_job_stock, "KDERP Warning, Please check Warehouse and Job, job and warehouse must be related", ['from_analytic_id','to_analytic_id','location_id','location_dest_id']),
                     (_update_to_pol, "",['price_unit','product_id','product_qty','product_uom','from_analytic_id','to_analytic_id'])]
