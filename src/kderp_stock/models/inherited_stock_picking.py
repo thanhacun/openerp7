@@ -28,9 +28,9 @@ EXPLAIN_PACKING_NO = _("""Packing Number:
                             P(L)(IN)YY-XXXXX,
                             P: Packing,
                             (L) Location H: Hanoi, P: Hai Phong, S: Ho Chi Minh,
-                            (IN) Packing in, OUT Packing Out, (INT) Stock Move (Internal),
+                            (IN) Packing in, OUT Packing Out, (M) Stock Move (Internal),
                             YY Year,
-                            XXXX is increase number with 5 number """)
+                            XXXXX is increase number with 5 number """)
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -189,7 +189,7 @@ class stock_picking(osv.osv):
             ('assigned', 'Waiting for Delivery'),
             ('done', 'Received'),
             ('cancel', 'Cancelled'),]
-
+    DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
     _columns = {
                 'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True, help=EXPLAIN_PACKING_NO),
                 'origin':fields.char('Ref. No.', size=32),
@@ -200,16 +200,18 @@ class stock_picking(osv.osv):
                 'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1),
 
                 #Set location required
-                'location_id': fields.many2one('stock.location', 'Source Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
+                'location_id': fields.many2one('stock.location', 'Source Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, domain = DOMAIN_LOCATION,
+                                                    help="Keep empty if you produce at the location where the finished products are needed." \
                                                             "Set a location if you produce at a fixed location. This can be a partner location " \
                                                             "if you subcontract the manufacturing operations.", select=True, required=True),
-                'location_dest_id': fields.many2one('stock.location', 'Dest. Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True, required=True),
+                'location_dest_id': fields.many2one('stock.location', 'Dest. Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},domain = DOMAIN_LOCATION,
+                                                    help="Location where the system will stock the finished products.", select=True, required=True),
 
 
                 'storekeeper_incharge_id':fields.many2one('hr.employee','Storekeeper', required=True, states={'done':[('readonly', True)]}),
 
                 'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                            store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='date', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
+                            store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='date', string='Scheduled', select=1, help="Scheduled date for the shipment to be processed"),
                 'date': fields.date('Creation Date', help="Creation date, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
                 'date_done': fields.date('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
                 'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",

@@ -85,8 +85,75 @@ def get_new_value_from_tree( cr, uid, id, object, lists, field, context={}):
         
         if res_id:
             cr.execute("""Select %s from %s where id = %s""" % (field,table_name,res_id))
-            res = cr.fetchone()[0]            
-            
+            res = cr.fetchone()[0]
+    return res
+
+def get_list_value_from_tree( cr, uid, ids, objectName, lists, fields, context={}):
+    res = []
+    for lst in lists:
+        sRes = {}
+        for fld in fields:
+            nochange_id = False
+            #In case Delete (Unlink)
+            if lst[0] in (2,3,5): #Delete Cut Link
+                break
+            #Incase No change
+            elif lst[0]==4:
+                nochange_id = lst[1]
+            #In case Change
+            elif lst[0]==1:
+                #If field not change in line
+                if fld not in lst[2]:
+                    nochange_id = lst[1]
+                #If field change in line
+                else:
+                    sRes[fld] = lst[2][fld]
+            #Incase add new
+            else:
+                sRes[fld] = lst[2][fld]
+            if ids and nochange_id:
+                object_name = objectName
+                table_name = object_name.replace('.','_')
+                cr.execute("""Select %s from %s where id = %s""" % (fld,table_name,nochange_id))
+                sRes[fld] = cr.fetchone()[0]
+        if sRes:
+            res.append(sRes)
+    return res
+
+def getlist_intree( cr, uid, id, object, lists, field, context={}):
+    list_nochange=[]
+    list_delete = [0]
+    lists_remain = []
+    res = False
+    for lst in lists:
+        if lst[0] in (2,3,5): #Delete Cut Link
+            list_delete.append(lst[1])
+        elif lst[0]==4:
+            list_nochange.append(lst[1])
+        elif lst[0]==1:
+            if field not in lst[2]:
+                list_nochange.append(lst[1])
+            else:
+                lists_remain.append(lst)
+        else:
+            lists_remain.append(lst)
+
+    for lst in lists_remain:
+        res = lst[2][field]
+
+    if id and not res:
+        object_name = object.__class__.__name__
+        try:
+            table_name = object._table_name
+        except:
+            table_name = object_name.replace('.','_')
+
+        res_id = max(list_nochange) if list_nochange else False
+
+        if res_id:
+            cr.execute("""Select %s from %s where id = %s""" % (field,table_name,res_id))
+            res = cr.fetchone()[0]
+
     return res
 
 def check_connection(server = '192.168.1.11', port = '5432', timeout = 5):

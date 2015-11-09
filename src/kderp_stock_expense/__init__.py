@@ -1,2 +1,2 @@
 __author__ = 'tnd34'
-import models
+import models, wizard

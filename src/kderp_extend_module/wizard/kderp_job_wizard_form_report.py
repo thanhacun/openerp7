@@ -28,12 +28,38 @@ class kderp_job_wizard_balance_sheet_form(osv.osv_memory):
     def print_report(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-            
+
         code_budget = ""
         jwbs = self.browse(cr, uid, ids[0])
-        for bg in jwbs.pcodebudget:
-            code_budget += "," + bg.code
-            
+        search_type = jwbs.search_type
+        budget_list_obj  = False
+        if search_type=='select_code':
+            budget_list_obj = jwbs.pcodebudget
+        elif search_type=='beginswith_code':
+            custom_code = jwbs.custom_code
+            #customCodes = map(lambda code: code + "%", custom_code.replace(' ','').split(';'))
+            customCodes = custom_code.replace(' ','').split(';')
+            abp_obj = self.pool.get('account.budget.post')
+            domains = []
+            for dom in customCodes:
+                if len(domains)>=1:
+                    domains.insert(0,'|')
+                domains += [('code','ilike',dom.ljust(4,'_'))]
+            abp_ids = abp_obj.search(cr, uid, domains)
+            budget_list_obj = abp_obj.browse(cr, uid, abp_ids)
+        elif search_type=='range_code':
+            custom_code = jwbs.custom_code
+            customCodes = custom_code.replace(' ','').split('~')
+            abp_obj = self.pool.get('account.budget.post')
+            fromCode = customCodes[0]
+            toCode = customCodes[1]
+            domains = [('code','<=',toCode),('code','>=',fromCode)]
+            abp_ids = abp_obj.search(cr, uid, domains)
+            budget_list_obj = abp_obj.browse(cr, uid, abp_ids)
+        if budget_list_obj:
+            for bg in budget_list_obj:
+                code_budget += "," + bg.code
+
         datas = {'ids': context.get('active_ids',[]),
                  'parameters':{
                                'pCodeBudget': code_budget,
@@ -50,12 +76,19 @@ class kderp_job_wizard_balance_sheet_form(osv.osv_memory):
             'report_name': report_name,
             'datas': datas,
             }
-     
+
+    SEARCH_TYPE = (('select_code','Select code'),
+                    ('range_code','Range Code'),
+                    ('beginswith_code','Begins With'),
+                    )
     _columns = {                
                 'pcodebudget':fields.many2many('account.budget.post','balance_detail_budgets','budget_id','detail_id','Code Budget'),
+                'custom_code':fields.char('Code(s)'),
+                'search_type':fields.selection(SEARCH_TYPE, 'Search Type', required=True),
                 'file_type':fields.selection([('xls','Excel File'),('pdf','PDF File')],'File Type', required=1),
                 }
     _defaults={
-               'file_type':'pdf'
+               'file_type':'pdf',
+                'search_type':'select_code'
                }
 kderp_job_wizard_balance_sheet_form()

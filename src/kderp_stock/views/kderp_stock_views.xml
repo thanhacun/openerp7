@@ -55,6 +55,9 @@
 							</page>
 	            		</notebook>
                 	</sheet>
+					<footer>
+						<button name="toggle_active" type="object" string="Show/Hide" groups="kderp_stock.group_menu_stock_configuration"/>
+					</footer>
                 </form>
             </field>
         </record>
@@ -91,6 +94,7 @@
             		            		
                     <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                     <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
+					<filter icon="terp-personal" name="showall" string="Show all"  context="{'show_all':1}"/>
             		
             		<group expand="0" string="Group by ...">
             			<filter string="Location Type" name='group_usage' domain="[]" context="{'group_by':'usage'}"/> 
