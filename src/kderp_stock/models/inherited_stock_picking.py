@@ -199,6 +199,8 @@ class stock_picking(osv.osv):
 
                 'state':fields.selection(STOCK_PICKING_IN_STATE,'State', readonly=1),
 
+                'move_lines': fields.one2many('stock.move', 'picking_id', 'Detail Moves', states={'cancel': [('readonly', True)]}, copy=True),
+
                 #Set location required
                 'location_id': fields.many2one('stock.location', 'Source Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, domain = DOMAIN_LOCATION,
                                                     help="Keep empty if you produce at the location where the finished products are needed." \

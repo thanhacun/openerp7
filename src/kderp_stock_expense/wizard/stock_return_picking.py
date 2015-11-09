@@ -203,8 +203,8 @@ class stock_return_picking(osv.osv_memory):
                                             'date': date_cur,
                                             'prodlot_id': data_get.prodlot_id.id,
                                             'pol_ids':[],
-                                            'expense_state_in': 'internal',
-                                            'expense_state_out': 'internal'
+                                            'expense_state_in': 'pending',
+                                            'expense_state_out': 'pending'
                 })
                 move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]}, context=context)
         if not returned_lines:

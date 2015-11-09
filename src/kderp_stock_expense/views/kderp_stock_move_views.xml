@@ -1,6 +1,6 @@
 <openerp>
     <data>
-        <!-- Move for Move Internal -->
+        <!-- Move for Move Internal - Replace view in Stock In Out -->
         <record id="kderp_stock_inout.kderp_view_packing_detail_internal_tree" model="ir.ui.view">
             <field name="name">kderp.view.packing.detail.internal.tree</field>
             <field name="model">stock.move</field>
@@ -11,10 +11,10 @@
                     <field name="product_qty" select="1" string="Qty."/>
                     <field name="product_uom" select="1" string="Unit"/>
                     <field name="price_unit" select="1" string="Price"/>
-                    <field name="location_id"/>
-                    <field name="from_analytic_id" attrs="{'readonly': ['|',('expense_state_out','=', 'public'),('state','!=', 'draft')]}" context="{'filter_by_location':location_id}" domain="[('state','not in',('cancel','closed'))]"/>
-                    <field name="location_dest_id"/>
-                    <field name="to_analytic_id" attrs="{'readonly': ['|',('expense_state_in','=', 'public'),('state','!=', 'draft')]}" context="{'filter_by_location':location_dest_id}" domain="[('state','not in',('cancel','closed'))]"/>
+                    <field name="location_id" context="{'stock_usage':'internal'}"/>
+                    <field name="from_analytic_id" attrs="{'readonly': ['|',('expense_state_out','=', 'adjusted'),('state','=', 'cancel')]}" context="{'filter_by_location':location_id}" domain="[('state','not in',('cancel','closed'))]"/>
+                    <field name="location_dest_id" context="{'stock_usage':'internal'}"/>
+                    <field name="to_analytic_id" attrs="{'readonly': ['|',('expense_state_in','=', 'adjusted'),('state','=', 'cancel')]}" context="{'filter_by_location':location_dest_id}" domain="[('state','not in',('cancel','closed'))]"/>
                     <field name="date_expected"/>
                     <field name="state" string="State"/>
                     <field name="expense_state_out" invisible="1" />

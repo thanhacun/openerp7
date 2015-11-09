@@ -56,11 +56,13 @@ class StockMove(osv.osv):
             res[sm.id] = sm.price_unit * sm.product_qty
         return res
 
+    EXPENSE_STATES = (('pending','Pending'),
+                     ('adjusted','Adjusted'))
     _columns ={
-                'from_analytic_id':fields.many2one('account.analytic.account',"From Job", readonly=True, ondelete="restrict",states={'draft': [('readonly', False)]},help='Use for moving expense'),
-                'to_analytic_id':fields.many2one('account.analytic.account',"To Job", readonly=True, ondelete="restrict",states={'draft': [('readonly', False)]},help='Use for moving expense'),
-                'expense_state_in':fields.selection((('internal','Internal'),('public','Public')),'Expense Status', readonly= 1, help='Internal: Expense not yet moved expense, Public: Expenes will move to job'),
-                'expense_state_out':fields.selection((('internal','Internal'),('public','Public')),'Expense Status', readonly= 1, help='Internal: Expense not yet moved expense, Public: Expenes will move to job'),
+                'from_analytic_id':fields.many2one('account.analytic.account',"From Job", ondelete="restrict",help='Use for moving expense'),
+                'to_analytic_id':fields.many2one('account.analytic.account',"To Job", ondelete="restrict", help='Use for moving expense'),
+                'expense_state_in':fields.selection(EXPENSE_STATES,'Expense Status', readonly= 1, help='Pending: Expense not yet adjusted expense, Adjusted: Expenes already ajusted'),
+                'expense_state_out':fields.selection(EXPENSE_STATES,'Expense Status', readonly= 1, help='Pending: Expense not yet adjusted expense, Adjusted: Expenes already ajusted'),
                 'budget_id':fields.related('product_id','budget_id', string='Budget', type='many2one',relation='account.budget.post'),
                 'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Product Price'), readonly=True, states = {'draft': [('readonly', False)]}),
                 'subtotal':fields.function(_get_subtotal, string='Sub-Total', type='float', digits_compute=dp.get_precision('Amount')),
@@ -69,8 +71,8 @@ class StockMove(osv.osv):
     _constraints = [(_check_job_stock, "KDERP Warning, Please check Warehouse and Job, job and warehouse must be related", ['from_analytic_id','to_analytic_id','location_id','location_dest_id']),
                     (_update_to_pol, "",['price_unit','product_id','product_qty','product_uom','from_analytic_id','to_analytic_id'])]
     _defaults = {
-        'expense_state_out': 'internal',
-        'expense_state_in': 'internal'
+        'expense_state_out': 'pending',
+        'expense_state_in': 'pending'
     }
 
     def move_expense(self, cr, uid, ids, context):
@@ -110,7 +112,7 @@ class StockMove(osv.osv):
                     wf_service.trg_delete(uid, 'purchase.order', new_po_id, cr)
                 except:
                     continue
-                expense_state = "expense_state_%s='public'" % exp_type
+                expense_state = "expense_state_%s='adjusted'" % exp_type
                 cr.execute("""Update stock_move set %s  where id=%d""" %(expense_state, sm.id))
         return new_po_id
 
@@ -132,7 +134,7 @@ class StockMove(osv.osv):
                             wf_service.trg_delete(uid, 'purchase.order', pol.order_id.id, cr)
                         except:
                             continue
-                expense_state = "expense_state_%s='internal'" % exp_type
+                expense_state = "expense_state_%s='pending'" % exp_type
                 cr.execute("""Update stock_move set %s where id=%d""" %(expense_state, sm.id))
         return True
 
