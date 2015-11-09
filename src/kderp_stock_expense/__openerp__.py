@@ -37,7 +37,8 @@
             "views/kderp_stock_expense_views.xml",
             "views/inherited_kderp_job_view.xml",
             "views/kderp_stock_move_views.xml",
-            "views/res_config_view.xml"
+            "views/res_config_view.xml",
+            'wizard/stock_return_picking_view.xml'
             ],
     'demo':[],
     'installable':True
