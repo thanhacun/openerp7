@@ -90,6 +90,9 @@
 	<field name="expense_type" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/expense_id/expense_type]]></fieldDescription>
 	</field>
+	<field name="AllocateTo" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/expense_id/allocated_to]]></fieldDescription>
+	</field>
 	<sortField name="series number"/>
 	<variable name="NumberOfBudget" class="java.lang.Integer" resetType="Group" resetGroup="PaymentNoGroup" incrementType="Group" incrementGroup="BudgetCode" calculation="Count">
 		<variableExpression><![CDATA[$V{NumberOfBudget}+1]]></variableExpression>
@@ -530,7 +533,7 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{AllocateTo}=="PE"?"V":""]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="486" y="244" width="63" height="15" forecolor="#000000"/>
@@ -817,7 +820,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 						<font fontName="SansSerif"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{expense_type}=="fixed_asset"?"V":($F{expense_type}=="prepaid"?"V":($F{expense_type}=="expense"?"V":""))]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{AllocateTo}=="GE"?"V":""]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="523" y="147" width="31" height="27" forecolor="#000000"/>
