@@ -372,8 +372,8 @@ class kderp_other_expense(osv.osv):
                 
                 'paid_auto':fields.boolean('Paid Auto',help='Using for case already paid (Prepaid), but prepaid without record in System because prepaid without VAT Invoice, and VAT Later and record to each payment'),
                 'payment_type':fields.related('supplier_payment_expense_ids','payment_type', string='Payment Type',selection=PAYMENT_SELECTION ,type='selection',  readonly=True,size=20, store=False),
-                'accounting_allocated_date':fields.date('Accounting Allocated Date',help('Using for Accounting update')),
-                'expense_id':fields.many2one('kderp.other.expense','General Expense', ),
+               
+               
             
                 }
     
@@ -451,13 +451,17 @@ class kderp_import_ge_accounting(osv.osv):
     _columns={
               
               'name':fields.date("Import Date"),  
-              'detail_ids':fields.one2many('kderp.other.expense','expense_id','Details',),
+              'detail_ids':fields.one2many('kderp.import.ge.accounting.detail','import_id','Details'),
              
               }
-    _defaults={
-               'name':lambda *a: time.strftime('%Y-%m-%d'),
-             
-               }    
+      
+class kderp_import_ge_accounting_detail(osv.osv):
+    _name = 'kderp.import.ge.accounting.detail'
+    _columns={
+              'import_id':fields.many2one('kderp.import.ge.accounting','Import'),
+              'expense_id':fields.many2one('kderp.other.expense','General Expense'),
+              'accounting_allocated_date':fields.date('Accounting Allocated Date',help('Using for Accounting update')),
+              }
    
 class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
@@ -489,7 +493,7 @@ class kderp_other_expense_line(osv.osv):
         return res
     
     _columns = {
-                'import_acc_date':fields.one2many('kderp.other.expensel','accounting_allocated_date','Acc Date',states={'done':[('readonly',True)]}),
+                #'import_acc_date':fields.one2many('kderp.other.expensel','accounting_allocated_date','Acc Date',states={'done':[('readonly',True)]}),
                 'section_id':fields.many2one('hr.department','Alloc. Section', select = 1),
                 'belong_expense_id':fields.many2one('kderp.other.expense', 'Fixed Asset/Prepaid', domain=[('expense_type','in',('prepaid','fixed_asset')),('state','not in',('draft','cancel','done'))]),
                 'description':fields.related('expense_id','description', string='Desc.', type='char', size=128, store=False),

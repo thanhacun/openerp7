@@ -20,8 +20,9 @@
 		                    <field name="name"/>
 		                    <field name='detail_ids' nolabel="1" colspan="4" mode="tree" view_type='tree'>
 		                    	<tree string='Details' editable='top'>
-		                    		<field name="expense_id"/>		                    		
-		                    		<field name="accounting_allocated_date" string='Accounting Allocated Date'/>
+		                    		<field name="expense_id"/>
+		                    		<field name="accounting_allocated_date"/>
+		                    		
 		                    	</tree>
 		                    </field>
 	                    </group>
@@ -38,7 +39,7 @@
        
        <menuitem action="kderp_action_working_other_expense_accounting" id="kderp_working_other_expense_accounting_action" 
         	parent="kderp_working_other_expense_ge_action" sequence="20"
-        	groups= "group_kderp_other_expense_accounting_update_date"/>
+        	/>
         
  	</data>
 		      
