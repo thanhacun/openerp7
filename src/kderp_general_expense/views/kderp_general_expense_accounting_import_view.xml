@@ -25,7 +25,7 @@
 		                    <field name="name"/>
 		                    <field name='detail_ids' nolabel="1" colspan="4" mode="tree" view_type='tree'>
 		                    	<tree string='Details' editable='top' colors="blue:state=='draft'">
-		                    		<field name="expense_id"/>
+		                    		<field name="expense_id" context="{'general_expense':True}"/>
 		                    		<field name="accounting_allocated_date"/>
 		                    		<field name="state"/>
 		                    	</tree>
