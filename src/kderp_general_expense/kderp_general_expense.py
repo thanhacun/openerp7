@@ -450,6 +450,22 @@ class kderp_other_expense(osv.osv):
 class kderp_import_ge_accounting(osv.osv):
     _name = 'kderp.import.ge.accounting'
     # Funtion kderp_acounting_submit dung de update ngay ke toan ghi nhan vao General Expense.
+    
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        ots = self.read(cr, uid, ids, ['state'], context=context)
+        unlink_ids = []
+
+        for ot in ots:
+            if ot['state'] not in ('draft'):
+                raise osv.except_osv("KDERP Warning",'You cannot delete imported data')
+            else:
+                unlink_ids.append(ot['id'])
+
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return True
+    
     def kderp_acounting_submit(self, cr, uid, ids, context={}):
         for kgei in self.browse(cr, uid, ids):
             done = True
