@@ -78,7 +78,7 @@
 		 	<field name="name">KDERP Stockeeper - Stock Picking </field>
 			<field name="model_id" ref="model_stock_picking"/>
 			<field name="global" eval="False"/>
-		 	<field name="domain_force">[('id','in','(select sp.id from stock_picking sp left join stock_location sl on sp.location_id = sl.id right join ( select location_id from stock_location sl left join storekeeper_user_rel si on si.stock_id =sl.id  where %s=user_id and location_id>0)qr on qr.location_id =sl.id or qr.location_id =sl.location_id)')]</field>
+		 	<field name="domain_force">[('id','in','(select sp.id  from stock_picking  sp left join stock_location sl on sl.id in (sp.location_id,sp.location_dest_id) left join storekeeper_user_rel rsl on rsl.stock_id =sl.id where %s in (rsl.user_id) and sp.id >0)')]</field>
 		 	<field model="res.groups" name="groups" search="[('name', 'like',' %Storekeeper%')]"/>
 		</record>
 			
