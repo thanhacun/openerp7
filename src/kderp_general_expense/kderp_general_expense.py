@@ -372,7 +372,8 @@ class kderp_other_expense(osv.osv):
                 
                 'paid_auto':fields.boolean('Paid Auto',help='Using for case already paid (Prepaid), but prepaid without record in System because prepaid without VAT Invoice, and VAT Later and record to each payment'),
                 'payment_type':fields.related('supplier_payment_expense_ids','payment_type', string='Payment Type',selection=PAYMENT_SELECTION ,type='selection',  readonly=True,size=20, store=False),
-               
+                'accounting_allocated_date':fields.date('Accounting Allocated Date',help('Using for Accounting update')),
+             
                
             
                 }
@@ -445,9 +446,22 @@ class kderp_other_expense(osv.osv):
                 if exp.expense_type != 'monthly_expense':
                     result = self.action_expense_create_supplier_payment_expense(cr, uid, ids)
         return result
+    
 class kderp_import_ge_accounting(osv.osv):
     _name = 'kderp.import.ge.accounting'
-    
+    # Funtion kderp_acounting_submit dung de update ngay ke toan ghi nhan vao General Expense.
+    def kderp_acounting_submit(self, cr, uid, ids, context={}):
+        for kgei in self.browse(cr, uid, ids):
+            for kgeil in kgei.detail_ids:
+                if  kgeil.expense_id:
+                    write_data = {
+                                  'accounting_allocated_date':kgeil.accounting_allocated_date}
+                    if kgeil.accounting_allocated_date:
+                        #raise osv.except_osv("KDERP Warning",kgeil.accounting_allocated_date)
+                        accounting_allocated_date = kgeil.accounting_allocated_date
+                        write_data['accounting_allocated_date'] = accounting_allocated_date 
+                    kgeil.expense_id.write(write_data)
+     
     _columns={
               
               'name':fields.date("Import Date"),  
@@ -462,7 +476,7 @@ class kderp_import_ge_accounting_detail(osv.osv):
               'expense_id':fields.many2one('kderp.other.expense','General Expense'),
               'accounting_allocated_date':fields.date('Accounting Allocated Date',help('Using for Accounting update')),
               }
-   
+    _sql_constraints = [('unique_import_ge_accounting','unique(import_id,expense_id)','KDERP Warning: Duplicated General Expense, pls check')]
 class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
     _inherit = 'kderp.other.expense.line'

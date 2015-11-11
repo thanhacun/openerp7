@@ -26,6 +26,9 @@
 		                    	</tree>
 		                    </field>
 	                    </group>
+	                     <footer>
+                    	<button name='kderp_acounting_submit' type='object' string='Submit'/>
+                    </footer>
 				</form>
 			</field>
 		</record>
