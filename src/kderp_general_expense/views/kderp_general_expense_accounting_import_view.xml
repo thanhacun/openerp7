@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
             	<tree string="Import Accounting">
                     <field name="name"/>
+                    <field name="state"/>
 				</tree>
             </field>
 		</record>
@@ -16,23 +17,28 @@
             <field name="model">kderp.import.ge.accounting</field>
             <field name="arch" type="xml">
                 <form string="Import Asset" version="7.0">
+                	<header>
+                		<field name="state" widget="statusbar" statusbar_visible="draft, done"/>
+                	</header>
+                	<sheet>
                 		<group colspan="4" col="4">
 		                    <field name="name"/>
 		                    <field name='detail_ids' nolabel="1" colspan="4" mode="tree" view_type='tree'>
-		                    	<tree string='Details' editable='top'>
+		                    	<tree string='Details' editable='top' colors="blue:state=='draft'">
 		                    		<field name="expense_id"/>
 		                    		<field name="accounting_allocated_date"/>
-		                    		
+		                    		<field name="state"/>
 		                    	</tree>
 		                    </field>
 	                    </group>
-	                     <footer>
-                    	<button name='kderp_acounting_submit' type='object' string='Submit'/>
+	                </sheet>
+	                <footer>
+                    	<button name='kderp_acounting_submit' type='object' string='Submit' states='draft'/>
                     </footer>
 				</form>
 			</field>
 		</record>
-	     <record id="kderp_action_working_other_expense_accounting" model="ir.actions.act_window">
+	    <record id="kderp_action_working_other_expense_accounting" model="ir.actions.act_window">
             <field name="name">Accounting Import</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">kderp.import.ge.accounting</field>
@@ -42,7 +48,7 @@
        
        <menuitem action="kderp_action_working_other_expense_accounting" id="kderp_working_other_expense_accounting_action" 
         	parent="kderp_working_other_expense_ge_action" sequence="20"
-        	/>
+        	groups='group_kderp_other_expense_accounting_update_date'/>
         
  	</data>
 		      
