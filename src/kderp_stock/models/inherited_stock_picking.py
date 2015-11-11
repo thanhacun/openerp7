@@ -89,6 +89,20 @@ class stock_picking(osv.osv):
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         return new_id
 
+    def action_cancel(self, cr, uid, ids, context=None):
+        """ Changes picking state to cancel.
+        @return: True
+        """
+        if not len(ids):
+            return False
+        wf_service = netsvc.LocalService("workflow")
+        for pick in self.browse(cr, uid, ids, context=context):
+            wf_service.trg_delete(uid, 'stock.picking', pick.id, cr)
+            ids2 = [move.id for move in pick.move_lines]
+            self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
+        self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
+        return True
+
     def action_cancel_draft(self, cr, uid, ids, context=None):
         """ Revise picking status.
         @return: True

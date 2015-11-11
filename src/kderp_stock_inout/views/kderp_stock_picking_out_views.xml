@@ -73,7 +73,8 @@
                         </notebook>
                     </sheet>
                     <footer>
-                        <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="kderp_stock.kderp_stock_receive_packing"/>
+                        <!--<button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="kderp_stock.kderp_stock_receive_packing"/>-->
+                        <button name="action_cancel" states="assigned,confirmed,draft,done" string="Cancel Transfer" type='object' groups="kderp_stock.kderp_stock_receive_packing"/>
                         <button name="action_cancel_draft" states="cancel" string="Revise" type='object' icon="gtk-convert" groups="kderp_stock.kderp_stock_receive_packing"/>
                     </footer>
                 </form>
