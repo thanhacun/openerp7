@@ -448,8 +448,7 @@ class kderp_other_expense(osv.osv):
         return result
     
 class kderp_import_ge_accounting(osv.osv):
-    _name = 'kderp.import.ge.accounting'
-    # Funtion kderp_acounting_submit dung de update ngay ke toan ghi nhan vao General Expense.
+    _name = 'kderp.import.ge.accounting'  
     
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
@@ -465,7 +464,7 @@ class kderp_import_ge_accounting(osv.osv):
 
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
-    
+    # Funtion kderp_acounting_submit dung de update ngay ke toan ghi nhan vao General Expense.
     def kderp_acounting_submit(self, cr, uid, ids, context={}):
         for kgei in self.browse(cr, uid, ids):
             done = True
