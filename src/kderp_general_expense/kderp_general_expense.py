@@ -452,31 +452,45 @@ class kderp_import_ge_accounting(osv.osv):
     # Funtion kderp_acounting_submit dung de update ngay ke toan ghi nhan vao General Expense.
     def kderp_acounting_submit(self, cr, uid, ids, context={}):
         for kgei in self.browse(cr, uid, ids):
+            done = True
             for kgeil in kgei.detail_ids:
-                if  kgeil.expense_id:
-                    write_data = {
-                                  'accounting_allocated_date':kgeil.accounting_allocated_date}
-                    if kgeil.accounting_allocated_date:
-                        #raise osv.except_osv("KDERP Warning",kgeil.accounting_allocated_date)
-                        accounting_allocated_date = kgeil.accounting_allocated_date
-                        write_data['accounting_allocated_date'] = accounting_allocated_date 
-                    kgeil.expense_id.write(write_data)
-     
+                if kgeil.expense_id.state<>'draft' and kgeil.state=='draft':
+                    if  kgeil.expense_id:
+                        write_data = {
+                                      'accounting_allocated_date':kgeil.accounting_allocated_date}
+                        kgeil.expense_id.write(write_data)
+                        kgeil.write({'state':'done'})
+                else:
+                    done = False
+            if done: 
+                kgei.write({'state':'done'})
+        pass
     _columns={
               
-              'name':fields.date("Import Date"),  
-              'detail_ids':fields.one2many('kderp.import.ge.accounting.detail','import_id','Details'),
+              'name':fields.date("Import Date",states={'done':[('readonly',True)]},required = True,) ,  
+              'detail_ids':fields.one2many('kderp.import.ge.accounting.detail','import_id','Details',states={'done':[('readonly',True)]}),
+              'state':fields.selection((('draft','Draft'),('done','Completed')),'State',readonly=True),
              
               }
+    
+    _defaults={
+               'name':lambda *a: time.strftime('%Y-%m-%d'),
+               'state':lambda *a: 'draft'
+               }    
       
 class kderp_import_ge_accounting_detail(osv.osv):
     _name = 'kderp.import.ge.accounting.detail'
     _columns={
-              'import_id':fields.many2one('kderp.import.ge.accounting','Import'),
-              'expense_id':fields.many2one('kderp.other.expense','General Expense'),
-              'accounting_allocated_date':fields.date('Accounting Allocated Date',help('Using for Accounting update')),
+              'import_id':fields.many2one('kderp.import.ge.accounting','Import',required = True,states={'done':[('readonly',True)]} ),
+              'expense_id':fields.many2one('kderp.other.expense','General Expense',required = True, states={'done':[('readonly',True)]}),
+              'accounting_allocated_date':fields.date('Accounting Allocated Date',required = True ,states={'done':[('readonly',True)]}),
+              'state':fields.selection((('draft','Draft'),('done','Completed')),'State',readonly=True),
               }
+    _defaults={
+               'state':lambda *a: 'draft'
+               }    
     _sql_constraints = [('unique_import_ge_accounting','unique(import_id,expense_id)','KDERP Warning: Duplicated General Expense, pls check')]
+
 class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
     _inherit = 'kderp.other.expense.line'
