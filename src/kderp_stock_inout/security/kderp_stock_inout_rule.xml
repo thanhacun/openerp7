@@ -88,7 +88,7 @@
 			<field name="model_id" ref="model_stock_location"/>
 			<field name="perm_read" eval="True"/>
 			<field name="global" eval="False"/>
-		 	<field name="domain_force">[('id','in','(select sl.id  from stock_location sl  left join storekeeper_user_rel rsl on rsl.stock_id in (sl.id,sl.location_id) where %s in (rsl.user_id) and sl.id >0)')]</field>
+		 	<field name="domain_force">[('id','in','(select sl.id  from stock_location sl  left join storekeeper_user_rel rsl on rsl.stock_id in (sl.id) where %s in (rsl.user_id) and sl.id >0)')]</field>
 		 	<field model="res.groups" name="groups" search="[('name', 'like',' %Storekeeper%')]"/>
 		</record>
 			
