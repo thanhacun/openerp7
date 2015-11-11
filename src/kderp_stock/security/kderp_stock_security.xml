@@ -122,5 +122,11 @@
 	      	<field name="category_id" ref="module_category_kderp_stock"/>
 	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
 		</record>
+			<!-- Group Menu Stock Location -->
+		<record id="group_menu_stock_location" model="res.groups">
+	       	<field name="name">KDERP Menu Stock / Location</field>
+	      	<field name="category_id" ref="module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
     </data>
 </openerp>
