@@ -43,7 +43,7 @@
 		 	<field name="name">KDERP Dashboard - General and Project Manager see all Stock Location </field>
 			<field name="model_id" ref="model_stock_location"/>
 			<field name="global" eval="False"/>
-		 	<field name="domain_force">[('id','in',"(select sp.id from account_analytic_account aaa left join jobs_stock_rel rsl on aaa.id = account_analytic_id left join stock_location sp on rsl.stock_id in (sp.id) where %s in (user_id,project_manager_ref,general_project_manager_id) and sp.id >0)")]</field>
+		 	<field name="domain_force">[('id','in',"(select sl.id from account_analytic_account aaa left join jobs_stock_rel rsl on aaa.id = account_analytic_id left join stock_location sl on rsl.stock_id in (sl.id) where %s in (user_id,project_manager_ref,general_project_manager_id) and sl.id >0)")]</field>
 		 	<field model="res.groups" name="groups" search="[('name', 'like', '%Project Manager Dashboard%')]"/>
 		</record>
 			
@@ -52,7 +52,7 @@
 		 	<field name="name">KDERP Dashboard -Site and Area Manager see all Stock Location </field>
 			<field name="model_id" ref="model_stock_location"/>
 			<field name="global" eval="False"/>
-			<field name="domain_force">[('id','in',"(select sp.id from account_analytic_account aaa left join jobs_stock_rel rsl on aaa.id = account_analytic_id left join stock_location sl on rsl.stock_id in (sl.id) where %s in (area_site_manager_id,manager_id) and sl.id >0)")]</field>
+			<field name="domain_force">[('id','in',"(select sl.id from account_analytic_account aaa left join jobs_stock_rel rsl on aaa.id = account_analytic_id left join stock_location sl on rsl.stock_id in (sl.id) where %s in (area_site_manager_id,manager_id) and sl.id >0)")]</field>
 		 	<field model="res.groups" name="groups" search="[('name', 'like',' %Site Manager Dashboard%')]"/>
 		</record>
 		
