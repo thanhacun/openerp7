@@ -128,5 +128,38 @@
 	      	<field name="category_id" ref="module_category_kderp_stock"/>
 	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
 		</record>
+		
+		<record id="group_kderp_stock_location_read" model="res.groups">
+	       	<field name="name">KDERP - Stock Location / Read </field>
+	      	<field name="category_id" ref="module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id="group_kderp_stock_location_write" model="res.groups">
+	       	<field name="name">KDERP - Stock Location / Write </field>
+	      	<field name="category_id" ref="module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id="group_kderp_stock_location_create" model="res.groups">
+	       	<field name="name">KDERP - Stock Location / Create </field>
+	      	<field name="category_id" ref="module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id="group_kderp_stock_location_delete" model="res.groups">
+	       	<field name="name">KDERP - Stock Location / Delete </field>
+	      	<field name="category_id" ref="module_category_kderp_stock"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+		
+		<record id='group_kderp_stock_location_full' model='res.groups'>
+	        <field name='name'>KDERP - Stock Location / Full</field>
+	        <field name="category_id" ref="module_category_kderp_stock"/>
+	        <field name="implied_ids" eval="[(4, ref('group_kderp_stock_location_read')),
+	          								(4, ref('group_kderp_stock_location_write')),
+	        								(4, ref('group_kderp_stock_location_create')),
+	        								(4, ref('group_kderp_stock_location_delete'))]"/>
+  	   	</record>
     </data>
 </openerp>
