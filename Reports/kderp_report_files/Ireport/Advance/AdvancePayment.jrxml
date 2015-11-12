@@ -3,7 +3,17 @@
 	<property name="OPENERP_RELATIONS" value="[&apos;advance_line&apos;]"/>
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="432"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Cur}=="VND"]]></conditionExpression>
+			<style pattern="#,##0"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Cur}!="VND"]]></conditionExpression>
+			<style pattern="#,##0.00"/>
+		</conditionalStyle>
+	</style>
 	<queryString language="xPath">
 		<![CDATA[]]>
 	</queryString>
@@ -49,6 +59,9 @@
 	<field name="Descriptions" class="java.lang.String">
 		<fieldDescription><![CDATA[description]]></fieldDescription>
 	</field>
+	<field name="Cur" class="java.lang.String">
+		<fieldDescription><![CDATA[currency_id/name]]></fieldDescription>
+	</field>
 	<sortField name="id"/>
 	<group name="Dummy Name Group">
 		<groupExpression><![CDATA[$F{id}]]></groupExpression>
@@ -83,7 +96,7 @@
 					</textElement>
 					<text><![CDATA[No.]]></text>
 				</staticText>
-				<staticText>
+				<textField>
 					<reportElement x="370" y="214" width="80" height="20"/>
 					<box>
 						<pen lineWidth="1.0"/>
@@ -92,11 +105,11 @@
 						<bottomPen lineWidth="1.0"/>
 						<rightPen lineWidth="1.0"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 						<font fontName="Arial" size="7" isBold="true" pdfFontName="Arial"/>
 					</textElement>
-					<text><![CDATA[Amount]]></text>
-				</staticText>
+					<textFieldExpression class="java.lang.String"><![CDATA["Amount"+" < "+$F{Cur} + " > "]]></textFieldExpression>
+				</textField>
 				<staticText>
 					<reportElement x="20" y="214" width="350" height="20"/>
 					<box>
@@ -249,7 +262,6 @@
 					<reportElement x="0" y="60" width="125" height="24"/>
 					<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
 						<font fontName="Arial" size="10" isBold="true" isStrikeThrough="false" pdfFontName="Helvetica-Bold"/>
-						
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Advance_No.-name}]]></textFieldExpression>
 				</textField>
@@ -641,8 +653,8 @@
 					</textElement>
 					<text><![CDATA[]]></text>
 				</staticText>
-				<textField pattern="#,##0">
-					<reportElement x="370" y="0" width="80" height="20"/>
+				<textField>
+					<reportElement style="style1" x="370" y="0" width="80" height="20"/>
 					<box rightPadding="2">
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="0.0"/>
@@ -652,7 +664,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Request_Amount-request_amount}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Request_Amount-request_amount}==null?0:$F{Request_Amount-request_amount}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="25" y="20" width="505" height="48"/>
@@ -1181,8 +1193,8 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Description-name}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0">
-				<reportElement x="370" y="0" width="80" height="20"/>
+			<textField>
+				<reportElement style="style1" x="370" y="0" width="80" height="20"/>
 				<box rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="0.0"/>
@@ -1193,7 +1205,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Amount-amount}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Amount-amount}==null?0:$F{Amount-amount}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="450" y="0" width="80" height="20"/>
