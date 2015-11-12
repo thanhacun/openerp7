@@ -23,7 +23,7 @@
             </field>
         </record>
 
-    <act_window name="Products"
+    	<act_window name="Products"
             res_model="kderp.open.stock.products"
             view_mode="form"
             target="new"
@@ -35,5 +35,12 @@
                   sequence="20"
                   action="action_view_wizard_open_stock_products"
                   groups="group_menu_stock_product"/>
+        
+        <menuitem id="kderp_product_for_stock_location_menu"
+                  parent="kderp_stock.menu_kderp_stock_location"
+                  sequence="20"
+                  action="action_view_wizard_open_stock_products"
+                  groups="group_menu_stock_product"/>
+                  
     </data>
 </openerp>
