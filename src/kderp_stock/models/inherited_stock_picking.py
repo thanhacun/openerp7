@@ -66,6 +66,7 @@ class stock_picking(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
             context = {}
+
         picking_id = context.get('picking_id',False)
         if picking_id:
             picking_type = self.read(cr, uid, picking_id, ['type'])['type']
@@ -197,9 +198,9 @@ class stock_picking(osv.osv):
                 res.add(move.picking_id.id)
         return list(res)
 
-    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for ROA'),
-            ('auto', 'Waiting Another Operation'),
-            ('confirmed', 'Waiting Availability'),
+    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for Confirmation'),
+            # ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Confirmed'),
             ('assigned', 'Waiting for Delivery'),
             ('done', 'Received'),
             ('cancel', 'Cancelled'),]
@@ -217,11 +218,9 @@ class stock_picking(osv.osv):
 
                 #Set location required
                 'location_id': fields.many2one('stock.location', 'Source Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, domain = DOMAIN_LOCATION,
-                                                    help="Keep empty if you produce at the location where the finished products are needed." \
-                                                            "Set a location if you produce at a fixed location. This can be a partner location " \
-                                                            "if you subcontract the manufacturing operations.", select=True, required=True),
+                                                    help="Select a source warehouse", select=True, required=True),
                 'location_dest_id': fields.many2one('stock.location', 'Dest. Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},domain = DOMAIN_LOCATION,
-                                                    help="Location where the system will stock the finished products.", select=True, required=True),
+                                                    help="Select a destination warehouse", select=True, required=True),
 
 
                 'storekeeper_incharge_id':fields.many2one('hr.employee','Storekeeper', required=True, states={'done':[('readonly', True)]}),
@@ -265,4 +264,5 @@ class stock_picking(osv.osv):
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
+            self.pool.get('stock.move').force_assign(cr, uid, todo, context=context)
         return True

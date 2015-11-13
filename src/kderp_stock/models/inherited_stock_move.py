@@ -60,15 +60,15 @@ class stock_move(osv.osv):
         'location_id': fields.many2one('stock.location', 'Source Warehouse', select=True,states={'done': [('readonly', True)]}, required=True, domain = DOMAIN_LOCATION),
         'location_dest_id': fields.many2one('stock.location', 'Destination Warehouse',states={'done': [('readonly', True)]}, required=True, domain = DOMAIN_LOCATION),
 
-        'state': fields.selection([('draft', 'New'),
-                                   ('cancel', 'Cancelled'),
-                                   ('assigned', 'Waiting for Confirm'),
-                                   ('confirmed', 'Waiting for Delivery'),
+        'state': fields.selection([('draft', 'Waiting for Confirmation'),
+                                   ('confirmed','Confirmed'),
+                                   ('assigned', 'Waiting for Delivery'),
                                    ('done', 'Done'),
+                                   ('cancel', 'Cancelled'),
                                    ], 'Status', readonly=True, select=True,
-                                 help= "* New: When the stock move is created and not yet confirmed.?\n"\
-                                       "* Waiting for Delivery\n"\
-                                       "* Done: When the shipment is processed, the state is \'Done\'."),
+                                 help=  "* Draft: Waiting for Confirmation, When the stock move is created and not yet confirmed.?\n"\
+                                        "* Waiting for Delivery\n"\
+                                        "* Done: When the shipment is processed, the state is \'Done\'."),
     }
 
     def _check_product_id(self, cr, uid, ids, context=None):

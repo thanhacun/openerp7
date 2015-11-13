@@ -55,6 +55,7 @@ class purchase_order(osv.osv):
         return stock_supplier_ids and stock_supplier_ids[0]
 
     _columns = {
+                'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of incoming shipments that have been generated for this purchase order."),
                 'received_details':fields.function(_get_move_ids,
                                                    type='one2many',
                                                    relation='stock.move',
@@ -115,8 +116,19 @@ class purchase_order(osv.osv):
                 period_ids = period_obj.find(cr, uid, po.date_order, context)
                 period_id = period_ids and period_ids[0] or False
             self.write(cr, uid, [po.id], {'state' : 'waiting_for_roa', 'period_id':period_id,'validator' : uid})
-                                   
-        res = self.action_create_packing(cr, uid, ids, context)                
+
+        res = self.action_create_packing(cr, uid, ids, context)
+
+        # #Confirm Packing and Move
+        # wf_service = netsvc.LocalService("workflow")
+        # stock_move = self.pool.get('stock.move')
+        # todo_moves = []
+        # sp_obj = res and self.pool.get('stock.picking').browse(cr, uid, res)
+        # if sp_obj and sp_obj.state<>'cancel':
+        #     for sm in sp_obj .move_lines:
+        #         todo_moves.append(sm.id)
+        #     # wf_service.trg_validate(uid, 'stock.picking', sp_obj.id, 'button_confirm', cr)
+        # stock_move.action_confirm(cr, uid, todo_moves)
         return res
     
     def act_assign_move_picking(self, cr, uid, ids, context = {}):
@@ -130,7 +142,8 @@ class purchase_order(osv.osv):
                     for sm in sp.move_lines:
                         todo_moves.append(sm.id)
                     wf_service.trg_validate(uid, 'stock.picking', sp.id, 'button_confirm', cr)
-        stock_move.force_assign(cr, uid, todo_moves)               
+        stock_move.action_confirm(cr, uid, todo_moves)
+        stock_move.force_assign(cr, uid, todo_moves)
         return ids
     
     def action_receive_picking(self, cr, uid, ids, context = {}):
@@ -180,7 +193,9 @@ class purchase_order(osv.osv):
             'purchase_id': order.id,
             #'company_id': order.company_id.id,
             'move_lines' : [],
-            
+            'location_id': order.source_location_id and order.source_location_id.id,
+            'location_dest_id': order.location_id and order.location_id.id,
+            'storekeeper_incharge_id': order.receiver_id and order.receiver_id.id
         }
     
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None, type = type):
@@ -249,7 +264,6 @@ class purchase_order(osv.osv):
                 #if order_line.move_dest_id and order_line.move_dest_id.state != 'done':
                 #    order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
-        stock_move.action_confirm(cr, uid, todo_moves)
         return [picking_id]
 
     def action_picking_create(self, cr, uid, ids, context=None):

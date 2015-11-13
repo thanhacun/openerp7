@@ -53,6 +53,9 @@
                 <field name="date_done" position="attributes">
                     <attribute name="string">Received Date</attribute>
                 </field>
+                <field name="location_id" position="attributes">
+                    <attribute name="context">{'stock_usage':'!!internal'}</attribute>
+                </field>
                 <field name="location_dest_id" position="attributes">
                     <attribute name="context">{'stock_usage':'internal'}</attribute>
                 </field>
@@ -77,11 +80,11 @@
 
     
 		<record id="act_kderp_stock_picking_in" model="ir.actions.act_window">
-            <field name="name">Packing In</field>
+            <field name="name">Packing In (With PO)</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','in')]</field>
+            <field name="domain">[('type','=','in'),('purchase_id','!=',False)]</field>
             <field name="context">{'picking_type':'in'}</field>
             <field name="filter" eval="True"/>
         </record>
@@ -106,6 +109,6 @@
         			id="kderp_stock_picking_menu_in" 
         			parent="kderp_stock.menu_kderp_stock_receive_delivery" sequence="1" groups ='group_kderp_menu_packing_in'/>
                <!-- groups ='group_kderp_packingmenu_' -->
-        
+
     </data>
 </openerp>
