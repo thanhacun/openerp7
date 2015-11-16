@@ -198,6 +198,18 @@ class stock_picking(osv.osv):
                 res.add(move.picking_id.id)
         return list(res)
 
+    def _check_picking_type_and_location(self, cr, uid, ids, context):
+        context = {} and context
+        picking_dict = {'customer-internal':'in',
+                        'supplier-internal':'in',
+                        'internal-internal':'internal',
+                        'internal-supplier':'out',
+                        'internal-customer':'out'}
+        for sp in self.browse(cr, uid, ids):
+            if picking_dict[sp.location_id.usage + "-" + sp.location_dest_id.usage] != sp.type or sp.location_id.usage=='view' or sp.location_dest_id.usage=='view':
+                return False
+        return True
+
     STOCK_PICKING_IN_STATE = [('draft', 'Waiting for Confirmation'),
             # ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Confirmed'),
@@ -238,6 +250,7 @@ class stock_picking(osv.osv):
                 'name': lambda self, cr, uid, context ={}: self.pool.get('stock.picking').get_newcode(cr, uid, False, context),
                 'type': lambda self, cr, uid, context ={}: 'internal' if not context else context.get('picking_type','internal')
                 }
+    _constraint = [(_check_picking_type_and_location,'Please check picking type and Source Warehouse and Destination Warehouse',['type','location_id','location_dest_id'])]
 
     def update_stock_received(self,cr, uid, ids, *args):
         self.write(cr,uid,ids,{'state':'done'})

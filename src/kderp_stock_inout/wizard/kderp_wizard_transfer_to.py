@@ -34,7 +34,7 @@ class kderp_wizard_transfer_to(osv.osv_memory):
     _columns = {
         'picking_id':fields.many2one('stock.picking','Picking'),
         'location_id':fields.many2one('stock.location','From Stock',readonly=1),
-        'location_dest_id':fields.many2one('stock.location', 'To Stock',required = 1),
+        'location_dest_id':fields.many2one('stock.location', 'To Stock',required = 1, domain=[('usage','in',('customer','supplier','internal'))]),
         'move_line':fields.one2many('kderp.wizard.move.line','wizard_transfer_id',"Details")
     }
 
@@ -165,16 +165,26 @@ class kderp_wizard_transfer_to(osv.osv_memory):
     def do_transfer(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        assert len(ids) == 1, 'Partial picking processing may only be done one at a time.'
+        assert len(ids) == 1, 'Transfer packing processing may only be done one at a time.'
         stock_picking = self.pool.get('stock.picking')
         stock_move = self.pool.get('stock.move')
         uom_obj = self.pool.get('product.uom')
-        partial = self.browse(cr, uid, ids[0], context=context)
-        partial_data = {
-            'delivery_date' : partial.date
+        transfer = self.browse(cr, uid, ids[0], context=context)
+        if transfer.location_id.id == transfer.location_dest_id.id:
+            raise osv.except_osv("KDERP Warning",'Please check Destination Warehouse, Source and destination Warehouse must be different')
+        picking_dict = {'customer-internal':'in',
+                        'supplier-internal':'in',
+                        'internal-internal':'internal',
+                        'internal-supplier':'out',
+                        'internal-customer':'out'}
+        import time
+        transfer_data = {
+            'date' : time.strftime("%Y-%m-%d")
         }
-        picking_type = partial.picking_id.type
-        for wizard_line in partial.move_ids:
+        import ipdb
+        ipdb.set_trace()
+        picking_type = picking_dict[transfer.location_id.usage + "-" +  transfer.location_dest_id.usage]
+        for wizard_line in transfer.move_ids:
             line_uom = wizard_line.product_uom
             move_id = wizard_line.move_id.id
 
@@ -208,7 +218,7 @@ class kderp_wizard_transfer_to(osv.osv_memory):
                                                     'prodlot_id': wizard_line.prodlot_id.id,
                                                     'location_id' : wizard_line.location_id.id,
                                                     'location_dest_id' : wizard_line.location_dest_id.id,
-                                                    'picking_id': partial.picking_id.id
+                                                    'picking_id': transfer.picking_id.id
                                                     },context=context)
                 stock_move.action_confirm(cr, uid, [move_id], context)
             partial_data['move%s' % (move_id)] = {
@@ -224,16 +234,16 @@ class kderp_wizard_transfer_to(osv.osv_memory):
         # Do the partial delivery and open the picking that was delivered
         # We don't need to find which view is required, stock.picking does it.
         done = stock_picking.do_partial(
-            cr, uid, [partial.picking_id.id], partial_data, context=context)
+            cr, uid, [transfer.picking_id.id], partial_data, context=context)
 
-        if done[partial.picking_id.id]['delivered_picking'] == partial.picking_id.id:
+        if done[transfer.picking_id.id]['delivered_picking'] == transfer.picking_id.id:
             return {'type': 'ir.actions.act_window_close'}
 
         return {
             'type': 'ir.actions.act_window',
             'res_model': context.get('active_model', 'stock.picking'),
             'name': _('Partial Delivery'),
-            'res_id': done[partial.picking_id.id]['delivered_picking'],
+            'res_id': done[transfer.picking_id.id]['delivered_picking'],
             'view_type': 'form',
             'view_mode': 'form,tree,calendar',
             'context': context,
