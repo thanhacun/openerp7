@@ -3,7 +3,7 @@
 	<property name="OPENERP_RELATIONS" value="[&apos;advance_line&apos;]"/>
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="432"/>
 	<style name="style1">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{Cur}=="VND"]]></conditionExpression>
