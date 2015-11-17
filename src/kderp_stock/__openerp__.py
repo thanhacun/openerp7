@@ -44,7 +44,8 @@
             'views/kderp_purchase_inherit_workflow.xml',
             'views/kderp_stock_workflow.xml',
             
-            'views/kderp_stock_picking_views.xml'
+            'views/kderp_stock_picking_views.xml',
+            'report.xml'
             ],
     'demo':[],
     'installable':True
