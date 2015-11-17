@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.9487171000000014"/>
-	<property name="ireport.x" value="122"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="59" bottomMargin="20">
+	<property name="ireport.zoom" value="1.7715610000000015"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;move_lines&apos;]"/>
 	<queryString language="XPath">
@@ -31,6 +31,9 @@
 	<field name="Supplier" class="java.lang.String">
 		<fieldDescription><![CDATA[partner_id/name]]></fieldDescription>
 	</field>
+	<field name="Stock_keeper" class="java.lang.String">
+		<fieldDescription><![CDATA[storekeeper_incharge_id/name]]></fieldDescription>
+	</field>
 	<group name="Dummy Name Group">
 		<groupExpression><![CDATA[$F{id}]]></groupExpression>
 	</group>
@@ -53,8 +56,8 @@
 					<text><![CDATA[MINUTE OF TAKING BACK OF REMAIN EQUIPMENT-MATERIALS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="331" y="40" width="54" height="15"/>
-					<textElement verticalAlignment="Middle">
+					<reportElement x="331" y="40" width="54" height="20"/>
+					<textElement verticalAlignment="Top">
 						<font fontName="DejaVu Sans" size="8" isItalic="true"/>
 					</textElement>
 					<text><![CDATA[Số/ No. :]]></text>
@@ -92,7 +95,7 @@
 					<textElement markup="html">
 						<font fontName="DejaVu Sans" size="8" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[<b>Các bên ( ký tên dưới đây) làm biên bản này để thu hồi các thiết bị vật tư thừa ( không cần sử dụng cho dự án này nữa )</b>
+					<text><![CDATA[<b>Các bên ( ký tên dưới đây) làm biên bản này để thu hồi các thiết bị vật tư thừa ( không cần sử dụng cho dự án này nữa )</b><br/>
 The parties ( signed below ) have made a mitune of taking back of some remain equiment- materials that do not need for this project anymore]]></text>
 				</staticText>
 				<staticText>
@@ -178,8 +181,8 @@ Conditions]]></text>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Project}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="385" y="40" width="170" height="15"/>
-					<textElement verticalAlignment="Middle">
+					<reportElement x="385" y="40" width="170" height="20"/>
+					<textElement verticalAlignment="Top">
 						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
@@ -201,9 +204,9 @@ Conditions]]></text>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="71">
+			<band height="140">
 				<staticText>
-					<reportElement x="1" y="51" width="135" height="20"/>
+					<reportElement x="0" y="50" width="135" height="20"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -218,7 +221,7 @@ Conditions]]></text>
 Deliver]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="136" y="51" width="135" height="20"/>
+					<reportElement x="135" y="50" width="135" height="20"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -233,7 +236,7 @@ Deliver]]></text>
 Site manager]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="271" y="51" width="135" height="20"/>
+					<reportElement x="270" y="50" width="135" height="20"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -248,7 +251,7 @@ Site manager]]></text>
 Project manager]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="406" y="51" width="150" height="20"/>
+					<reportElement x="405" y="50" width="150" height="20"/>
 					<box>
 						<pen lineWidth="0.0"/>
 						<topPen lineWidth="0.0"/>
@@ -262,13 +265,23 @@ Project manager]]></text>
 					<text><![CDATA[<b>Thủ kho</b><br/>
 Stock keeper]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="335" y="21" width="220" height="30"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="DejaVu Sans" isItalic="true"/>
+				<textField>
+					<reportElement x="335" y="0" width="220" height="50"/>
+					<box bottomPadding="10" rightPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
+						<font fontName="DejaVu Sans" size="8" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[Ngày     tháng     năm]]></text>
-				</staticText>
+					<textFieldExpression class="java.lang.String"><![CDATA["Ngày "+String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date())).substring(0,2)+
+" Tháng "+String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date())).substring(3,5)+
+" Năm "+String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date())).substring(6,10)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="406" y="70" width="149" height="70"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Stock_keeper}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
