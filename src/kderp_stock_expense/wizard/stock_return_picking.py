@@ -26,6 +26,19 @@ from openerp.osv import osv,fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
+class stock_return_picking_memory(osv.osv_memory):
+    _name = "stock.return.picking.memory"
+    _inherit = "stock.return.picking.memory"
+
+    _columns = {
+        'remarks':fields.char('Remarks', size=256),
+    }
+
+stock_return_picking_memory()
+
+
+
 class stock_return_picking(osv.osv_memory):
     _name = 'stock.return.picking'
     _inherit = 'stock.return.picking'
@@ -64,8 +77,8 @@ class stock_return_picking(osv.osv_memory):
             return_history = self.get_return_history(cr, uid, record_id, context)       
             for line in pick.move_lines:
                 qty = line.product_qty - return_history.get(line.id, 0)
-                if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'prodlot_id': line.prodlot_id and line.prodlot_id.id or False})
+                if qty > 0 and line.state=='done':
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'prodlot_id': line.prodlot_id and line.prodlot_id.id or False,'remarks': line.remarks})
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
         return res
@@ -204,7 +217,8 @@ class stock_return_picking(osv.osv_memory):
                                             'prodlot_id': data_get.prodlot_id.id,
                                             'pol_ids':[],
                                             'expense_state_in': 'pending',
-                                            'expense_state_out': 'pending'
+                                            'expense_state_out': 'pending',
+                                            'remarks': data_get.remarks
                 })
                 move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]}, context=context)
         if not returned_lines:

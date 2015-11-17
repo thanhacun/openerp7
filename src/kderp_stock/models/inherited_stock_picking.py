@@ -66,6 +66,7 @@ class stock_picking(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
             context = {}
+
         picking_id = context.get('picking_id',False)
         if picking_id:
             picking_type = self.read(cr, uid, picking_id, ['type'])['type']
@@ -88,6 +89,20 @@ class stock_picking(osv.osv):
             vals['name'] = self.pool.get('stock.picking').get_newcode(cr, user, context.get('picking_type','internal'), context)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         return new_id
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        """ Changes picking state to cancel.
+        @return: True
+        """
+        if not len(ids):
+            return False
+        wf_service = netsvc.LocalService("workflow")
+        for pick in self.browse(cr, uid, ids, context=context):
+            wf_service.trg_delete(uid, 'stock.picking', pick.id, cr)
+            ids2 = [move.id for move in pick.move_lines]
+            self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
+        self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
+        return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         """ Revise picking status.
@@ -183,9 +198,21 @@ class stock_picking(osv.osv):
                 res.add(move.picking_id.id)
         return list(res)
 
-    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for ROA'),
-            ('auto', 'Waiting Another Operation'),
-            ('confirmed', 'Waiting Availability'),
+    def _check_picking_type_and_location(self, cr, uid, ids, context):
+        context = {} and context
+        picking_dict = {'customer-internal':'in',
+                        'supplier-internal':'in',
+                        'internal-internal':'internal',
+                        'internal-supplier':'out',
+                        'internal-customer':'out'}
+        for sp in self.browse(cr, uid, ids):
+            if picking_dict[sp.location_id.usage + "-" + sp.location_dest_id.usage] != sp.type or sp.location_id.usage=='view' or sp.location_dest_id.usage=='view':
+                return False
+        return True
+
+    STOCK_PICKING_IN_STATE = [('draft', 'Waiting for Confirmation'),
+            # ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Confirmed'),
             ('assigned', 'Waiting for Delivery'),
             ('done', 'Received'),
             ('cancel', 'Cancelled'),]
@@ -203,11 +230,9 @@ class stock_picking(osv.osv):
 
                 #Set location required
                 'location_id': fields.many2one('stock.location', 'Source Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, domain = DOMAIN_LOCATION,
-                                                    help="Keep empty if you produce at the location where the finished products are needed." \
-                                                            "Set a location if you produce at a fixed location. This can be a partner location " \
-                                                            "if you subcontract the manufacturing operations.", select=True, required=True),
+                                                    help="Select a source warehouse", select=True, required=True),
                 'location_dest_id': fields.many2one('stock.location', 'Dest. Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},domain = DOMAIN_LOCATION,
-                                                    help="Location where the system will stock the finished products.", select=True, required=True),
+                                                    help="Select a destination warehouse", select=True, required=True),
 
 
                 'storekeeper_incharge_id':fields.many2one('hr.employee','Storekeeper', required=True, states={'done':[('readonly', True)]}),
@@ -225,6 +250,7 @@ class stock_picking(osv.osv):
                 'name': lambda self, cr, uid, context ={}: self.pool.get('stock.picking').get_newcode(cr, uid, False, context),
                 'type': lambda self, cr, uid, context ={}: 'internal' if not context else context.get('picking_type','internal')
                 }
+    _constraint = [(_check_picking_type_and_location,'Please check picking type and Source Warehouse and Destination Warehouse',['type','location_id','location_dest_id'])]
 
     def update_stock_received(self,cr, uid, ids, *args):
         self.write(cr,uid,ids,{'state':'done'})
@@ -251,4 +277,5 @@ class stock_picking(osv.osv):
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
+            self.pool.get('stock.move').force_assign(cr, uid, todo, context=context)
         return True

@@ -12,7 +12,7 @@
             		<field name='source_location_id'/>
             	</field>
             	<page string="Packing" position="inside">
-            		<field name='picking_ids'/>
+            		<field name='picking_ids' context="{'picking_type':'in'}"/> <!--,'form_view_ref':'kderp_stock.kderp_view_picking_form'-->
             	</page>
             	<!-- FIXME Add received_qty to testing please remove after completed -->
             	<field name="product_id" position="after">

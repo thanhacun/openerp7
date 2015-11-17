@@ -32,7 +32,13 @@ class StockLocation(models.Model):
         context = context or {}
         stock_usage = context.get('stock_usage', False)
         if stock_usage:
-            args += [('usage','=',stock_usage)]
+            if stock_usage.find('!!')>=0:
+                compareSign = '!='
+                compareValue = stock_usage[2:]
+            else:
+                compareSign = '='
+                compareValue = stock_usage
+            args += [('usage',compareSign, compareValue)]
         return super(StockLocation, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _get_products_list(self, cr, uid, ids, name, args, context = {}):

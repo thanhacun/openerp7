@@ -47,7 +47,8 @@ class StockMove(osv.osv):
 
     _columns ={
         'qty_inout':fields.function(_get_qty_inout,type='float',string='Qty. In/Out'),
-        'purchase_id':fields.related('purchase_line_id','order_id',type='many2one',string='PO. No.',relation='purchase.order')
+        'purchase_id':fields.related('purchase_line_id','order_id',type='many2one',string='PO. No.',relation='purchase.order'),
+        'remarks':fields.char("Remarks", size=128, states={'done': [('readonly', True)]})
     }
 
     _defaults = {

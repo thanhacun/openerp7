@@ -1,8 +1,8 @@
 $(document).ready(function (){
     ////getting current weather
     function displayWeather(lat, lon, timeout) {
-        var weatherAPI = "http://api.wunderground.com/api/4844c2f37dbc3540/conditions/lang:VU/q/" + lat + "," + lon + ".json";
-        //http://api.wunderground.com/api/4844c2f37dbc3540/forecast/lang:VU/q/21.0333,105.85.json
+        //var weatherAPI = "http://api.wunderground.com/api/4844c2f37dbc3540/conditions/lang:VU/q/" + lat + "," + lon + ".json";
+        var weatherAPI = "http://thcn-api.herokuapp.com/api/weathers/now/"  + lat + "," + lon;
         $.getJSON(weatherAPI, function (data) {
             var conditions = data.current_observation;
 

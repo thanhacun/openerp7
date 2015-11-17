@@ -153,3 +153,12 @@ class StockMove(osv.osv):
             getPrice = self.pool.get('product.product').read(cr, uid, prod_id, [field_to_read])[field_to_read]
             res['value']['price_unit'] = cur_obj.round(cr, uid, cur_obj_id, getPrice* remainPercent)
         return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.state!='draft' or move.expense_state_in != 'pending' or move.expense_state_out != 'pending':
+                raise osv.except_osv(_('KDERP User Error!'), _('You can only delete draft or not Adjusted expense moves.'))
+        return super(StockMove, self).unlink( cr, uid, ids, context=ctx)
