@@ -183,7 +183,7 @@ Conditions]]></text>
 				<textField>
 					<reportElement x="385" y="40" width="170" height="20"/>
 					<textElement verticalAlignment="Top">
-						<font size="8" isBold="false"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
 				</textField>
@@ -278,7 +278,7 @@ Stock keeper]]></text>
 				<textField>
 					<reportElement x="406" y="70" width="149" height="70"/>
 					<textElement textAlignment="Center" verticalAlignment="Bottom">
-						<font size="9" isBold="true"/>
+						<font size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Stock_keeper}]]></textFieldExpression>
 				</textField>
