@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <report string="Taking back of material"
+    <report string="Taking back of Materials"
         model="stock.picking"
         auto="True"
         name="taking.back.of.material"
