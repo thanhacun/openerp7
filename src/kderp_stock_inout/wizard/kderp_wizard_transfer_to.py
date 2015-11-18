@@ -82,7 +82,8 @@ class kderp_wizard_transfer_to(osv.osv_memory):
             'qty' : qty,
             'product_uom' : move.product_uom.id,
             'remarks': move.remarks,
-            'location_id' : move.location_dest_id.id
+            #'location_dest_id' : move.location_dest_id.id,
+            'move_id' : move.id
         }
         return transfer_move
 
@@ -112,46 +113,39 @@ class kderp_wizard_transfer_to(osv.osv_memory):
                          }
         ctx['picking_type'] = picking_type
 
+        location_id = transfer.location_id.id
         for wizard_line in transfer.move_line:
+            move_obj = wizard_line.move_id
             location_dest_id = (wizard_line.location_dest_id and wizard_line.location_dest_id.id) or transfer.location_dest_id.id
-            location_id = wizard_line.location_id.id
             if location_dest_id==location_id:
                 raise osv.except_osv("KDERP Warning",'Please check Destination Warehouse, Source and destination Warehouse must be different')
-
             line_uom = wizard_line.product_uom
-            move_id = wizard_line.move_id.id
 
             #Quantiny must be Positive
-            if wizard_line.quantity <= 0:
+            move_lines =[]
+            if wizard_line.qty<= 0:
                 raise osv.except_osv(_('KDERP Warning!'), _('Please provide proper Quantity.'))
-
-            #Compute the quantity for respective wizard_line in the line uom (this jsut do the rounding if necessary)
-            # qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id)
-            #
-            # if line_uom.factor and line_uom.factor <> 0:
-            #     if float_compare(qty_in_line_uom, wizard_line.quantity, precision_rounding=line_uom.rounding) != 0:
-            #         raise osv.except_osv(_('Warning!'), _('The unit of measure rounding does not allow you to ship "%s %s", only rounding of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
-
-            #Check rounding Quantity.ex.
-            #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g),
-            #partial delivery: 253g
-            #=> result= refused, as the qty left on picking would be 0.747kg and only 0.75 is accepted by the uom.
-            # initial_uom = wizard_line.move_id.product_uom
-            # #Compute the quantity for respective wizard_line in the initial uom
-            # qty_in_initial_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, initial_uom.id)
-            # without_rounding_qty = (wizard_line.quantity / line_uom.factor) * initial_uom.factor
-            # if float_compare(qty_in_initial_uom, without_rounding_qty, precision_rounding=initial_uom.rounding) != 0:
-            #     raise osv.except_osv(_('Warning!'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only rounding of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
-
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': context.get('active_model', 'stock.picking'),
-            'name': _('Stock Move'),
-            'res_id': transfer.id,
-            'view_type': 'form',
-            'view_mode': 'form,tree,calendar',
-            'context': context,
-        }
+            #FIXME: IF later using convert Unit please see on stock picking partial Wizard
+            move_lines.append((0, False, {
+                                    'location_id': location_id,
+                                    'location_dest_id': location_dest_id,
+                                    'product_id': move_obj.product_id.id,
+                                    'name': move_obj.name,
+                                    'product_uom': line_uom.id,
+                                    'remarks': wizard_line.remarks,
+                                    'product_qty': wizard_line.qty}))
+        transfer_data['move_lines'] = move_lines
+        new_picking_id = stock_picking.create(cr, uid, transfer_data, ctx)
+        return {'type': 'ir.actions.act_window_close'}
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'res_model': context.get('active_model', 'stock.picking'),
+        #     'name': _('Stock Move'),
+        #     'res_id': new_picking_id,
+        #     'view_type': 'form',
+        #     'view_mode': 'form,tree',
+        #     'context': context,
+        # }
 
 
 class kderp_wizard_move_line(osv.osv_memory):
@@ -160,10 +154,11 @@ class kderp_wizard_move_line(osv.osv_memory):
     _rec_name="product_id"
     _columns = {
         'wizard_transfer_id':fields.many2one("kderp.wizard.transfer.to",'Transfer ID', ondelete="CASCADE"),
-        'location_id':fields.many2one('stock.location', 'Source Warehouse', required = 1),
+        #'location_id':fields.many2one('stock.location', 'Source Warehouse', required = 1),
         'location_dest_id':fields.many2one('stock.location', 'Dest. Warehouse', domain=[('usage','!=','view')]),
         'product_id':fields.many2one('product.product','Product', required=1),
         'product_uom':fields.many2one('product.uom','Product UOM', required=1),
         'remarks':fields.char('Remarks',size=256),
         'qty':fields.float('Qty', required=1),
+        'move_id':fields.many2one('stock.move','Move',required=1)
     }
