@@ -208,6 +208,13 @@ class stock_picking(osv.osv):
         for sp in self.browse(cr, uid, ids):
             if picking_dict[sp.location_id.usage + "-" + sp.location_dest_id.usage] != sp.type or sp.location_id.usage=='view' or sp.location_dest_id.usage=='view':
                 return False
+            for sm in sp.move_lines:
+                if sp.type != picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]:
+                    move_type = picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]
+                    picking_type = sm.picking_id.type
+                    raise osv.except_osv(_("KDERP Warning"),_("Please check Picking type: %s and Detail of Picking: %s" % (picking_type.upper(), move_type.upper())))
+        return True
+
         return True
 
     STOCK_PICKING_IN_STATE = [('draft', 'Waiting for Confirmation'),

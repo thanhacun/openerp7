@@ -192,3 +192,15 @@ div.oe_sidebar > div:nth-last-child(1) > ul:nth-last-child(1) > li:nth-last-chil
 	min-height: inherit;
 }
 
+/*
+ * Lam cho o thong bao loi resize theo content o ben trong
+*/
+.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-draggable.ui-resizable.ui-dialog-buttons.openerp {
+  width: auto !important;
+  max-width: 50% !important;
+}
+
+table.oe_dialog_warning.ui-dialog-content.ui-widget-content
+{
+  width: 100% !important;
+}
