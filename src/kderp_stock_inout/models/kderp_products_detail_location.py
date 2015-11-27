@@ -204,6 +204,9 @@ class product_product(osv.osv):
         # results3 = [] #In Opening
         # results4 = [] #Out Opening
 
+        # Add Except Move IDs to Calcuation
+        exceptMoveIDs = "sm.id not in (%s)" % ",".join(map(str, context.get('except_move_ids',[0])))
+
         # FIXME: If need using Date with time
         from_date = context.get('from_date',False)
         to_date = context.get('to_date',False) if context.get('to_date',False) else time.strftime("%Y-%m-%d %H:%M:%S")
@@ -238,12 +241,13 @@ class product_product(osv.osv):
                                     sum(product_qty), product_id, product_uom
                                 FROM
                                     stock_move sm
-                                %s and location_dest_id in (%s) and product_id in (%s) and state='done'
+                                %s and location_dest_id in (%s) and product_id in (%s) and state='done' and %s
                                 group by
                                     product_id, product_uom
                              """ % (where_opening_date,
                                     ",".join(map(str, location_ids)),
-                                    ",".join(map(str, ids))
+                                    ",".join(map(str, ids)),
+                                    exceptMoveIDs
                                     )
 
                 cr.execute(sqlCommand)
@@ -253,12 +257,13 @@ class product_product(osv.osv):
                                     sum(product_qty), product_id, product_uom
                                 FROM
                                     stock_move sm
-                                %s and location_id in (%s) and product_id in (%s) and state='done'
+                                %s and location_id in (%s) and product_id in (%s) and state='done' and %s
                                 group by
                                     product_id, product_uom
                              """ % (where_opening_date,
                                     ",".join(map(str, location_ids)),
-                                    ",".join(map(str, ids))
+                                    ",".join(map(str, ids)),
+                                    exceptMoveIDs
                                     )
                 cr.execute(sqlCommand)
                 results2.extend(cr.fetchall())
@@ -285,21 +290,21 @@ class product_product(osv.osv):
                 #
                 cr.execute("""select
                                         sum(product_qty), product_id, product_uom
-                                  from stock_move
+                                  from stock_move sm
                                   where
                                         location_dest_id IN %s
                                         and product_id IN %s
-                                        and state IN %s """  + (date_str and 'and '+ date_str + ' ' or '')  + """ group by product_id,product_uom""", tuple(where))
+                                        and state IN %s """  + (date_str and 'and '+ date_str + ' ' or '')  + " and " + exceptMoveIDs + """ group by product_id,product_uom""", tuple(where))
                 results.extend(cr.fetchall())
 
             if 'out' in what:
                 # all moves from a location in the set to a location out of the set
                 cr.execute(
                     'select sum(product_qty), product_id, product_uom '\
-                    'from stock_move '\
+                    'from stock_move sm '\
                     'where location_id IN %s '\
                     'and product_id  IN %s '\
-                    'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' ' +
+                    'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' and %s' % exceptMoveIDs +
                     'group by product_id,product_uom',tuple(where))
                 results2.extend(cr.fetchall())
 
@@ -516,6 +521,7 @@ class product_product(osv.osv):
         stock_period_obj = self.pool.get('kderp.stock.period')
         location_obj = self.pool.get('stock.location')
 
+        stateOption = "coalesce(state,'')!=''"
         if not location_ids:
             location_ids = location_obj.search(cr, uid, [('general_stock','=',True)])
             if not location_ids:
@@ -577,10 +583,11 @@ class product_product(osv.osv):
                                 distinct product_id
                             FROM
                                 stock_move sm
-                            %s and (location_dest_id in (%s) or location_id in (%s)) and state = 'done'
+                            %s and (location_dest_id in (%s) or location_id in (%s)) and %s
                          """ % (where_opening_date,
                                 location_ids_str,
-                                location_ids_str)
+                                location_ids_str,
+                                stateOption)
 
             cr.execute(sqlCommand)
             for prd in cr.fetchall():
@@ -614,9 +621,10 @@ class product_product(osv.osv):
                                 distinct product_id
                             FROM
                                 stock_move sm
-                            where (location_dest_id in (%s) or location_id in (%s)) and state = 'done' and %s""" % (location_ids_str,
+                            where (location_dest_id in (%s) or location_id in (%s)) and %s and %s""" % (location_ids_str,
                                                                                                                     location_ids_str,
-                                                                                                                    date_str)
+                                                                                                                    date_str,
+                                                                                                                    stateOption)
         cr.execute(sqlCommand)
         for prd in cr.fetchall():
             results[prd[0]] = True

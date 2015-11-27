@@ -51,6 +51,8 @@ class StockMove(osv.osv):
         #Check enough Qty from Source Warehouse before move (Only internal)
         context = context or {}
         ctx = context.copy()
+        ctx['except_move_ids'] =  ids or [0] #Not calculation quantity for check move
+
         pp_obj = self.pool.get('product.product')
         location_list = {}
 

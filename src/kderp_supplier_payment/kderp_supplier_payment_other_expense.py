@@ -622,6 +622,9 @@ class kderp_supplier_payment_expense(osv.osv):
             account_move_obj.unlink(cr, uid, move_ids, context=context)
 
         self.write(cr, uid, ids, {'state':'cancel'})
+        ctx = context.copy()
+        ctx['delete_only'] = True
+        self.update_supplier_expense_taxes(cr, uid, ids, ctx)
         return True    
     
     def wkf_action_payment_done(self, cr, uid, ids, *args):
@@ -1064,8 +1067,9 @@ class kderp_supplier_payment_expense(osv.osv):
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE supplier_payment_expense_id=%s AND manual is False", (id,))
-            for taxe in self.compute(cr, uid, id, ctx).values():
-                ait_obj.create(cr, uid, taxe, ctx)
+            if not context.get("delete_only", False):
+                for taxe in self.compute(cr, uid, id, ctx).values():
+                    ait_obj.create(cr, uid, taxe, ctx)
         return True
 kderp_supplier_payment_expense()
 

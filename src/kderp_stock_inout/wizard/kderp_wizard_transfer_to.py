@@ -114,6 +114,7 @@ class kderp_wizard_transfer_to(osv.osv_memory):
         ctx['picking_type'] = picking_type
 
         location_id = transfer.location_id.id
+        move_lines =[]
         for wizard_line in transfer.move_line:
             move_obj = wizard_line.move_id
             location_dest_id = (wizard_line.location_dest_id and wizard_line.location_dest_id.id) or transfer.location_dest_id.id
@@ -122,7 +123,6 @@ class kderp_wizard_transfer_to(osv.osv_memory):
             line_uom = wizard_line.product_uom
 
             #Quantiny must be Positive
-            move_lines =[]
             if wizard_line.qty<= 0:
                 raise osv.except_osv(_('KDERP Warning!'), _('Please provide proper Quantity.'))
             #FIXME: IF later using convert Unit please see on stock picking partial Wizard
