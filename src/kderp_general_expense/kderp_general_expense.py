@@ -369,7 +369,6 @@ class kderp_other_expense(osv.osv):
                                                            'kderp.other.expense.line':(_get_expense_from_expl, ['belong_expense_id','amount','expense_id'], 15),
                                                            }),
                 'number_of_month':fields.integer("Allocated Months", readonly=True, help='Number of months expense will be allocated automatically. This field use for automatically create Allocation Sheet'),
-                
                 'paid_auto':fields.boolean('Paid Auto',help='Using for case already paid (Prepaid), but prepaid without record in System because prepaid without VAT Invoice, and VAT Later and record to each payment'),
                 'payment_type':fields.related('supplier_payment_expense_ids','payment_type', string='Payment Type',selection=PAYMENT_SELECTION ,type='selection',  readonly=True,size=20, store=False),
                 'accounting_allocated_date':fields.date('Accounting Allocated Date',help('Using for Accounting update')),
