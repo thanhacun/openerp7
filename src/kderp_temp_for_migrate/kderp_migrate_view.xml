@@ -127,7 +127,10 @@
                     </h3>
                     <label string="3. Update Cash State"/>
                     <button name='update_cash_state' type='object' string='3. Update Cash State'/>
-                    
+                    <h3>
+                    	 <label string='12. UPDATED GENERAL EXPENSE'/>
+                    	 <button name='update_genernal_expense' type='object' string='12. Update General Expense State'/>
+                    </h3>
                 </form>
             </field>
         </record>
