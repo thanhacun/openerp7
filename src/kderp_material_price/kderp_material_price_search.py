@@ -1,5 +1,5 @@
 from osv import osv, fields
-from osv.orm import intersect
+
 from openerp import tools
 import time
 

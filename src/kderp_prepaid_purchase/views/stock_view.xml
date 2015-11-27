@@ -52,6 +52,7 @@
             		<field name="usage"/>
             		<field name="stock_code"/>
             		<field name="global_stock"/>
+					<field name="state" invisible="1"/>
             		<field name="stock_real" invisible="'product_id' not in context"/>
                     <field name="stock_virtual" invisible="'product_id' not in context"/>
             	</tree>
@@ -101,7 +102,8 @@
 		<record id="action_window_view_stock_location_form" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_kderp_stock_location_consignment_form"/>
+            <!--<field name="view_id" ref="view_kderp_stock_location_consignment_form"/>-->
+			<field name="view_id" ref="kderp_stock.view_kderp_stock_location_form"/>
             <field name="act_window_id" ref="action_kderp_stock_location_consignment"/>
         </record>
         <record id="action_window_view_stock_location_tree" model="ir.actions.act_window.view">

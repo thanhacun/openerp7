@@ -29,3 +29,5 @@ import inherited_stock_move
 import kderp_products_detail_location
 
 import inherited_stock_location
+
+import inherited_purchase_order

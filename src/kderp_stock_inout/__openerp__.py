@@ -23,25 +23,26 @@
     'version':"7.0.0",
     'author':"KDERP IT-Dev. Team",
     'images' : ['images/kinden.png'],
-    'summary':"Customize Purchase Module for Suiteable Kinden Procedure",
+    'summary':"Customize Stock Picking and Stock Move",
     'category':"KDERP Apps",
-    'depends':['kderp_stock'],
+    'depends':['kderp_stock','kderp_purchase_extend'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure
     - Customize Interface""",
-    'css': ['static/src/css/*.css'],
     'data':[
             'security/kderp_stock_inout_security.xml',
             'security/ir.model.access.csv',
             'security/kderp_stock_inout_rule.xml',
             "views/kderp_stock_move_views.xml",
+            "wizard/kderp_wizard_transfer_to.xml",
             'views/kderp_stock_picking_in_views.xml',
             'views/kderp_stock_picking_out_views.xml',
             'views/kderp_product_views.xml',
             'views/kderp_stock_picking_internal_views.xml',
             'views/kderp_stock_views.xml',
-            'wizard/kderp_open_stock_products_views.xml'
+            'wizard/kderp_open_stock_products_views.xml',
+            'views/kderp_purchase_view.xml'
             ],
     'demo':[],
     'installable':True

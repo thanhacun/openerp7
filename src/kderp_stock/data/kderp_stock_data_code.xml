@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+        <!--Code using for Warehouse (Stock) -->
+        <record id="seq_type_kderp_warehouse_code" model="ir.sequence.type">
+            <field name="name">KDERP Warehouse Code</field>
+            <field name="code">kderp_stock_warehouse_code</field>
+        </record>
+        <record id="seq_kderp_warehouse_code" model="ir.sequence">
+            <field name="name">KDERP Warehouse Code</field>
+            <field name="code">kderp_stock_warehouse_code</field>
+            <field eval="4" name="padding"/>
+            <field name="prefix">W$</field>
+            <field name="example">WH0000</field>
+        </record>
+
+
+        <!--Code using for Stock Packing -->
         <record id="seq_type_kderp_stock_picking_code_in" model="ir.sequence.type">
             <field name="name">KDERP Stock Picking Code</field>
             <field name="code">kderp_stock_picking_code_in</field>

@@ -373,10 +373,7 @@ class kderp_other_expense(osv.osv):
                 'paid_auto':fields.boolean('Paid Auto',help='Using for case already paid (Prepaid), but prepaid without record in System because prepaid without VAT Invoice, and VAT Later and record to each payment'),
                 'payment_type':fields.related('supplier_payment_expense_ids','payment_type', string='Payment Type',selection=PAYMENT_SELECTION ,type='selection',  readonly=True,size=20, store=False),
                 'accounting_allocated_date':fields.date('Accounting Allocated Date',help('Using for Accounting update')),
-             
-               
-            
-                }
+              }
     
     _defaults = {                
                 'allocated_to': lambda self, cr, uid, context={}:'PGE' if context.get('PGE',False) else 'GE' if context.get('general_expense',False)  else 'PE',

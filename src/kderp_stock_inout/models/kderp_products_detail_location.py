@@ -82,7 +82,7 @@ class product_product(osv.osv):
                 return res
 
         # build the list of ids of children of the location given by id
-        if context.get('compute_child', True):
+        if context.get('compute_child', False):
             child_location_ids = location_obj.search(cr, uid, [('id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
 
@@ -136,6 +136,7 @@ class product_product(osv.osv):
         if name=='qty_available':
             c.update({ 'states': ('done',), 'what': ('in', 'out'),'opening_qty':1 })
             loc_ids = [c.get('filter_by_location_id', False)]
+            c['location_ids'] = loc_ids #get Product available for LOC_IDS
             prd_ids = self.find_product_in_period(cr, uid, loc_ids, context)
             prd_ids_with_qty = self.get_product_available(cr, uid, prd_ids, context=c)
             compare = args[0][1]
@@ -179,7 +180,7 @@ class product_product(osv.osv):
                 return res
 
         # build the list of ids of children of the location given by id
-        if context.get('compute_child', True):
+        if context.get('compute_child', False):
             child_location_ids = location_obj.search(cr, uid, [('id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
 
@@ -371,6 +372,7 @@ class product_product(osv.osv):
         res = {}
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0.0)
+
         for f in field_names:
             c = context.copy()
             if f == 'opening_qty':
@@ -458,7 +460,7 @@ class product_product(osv.osv):
                  "Location with 'internal' type."),
     }
 
-    def fields_view_get1(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if context is None:
             context = {}
@@ -526,7 +528,7 @@ class product_product(osv.osv):
             raise osv.except_osv("KDERP Warning","Stock ID  must be Integer or list of integer")
 
         # build the list of ids of children of the location given by id
-        if context.get('compute_child', True):
+        if context.get('compute_child', False):
             child_location_ids = location_obj.search(cr, uid, [('id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
             stock_job = []

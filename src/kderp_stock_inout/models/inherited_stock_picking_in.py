@@ -57,8 +57,37 @@ class stock_picking(osv.osv):
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},
                     ondelete='set null', select=True)
     }
-
     _defaults = {
                 'purchase_id': lambda self, cr, uid, context: context.get('order_id', False) or context.get('purchase_id', False),
                 'location_id': _default_location_source
                 }
+
+    def onchange_po_id(self, cr, uid, ids, order_id, origin = False):
+        if order_id:
+            po_obj = self.pool.get('purchase.order')
+            po_info = po_obj.read(cr, uid, order_id, ['partner_id','origin'])
+            val = {'partner_id': po_info['partner_id'][0]}
+            if not origin:
+                val['origin'] = po_info['origin']
+        else:
+            val = {'partner_id': False}
+        return {'value': val}
+    def action_transfer(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        """Open the transfer wizard"""
+
+        context.update({
+            'active_model': self._name,
+            'active_ids': ids,
+            'active_id': len(ids) and ids[0] or False
+        })
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'kderp.wizard.transfer.to',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context,
+            'nodestroy': True,
+        }

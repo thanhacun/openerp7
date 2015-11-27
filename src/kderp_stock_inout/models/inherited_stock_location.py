@@ -21,7 +21,6 @@
 
 from openerp.osv import fields, osv as models
 
-
 class StockLocation(models.Model):
     """
         Inherit stock location, customize for Kinden Vietnam
@@ -29,13 +28,23 @@ class StockLocation(models.Model):
     _inherit = 'stock.location'
     _name = 'stock.location'
 
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        context = context or {}
+        stock_usage = context.get('stock_usage', False)
+        if stock_usage:
+            args += [('usage','=',stock_usage)]
+        return super(StockLocation, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
+
     def _get_products_list(self, cr, uid, ids, name, args, context = {}):
         """ Return product using for stock in current period
         """
         res = {}
         pp_obj = self.pool.get('product.product')
+        ctx = context.copy()
+        ctx = ctx or {}
+        ctx['compute_child'] = True
         for location_id in ids:
-            pr_ids = pp_obj.find_product_in_period(cr, uid, location_id, context)
+            pr_ids = pp_obj.find_product_in_period(cr, uid, location_id, ctx)
             res[location_id] = pr_ids
         return res
 

@@ -54,9 +54,9 @@ class stock_picking(osv.osv):
         return location_id
     _columns = {
                 'approved_by_uid':fields.many2one('hr.employee','Approved By', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},
-                    ondelete='restrict', required=True),
-                'request_by_uid':fields.many2one('hr.employee','Request By', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},
-                    ondelete='restrict', required=True),
+                    ondelete='restrict'),
+                'request_by_uid':fields.many2one('hr.employee','Requested By', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},
+                    ondelete='restrict'),
                 'received_by': fields.many2one('kderp.user.related', 'Received By', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
                 }
 
