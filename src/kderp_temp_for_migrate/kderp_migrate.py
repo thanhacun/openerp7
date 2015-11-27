@@ -1088,7 +1088,24 @@ class kderp_migrate(osv.osv_memory):
         for kap_id in adv_ids:
         #for kap in adv_obj.browse(cr, uid, adv_ids, context):            
             wf_service.trg_validate(uid, 'kderp.advance.payment', kap_id, 'btn_processing_to_wfcomplete', cr)
-        
+   
+    
+
+    def update_genernal_expense(self, cr, uid, ids, context):
+        res = {}
+
+        cr.execute("""select
+                       id
+                   from
+                       kderp_other_expense koe
+                   where
+                       name like '%-%-I%' and state='draft'""")
+        koe_obj = self.pool.get('kderp.other.expense')
+
+        for koe_id in cr.fetchall():
+               koe_obj.action_draft_to_waiting_for_payment(cr, uid, [koe_id[0]], context)
+               cr.commit()
+        return True
 kderp_migrate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
