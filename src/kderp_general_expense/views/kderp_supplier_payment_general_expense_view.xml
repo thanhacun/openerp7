@@ -49,7 +49,7 @@
   						<group colspan="4" col="4">
 							<field name="date" on_change="onchange_date_ge(date,name)" default_focus="1"/>
 							<field name="due_date"/>
-							<field name="expense_id" />
+							<field name="expense_id" context="{'general_expense':True}"/>
 							<field name="supplier_id"/>
 							<field name="payment_type"/>
 							<field name="user_applicant_id"/>
