@@ -3,25 +3,14 @@
     <data>
     
 		 <menuitem id="menu_kderp_stock_management_root" name="Warehouse" sequence="8" groups="group_menu_kderp_stock"/>
-    	
-<<<<<<< HEAD
-         <menuitem id="menu_kderp_stock" name="Stock Management" sequence="10"  groups="group_menu_stock_management" parent="menu_kderp_stock_management_root"/>
-         
-         <menuitem id="menu_kderp_stock_location" name="Stock Location" sequence="15"  groups="group_menu_stock_location" parent="menu_kderp_stock_management_root"/>
-              	
-=======
+
+         <menuitem id="menu_kderp_stock_location" name="Warehouse Management" sequence="15"  groups="group_menu_stock_location" parent="menu_kderp_stock_management_root"/>
+
          <menuitem id="menu_kderp_stock" name="Warehouse Management" sequence="10" parent="menu_kderp_stock_management_root" groups="group_menu_stock_management"/>
-                 	
->>>>>>> refs/remotes/upstream/oe7-develop
+
          <menuitem id="menu_kderp_stock_receive_delivery" name="Receive/Deliver" sequence="3" parent="menu_kderp_stock_management_root"/>
-         
-<<<<<<< HEAD
-         <menuitem id="menu_kderp_stock_config" name="Stock Configuration" sequence="30" groups="group_menu_stock_configuration" parent="menu_kderp_stock_management_root"/>
- 		
- 		  
-=======
+
          <menuitem id="menu_kderp_stock_config" name="Warehouse Configuration" sequence="30" parent="menu_kderp_stock_management_root" groups="group_menu_stock_configuration"/>
 
->>>>>>> refs/remotes/upstream/oe7-develop
      </data>
 </openerp>

@@ -52,7 +52,7 @@ class stock_move(osv.osv):
         #'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
                 
         'purchase_line_id': fields.many2one('purchase.order.line',
-            'Purchase Order Line', ondelete='restrict', select=True),
+            'Purchase Order Line', ondelete='restrict', select=True, states={'done': [('readonly', True)]}),
         'name': fields.char('Description', select=True),
         'date': fields.date('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.date('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
