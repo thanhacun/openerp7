@@ -205,7 +205,7 @@
             <field name="model">kderp.other.expense</field>
             <field name="inherit_id" ref='kderp_general_expense.view_kderp_other_expense_ge_form'/>
             <field name="arch" type="xml">
-				<field name='section_incharge_id' position='after'>
+				<field name='accounting_allocated_date' position='after'>
 					<field name='link_asset_id' colspan="1" attrs="{'invisible':[('expense_type','not in',('expense','fixed_asset'))]}" context="{'partner_id':partner_id,'description':description}"/>
 				</field>
 			</field>
