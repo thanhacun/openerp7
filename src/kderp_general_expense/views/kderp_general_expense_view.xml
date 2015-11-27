@@ -60,8 +60,10 @@
 	                       	<label string=""/>
 	                       	<field name='allocated_to' on_change="onchange_allocate_ge(allocated_to,section_incharge_id,True)" context="{'general_expense':True}" colspan="1" default_focus="1"/>
 							<!-- <field name='allocated_to'  on_change="onchange_allocate_ge(allocated_to)" context="{'general_expense': True}" colspan="1" default_focus="1"/> -->
-							<field name="date" colspan="1" string='Exp./Allocated Date'/>
-	                        <field name='section_incharge_id' colspan="1"/>      
+							<field name="date" colspan="1" string='Ad./Allocated Date'/>
+							
+	                        <field name='section_incharge_id' colspan="1"/>    
+	                        <field name="accounting_allocated_date" colspan="1" string='Acc./Allocated Date'/>  
 	                        <field name ='ref_number' help="Input Reference No. when General Expense is Telephone"/>    
 	                        <field name="payment_type"/>            
 	                    </group>

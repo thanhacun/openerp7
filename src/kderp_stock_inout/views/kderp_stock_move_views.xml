@@ -99,7 +99,7 @@
             </field>
         </record>
 
-        <record id="act_kderp_all_stock_move" model="ir.actions.act_window">
+       	<record id="act_kderp_all_stock_move" model="ir.actions.act_window">
             <field name="name">All Moves</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.move</field>
@@ -113,5 +113,9 @@
         			action="act_kderp_all_stock_move"
         			id="kderp_stock_move_menu_all"
         			parent="kderp_stock.menu_kderp_stock" groups ='kderp_stock_all_moves' sequence="20"/>
+       <menuitem
+        			action="act_kderp_all_stock_move"
+        			id="kderp_stock_move_menu_all_location"
+        			parent="kderp_stock.menu_kderp_stock_location" groups ='kderp_stock_all_moves' sequence="20"/>
     </data>
 </openerp>
