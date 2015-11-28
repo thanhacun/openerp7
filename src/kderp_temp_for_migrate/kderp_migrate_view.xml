@@ -131,6 +131,10 @@
                     	 <label string='12. UPDATED GENERAL EXPENSE'/>
                     	 <button name='update_genernal_expense' type='object' string='12. Update General Expense State'/>
                     </h3>
+                    <h3>
+                    	 <label string='13. UPDATED PAYMENT GENERAL EXPENSE'/>
+                    	 <button name='update_payment_genernal_expense' type='object' string='13. Update Payment General Expense State'/>
+                    </h3>
                 </form>
             </field>
         </record>
