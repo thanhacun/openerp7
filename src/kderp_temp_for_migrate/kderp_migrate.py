@@ -1103,8 +1103,30 @@ class kderp_migrate(osv.osv_memory):
         koe_obj = self.pool.get('kderp.other.expense')
 
         for koe_id in cr.fetchall():
-               koe_obj.action_draft_to_waiting_for_payment(cr, uid, [koe_id[0]], context)
-               cr.commit()
+            koe_obj.action_draft_to_waiting_for_payment(cr, uid, [koe_id[0]], context)
+            cr.commit()
+        return True
+    def update_payment_genernal_expense(self, cr, uid, ids, context):
+        res = {}
+        wf_service = netsvc.LocalService("workflow")
+        cr.execute("""Select
+                           kspe.id
+                       from
+                           kderp_supplier_payment_expense kspe
+                       left join
+                           kderp_other_expense koe on kspe.expense_id = koe.id
+                       where
+                           kspe.state ='draft' and
+                           koe.name like '%-%-I%' and
+                           exists(Select id from kderp_supplier_payment_expense_line kspel where supplier_payment_expense_id=kspe.id)""")                
+
+        for kspe_id in cr.fetchall():
+            wf_service.trg_validate(uid, 'kderp.supplier.payment.expense', kspe_id[0], 'btn_submit_confirm', cr)
+            wf_service.trg_validate(uid, 'kderp.supplier.payment.expense', kspe_id[0], 'btn_bod_confirm', cr)
+            try:
+                wf_service.trg_delete(uid, 'kderp.supplier.payment.expense', kspe_id, cr)
+            except:
+                continue
         return True
 kderp_migrate()
 
