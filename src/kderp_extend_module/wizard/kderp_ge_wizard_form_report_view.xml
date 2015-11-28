@@ -32,10 +32,13 @@
         </record>
 
 		<menuitem action="action_print_ge_statement_form"
-            id="menu_action_print_ge_statement_form"
-            parent="kderp_general_expense.kderp_working_other_expense_ge_action"
-            sequence="20"
-            groups="kderp_group_update_completion_date"
-            />
+            id="menu_action_print_ge_statement_form_ge"
+            parent="menu_action_print_ge_statement_form"
+            sequence="20"/>
+
+     	<menuitem name="Reporting"
+     		id="menu_action_print_ge_statement_form"
+     		sequence="10"
+			parent="kderp_general_expense.menu_kderp_general_exepense_root"/>
     </data>
 </openerp>
