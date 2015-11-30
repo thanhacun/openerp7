@@ -47,7 +47,27 @@ class stock_move(osv.osv):
             res.append((line.id, name))
         return res
 
-    DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
+    def _get_location_id(self, cr, uid, ids, name, args, context={}):
+        """
+            () -> {'id': {'location_id': int, 'location_dest_id': int}}
+        """
+        res = {}
+        for sm in self.browse(cr, uid, ids):
+            res[sm.id] = {'location_id': sm.picking_id and sm.picking_id.location_id and sm.picking_id.location_id.id,
+                          'location_dest_id': sm.picking_id and sm.picking_id.location_dest_id and sm.picking_id.location_dest_id.id}
+        return res
+
+    def _get_stock_move_from_picking(self, cr, uid, ids, context = {}):
+        """
+            () -> Stock Move IDs
+        """
+        res = {}
+        for sp in self.browse(cr, uid, ids, context):
+            for sm in sp.move_lines:
+                res[sm.id] = True
+        return res.keys()
+
+    #DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
     _columns = {
         #'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
                 
@@ -57,8 +77,17 @@ class stock_move(osv.osv):
         'date': fields.date('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.date('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
 
-        'location_id': fields.many2one('stock.location', 'Source Warehouse', select=True,states={'done': [('readonly', True)]}, required=True, domain = DOMAIN_LOCATION),
-        'location_dest_id': fields.many2one('stock.location', 'Destination Warehouse',states={'done': [('readonly', True)]}, required=True, domain = DOMAIN_LOCATION),
+        'location_id': fields.function(_get_location_id,relation='stock.location', type='many2one', string='Source Warehouse', select=True, multi="get_location_id",
+                                      store = {
+                                          'stock.move': (lambda self, cr, uid, ids, contexts={}: ids,['picking_id'], 5),
+                                          'stock.picking': (_get_stock_move_from_picking, ['location_id'], 10)}),
+        'location_dest_id': fields.function(_get_location_id,'location_dest_id',relation='stock.location', type='many2one', string='Destination Warehouse', select=True, multi="get_location_id",
+                                           store = {
+                                                    'stock.move': (lambda self, cr, uid, ids, contexts={}: ids,['picking_id'], 5),
+                                                    'stock.picking': (_get_stock_move_from_picking, ['location_dest_id'], 10)}),
+        #'': fields.related('stock.location', 'Destination Warehouse',states={'done': [('readonly', True)]}, required=True, domain = DOMAIN_LOCATION),, domain = DOMAIN_LOCATION),
+
+        'picking_id': fields.many2one('stock.picking', 'Picking ID', select=True, states={'done': [('readonly', True)]}, required=1),
 
         'state': fields.selection([('draft', 'Waiting for Confirmation'),
                                    ('confirmed','Confirmed'),

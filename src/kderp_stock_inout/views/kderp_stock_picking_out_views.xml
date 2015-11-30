@@ -30,10 +30,10 @@
                     <header>
                         <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight" groups="kderp_stock.kderp_stock_receive_packing"/>
                         <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight" groups="kderp_stock.kderp_stock_receive_packing"/>
-                        <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="kderp_stock.kderp_stock_receive_packing"/>
-                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="kderp_stock.kderp_stock_receive_packing"/>
+                        <!--<button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="kderp_stock.kderp_stock_receive_packing"/>-->
+                        <!--<button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="kderp_stock.kderp_stock_receive_packing"/>-->
                         <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="kderp_stock.kderp_stock_receive_packing" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                        <field name="state" widget="statusbar" statusbar_visible="assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </header>
                     <sheet>
                         <h1>

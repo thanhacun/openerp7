@@ -62,11 +62,25 @@ class stock_picking(osv.osv):
         new_code = cr.fetchone()
         return new_code[0] if new_code else False
 
-    #Fuction Get id of view when open Picking In, Out, or Move (internal)
+    # Fuction
+    # Change state selection
+    # Get id of view when open Picking In, Out, or Move (internal)
+    def fields_get(self, cr, uid, fields=None, context=None):
+        res = super(stock_picking, self).fields_get(cr, uid, fields, context)
+        picking_id = context.get('picking_id',False)
+        picking_type = context.get('picking_type','in')
+        if picking_id:
+            picking_type = self.read(cr, uid, picking_id, ['type'])['type']
+        selection = picking_type!='in' and res.get('state')
+        if selection:
+            newStates = [('draft','Creating'),('assigned', 'Waiting for Delivery'),('done', 'Received'),('cancel', 'Cancelled')] if picking_type=='out' else \
+                        [('draft','Creating'),('assigned', 'Waiting for Receive'),('done', 'Received'),('cancel', 'Cancelled')]
+            selection['selection'] = newStates
+        return res
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
             context = {}
-
         picking_id = context.get('picking_id',False)
         if picking_id:
             picking_type = self.read(cr, uid, picking_id, ['type'])['type']
@@ -79,8 +93,12 @@ class stock_picking(osv.osv):
                 views_ids = self.pool.get('ir.ui.view').search(cr, uid, [('name','=','kderp.stock.picking.%s.%s' % (picking_type,view_type))])
                 if views_ids:
                     view_id = views_ids[0]
-
-        return super(stock_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(stock_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        # selection = picking_type!='in' and res.get('fields',{}) and res.get('fields',{}).get('state')
+        # if selection:
+        #     newStates = [('draft','Creating'),('assigned', 'Waiting for Delivery'),('done', 'Received'),('cancel', 'Cancelled')] if picking_type=='out' else [()]
+        #     selection['selection'] = newStates
+        return res
 
     def create(self, cr, user, vals, context=None):
         if not context:
@@ -116,8 +134,8 @@ class stock_picking(osv.osv):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel_draft(cr, uid, ids2, context)
             wf_service.trg_delete(uid, 'stock.picking', pick.id, cr)
+            self.write(cr, uid, [pick.id], {'state': 'draft'})
             wf_service.trg_create(uid, 'stock.picking', pick.id, cr)
-        self.write(cr, uid, ids, {'state': 'draft'})
         return True
 
     def _get_received_by_id(self, cr, uid, context={}):

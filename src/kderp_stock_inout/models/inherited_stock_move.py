@@ -83,31 +83,30 @@ class StockMove(osv.osv):
             return False
         return True
 
-    def _check_picking_type(self, cr, uid, ids):
-        picking_dict = {'customer-internal':'in',
-                        'supplier-internal':'in',
-                        'internal-internal':'internal',
-                        'internal-supplier':'out',
-                        'internal-customer':'out'}
-        for sm in self.browse(cr, uid, ids):
-            if sm.picking_id and sm.picking_id.type != picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]:
-                move_type = picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]
-                picking_type = sm.picking_id.type
-                raise osv.except_osv(_("KDERP Warning"),_("Please check Picking type (%s) and Detail picking(%s)" % (picking_type.upper(), move_type.upper())))
-        return True
-
+    # def _check_picking_type(self, cr, uid, ids):
+    #     picking_dict = {'customer-internal':'in',
+    #                     'supplier-internal':'in',
+    #                     'internal-internal':'internal',
+    #                     'internal-supplier':'out',
+    #                     'internal-customer':'out'}
+    #     for sm in self.browse(cr, uid, ids):
+    #         if sm.picking_id and sm.picking_id.type != picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]:
+    #             move_type = picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]
+    #             picking_type = sm.picking_id.type
+    #             raise osv.except_osv(_("KDERP Warning"),_("Please check Picking type (%s) and Detail picking(%s)" % (picking_type.upper(), move_type.upper())))
+    #     return True
 
     _columns ={
         'qty_inout':fields.function(_get_qty_inout,type='float',string='Qty. In/Out'),
         'purchase_id':fields.related('purchase_line_id','order_id',type='many2one',string='PO. No.',relation='purchase.order'),
         'remarks':fields.char("Remarks", size=128, states={'done': [('readonly', True)]})
     }
-    _constraints = [(_check_warehouse_product_available, "KDERP Warning, Please Quantity available in Warehoues", ['product_id','product_qty','location_id']),
-                    (_check_picking_type, "KDERP Warning, Check Picking type",['location_id','location_dest_id','picking_id'])]
-    _defaults = {
-       'location_id':lambda self, cr, uid, context = {}: context.get('location_id',False) if context else False,
-       'location_dest_id':lambda self, cr, uid, context = {}: context.get('location_dest_id',False) if context else False
-        }
+    _constraints = [(_check_warehouse_product_available, "KDERP Warning, Please Quantity available in Warehoues", ['product_id','product_qty','location_id'])]
+    #(_check_picking_type, "KDERP Warning, Check Picking type",['location_id','location_dest_id','picking_id'])
+    # _defaults = {
+    #    'location_id':lambda self, cr, uid, context = {}: context.get('location_id',False) if context else False,
+    #    'location_dest_id':lambda self, cr, uid, context = {}: context.get('location_dest_id',False) if context else False
+    #     }
 
     #TODO
     # #Kiem tra lai Product Qty con so luong hay khong khi submit
