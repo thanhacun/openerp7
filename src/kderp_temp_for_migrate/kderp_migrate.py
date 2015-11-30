@@ -1110,23 +1110,27 @@ class kderp_migrate(osv.osv_memory):
         res = {}
         wf_service = netsvc.LocalService("workflow")
         cr.execute("""Select
-                           kspe.id
-                       from
-                           kderp_supplier_payment_expense kspe
-                       left join
-                           kderp_other_expense koe on kspe.expense_id = koe.id
-                       where
-                           kspe.state ='draft' and
-                           koe.name like '%-%-I%' and
-                           exists(Select id from kderp_supplier_payment_expense_line kspel where supplier_payment_expense_id=kspe.id)""")                
+                          kspe.id,state
+                      from
+                          kderp_supplier_payment_expense kspe
+                      left join
+                          kderp_other_expense koe on kspe.expense_id = koe.id
+                      where
+                          kspe.state in ('draft','waiting_bod') and
+                          koe.name like '%-%-I%' and
+                          exists(Select id from kderp_supplier_payment_expense_line kspel where supplier_payment_expense_id=kspe.id)""")                
 
-        for kspe_id in cr.fetchall():
-            wf_service.trg_validate(uid, 'kderp.supplier.payment.expense', kspe_id[0], 'btn_submit_confirm', cr)
-            wf_service.trg_validate(uid, 'kderp.supplier.payment.expense', kspe_id[0], 'btn_bod_confirm', cr)
+        for kspe_id, state in cr.fetchall():
+            if state=='draft':
+                wf_service.trg_validate(uid, 'kderp.supplier.payment.expense', kspe_id, 'btn_submit_confirm', cr)
+                wf_service.trg_validate(uid, 'kderp.supplier.payment.expense', kspe_id, 'btn_bod_confirm', cr)
+            else:
+                wf_service.trg_validate(uid, 'kderp.supplier.payment.expense', kspe_id, 'btn_bod_confirm', cr)
             try:
                 wf_service.trg_delete(uid, 'kderp.supplier.payment.expense', kspe_id, cr)
             except:
-                continue
+                pass
+            cr.commit()
         return True
 kderp_migrate()
 
