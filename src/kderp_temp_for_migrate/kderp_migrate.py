@@ -1110,7 +1110,7 @@ class kderp_migrate(osv.osv_memory):
         res = {}
         wf_service = netsvc.LocalService("workflow")
         cr.execute("""Select
-                          kspe.id,state
+                          kspe.id,ksp.state
                       from
                           kderp_supplier_payment_expense kspe
                       left join
