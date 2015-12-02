@@ -22,14 +22,12 @@
 # 1 : imports of python lib
 # 2 :  imports of openerp
 import openerp
-from openerp.osv import fields, osv as models, expression
+from openerp.osv import fields, osv as models, expression, osv
 from openerp.tools.translate import _
 
 EXPLAIN_WAREHOUSE_NO = _("""Warehouse Number:
-                            W(L)XXXX,
-                            W: Warehouse,
-                            (L) Location H: Hanoi, P: Hai Phong, S: Ho Chi Minh,
-                            XXXX is increase number with four number """)
+                                \tW-JOBNumber: Warehouse Internal,
+                                \tSUB-JOBNumber: Warehouse Subcontractor (Warhouse Out)""")
 
 class StockLocation(models.Model):
     """
@@ -38,37 +36,75 @@ class StockLocation(models.Model):
     _inherit = 'stock.location'
     _name = 'stock.location'
 
+    def onchange_getnewcode(self, cr, uid, ids, job_id, usage, context = {}):
+        context = context or {}
+        val = {}
+        if job_id and usage and usage in ('internal','supplier','customer'):
+            jobObj = self.pool.get('account.analytic.account').browse(cr, uid, job_id)
+            ctx = context.copy()
+            ctx['jobCode'] = jobObj.code
+            ctx['warehouseType'] = usage
+            newCode = self.get_newcode(cr, uid, ctx)
+            newBelong = self._get_default_belong_location(cr, uid, ctx)
+            val = {'code': newCode,
+                   'location_id': newBelong}
+        elif ids:
+            oldObj = self.browse(cr, uid, ids[0])
+            val = {'code': oldObj.code,
+                    'location_id': oldObj.location_id and oldObj.location_id.id}
+        return {'value':val}
+
+    #Default function Area
+    # def _get_stock_manager_id(self, cr, uid, context={}):
+    #     res_ids = self.pool.get('hr.department').search(cr, uid, [('code','=','S1420')])
+    #     depts = res_ids and self.pool.get('hr.department').browse(cr, uid, res_ids)[0]
+    #     return depts and depts.manager_id and depts.manager_id.user_id and depts.manager_id.user_id.id
+
     #Get new code for Warehouser
     def get_newcode(self, cr, uid, context = {} ):
         """() -> NEw code string """
         if not context:
             context = {}
-
-        # Please consider later when location user global (location code)
-        cr.execute("""SELECT
-                        replace(prefix,'$',location_code) || lpad((max(substring(coalesce(sp.code, replace(prefix,'$',location_code) || lpad('0',padding,'0')) from length(replace(prefix,'$',location_code))+1 for padding)::integer) + 1)::text, padding, '0')
-                    FROM
-                        (select
-                                case when location_user = 'hcm' then 'S' else
-                                    case when location_user = 'haiphong' then 'P' else 'H' end end as location_code from res_users ru where ru.id = %d ) vwcompany
-                    left join
-                        ir_sequence isq on 1=1
-                    left join
-                         stock_location sp on sp.code ilike replace(isq.prefix,'$',location_code) || lpad('_',padding,'_')
-                    WHERE
-                        isq.code = 'kderp_stock_warehouse_code'
-                    group by
-                        isq.id,
-                        location_code""" % (uid))
-        new_code = cr.fetchone()
-        return new_code[0] if new_code else False
+        jobCode = context.get('jobCode','')
+        wType = context.get('warehouseType','') #Warehouse Type
+        if jobCode and wType:
+            is_obj = self.pool.get('ir.sequence')
+            if wType=='internal':
+                getCode = 'kderp_warehouse_internal_code'
+            elif wType in ('supplier','customer'):
+                getCode = 'kderp_warehouse_partner_code'
+            else:
+                getCode = False
+            if getCode:
+                seq_ids = is_obj.search(cr, uid, [('code','=',getCode)])
+                wCode = seq_ids and is_obj.browse(cr, uid, seq_ids[0]).prefix
+                if wCode:
+                    return wCode + jobCode
+        return False
+        # # Please consider later when location user global (location code)
+        # cr.execute("""SELECT
+        #                 replace(prefix,'$',location_code) || lpad((max(substring(coalesce(sp.code, replace(prefix,'$',location_code) || lpad('0',padding,'0')) from length(replace(prefix,'$',location_code))+1 for padding)::integer) + 1)::text, padding, '0')
+        #             FROM
+        #                 (select
+        #                         case when location_user = 'hcm' then 'S' else
+        #                             case when location_user = 'haiphong' then 'P' else 'H' end end as location_code from res_users ru where ru.id = %d ) vwcompany
+        #             left join
+        #                 ir_sequence isq on 1=1
+        #             left join
+        #                  stock_location sp on sp.code ilike replace(isq.prefix,'$',location_code) || lpad('_',padding,'_')
+        #             WHERE
+        #                 isq.code = 'kderp_stock_warehouse_code'
+        #             group by
+        #                 isq.id,
+        #                 location_code""" % (uid))
+        # new_code = cr.fetchone()
+        #return new_code[0] if new_code else False
 
     def _get_default_belong_location(self, cr, uid, context = {}):
-        #WH001-> Hanoi, WH002 -> Hai Phong, WH003 - HCM
-        location_dict = {'hanoi': 'W001','haiphong': 'W002', 'hcm': 'W003'}
-        location_user = self.pool.get('res.users').browse(cr, uid, uid).location_user
-        location_ids = location_dict.get(location_user, False) and self.pool.get('stock.location').search(cr, uid, [('code','=',location_dict.get(location_user, False))])
-        return (location_ids and location_ids[0]) or False
+        jobCode = context.get('jobCode','')
+        searchWH = 'GW' + jobCode[:1] if jobCode else ''
+        wh_ids = self.search(cr, uid, [('code','=', searchWH)])
+        return wh_ids and wh_ids[0]
 
     #Copy from Original module
     def _complete_name(self, cr, uid, ids, name, args, context=None):
@@ -127,13 +163,33 @@ class StockLocation(models.Model):
     def open_warehouse(self, cr, uid, ids, context):
         return self.write(cr, uid, ids, {'state':'open'})
 
+    def _check_warehouse_job_code(self, cr, uid, ids, context = {}):
+        for wh in self.browse(cr,uid, ids):
+            if wh.account_analytic_id and wh.usage in ('supplier','customer','internal') and wh.code != self.get_newcode(cr, uid, {'warehouseType':wh.usage,'jobCode': wh.account_analytic_id.code}):
+                is_obj = self.pool.get('ir.sequence')
+                if wh.usage=='internal':
+                    getCode = 'kderp_warehouse_internal_code'
+                elif wh.usage in ('supplier','customer'):
+                    getCode = 'kderp_warehouse_partner_code'
+                seq_ids = is_obj.search(cr, uid, [('code','=',getCode)])
+                wCode = seq_ids and is_obj.browse(cr, uid, seq_ids[0]).prefix
+                raise osv.except_osv("KDERP Warning", "Please check warehouse code, this warehouse link to Job, so Code is %s%s" % (wCode,wh.account_analytic_id.code) )
+        return True
+
+    def _check_warehouse_and_job(self, cr, uid, ids, context = {}):
+        for wh in self.browse(cr, uid, ids):
+            wh_ids = wh.account_analytic_id and self.search(cr, uid, [('account_analytic_id','=',wh.account_analytic_id.id)])
+            if wh_ids and len(wh_ids)>2:
+                raise osv.except_osv("KDERP Warning", "Can't link more than two warehouses to one job")
+        return True
+
     # Fields declaration
     STOCK_STATES = (('open','Open'),
                     ('locked','Locked'),
                     ('closed','Closed'))
     _columns = {
                 'state':fields.selection(STOCK_STATES, 'State', readonly=1, states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
-                'code':fields.char('Code', required = True, size=8,help=EXPLAIN_WAREHOUSE_NO, states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
+                'code':fields.char('Code', required = True, size=16, help=EXPLAIN_WAREHOUSE_NO, states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
                 'name': fields.char('Warehouse Name', size=64, required=True, translate=False, states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
                 'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name",
                                     store={'stock.location': (_get_sublocations, ['name', 'location_id'], 10)}),
@@ -156,14 +212,19 @@ class StockLocation(models.Model):
                 
                 'stock_manager_id':fields.many2one('res.users', 'Warehouse Manager', ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
                 'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', 'Storekeepers', ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
-                'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', 'Job Related', ondelete='restrict',states={'locked':[('readonly', True)], 'closed':[('readonly',True)]})
+                #'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', 'Job Related', ondelete='restrict',states={'locked':[('readonly', True)], 'closed':[('readonly',True)]})
+                'account_analytic_id':fields.many2one('account.analytic.account','Job', ondelete="restrict")
                 }
     _defaults = {
         'code':get_newcode,
         'location_id':_get_default_belong_location,
+        #'stock_manager_id': _get_stock_manager_id,
         'state': 'open'
     }
     _sql_constraints = [("_unique_warehouse_code","unique(code)","KDERP Warning: Warehouse code must be unique")]
+    _constraints = [(_check_warehouse_job_code, 'Please check code of Warehouse for a Job',['code','account_analytic_id','usage']),
+                    (_check_warehouse_and_job, "KDERP Warning: Can't link more than two warehouses to one job", ['account_analytic_id'])
+                    ]
     # FIXME: Later remove this init method, this method using for recreate Parent Left, right
     # def init(self, cr):
     #     cr.execute("""Alter table stock_location drop column parent_left;
