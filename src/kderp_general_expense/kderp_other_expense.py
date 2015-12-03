@@ -190,8 +190,10 @@ class kderp_other_expense(osv.osv):
                             vat_amount=kspvi.total_amount
                             vat_subtotal=kspvi.subtotal
                             if company_currency.id == kspvi.currency_id.id and koe_currency_id!=company_currency.id:
-                                total_vat_amount += cur_obj.round(cr, uid, koe.currency_id, koe.exrate*vat_amount)
-                                subtotal_vat_amount += cur_obj.round(cr, uid, koe.currency_id, koe.exrate*vat_subtotal)
+                                #Incase vat invoice same currency with Company Currency and Expense not
+                                if koe.exrate:
+                                    total_vat_amount += cur_obj.round(cr, uid, koe.currency_id, vat_amount/koe.exrate)
+                                    subtotal_vat_amount += cur_obj.round(cr, uid, koe.currency_id, vat_subtotal/koe.exrate)
                             else: 
                                 total_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, vat_amount, round=True, context=context)
                                 subtotal_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, koe_currency_id, vat_subtotal, round=True, context=context)

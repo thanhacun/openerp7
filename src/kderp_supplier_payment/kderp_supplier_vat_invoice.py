@@ -232,7 +232,10 @@ class kderp_supplier_vat_invoice(osv.osv):
         return {'value':value}
     
     def on_changevalue_per(self, cr, uid, ids, amount, tax_per, amount_tax=0,dump = 0):
-        if abs(amount*tax_per/100.0-amount_tax)<=2:
+        #In case create new get from default value
+        # if not ids:
+        #     return {}
+        if abs(amount*tax_per/100.0-amount_tax)<1000:
             amount_tax=amount_tax
         else:
             amount_tax=amount*tax_per/100.0

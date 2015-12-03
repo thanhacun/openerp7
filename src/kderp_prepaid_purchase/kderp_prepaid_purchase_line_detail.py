@@ -192,3 +192,12 @@ class kderp_purchase_job_allocated_combine(osv.osv_memory):
                 'job_name':fields.char('Job Name', size=256),
                 'allocated_amount':fields.float("Allocated Amount")
                 }
+
+class kderp_prepaid_purchase_order_line(osv.osv):
+    _name = 'kderp.prepaid.purchase.order.line'
+    _inherit = 'kderp.prepaid.purchase.order.line'
+    _description = 'kderp.prepaid.purchase.order.line'
+
+    _columns = {
+        'prepaid_order_line_detail_ids':fields.one2many('kderp.prepaid.purchase.order.line.detail','prepaid_order_line_id','Prepaid Order Line Details')
+        }
