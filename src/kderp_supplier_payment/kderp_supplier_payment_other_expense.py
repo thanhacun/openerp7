@@ -1026,7 +1026,7 @@ class kderp_supplier_payment_expense(osv.osv):
         kspe_cur = kspe.currency_id
         company_currency = cur.id
         
-        supplier_code = " - " +  kspe.expense_id.partner_id.code
+        supplier_code = " - " +  kspe.expense_id.partner_id.code if kspe.expense_id.partner_id.code else kspe.expense_id.partner_id.name
         if kspe.taxes_id:
             for tax in tax_obj.compute_all(cr, uid, kspe.taxes_id, kspe.amount, 1, False, False)['taxes']:
                 val={}
