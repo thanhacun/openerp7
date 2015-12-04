@@ -67,10 +67,51 @@ class stock_move(osv.osv):
                 res[sm.id] = True
         return res.keys()
 
+    def _get_finalprice_unit(self, cr, uid, ids, name, args, context= {}):
+        context = context or {}
+        res = {}
+        cur_obj = self.pool.get('res.currency')
+        company_curr = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
+        for sm in self.browse(cr, uid, ids, context=context):
+            if sm.purchase_line_id:
+                pol_price_unit = sm.purchase_line_id.after_negotiation
+                if pol_price_unit<>sm.price_unit:
+                    cr.execute("""Update stock_move set price_unit=%s where id =%s""" %  (pol_price_unit ,sm.id))
+                res[sm.id] = pol_price_unit
+            else:
+                res[sm.id] = sm.price_unit
+        return res
+
+    def _get_stockmove_purchase_order_line(self, cr, uid, ids, context = {}):
+        """
+            () -> Stock Move IDS
+        """
+        res = {}
+        for pol in self.browse(cr, uid, ids):
+            for sm in pol.move_ids:
+                res[sm.id] = True
+        return res.keys()
+
+    def _get_stockmove_purchase_order(self, cr, uid, ids, context = {}):
+        """
+            () -> Stock Move IDS
+        """
+        res = {}
+        for po in self.browse(cr, uid, ids):
+            for sm in po.received_details:
+                res[sm.id] = True
+        return res.keys()
+
     #DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
     _columns = {
         #'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
-                
+        #Sequence field must be largest compare with amount in Purchase Order line
+        'final_price_unit':fields.function(_get_finalprice_unit, method=True, type="float", string='Final Price Unit',
+                                           store={
+                                                    'stock.move':(lambda self, cr, uid, ids, context={}: ids, ['price_unit','purchase_line_id'],50),
+                                                    'purchase.order.line':(_get_stockmove_purchase_order_line, ['price_unit','plan_qty'],55),
+                                                    'purchase.order': (_get_stockmove_purchase_order, ['currency_id','date_order','discount_amount'], 60),
+                                            }),
         'purchase_line_id': fields.many2one('purchase.order.line',
             'Purchase Order Line', ondelete='restrict', select=True, states={'done': [('readonly', True)]}),
         'name': fields.char('Description', select=True),
@@ -112,24 +153,7 @@ class stock_move(osv.osv):
                     return False
         return True
 
-    def _check_update_price(self, cr, uid, ids, context=None):
-        """
-            Price Unit link to POL
-        """
-        if not context:
-            context={}
-        cur_obj = self.pool.get('res.currency')
-        company_curr = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
-        for sm in self.browse(cr, uid, ids, context=context):
-            if sm.purchase_line_id:
-                pol_price_unit = sm.purchase_line_id.after_negotiation/sm.purchase_line_id.plan_qty if sm.purchase_line_id.plan_qty else sm.purchase_line_id.price_unit
-                pol_price_unit = cur_obj.round(cr, uid, company_curr, pol_price_unit)
-                if pol_price_unit<>sm.price_unit:
-                    sm.write({'price_unit':pol_price_unit})
-        return True
-
-    _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id']),
-                    (_check_update_price,'KDERP Warning',['purchase_line_id','price_unit'])]
+    _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id'])]
     
     def purchase_order_line_change(self, cr, uid, ids, order_line_id):        
         if not order_line_id:
