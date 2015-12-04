@@ -111,8 +111,25 @@ class stock_move(osv.osv):
                 if sm.purchase_line_id.product_id.id !=  sm.product_id.id:
                     return False
         return True
-    
-    _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id'])]
+
+    def _check_update_price(self, cr, uid, ids, context=None):
+        """
+            Price Unit link to POL
+        """
+        if not context:
+            context={}
+        cur_obj = self.pool.get('res.currency')
+        company_curr = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
+        for sm in self.browse(cr, uid, ids, context=context):
+            if sm.purchase_line_id:
+                pol_price_unit = sm.purchase_line_id.after_negotiation/sm.purchase_line_id.plan_qty if sm.purchase_line_id.plan_qty else sm.purchase_line_id.price_unit
+                pol_price_unit = cur_obj.round(cr, uid, company_curr, pol_price_unit)
+                if pol_price_unit<>sm.price_unit:
+                    sm.write({'price_unit':pol_price_unit})
+        return True
+
+    _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id']),
+                    (_check_update_price,'KDERP Warning',['purchase_line_id','price_unit'])]
     
     def purchase_order_line_change(self, cr, uid, ids, order_line_id):        
         if not order_line_id:
