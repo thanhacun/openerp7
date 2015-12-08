@@ -53,6 +53,7 @@
 	                                <tree string="Expense Details" editable="bottom">
 	                                	<field name="name" string="Desc."/>
 	                                	<field name="amount"/>
+										<field name="manual_vat"/>
 	                                    <field name='account_analytic_id' context="{'code':'JD'}" string='Job/G.E'/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, }" options='{"always_reload": True}'/>
 	                                </tree>

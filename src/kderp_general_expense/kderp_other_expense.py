@@ -333,7 +333,26 @@ class kderp_other_expense(osv.osv):
                                                             'kderp.supplier.payment.expense.line':(_get_order_from_supplier_payment_line, None, 25),
                                                             'kderp.supplier.payment.expense.pay': (_get_order_from_supplier_payment_pay, None, 30),
                                                            }),
-              }    
+              }
+
+    def _check_manual_vat(self, cr, uid, ids):
+        koe_ids = {}
+        self.pool.get('ir.rule').clear_cache(cr,uid)
+        for koe in self.browse(cr, uid, ids):
+            for koel in koe.expense_line:
+                if koel.manual_vat:
+                    koe_ids[koe.id] = True
+        koe_taxes = self._amount_all(cr, uid, koe_ids.keys(),['amount_tax'], {}, {})
+        for koe in self.browse(cr, uid, koe_ids.keys()):
+            subtotalVATAmount = 0
+            for koel in koe.expense_line:
+                subtotalVATAmount += koel.manual_vat
+            amountTAXOE = koe_taxes[koe.id]['amount_tax']
+            if amountTAXOE <> subtotalVATAmount:
+                raise osv.except_osv("KDERP Warning", "Please check VAT Amount")
+        return True
+
+    _constraints = [(_check_manual_vat, "",['taxes_id','expense_line'])]
 kderp_other_expense()
 
 class kderp_other_expense_line(osv.osv):
@@ -402,5 +421,26 @@ class kderp_other_expense_line(osv.osv):
                                                         'kderp.supplier.payment.expense.line':(_get_expense_line_from_supplier_payment_line, None, 35),
                                                         'kderp.supplier.payment.expense.pay': (_get_expense_line_from_supplier_payment_pay, None, 35),
                                                         }),
+              'manual_vat': fields.float("Manual VAT", digits = (16,2))
               }
+    #
+    # def _check_manual_vat(self, cr, uid, ids):
+    #     koe_ids = {}
+    #     for koel in self.browse(cr, uid, ids):
+    #         if koel.manual_vat:
+    #             koe_ids[koel.expense_id.id] = True
+    #     oe_keys = self.pool.get('kderp.other.expense')._amount_all(cr, uid, koe_ids.keys(), 'amount_tax', {}, context={})
+    #
+    #     import pdb
+    #     pdb.set_trace()
+    #     for koe in self.pool.get('kderp.other.expense').browse(cr, uid, koe_ids.keys()):
+    #         subtotalVATAmount = 0
+    #         for koel in koe.expense_line:
+    #             subtotalVATAmount += koel.manual_vat
+    #         amountTAXOE = oe_keys[koe.id]['amount_tax']
+    #         if amountTAXOE <> subtotalVATAmount:
+    #             raise osv.except_osv("KDERP Warning", "Please check VAT Amount")
+    #     return True
+    #
+    # _constraints = [(_check_manual_vat, "",['manual_vat','expense_id'])]
 kderp_other_expense_line()
