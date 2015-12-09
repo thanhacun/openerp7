@@ -26,4 +26,6 @@ import kderp_detail_cash_advance
 
 import wizard
 
-import kderp_batch_update_advance
+#import kderp_batch_update_advance
+
+import kderp_batch_update_advance_and_cash
