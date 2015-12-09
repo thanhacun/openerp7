@@ -76,6 +76,9 @@
 	                        		<field name='currency_id'/>
 	                        		<field name='exrate'/>
 	                        		<field name='manual_exrate' string ="Manual Ex.Rate"/>
+	                        		
+	                        		<button context="{'expense_id':active_id,'account_analytic_id':account_analytic_id}" name="%(act_kderp_advance_cash)d" type='action' groups= "kderp_general_expense.group_kderp_cash_advance_from_ge"  string='Create Cash/Advance' icon='gtk-new' />
+	                 
 	                        	</group>	                        	
 	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
