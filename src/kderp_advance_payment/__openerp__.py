@@ -44,8 +44,9 @@
             "kderp_batch_update_advance_view.xml",
             "wizard/kderp_advance_wizard_form_report_view.xml",
             "data/kderp_advance_cash_payment.xml",
-            "wizard/kderp_cash_payment_supplier_view.xml"
+            "wizard/kderp_cash_payment_supplier_view.xml",
 #             "process/advance_payment_process.xml"
+            "kderp_batch_update_advance_and_cash_view.xml"
             ],
     'demo':[],
     'installable':True
