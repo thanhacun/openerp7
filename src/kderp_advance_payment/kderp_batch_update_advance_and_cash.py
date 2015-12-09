@@ -2,7 +2,6 @@ import time
 
 from openerp.osv import fields, osv
 
-
 class kderp_batch_update_advance_and_cash(osv.osv):
     _name = 'kderp.batch.update.advance.and.cash'
     _description = 'KDERP Batch Update Advance and Cash for Kinden'

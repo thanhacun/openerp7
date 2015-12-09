@@ -14,8 +14,7 @@
             	</tree>
             </field>
 		</record>
-		
-		 
+
     	<record id="view_kderp_batch_update_advance_and_cash_form" model="ir.ui.view">
             <field name="name">view.kderp.batch.update.advance.and.cash.form</field>
             <field name="model">kderp.batch.update.advance.and.cash</field>
