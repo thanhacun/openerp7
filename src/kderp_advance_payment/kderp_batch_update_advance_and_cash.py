@@ -35,11 +35,11 @@ class kderp_batch_update_advance_and_cash(osv.osv):
         for adv_id,date_receive_adv,date_receivecashbook in cr.fetchall():
             vals = {}
             if date_receive_adv:
-                val['date_acc_recv_doc'] = date_receive_adv
+                vals['date_acc_recv_doc'] = date_receive_adv
             if date_receivecashbook:
-                val['date_acc_recv_cashbook'] = date_receivecashbook
+                vals['date_acc_recv_cashbook'] = date_receivecashbook
             kap_obj.write(cr, uid, [adv_id], vals)
-        self.write(cr, uid, [id], {'state':'done'})
+        self.write(cr, uid, ids, {'state':'done'})
         return True
 
     _columns={
