@@ -71,7 +71,11 @@ class kderp_other_expense(osv.osv):
             tax_ids=[]
             for tax_id in koe.taxes_id:
                 tax_ids.append(tax_id.id)
-            general_expense=koe.account_analytic_id.general_expense
+            #FIXME: Later will remove this, if already installed General Expense
+            try:
+                general_expense=koe.account_analytic_id.general_expense
+            except:
+                general_expense  = False
             if not self.pool.get('ir.model.access').check_groups(cr, uid, "kderp_supplier_payment.group_kderp_supplier_payment_haiphong"):
                 rop_date = time.strftime('%Y-%m-%d')
                 if general_expense:
