@@ -314,62 +314,6 @@ class kderp_other_expense(osv.osv):
 #         return res
 #    
    
-    def action_ge_create_ge_cash_advance(self, cr, uid, ids, *args): 
-        advance_buying='cash'
-        name=''
-        rValue = self.pool.get('kderp.advance.payment').new_code(cr, uid, [],3, name,advance_buying)['value']
-        newcode = rValue.get('name', False)
-        #pdb.set_trace()
-        date=time.strftime('%Y-%m-%d')
-        kderp_kspe_id = False
-        for ge in self.browse(cr, uid, ids):
-            if ge.advance_payment_id:
-                return True  
-            #pdb.set_trace()
-            cash_details = []
-            advance_cash= {
-                    'advance_buying':advance_buying,
-                    'name':newcode,
-                    'type_cash':'payment',
-                    'date':date,
-                   
-                    #'other_expense_ids':ge.id
-                    
-                   
-                }
-            kderp_kspe_id = self.pool.get('kderp.advance.payment').create(cr, uid, advance_cash)            
-            ge.write({'advance_payment_id': kderp_kspe_id})  
-            cr.execute("Select\
-                            name,\
-                            amount\
-                        from \
-                            kderp_other_expense_line koel\
-                        where expense_id=%s" % (ge.id))
-            for name,amount in cr.fetchall():
-                if name<>'':
-                    name=''
-                else:
-                    name=name
-                cash={
-                      'advance_id':kderp_kspe_id,
-                      'name':name,
-                      'amount':amount,
-                      'date':date
-                      }
-                cash_details =self.pool.get('kderp.advance.payment.reimbursement.line').create(cr, uid, cash)             
-        if kderp_kspe_id:   
-            return {
-                'type': 'ir.actions.act_window',
-                'name': 'Supplier Payment (OExpense)',
-                'view_type': 'form',
-                'res_id':kderp_kspe_id,
-                'target':'current',
-                'nodestroy': True,
-                'view_mode': 'form,tree',
-                'res_model': 'kderp.advance.payment',
-                ' domain': "[('id','=',%s)]" % kderp_kspe_id
-                }
-            #pdb.set_trace()
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_payment','Waiting for Payment'),
                    ('paid','Paid'),
