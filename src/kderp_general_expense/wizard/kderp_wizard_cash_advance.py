@@ -126,7 +126,6 @@ class kderp_wizard_cash_advance(osv.osv_memory):
             context={}
         new_form_data = self.read(cr,uid,ids,['name','account_analytic_id','user_id','date',],context)
         advance_buying='cash'
-        #date=time.strftime('%Y-%m-%d')
         kderp_kspe_id = False
         koe_obj = self.pool.get('kderp.other.expense')
         for koe in koe_obj.browse(cr,uid,[context.get('expense_id',False)]):  
