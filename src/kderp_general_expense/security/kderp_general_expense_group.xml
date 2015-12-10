@@ -186,6 +186,12 @@
 			 <field name="users" eval="[(4, ref('base.user_root'))]"/>
 	         <field name="category_id" ref="module_category_kderp_general_expense"/>
 	   </record>
+	   <!-- Group KDERP -  Cash Advance Create From GE-->
+	   <record id="group_kderp_cash_advance_from_ge" model="res.groups">
+			 <field name="name">KDERP - Cash Advance Create From GE </field>
+			 <field name="users" eval="[(4, ref('base.user_root'))]"/>
+	         <field name="category_id" ref="module_category_kderp_general_expense"/>
+	   </record>
 	   
     </data>
 </openerp>

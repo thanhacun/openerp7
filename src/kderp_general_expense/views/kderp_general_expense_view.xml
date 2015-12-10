@@ -25,7 +25,6 @@
             	</tree>
             </field>
 		</record>
-		 
  		<record id="view_kderp_other_expense_ge_form" model="ir.ui.view">
             <field name="name">view.kderp.other.expense.ge.form</field>
             <field name="model">kderp.other.expense</field>
@@ -75,7 +74,8 @@
 	                        		<field name='currency_id'/>
 	                        		<field name='exrate'/>
 	                        		<field name='manual_exrate' string ="Manual Ex.Rate"/>
-	                        	</group>	                        	
+	                        	</group>	
+	                        	                    	
 	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge': parent.allocated_to,'job_id':account_analytic_id}"/>

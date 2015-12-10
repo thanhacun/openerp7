@@ -312,7 +312,8 @@ class kderp_other_expense(osv.osv):
 #         else:
 #             res='PE'
 #         return res
-#
+#    
+   
     STATE_SELECTION=[('draft','Draft'),
                    ('waiting_for_payment','Waiting for Payment'),
                    ('paid','Paid'),
