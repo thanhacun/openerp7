@@ -61,7 +61,6 @@
 	                       	<field name='allocated_to' on_change="onchange_allocate_ge(allocated_to,section_incharge_id,True)" context="{'general_expense':True}" colspan="1" default_focus="1"/>
 							<!-- <field name='allocated_to'  on_change="onchange_allocate_ge(allocated_to)" context="{'general_expense': True}" colspan="1" default_focus="1"/> -->
 							<field name="date" colspan="1" string='Ad./Allocated Date'/>
-							
 	                        <field name='section_incharge_id' colspan="1"/>    
 	                        <field name="accounting_allocated_date" colspan="1" string='Acc./Allocated Date'/>  
 	                        <field name ='ref_number' help="Input Reference No. when General Expense is Telephone"/>    
@@ -76,10 +75,11 @@
 	                        		<field name='currency_id'/>
 	                        		<field name='exrate'/>
 	                        		<field name='manual_exrate' string ="Manual Ex.Rate"/>
-	                        		
-	                        		<button context="{'expense_id':active_id,'account_analytic_id':account_analytic_id}" name="%(act_kderp_advance_cash)d" type='action' groups= "kderp_general_expense.group_kderp_cash_advance_from_ge"  string='Create Cash/Advance' icon='gtk-new' />
-	                 
-	                        	</group>	                        	
+	                        	</group>	
+	                        	<group>
+	                        		<button attrs="{'invisible':[('advance_payment_id','>',0)]}" context="{'expense_id':active_id,'account_analytic_id':account_analytic_id}" name="%(act_kderp_wizard_cash_advance)d" type='action' groups= "kderp_general_expense.group_kderp_cash_advance_from_ge"  string='Create Cash/Advance' icon='gtk-new' />
+	               
+	                        </group>                        	
 	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                    <field name='account_analytic_id' string='Job/G.E'  options='{"always_reload": True}' context="{'kderp_search_pge': parent.allocated_to,'job_id':account_analytic_id}"/>
