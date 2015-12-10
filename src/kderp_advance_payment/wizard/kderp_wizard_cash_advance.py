@@ -159,7 +159,7 @@ class kderp_wizard_cash_advance(osv.osv_memory):
             koe.write({'advance_payment_id': kderp_adv_id})  
         return {
                 'type': 'ir.actions.act_window',
-                'name': 'Supplier Payment (OExpense)',
+                'name': 'Kderp Advance Payment',
                 'view_type': 'form',
                 'res_id':kderp_adv_id,
                 'target':'current',
