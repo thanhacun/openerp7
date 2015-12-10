@@ -171,13 +171,12 @@ class kderp_wizard_cash_advance(osv.osv_memory):
             
     def _get_job(self,cr,uid,context={}):
         return context.get('account_analytic_id',False)
+    
     _defaults={
                'type_cash':lambda *x:'payment',
                'advance_buying':lambda *x:'cash',
                'account_analytic_id':_get_job,
                'date': lambda *a: time.strftime('%Y-%m-%d'),
-               
-               
                }
 
 kderp_wizard_cash_advance()
