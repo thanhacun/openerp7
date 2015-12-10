@@ -59,6 +59,7 @@
              'wizard/kderp_job_wizard_form_report_view.xml',
              'wizard/update_quotation_completion_date_view.xml',
             'wizard/kderp_ge_wizard_form_report_view.xml',
+            "wizard/kderp_wizard_cash_advance_view.xml",
             ],
     'demo':[],
     'installable':True

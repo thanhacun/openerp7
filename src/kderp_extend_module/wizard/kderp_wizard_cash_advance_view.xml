@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<record id="view_kderp_wizard_cash_adavance" model="ir.ui.view">
+            <field name="name">Create Cash/Advance</field>
+            <field name="model">kderp.wizard.cash.advance</field>
+            <field name="arch" type="xml">
+                <form string="Create Cash/Advance" version="7.0">
+                	<group string='Create Cash/Advance'>
+                		<field name="name" invisible="1" string="Advance No."/>
+                	</group>
+                	<group>
+                		<field name="date"/>
+                		<field name="type_cash" invisible="1" />
+                		<field name="advance_buying" on_change="new_code(user_id,name,advance_buying)"/>
+                		<field name="user_id" on_change="new_code(user_id,name,advance_buying)"/>
+                		<field name="account_analytic_id" invisible="1" />                		
+	                </group>
+	                 <footer>
+                		<button context="{'user_id':user_id,'account_analytic_id':account_analytic_id}" icon="gtk-new" type="object" string="Create Cash/Advance" name="action_ge_create_ge_cash_advance"/>
+                	</footer>
+                </form>               
+            </field>
+        </record> 
+        <record id="act_kderp_wizard_cash_advance" model="ir.actions.act_window">
+            <field name="name">Create Cash/Advance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kderp.wizard.cash.advance</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_kderp_wizard_cash_adavance"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>
