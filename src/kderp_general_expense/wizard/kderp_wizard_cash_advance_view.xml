@@ -21,7 +21,7 @@
                 	</footer>
                 </form>               
             </field>
-        </record>
+        </record> 
         <record id="act_kderp_wizard_cash_advance" model="ir.actions.act_window">
             <field name="name">Create Cash/Advance</field>
             <field name="type">ir.actions.act_window</field>
