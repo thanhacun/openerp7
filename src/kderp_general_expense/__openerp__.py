@@ -34,7 +34,6 @@
             "security/kderp_general_expense_group.xml",
             "security/ir.model.access.csv",
             "wizard/kderp_allocation_sheet_wizard_view.xml",
-           "wizard/kderp_wizard_cash_advance_view.xml",
             "data/kderp_general_exepense_code_sequence.xml",            
             "views/kderp_general_expense_menu.xml",
             "views/kderp_budget_view.xml",
