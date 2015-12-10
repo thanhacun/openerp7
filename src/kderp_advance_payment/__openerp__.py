@@ -37,6 +37,7 @@
             "kderp_advance_payment_workflow.xml",
             "kderp_advance_payment_view.xml",
             "kderp_expense_view.xml",
+            'kderp_general_expense_view.xml',
             "period/kderp_cash_period_view.xml",
             "kderp_detail_cash_advance_view.xml",
             "wizard/kderp_advance_report_view.xml",
@@ -44,7 +45,8 @@
             "kderp_batch_update_advance_view.xml",
             "wizard/kderp_advance_wizard_form_report_view.xml",
             "data/kderp_advance_cash_payment.xml",
-            "wizard/kderp_cash_payment_supplier_view.xml"
+            "wizard/kderp_cash_payment_supplier_view.xml",
+             "wizard/kderp_wizard_cash_advance_view.xml"
 #             "process/advance_payment_process.xml"
             ],
     'demo':[],
