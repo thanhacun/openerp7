@@ -717,34 +717,34 @@ class purchase_order_line(osv.osv):
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (lambda self, cr, uid, ids, c={}: ids, ['plan_qty','price_unit'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','order_line'], 15),
                                                         }),
             'final_subtotal':fields.function(_amount_all_in_line,string='Final',digits_compute=dp.get_precision('Percent'),type='float',
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['price_unit','plan_qty'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','order_line'], 15),
                                                         }),#,digits_compute=dp.get_precision('Amount')
             'amount_tax':fields.function(_amount_all_in_line,
                                                  digits_compute=dp.get_precision('Amount'),string='VAT',type='float',
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['plan_qty','price_unit','taxes_id'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','taxes_id'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','taxes_id','order_line'], 15),
                                                         }),
             'final_total':fields.function(_amount_all_in_line,
                                                  digits_compute=dp.get_precision('Amount'),string='Total',type='float',
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['plan_qty','price_unit','taxes_id'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','order_line'], 15),
                                                         }),
                             
             'amount_company_curr':fields.function(_amount_in_company_curr,digits_compute=dp.get_precision('Budget'),string='Subtotal',
                                                   type='float',method=True,
                                                   store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['price_unit','plan_qty'], 35),
-                                                        'purchase.order': (_get_line_from_order, ['currency_id','date_order','state','discount_amount'], 35),
+                                                        'purchase.order': (_get_line_from_order, ['currency_id','date_order','state','discount_amount','order_line'], 35),
                                                         }),
               }
     _defaults={
