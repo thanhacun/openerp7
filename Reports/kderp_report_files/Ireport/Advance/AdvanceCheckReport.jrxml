@@ -255,20 +255,6 @@ $V{Total_VND_return_adv}]]></variableExpression>
 					<text><![CDATA[Today, date]]></text>
 				</staticText>
 				<textField pattern="dd-MMM-yyyy">
-					<reportElement x="493" y="0" width="62" height="10"/>
-					<textElement>
-						<font size="7" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="429" y="0" width="64" height="10"/>
-					<textElement>
-						<font size="7" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Printed date :]]></text>
-				</staticText>
-				<textField pattern="dd-MMM-yyyy">
 					<reportElement x="64" y="75" width="491" height="15"/>
 					<textElement/>
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{date_stop}]]></textFieldExpression>
