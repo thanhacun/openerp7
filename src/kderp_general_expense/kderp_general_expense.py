@@ -456,11 +456,11 @@ class kderp_other_expense(osv.osv):
                 job = job_obj.browse(cr, uid, koel.account_analytic_id.id)
                 kebl_object= self.pool.get('kderp.expense.budget.line').search(cr, uid, [('name','=',koe.name),('account_analytic_id','=',koel.account_analytic_id.id),('expense_id','=',koel.expense_id.id),('budget_id','=',koel.budget_id.id)])
                 if koel.budget_id.id==budget_id[0] and job.general_expense == True:
-                    for kebl in kebl_object:
-                        vals={}
-                        koel.write({'budget_id': budget_id_update[0]})
-                        vals['budget_id'] =  budget_id_update[0]
-                        self.pool.get('kderp.expense.budget.line').write(cr, uid, kebl_object, vals , context=context) 
+                    koel.write({'budget_id': budget_id_update[0]})
+            for kebl in kebl_object:
+                vals={}
+                vals['budget_id'] =  budget_id_update[0]
+                self.pool.get('kderp.expense.budget.line').write(cr, uid, kebl_object, vals , context=context) 
         return True
 class kderp_import_ge_accounting(osv.osv):
     _name = 'kderp.import.ge.accounting'  
