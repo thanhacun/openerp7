@@ -54,10 +54,13 @@
 	                                	<field name="name" string="Desc."/>
 	                                	<field name="amount"/>
 										<field name="manual_vat"/>
-	                                    <field name='account_analytic_id' context="{'code':'JD'}" string='Job/G.E'/>
+	                                    <field name='account_analytic_id' on_change="onchange_budget_telephone(account_analytic_id)"  context="{'code':'JD'}" string='Job/G.E'/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, }" options='{"always_reload": True}'/>
 	                                </tree>
-	                            </field>         
+	                            </field>   
+	                         	<group>
+	                    			<button icon="gtk-apply" string='Update Budget' name="update_budget_telephone" type='object'/>
+								</group>      
 	                            <group class="oe_subtotal_footer oe_right"> 
 	                            	<group colspan="2" col="2">
 	                            		<label for="amount_untaxed" string="Sub-total"/>

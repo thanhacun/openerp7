@@ -1,7 +1,7 @@
 from openerp.osv import fields, osv
 import time
 from openerp.tools.translate import _
-
+from openerp import netsvc
 class account_budget_post(osv.osv):
     """
         Inherit Budget add new some field, using for Budget Code
@@ -443,7 +443,25 @@ class kderp_other_expense(osv.osv):
                 if exp.expense_type != 'monthly_expense':
                     result = self.action_expense_create_supplier_payment_expense(cr, uid, ids)
         return result
-    
+    # Function update_budget_telephone dung de chuyen budget sang budget telephone A17 - khi khong phai la job du an
+    def update_budget_telephone(self, cr, uid, ids, context=None):
+        if not context:
+            context={}
+            
+        budget_id = self.pool.get('account.budget.post').search(cr, uid, [('code','=','A99')])
+        budget_id_update=self.pool.get('account.budget.post').search(cr, uid, [('code','=','A17')])
+        for koe in self.browse(cr, uid, ids):
+            for koel in koe.expense_line:
+                job_obj = self.pool.get('account.analytic.account')
+                job = job_obj.browse(cr, uid, koel.account_analytic_id.id)
+                kebl_object= self.pool.get('kderp.expense.budget.line').search(cr, uid, [('name','=',koe.name),('account_analytic_id','=',koel.account_analytic_id.id),('expense_id','=',koel.expense_id.id),('budget_id','=',koel.budget_id.id)])
+                if koel.budget_id.id==budget_id[0] and job.general_expense == True:
+                    for kebl in kebl_object:
+                        vals={}
+                        koel.write({'budget_id': budget_id_update[0]})
+                        vals['budget_id'] =  budget_id_update[0]
+                        self.pool.get('kderp.expense.budget.line').write(cr, uid, kebl_object, vals , context=context) 
+        return True
 class kderp_import_ge_accounting(osv.osv):
     _name = 'kderp.import.ge.accounting'  
     
@@ -502,7 +520,7 @@ class kderp_import_ge_accounting_detail(osv.osv):
                'state':lambda *a: 'draft'
                }    
     _sql_constraints = [('unique_import_ge_accounting','unique(import_id,expense_id)','KDERP Warning: Duplicated General Expense, pls check')]
-
+      
 class kderp_other_expense_line(osv.osv):
     _name = 'kderp.other.expense.line'
     _inherit = 'kderp.other.expense.line'
@@ -531,6 +549,18 @@ class kderp_other_expense_line(osv.osv):
             job_ids = self.pool.get('account.analytic.account').search(cr, uid, [('code','=',job_code)])
             res = job_ids[0] if job_ids else False
         return res
+     
+    def onchange_budget_telephone(self, cr, uid, ids,job_id):
+        value = {}
+        if job_id:
+            job_obj = self.pool.get('account.analytic.account')
+            job = job_obj.browse(cr, uid, job_id)
+            if job.general_expense == True:
+                budget_id = self.pool.get('account.budget.post').search(cr, uid, [('code','=','A99')])
+            else:
+                budget_id = self.pool.get('account.budget.post').search(cr, uid, [('code','=','7000')])
+            value['budget_id'] = budget_id
+        return {'value':value}
     
     _columns = {
                 #'import_acc_date':fields.one2many('kderp.other.expensel','accounting_allocated_date','Acc Date',states={'done':[('readonly',True)]}),
