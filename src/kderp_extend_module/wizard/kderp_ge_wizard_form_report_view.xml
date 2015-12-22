@@ -9,7 +9,8 @@
 				<form string="Input Value for GE Statement Form" version="7.0" readonly="1" create="false" >
 					<group colspan="2" col="2">
 						<field name="pdate_start"/>
-						<field name="pdate_end"/>	
+						<field name="pdate_end"/>
+                        <field name="ge_report_name"/>
 						<field name='file_type'/>	
 					</group>						
 					<footer>
@@ -22,7 +23,7 @@
 		</record>
 		
         <record id="action_print_ge_statement_form" model="ir.actions.act_window">
-            <field name="name">GE Statement</field>
+            <field name="name">GE Form</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">kderp.ge.wizard.form</field>
             <field name="view_type">form</field>
@@ -31,14 +32,17 @@
             <field name="target">new</field>
         </record>
 
+        <menuitem name="Reporting"
+     		id="menu_action_print_ge_statement_form"
+     		sequence="10"
+			parent="kderp_general_expense.menu_kderp_general_exepense_root"/>
+
 		<menuitem action="action_print_ge_statement_form"
             id="menu_action_print_ge_statement_form_ge"
             parent="menu_action_print_ge_statement_form"
             sequence="20"/>
 
-     	<menuitem name="Reporting"
-     		id="menu_action_print_ge_statement_form"
-     		sequence="10"
-			parent="kderp_general_expense.menu_kderp_general_exepense_root"/>
+
+
     </data>
 </openerp>
