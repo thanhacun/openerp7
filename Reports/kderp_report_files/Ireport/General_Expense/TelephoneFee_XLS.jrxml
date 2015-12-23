@@ -13,19 +13,22 @@
 	<queryString>
 		<![CDATA[select
 	koel.name as "Tel. Number",
-	CASE WHEN abp.general_expense = True and koel.name not ilike '%hcm%' or koel.name is null THEN koel.amount ELSE null END as "GE",
-	CASE WHEN koel.name ilike '%hcm%' THEN koel.amount ELSE null END as "HCM",
-	CASE WHEN abp.general_expense = False and koel.name not ilike '%hcm%' THEN koel.amount ELSE null END as "Job Cost",
+	CASE WHEN abp.general_expense = True and koel.name not ilike '%hcm%' or koel.name is null
+		THEN koel.amount*(CASE WHEN koe.manual_exrate = 0 or koe.manual_exrate is null THEN rcr.rate ELSE koe.manual_exrate END) ELSE 0 END as "GE",
+	CASE WHEN koel.name ilike '%hcm%'
+		THEN koel.amount*(CASE WHEN koe.manual_exrate = 0 or koe.manual_exrate is null THEN rcr.rate ELSE koe.manual_exrate END) ELSE 0 END as "HCM",
+	CASE WHEN abp.general_expense = False and koel.name not ilike '%hcm%'
+		THEN koel.amount*(CASE WHEN koe.manual_exrate = 0 or koe.manual_exrate is null THEN rcr.rate ELSE koe.manual_exrate END) ELSE 0 END as "Job Cost",
 	CASE WHEN koel.manual_vat = 0 or koel.manual_vat is null
 		THEN
-			CASE WHEN koe.amount_untaxed = 0 or koe.amount_untaxed is null THEN null ELSE ROUND((koe.amount_tax / koe.amount_untaxed)*koel.amount,0) END
+			CASE WHEN koe.amount_untaxed = 0 or koe.amount_untaxed is null THEN 0 ELSE ROUND((koe.amount_tax / koe.amount_untaxed)*koel.amount,0)*(CASE WHEN koe.manual_exrate = 0 or koe.manual_exrate is null THEN rcr.rate ELSE koe.manual_exrate END) END
 		ELSE
-			koel.manual_vat END as "VAT",
+			koel.manual_vat*(CASE WHEN koe.manual_exrate = 0 or koe.manual_exrate is null THEN rcr.rate ELSE koe.manual_exrate END) END as "VAT",
 	CASE WHEN koel.manual_vat = 0 or koel.manual_vat is null
 		THEN
-			CASE WHEN koe.amount_untaxed = 0 or koe.amount_untaxed is null THEN null ELSE (koel.amount + ROUND((koe.amount_tax / koe.amount_untaxed)*koel.amount,0)) END
+			CASE WHEN koe.amount_untaxed = 0 or koe.amount_untaxed is null THEN 0 ELSE (koel.amount + ROUND((koe.amount_tax / koe.amount_untaxed)*koel.amount,0))*(CASE WHEN koe.manual_exrate = 0 or koe.manual_exrate is null THEN rcr.rate ELSE koe.manual_exrate END) END
 		ELSE
-			koel.manual_vat + koel.amount END as "Total",
+			(koel.manual_vat + koel.amount)*(CASE WHEN koe.manual_exrate = 0 or koe.manual_exrate is null THEN rcr.rate ELSE koe.manual_exrate END) END as "Total",
 	CASE WHEN abp.general_expense = False and koel.name not ilike '%hcm%' THEN aaael.code ELSE null END as "Job No."
 from
 	kderp_other_expense koe
@@ -39,6 +42,23 @@ left join
 	account_budget_post abp on koel.budget_id = abp.id
 left join
 	account_analytic_account aaa on koe.account_analytic_id = aaa.id
+left join
+	(Select
+		koe.id as id,
+		max(rcr.name) as max_date
+	from
+		kderp_other_expense_line koel
+	left join
+		kderp_other_expense koe on koel.expense_id = koe.id
+	left join
+		res_currency rc on koe.currency_id = rc.id
+	left join
+		res_currency_rate rcr on koe.currency_id = rcr.currency_id and koe.date>=rcr.name
+	group by
+		koe.id
+	) vwkoe_rate on koe.id=vwkoe_rate.id
+left join
+	res_currency_rate rcr on koe.currency_id = rcr.currency_id and max_date=rcr.name
 where
 	aaa.general_expense = True
 	and rp.code = 'P00594'
@@ -50,7 +70,9 @@ group by
 	koel.manual_vat,
 	koe.amount_untaxed,
 	koe.amount_tax,
-	aaael.code
+	aaael.code,
+	rcr.rate,
+	koe.manual_exrate
 order by
 	koel.name]]>
 	</queryString>
