@@ -46,7 +46,7 @@
 		<variableExpression><![CDATA[($F{Sub_total}==null||$F{Sub_total}=="")?0:($F{Vat_total}==null?0:$F{Vat_total})/$F{Sub_total}]]></variableExpression>
 	</variable>
 	<variable name="Total_Vat" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[($F{Manual_Vat} == 0 ||$F{Manual_Vat} == null)?(($F{Cost}==null?0:$F{Cost})*$V{vat_per}):$F{Manual_Vat}]]></variableExpression>
+		<variableExpression><![CDATA[$F{Manual_Vat}==null?0:$F{Manual_Vat}]]></variableExpression>
 	</variable>
 	<filterExpression><![CDATA[$F{ID}==$P{ParentID}]]></filterExpression>
 	<title>
@@ -235,7 +235,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Manual_Vat} == 0 ||$F{Manual_Vat} == null)?(($F{Cost}==null?0:$F{Cost})*$V{vat_per}):$F{Manual_Vat}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Manual_Vat}==null?0:$F{Manual_Vat}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0">
 				<reportElement stretchType="RelativeToTallestObject" x="226" y="0" width="70" height="20"/>
@@ -249,7 +249,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Cost}==null?0:$F{Cost})+(($F{Manual_Vat} == 0 ||$F{Manual_Vat} == null)?(($F{Cost}==null?0:$F{Cost})*$V{vat_per}):$F{Manual_Vat})]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Cost}==null?0:$F{Cost})+($F{Manual_Vat}==null?0:$F{Manual_Vat})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
