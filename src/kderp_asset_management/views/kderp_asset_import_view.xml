@@ -36,13 +36,14 @@
 		                    		<field name="state"/>
 		                    	</tree>
 		                    </field>
-		                    <field name='detail_ids' nolabel="1" colspan="4" mode="tree" view_type='tree' attrs="{'invisible':[('import_type','!=','lq')]}">
+		                    <field name='detail_ids' nolabel="1" colspan="4" mode="tree" view_type='tree' attrs="{'invisible':[('import_type','!=','state')]}">
 		                    	<tree string='Details' editable='top' colors="blue:state=='draft'">
 		                    		<field name="asset_id"/>
 		                    		<field name="date"/>
 		                    		<field name="remarks"/>
 		                    		<field name="state"/>
 		                    		<field name="reason"/>
+                                    <field name="state_asset"/>
 		                    	</tree>
 		                    </field>
 		                    <field name='detail_usage_ids' nolabel="1" colspan="4" mode="tree" view_type='tree' attrs="{'invisible':[('import_type','!=','usage')]}">
