@@ -448,6 +448,7 @@ class kderp_other_expense(osv.osv):
     def update_budget_telephone(self, cr, uid, ids, context=None):
         if not context:
             context={}
+
         budget_id_update = self.pool.get('account.budget.post').search(cr, uid, [('code','=','A17')])
         checkChange = False
         if budget_id_update:

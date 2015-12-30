@@ -25,7 +25,9 @@ from datetime import date
 class kderp_ge_wizard_form(osv.osv_memory):
     _name = 'kderp.ge.wizard.form'
     _description = 'GE Wizard Print GE Statement'      
-    
+
+    TYPE_OF_GROUP = [('kderp.report.ge.statement','GE Statement'),
+                    ('kderp.report.telephone.fee','GE Telephone Fee')]
     def print_report(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -36,26 +38,26 @@ class kderp_ge_wizard_form(osv.osv_memory):
                                'pdate_end':ge.pdate_end
                                }
                  }
-        
+
         datas['model'] = 'kderp.other.expense'
-        datas['title'] = 'GE Statement Form'
-        
-        report_name= "kderp.report.ge.statement.%s" % ge.file_type
-          
+        datas['title'] = 'GE Form'
+
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': report_name,
-            'datas': datas,
+            'report_name': ge.ge_report_name +'.'+ ge.file_type,
+            'datas': datas
             }
      
     _columns = {                
                 'pdate_start':fields.date('Start Date'),
                 'pdate_end':fields.date('End Date'),
+                'ge_report_name':fields.selection(TYPE_OF_GROUP,'Report Name', required=True),
                 'file_type':fields.selection([('xls','Excel File'),('pdf','PDF File')],'File Type', required=1),
                 }
     _defaults={
-               "pdate_start": date.today().strftime("%Y-01-01"),
-               'pdate_end':date.today().strftime("%Y-12-31"),
-               'file_type':'xls'
+                'pdate_start': date.today().strftime("%Y-01-01"),
+                'pdate_end':date.today().strftime("%Y-12-31"),
+                'file_type':'xls',
+                'ge_report_name':'kderp.report.ge.statement'
                }
 kderp_ge_wizard_form()
