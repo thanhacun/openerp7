@@ -59,13 +59,6 @@
 		                    		<field name="reason"/>
 		                    	</tree>
 		                    </field>
-                            <field name='detail_stock_ids' nolabel="1" colspan="4" mode="tree" view_type='tree' attrs="{'invisible':[('import_type','!=','is')]}">
-		                    	<tree string='Details' editable='top' colors="blue:state=='draft'">
-		                    		<field name="asset_id"/>
-		                    		<field name="state"/>
-                                    <field name="state_asset"/>
-		                    	</tree>
-		                    </field>
 	                    </group>
                     </sheet>
                     <footer>
