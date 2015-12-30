@@ -36,6 +36,7 @@ class kderp_asset_import(Model):
                             new_remark = (old_remarks + '\n' + kail.remarks) if old_remarks else kail.remarks
                             write_data['remarks'] = new_remark
                         kail.asset_id.write(write_data)
+                        kail.write({'state_asset':'liquidated'})
                         kail.write({'state':'done'})
                     elif kail.state=='draft':
                         kail.write({'reason':'This asset already in Liquidation List'})
@@ -44,6 +45,13 @@ class kderp_asset_import(Model):
                     write_data = {'name':kail.remarks}                    
                     kail.asset_id.write(write_data)
                     kail.write({'state':'done'})
+
+                elif kai.import_type=='is':
+                    if kail.asset_id.state<>'instock' and kail.state=='draft':
+                        write_data = {'state':'instock'}
+                        kail.asset_id.write(write_data)
+                        kail.write({'state':'done'})
+
                 elif kai.import_type=='usage':                    
                         if not kail.user_id or not kail.date:
                             raise osv.except_osv("KDERP Warning","Pls. input user and used time")
@@ -66,7 +74,7 @@ class kderp_asset_import(Model):
                 kai.write({'state':'done'})
         pass
         
-    IMPORT_TYPE = (('lq','Liquidation'),('usage','Usage'),('spec','Specification'))
+    IMPORT_TYPE = (('lq','Liquidation'),('usage','Usage'),('spec','Specification'),('is','In Stock'))
     _columns={
               'name':fields.date("Import Date", 
                                     states={'done':[('readonly',True)]}, required=True),              
@@ -74,11 +82,12 @@ class kderp_asset_import(Model):
                                     states={'done':[('readonly',True)]}),                                                               
                 
               'state':fields.selection((('draft','Draft'),('done','Completed')),'State',readonly=True),
-              
+              'detail_instock_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_spec_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_usage_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'import_type':fields.selection(IMPORT_TYPE,'Import type',states={'done':[('readonly',True)]}),
+              'detail_stock_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               }
     _defaults={
                'name':lambda *a: time.strftime('%Y-%m-%d'),
@@ -90,7 +99,14 @@ kderp_asset_import()
 class kderp_import_asset_detail(Model):    
     _name = 'kderp.import.asset.detail'
     _rec_name = 'asset_id'
-    
+
+    def _get_state_asset(self, cr, uid, ids, *args):
+        res = {}
+        for kiad in self.browse(cr, uid, ids):
+            if kiad.asset_id:
+                res[kiad.id] = kiad.asset_id.state
+        return res
+
     _columns={
               'import_id':fields.many2one('kderp.asset.import','Import', required=True, states={'done':[('readonly',True)]}),
               'asset_id':fields.many2one('kderp.asset.management','Asset', required=True, states={'done':[('readonly',True)]}),
@@ -102,6 +118,8 @@ class kderp_import_asset_detail(Model):
               'location_id':fields.many2one('kderp.asset.location','Location', states={'done':[('readonly',True)]}),
               'remarks':fields.char('Remark',size=256, states={'done':[('readonly',True)]}),
               'job_id':fields.many2one('kderp.job','Job', states={'done':[('readonly',True)]}),
+              #'state_asset':fields.selection(STATE_SELECTION,'State Asset',readonly=True),
+              'state_asset':fields.function(_get_state_asset,type='char',method=True,string='State Asset')
               }
     _defaults = {
                  'state':lambda *x: 'draft'
