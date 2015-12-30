@@ -27,30 +27,26 @@ class kderp_asset_import(Model):
         for kai in self.browse(cr, uid, ids):
             done = True
             for kail in kai.detail_ids:
-                if kai.import_type=='lq':
-                    if kail.asset_id.state<>'liquidated' and kail.state=='draft':
-                        write_data = {'state':'liquidated',
-                                             'dateofliquidated':kail.date}
+                if kai.import_type=='state':
+                    if kail.state_asset and kail.state=='draft':
+                        if kail.state_asset =='liquidated':
+                             write_data = {'state':kail.state_asset,
+                                           'dateofliquidated':kail.date}
+                        else:
+                            write_data = {'state':kail.state_asset}
                         if kail.remarks:
                             old_remarks = kail.asset_id.remarks
                             new_remark = (old_remarks + '\n' + kail.remarks) if old_remarks else kail.remarks
                             write_data['remarks'] = new_remark
                         kail.asset_id.write(write_data)
-                        kail.write({'state_asset':'liquidated'})
                         kail.write({'state':'done'})
                     elif kail.state=='draft':
-                        kail.write({'reason':'This asset already in Liquidation List'})
+                        #kail.write({'reason':'This asset already in Liquidation List'})
                         done = False
                 elif kai.import_type=='spec':
                     write_data = {'name':kail.remarks}                    
                     kail.asset_id.write(write_data)
                     kail.write({'state':'done'})
-
-                elif kai.import_type=='is':
-                    if kail.asset_id.state<>'instock' and kail.state=='draft':
-                        write_data = {'state':'instock'}
-                        kail.asset_id.write(write_data)
-                        kail.write({'state':'done'})
 
                 elif kai.import_type=='usage':                    
                         if not kail.user_id or not kail.date:
@@ -74,7 +70,7 @@ class kderp_asset_import(Model):
                 kai.write({'state':'done'})
         pass
         
-    IMPORT_TYPE = (('lq','Liquidation'),('usage','Usage'),('spec','Specification'),('is','In Stock'))
+    IMPORT_TYPE = (('state','State'),('usage','Usage'),('spec','Specification'))
     _columns={
               'name':fields.date("Import Date", 
                                     states={'done':[('readonly',True)]}, required=True),              
@@ -87,7 +83,7 @@ class kderp_asset_import(Model):
               'detail_spec_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_usage_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'import_type':fields.selection(IMPORT_TYPE,'Import type',states={'done':[('readonly',True)]}),
-              'detail_stock_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
+
               }
     _defaults={
                'name':lambda *a: time.strftime('%Y-%m-%d'),
@@ -100,12 +96,10 @@ class kderp_import_asset_detail(Model):
     _name = 'kderp.import.asset.detail'
     _rec_name = 'asset_id'
 
-    def _get_state_asset(self, cr, uid, ids, *args):
-        res = {}
-        for kiad in self.browse(cr, uid, ids):
-            if kiad.asset_id:
-                res[kiad.id] = kiad.asset_id.state
-        return res
+    def _get_state_asset(self, cr, uid, context=None):
+        asset_state = self.pool.get('kderp.asset.management').fields_get(cr, uid, ['state'],{})
+        tmp_selection = asset_state['state']['selection']
+        return tuple(tmp_selection)
 
     _columns={
               'import_id':fields.many2one('kderp.asset.import','Import', required=True, states={'done':[('readonly',True)]}),
@@ -118,11 +112,11 @@ class kderp_import_asset_detail(Model):
               'location_id':fields.many2one('kderp.asset.location','Location', states={'done':[('readonly',True)]}),
               'remarks':fields.char('Remark',size=256, states={'done':[('readonly',True)]}),
               'job_id':fields.many2one('kderp.job','Job', states={'done':[('readonly',True)]}),
-              #'state_asset':fields.selection(STATE_SELECTION,'State Asset',readonly=True),
-              'state_asset':fields.function(_get_state_asset,type='char',method=True,string='State Asset')
+              'state_asset':fields.selection(_get_state_asset, string='State Asset')
               }
     _defaults = {
-                 'state':lambda *x: 'draft'
+                 'state':lambda *x: 'draft',
+                 'state_asset':lambda *x: 'liquidated'
                  }
     _order = 'state desc'
     _sql_constraints = [('unique_asset_import','unique(import_id,asset_id)','KDERP Warning: Duplicated Asset, pls check')]
