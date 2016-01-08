@@ -24,8 +24,9 @@ class kderp_supplier_payment_expense(osv.osv):
             due_date = self._onchange_due_date(cr,uid,ids,date)
         
         val={}
-        if not oldno and date:
-            cr.execute("""SELECT 
+        
+        if (not oldno and date) or (date and oldno and date[:4][2:]!=oldno[:4][2:]):
+            cr.execute("""SELECT
                             wnewcode.pattern || 
                             btrim(to_char(max(substring(wnewcode.code::text, length(wnewcode.pattern) + 1,padding )::integer) + 1,lpad('0',padding,'0'))) AS newcode
                         from
