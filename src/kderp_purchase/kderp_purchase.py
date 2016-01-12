@@ -242,7 +242,7 @@ class purchase_order(osv.osv):
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
         supplier = partner.browse(cr, uid, partner_id)
         return {'value': {
-            'pricelist_id': supplier.property_product_pricelist_purchase.id,
+            # 'pricelist_id': supplier.property_product_pricelist_purchase.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'payment_term_id': supplier.property_supplier_payment_term.id or False,
             'address_id': supplier.id or False
@@ -618,11 +618,11 @@ class purchase_order_line(osv.osv):
             for c in self.pool.get('account.tax').compute_all(cr, uid, pol.taxes_id, final_subtotal, 1, pol.product_id, pol.order_id.partner_id)['taxes']:
                 val += c.get('amount', 0.0)
 
-            res[pol.id]['price_subtotal']=cur_obj.round(cr, uid, cur, price_subtotal)                    
-            res[pol.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
-            res[pol.id]['discount_percent']=discount_percent
-            res[pol.id]['final_subtotal']=final_subtotal #Offered Price/(1-Discount Percent on PO)
-            res[pol.id]['final_total']=res[pol.id]['final_subtotal'] + res[pol.id]['amount_tax']
+            res[pol.id]['price_subtotal'] = price_subtotal # cur_obj.round(cr, uid, cur,
+            res[pol.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
+            res[pol.id]['discount_percent'] = discount_percent
+            res[pol.id]['final_subtotal'] = final_subtotal #Offered Price/(1-Discount Percent on PO)
+            res[pol.id]['final_total'] = res[pol.id]['final_subtotal'] + res[pol.id]['amount_tax']
             
         return res
       
@@ -719,7 +719,7 @@ class purchase_order_line(osv.osv):
                                                         'purchase.order.line': (lambda self, cr, uid, ids, c={}: ids, ['plan_qty','price_unit'], 15),
                                                         'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','order_line'], 15),
                                                         }),
-            'final_subtotal':fields.function(_amount_all_in_line,string='Final',digits_compute=dp.get_precision('Percent'),type='float',
+            'final_subtotal':fields.function(_amount_all_in_line,string='Final',digits_compute=dp.get_precision('Amount'),type='float',
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['price_unit','plan_qty'], 15),
