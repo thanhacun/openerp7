@@ -280,7 +280,7 @@ class purchase_order(osv.osv):
 
     def _get_default_pricelist(self, cr, uid, context):
         company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
-        pricelist_default_id = self.pool.get('product.pricelist').search(cr, uid, [('currency_id', '=', company_currency_id)])
+        pricelist_default_id = self.pool.get('product.pricelist').search(cr, uid, [('currency_id', '=', company_currency_id),('type','=','purchase')])
         return False or (pricelist_default_id and pricelist_default_id[0])
 
     STATE_SELECTION=[('draft','Draft'),

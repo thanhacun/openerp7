@@ -110,7 +110,15 @@ class kderp_budget_data(osv.osv):
             unlink_ids.append(kbd.id)
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
-        
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'budget_id' in vals:
+            for kbd in self.browse(cr, uid, ids):
+                if kbd.detail_budget:
+                    raise osv.except_osv("KDERP Warning",'Can not CHANGE or DELETE budget having expenses.')
+        res = super(kderp_budget_data, self).write(cr, uid, ids, vals, context=context)
+        return res
+
     _columns={
               'expense_amount':fields.function(_get_summaryofbudget,string='Purchased',digits_compute=dp.get_precision('Budget'),method=True,type='float',multi='_get_info',
                                                store={
@@ -152,6 +160,8 @@ class kderp_budget_data(osv.osv):
               'detail_budget':fields.function(_get_detail_budget,method=True,type='one2many',relation='kderp.expense.budget.line')
                             
               }
+    #_constraints = [(_check_change_budget, "KDERP Warning, Can't Budget already have expense(s)", ['budget_id'])]
+
     _defaults={
                'expense_amount': lambda *x: 0.0,
                'paid_amount': lambda *x: 0.0,
