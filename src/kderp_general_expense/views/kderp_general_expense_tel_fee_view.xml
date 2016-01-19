@@ -52,6 +52,7 @@
 	                            <field name="expense_line" context="{'id':active_id,'account_analytic_id':account_analytic_id,'code':'JD','budget_code':'A99'}" attrs="{'readonly':['|',('state','in',('paid','done','cancel')),('expense_type','not in',('expense'))] ,'invisible':[('expense_type','!=','expense')]}">
 	                                <tree string="Expense Details" editable="bottom">
 	                                	<field name="name" string="Desc."/>
+	                                	<field name="section_id" string="Allocated Section"/>
 	                                	<field name="amount"/>
 										<field name="manual_vat"/>
 	                                    <field name='account_analytic_id' on_change="onchange_budget_telephone(account_analytic_id)"  context="{'code':'JD'}" string='Job/G.E'/>
