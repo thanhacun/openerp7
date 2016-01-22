@@ -1181,7 +1181,7 @@ Contract]]></text>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="6" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[DETAIL OF PURCHASED ITMES]]></text>
+					<text><![CDATA[DETAIL OF PURCHASED ITEMS]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Opaque" x="402" y="0" width="42" height="13" backcolor="#CCCCCC"/>
