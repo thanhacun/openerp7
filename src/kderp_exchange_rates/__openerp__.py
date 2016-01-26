@@ -6,7 +6,9 @@
 "category" : "Generic Modules/Others",
 "depends" : ['base','kderp_base'],
 "description" : "Exchange Rates",
-"init_xml" : ["kderp_exchange_rates_view.xml"],
+"init_xml" : ["kderp_exchange_rates_view.xml",
+              "kderp_exchange_rates_data_view.xml"
+              ],
 "demo_xml" : [],
 "update_xml" : [],
 "installable": True

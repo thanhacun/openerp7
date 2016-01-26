@@ -41,7 +41,7 @@ class kderp_exchange_rates(osv.osv):
 #        transfer = 20000 
         return {'date':today,'cur_id':cur_ids[cur],'buy':buy,'sell':sell,'tranfer':transfer}
     
-    def UJE_exrate(self,cr,uid,ids,context):
+    def UJE_exrate(self,cr,uid, ids=None, context=None):
         """
         Lay ti gia cua USD, JPY va EUR
         Ghi vao CSDL
@@ -50,12 +50,12 @@ class kderp_exchange_rates(osv.osv):
         today = datetime.now().date()
         ##Chi tao moi khi chua co du lieu cua ngay hom do
         #tim xem da co ban ghi chua
-        if (not self.search(cr, uid, [('date','=',today)])):
-            self.create(cr, uid, self.today_exrate("USD")) #ti gia USD
-            self.create(cr, uid, self.today_exrate("JPY")) #ti gia JPY
-            self.create(cr, uid, self.today_exrate("EUR")) #ti gia EUR
-        else:
-            return False
+        #if (not self.search(cr, uid, [('date','=',today)])):
+        self.create(cr, uid, self.today_exrate("USD")) #ti gia USD
+        self.create(cr, uid, self.today_exrate("JPY")) #ti gia JPY
+        self.create(cr, uid, self.today_exrate("EUR")) #ti gia EUR
+       # else:
+       #     return False
     
     _columns = {
         'cur_id': fields.many2one('kderp.currency', 'Currency', required=True),
