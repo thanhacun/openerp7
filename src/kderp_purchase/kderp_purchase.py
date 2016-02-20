@@ -428,10 +428,11 @@ class purchase_order(osv.osv):
     
     #Delete All Line
     def action_delete_all_line(self, cr, uid, ids, context):
-        pol_obj=self.pool.get('purchase.order.line')
+        pol_obj = self.pool.get('purchase.order.line')
         pol_ids = pol_obj.search(cr, uid,[('order_id','in',ids)])
         if pol_ids:
             pol_obj.unlink(cr, uid, pol_ids)
+        self.write(cr, uid, ids, {})
         return True 
         
     #Function to Workflow
@@ -853,6 +854,12 @@ class purchase_order_line(osv.osv):
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
   
-        return res   
-  
+        return res
+
+    def create(self, cr, uid, vals, context={}):
+        new_pol_ids = super(purchase_order_line, self).create(cr, uid, vals, context=context)
+        dict_order_ids = {}
+        if 'order_id' in vals:
+            self.pool.get('purchase.order').write(cr, uid, [vals['order_id']], {})
+        return new_pol_ids
 purchase_order_line()
