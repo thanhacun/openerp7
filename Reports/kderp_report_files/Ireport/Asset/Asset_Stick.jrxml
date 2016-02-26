@@ -3,6 +3,16 @@
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{user_name}.length()<20]]></conditionExpression>
+			<style fontSize="9"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{user_name}.length()>19]]></conditionExpression>
+			<style fontSize="9"/>
+		</conditionalStyle>
+	</style>
 	<parameter name="ParentID" class="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="REWIND" class="java.lang.Object" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_DATA_SOURCE}.moveFirst()]]></defaultValueExpression>
@@ -67,7 +77,7 @@
 				<textFieldExpression class="java.util.Date"><![CDATA[$F{usedtime}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="120" y="48" width="148" height="20"/>
+				<reportElement style="style1" x="120" y="48" width="148" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
