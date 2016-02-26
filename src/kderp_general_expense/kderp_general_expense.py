@@ -548,14 +548,14 @@ class kderp_other_expense_line(osv.osv):
             job_ids = self.pool.get('account.analytic.account').search(cr, uid, [('code','=',job_code)])
             res = job_ids[0] if job_ids else False
         return res
-     
+     #
     def onchange_budget_telephone(self, cr, uid, ids,job_id):
         value = {}
         if job_id:
             job_obj = self.pool.get('account.analytic.account')
             job = job_obj.browse(cr, uid, job_id)
             if job.general_expense == True:
-                budget_id = self.pool.get('account.budget.post').search(cr, uid, [('code','=','A99')])
+                budget_id = self.pool.get('account.budget.post').search(cr, uid, [('code','=','A17')])
             else:
                 budget_id = self.pool.get('account.budget.post').search(cr, uid, [('code','=','7000')])
             value['budget_id'] = budget_id
