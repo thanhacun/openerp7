@@ -242,7 +242,7 @@ class purchase_order(osv.osv):
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
         supplier = partner.browse(cr, uid, partner_id)
         return {'value': {
-            'pricelist_id': supplier.property_product_pricelist_purchase.id,
+            # 'pricelist_id': supplier.property_product_pricelist_purchase.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'payment_term_id': supplier.property_supplier_payment_term.id or False,
             'address_id': supplier.id or False
@@ -280,7 +280,7 @@ class purchase_order(osv.osv):
 
     def _get_default_pricelist(self, cr, uid, context):
         company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
-        pricelist_default_id = self.pool.get('product.pricelist').search(cr, uid, [('currency_id', '=', company_currency_id)])
+        pricelist_default_id = self.pool.get('product.pricelist').search(cr, uid, [('currency_id', '=', company_currency_id),('type','=','purchase')])
         return False or (pricelist_default_id and pricelist_default_id[0])
 
     STATE_SELECTION=[('draft','Draft'),
@@ -428,10 +428,11 @@ class purchase_order(osv.osv):
     
     #Delete All Line
     def action_delete_all_line(self, cr, uid, ids, context):
-        pol_obj=self.pool.get('purchase.order.line')
+        pol_obj = self.pool.get('purchase.order.line')
         pol_ids = pol_obj.search(cr, uid,[('order_id','in',ids)])
         if pol_ids:
             pol_obj.unlink(cr, uid, pol_ids)
+        self.write(cr, uid, ids, {})
         return True 
         
     #Function to Workflow
@@ -618,11 +619,11 @@ class purchase_order_line(osv.osv):
             for c in self.pool.get('account.tax').compute_all(cr, uid, pol.taxes_id, final_subtotal, 1, pol.product_id, pol.order_id.partner_id)['taxes']:
                 val += c.get('amount', 0.0)
 
-            res[pol.id]['price_subtotal']=cur_obj.round(cr, uid, cur, price_subtotal)                    
-            res[pol.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
-            res[pol.id]['discount_percent']=discount_percent
-            res[pol.id]['final_subtotal']=final_subtotal #Offered Price/(1-Discount Percent on PO)
-            res[pol.id]['final_total']=res[pol.id]['final_subtotal'] + res[pol.id]['amount_tax']
+            res[pol.id]['price_subtotal'] = price_subtotal # cur_obj.round(cr, uid, cur,
+            res[pol.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
+            res[pol.id]['discount_percent'] = discount_percent
+            res[pol.id]['final_subtotal'] = final_subtotal #Offered Price/(1-Discount Percent on PO)
+            res[pol.id]['final_total'] = res[pol.id]['final_subtotal'] + res[pol.id]['amount_tax']
             
         return res
       
@@ -717,34 +718,34 @@ class purchase_order_line(osv.osv):
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (lambda self, cr, uid, ids, c={}: ids, ['plan_qty','price_unit'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','order_line'], 15),
                                                         }),
-            'final_subtotal':fields.function(_amount_all_in_line,string='Final',digits_compute=dp.get_precision('Percent'),type='float',
+            'final_subtotal':fields.function(_amount_all_in_line,string='Final',digits_compute=dp.get_precision('Amount'),type='float',
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['price_unit','plan_qty'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','order_line'], 15),
                                                         }),#,digits_compute=dp.get_precision('Amount')
             'amount_tax':fields.function(_amount_all_in_line,
                                                  digits_compute=dp.get_precision('Amount'),string='VAT',type='float',
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['plan_qty','price_unit','taxes_id'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','taxes_id'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','taxes_id','order_line'], 15),
                                                         }),
             'final_total':fields.function(_amount_all_in_line,
                                                  digits_compute=dp.get_precision('Amount'),string='Total',type='float',
                                                  method=True, multi="kderp_pol_total",
                                                  store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['plan_qty','price_unit','taxes_id'], 15),
-                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state'], 15),
+                                                        'purchase.order': (_get_line_from_order, ['discount_amount','special_case','state','order_line'], 15),
                                                         }),
                             
             'amount_company_curr':fields.function(_amount_in_company_curr,digits_compute=dp.get_precision('Budget'),string='Subtotal',
                                                   type='float',method=True,
                                                   store={
                                                         'purchase.order.line': (_get_line_from_order_line, ['price_unit','plan_qty'], 35),
-                                                        'purchase.order': (_get_line_from_order, ['currency_id','date_order','state','discount_amount'], 35),
+                                                        'purchase.order': (_get_line_from_order, ['currency_id','date_order','state','discount_amount','order_line'], 35),
                                                         }),
               }
     _defaults={
@@ -853,6 +854,12 @@ class purchase_order_line(osv.osv):
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
   
-        return res   
-  
+        return res
+
+    def create(self, cr, uid, vals, context={}):
+        new_pol_ids = super(purchase_order_line, self).create(cr, uid, vals, context=context)
+        dict_order_ids = {}
+        if 'order_id' in vals:
+            self.pool.get('purchase.order').write(cr, uid, [vals['order_id']], {})
+        return new_pol_ids
 purchase_order_line()

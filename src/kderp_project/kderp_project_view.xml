@@ -156,7 +156,7 @@
                     <filter string="On-Going" domain="[('state','=','doing')]"/>
                     <filter string="Completed" domain="[('state','=','done')]"/>
                     <filter string="Closed" domain="[('state','=','closed')]"/>
-                    <filter string="Cancelled" domain="[('state','=','cancelled')]"/>
+                    <filter string="Cancelled" domain="[('state','=','cancel')]"/>
                     <separator/>
 					<filter string="Electrical Jobs" domain="[('job_type','=','E')]"/>                    
 					<filter string="Mechanical Jobs" domain="[('job_type','=','M')]"/>

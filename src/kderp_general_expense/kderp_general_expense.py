@@ -443,25 +443,24 @@ class kderp_other_expense(osv.osv):
                 if exp.expense_type != 'monthly_expense':
                     result = self.action_expense_create_supplier_payment_expense(cr, uid, ids)
         return result
+
     # Function update_budget_telephone dung de chuyen budget sang budget telephone A17 - khi khong phai la job du an
     def update_budget_telephone(self, cr, uid, ids, context=None):
         if not context:
             context={}
-            
-        budget_id = self.pool.get('account.budget.post').search(cr, uid, [('code','=','A99')])
-        budget_id_update=self.pool.get('account.budget.post').search(cr, uid, [('code','=','A17')])
-        for koe in self.browse(cr, uid, ids):
-            for koel in koe.expense_line:
-                job_obj = self.pool.get('account.analytic.account')
-                job = job_obj.browse(cr, uid, koel.account_analytic_id.id)
-                kebl_object= self.pool.get('kderp.expense.budget.line').search(cr, uid, [('name','=',koe.name),('account_analytic_id','=',koel.account_analytic_id.id),('expense_id','=',koel.expense_id.id),('budget_id','=',koel.budget_id.id)])
-                if koel.budget_id.id==budget_id[0] and job.general_expense == True:
-                    for kebl in kebl_object:
-                        vals={}
+
+        budget_id_update = self.pool.get('account.budget.post').search(cr, uid, [('code','=','A17')])
+        checkChange = False
+        if budget_id_update:
+            for koe in self.browse(cr, uid, ids):
+                for koel in koe.expense_line:
+                    if koel.budget_id.code=='A99' and koel.account_analytic_id.general_expense == True:
                         koel.write({'budget_id': budget_id_update[0]})
-                        vals['budget_id'] =  budget_id_update[0]
-                        self.pool.get('kderp.expense.budget.line').write(cr, uid, kebl_object, vals , context=context) 
+                        checkChange = True
+                if checkChange:
+                    koe.write({})
         return True
+
 class kderp_import_ge_accounting(osv.osv):
     _name = 'kderp.import.ge.accounting'  
     

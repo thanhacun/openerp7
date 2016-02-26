@@ -5,14 +5,16 @@ $(document).ready(function (){
         var weatherAPI = "http://thcn-api.herokuapp.com/api/weathers/now/"  + lat + "," + lon;
         $.getJSON(weatherAPI, function (data) {
             var conditions = data.current_observation;
-
-            var temp = conditions.temp_c;
+            if (conditions != undefined && conditions.temp_c != undefined)
+                var temp = conditions.temp_c;
+            else
+                var temp = 'N/A';
             var feellike = conditions.feelslike_c;
             var city = conditions.display_location.city;
             var desc = conditions.weather;
             html = "<div id='weather' class='weatherFeed'>" +
                         "<img class='weatherItem' src='" + conditions.icon_url + "'>" +
-                        "<div class='weatherCity text-right pull-right'>" + city + "(" +  desc + ")</div>" +
+                        "<div class='weatherCity text-right pull-right'>" + city + "(1" +  desc + ")</div>" +
                         "<div class='weatherTemp'>" + feellike + "&#8451;</div>" +
                     "</div>";
             setTimeout(function() {

@@ -58,9 +58,9 @@
 	                                    <field name='account_analytic_id' on_change="onchange_budget_telephone(account_analytic_id)" string='Job/G.E'/>
 	            						<field name='budget_id' string='Budget Code' context="{'job_id':account_analytic_id, }" options='{"always_reload": True}'/>
 	                                </tree>
-	                            </field>   
-	                         	<group> 
-	                    			<button icon="gtk-apply" string='Update Budget' name="update_budget_telephone" type='object'/>
+	                            </field>
+	                         	<group>
+	                    			<button icon="gtk-apply" string='Update Budget' states="draft,waiting_for_payment" name="update_budget_telephone" type='object' confirm="Are you sure to update remain budget A99 to A17 (General Expense)?"/>
 								</group>      
 	                            <group class="oe_subtotal_footer oe_right"> 
 	                            	<group colspan="2" col="2">
