@@ -37,4 +37,6 @@ class kderp_city(osv.osv):
         'code':fields.char('Code',size=4,required=True),
         'name':fields.char('Name', size=128, translate=True, required = True),
     }
+
+    _sql_constraints=[('kderp.city','unique(code)','Code must be unique !')]
 kderp_city()
