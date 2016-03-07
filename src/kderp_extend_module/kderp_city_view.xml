@@ -38,7 +38,7 @@
 		</record>
 	
 		<record id="action_kderp_city_view" model="ir.actions.act_window">
-			<field name="name">List of City</field>
+			<field name="name">List of City / Province</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">kderp.city</field>
 			<field name="view_type">form</field>
