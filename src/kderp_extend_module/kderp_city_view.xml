@@ -7,11 +7,23 @@
 			<field name="model">kderp.location</field>
 			<field name="inherit_id" ref="kderp_common.kderp_location_view_form"/>
 			<field name="arch" type="xml">
-				<field name="city" position='after'>
+				<field name="city" position='replace'>
 					<field name="city_id" string="Name of City / Province"/>
 	          	</field>
 	        </field>
        	</record>
+
+        <record model="ir.ui.view" id="view_kderp_location_extend_tree">
+			<field name="name">kderp.location.tree.inherit.extend</field>
+			<field name="model">kderp.location</field>
+			<field name="inherit_id" ref="kderp_common.kderp_location_view_tree"/>
+			<field name="arch" type="xml">
+				<field name="city" position='replace'>
+					<field name="city_id" string="Name of City / Province"/>
+	          	</field>
+            </field>
+        </record>
+
         <!--City-->
 	    <record id="kderp_city_view_form" model="ir.ui.view">
 	      <field name="name">kderp.city.view.form</field>
