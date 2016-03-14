@@ -19,7 +19,8 @@
 			<field name="inherit_id" ref="kderp_common.kderp_location_view_tree"/>
 			<field name="arch" type="xml">
 				<field name="city" position='replace'>
-					<field name="city_id" string="Name of City / Province"/>
+                    <field name="city_code"/>
+					<field name="city_id" string="Name of City / Province" options="{'always_reload': 1}"/>
 	          	</field>
             </field>
         </record>
@@ -56,8 +57,8 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		
-		<menuitem action="action_kderp_city_view" id="menu_kderp_city" parent="kderp_base.menu_kderp_budget_control_configuration_root"/>
-    
+
+        <menuitem action="action_kderp_city_view" id="menu_kderp_city" parent="kderp_base.menu_kderp_budget_control_configuration_root"/>
+
 	</data>
 </openerp>
