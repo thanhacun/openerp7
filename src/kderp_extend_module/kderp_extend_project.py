@@ -37,23 +37,20 @@ class account_analytic_account(osv.osv):
                 #Them truong moi
                 'remark':fields.text('Remark'),
                 'project_location_id':fields.many2one('kderp.location','Project Location',ondelete='restrict'),
-                'city_province':fields.char('City Province'),
+                'city_province_id':fields.many2one('kderp.city','City Province'),
                 'project_address_id':fields.many2one('res.partner','Project Address',ondelete='restrict'),
               }
 
-    def onchange_location_city(self, cr, uid, ids, project_location_id=False, context=None):
-        location = self.pool.get('kderp.location')
+    def onchange_location_city(self, cr, uid, ids, project_location_id=False):
         if not project_location_id:
             return {'value': {
-                'city_province': '',
+                'city_province_id': False,
                 }}
-        location = location.browse(cr, uid, project_location_id)
-        if location.city_id.id:
-            return {'value': {
-                'city_province': location.city_id.code + ' - ' + location.city_id.name
-                }}
-        else:
-            return {'value': {'city_province': ''}}
+        location = self.pool.get('kderp.location').browse(cr, uid, project_location_id)
+
+        return {'value': {
+                'city_province_id': location and location.city_id.id if location.city_id else False
+        }}
 
     def onchange_job_code(self, cr, uid, ids, code):
         value = {}
