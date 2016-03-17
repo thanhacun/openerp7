@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<!-- Thay doi status cua Job theo tung group -->
-		<record id="kderp_job_form_set_readonly_status" model="ir.ui.view">
+
+        <!-- Thay doi status cua Job theo tung group -->
+        <record id="kderp_job_form_set_readonly_status" model="ir.ui.view">
 			<field name="name">kderp.job.form.set.readonly.status</field>
 			<field name="model">account.analytic.account</field>
 			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_form"/>
 			<field name="arch" type="xml">
-				<field name='process_status' position="attributes">
-	            	<attribute name="readonly">1</attribute>
+				<field name='process_status' position="replace"/>
+				<field name="state" position="replace"/>
+                <field name='owner_id' position='replace'/>
+                <field name='partner_id' position="replace"/>
+
+                <field name="job_type" position="after">
+                    <field name="owner_id" context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options='{"always_reload": True}'/>
+                    <field name='partner_id' context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options='{"always_reload": True}'/>
+                    <field name='project_location_id' string="IP Location" on_change="onchange_location_city(project_location_id)"/>
 	        	</field>
-				<field name='state' position="attributes">
-	            	<attribute name="readonly">1</attribute>
-	        	</field>
-	        	<field name='invoice_address_id' position='after'>
-	        		<field name='project_location_id' string = "IP Location" on_change = "onchange_location_city( project_location_id )"/>
-                    <field name='city_province'/>
-	        	</field>
+
                 <field name='address_id' position='replace'>
+                    <field name="process_status" readonly="1" />
+                    <field name="state" readonly="1" />
                     <field name="project_address_id" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options='{"always_reload": True}'/>
                 </field>
+	        	<field name='invoice_address_id' position='after'>
+                    <field name='city_province_id'/>
+	        	</field>
+
 			</field>
 		</record>
-		
+
+		<!-- Thay doi status cua Job theo tung group -->
 		<record id="kderp_job_form_set_edit_status" model="ir.ui.view">
 			<field name="name">kderp.job.form.set.edit.status</field>
 			<field name="model">account.analytic.account</field>

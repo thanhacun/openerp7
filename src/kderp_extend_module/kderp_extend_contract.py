@@ -157,6 +157,10 @@ class kderp_contract_client(osv.osv):
                 'revise_date': fields.date('Rev. Date'),
                 'availability':fields.selection(AVAILABILITY_SELECTION,'Availability',readonly=True),
                 'remark':fields.char('Remark',size=128),
+
+                'city_province_id': fields.many2one('kderp.city', 'City Province'),
+                'project_address_id': fields.many2one('res.partner', 'Project Address', ondelete='restrict'),
+
                 'cur_contract_info':fields.function(_get_value_from_contract_info,type='char',
                                             size=8,method=True,string='Currency',
                                             multi='_get_value_from_contract_info',
@@ -193,6 +197,17 @@ class kderp_contract_client(osv.osv):
     _defaults={
                'availability':lambda *x: 'inused',
                }
+
+    def onchange_location_city(self, cr, uid, ids, project_location_id=False):
+        if not project_location_id:
+            return {'value': {
+                'city_province_id': False,
+            }}
+        location = self.pool.get('kderp.location').browse(cr, uid, project_location_id)
+
+        return {'value': {
+            'city_province_id': location and location.city_id.id if location.city_id else False
+        }}
 kderp_contract_client()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
