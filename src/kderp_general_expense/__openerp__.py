@@ -49,7 +49,8 @@
             "security/kderp_general_expense_rule.xml",
             'wizard/update_monthly_expense_view.xml',
             'views/kderp_job_menu_view.xml',
-            'views/kderp_job_view.xml'
+            'views/kderp_job_view.xml',
+            'wizard/kderp_ge_wizard_form_report_view.xml',
             ],
     'demo':[],
     'installable':True
