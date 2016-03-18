@@ -35,7 +35,7 @@
         <menuitem name="Reporting"
      		id="menu_action_print_ge_statement_form"
      		sequence="10"
-			parent="kderp_general_expense.menu_kderp_general_exepense_root"/>
+			parent="menu_kderp_general_exepense_root"/>
 
 		<menuitem action="action_print_ge_statement_form"
             id="menu_action_print_ge_statement_form_ge"

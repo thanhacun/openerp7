@@ -58,7 +58,7 @@
              'kderp_budget_view.xml',
              'wizard/kderp_job_wizard_form_report_view.xml',
              'wizard/update_quotation_completion_date_view.xml',
-             'wizard/kderp_ge_wizard_form_report_view.xml',
+             #'wizard/kderp_ge_wizard_form_report_view.xml',
              'kderp_city_view.xml'
             ],
     'demo':[],
