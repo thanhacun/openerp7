@@ -36,7 +36,7 @@ class account_analytic_account(osv.osv):
                 'process_status':fields.selection([('doing','On-Going'),('done','Completed'),('closed','Closed'),('cancel','Cancelled')],"Process Status",select=1),
                 #Them truong moi
                 'remark':fields.text('Remark'),
-                'project_location_id':fields.many2one('kderp.location','Project Location',ondelete='restrict'),
+                'project_location_id':fields.many2one('kderp.location','IP Location',ondelete='restrict'),
                 'city_province_id':fields.many2one('kderp.city','City Province'),
                 'project_address_id':fields.many2one('res.partner','Project Address',ondelete='restrict'),
               }
