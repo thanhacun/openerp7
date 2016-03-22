@@ -20,14 +20,23 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 
 class account_invoice_line(osv.osv):
 
     _name = "account.invoice.line"
     _inherit="account.invoice.line"    
-    
+
+    def _total_amount_line(self, cr, uid, ids, name, args, context):
+        context = context or {}
+        res = {}
+        for ail in self.browse(cr, uid, ids, context):
+            res[ail.id] = ail.price_unit + ail.amount_tax
+        return res
+
     _columns={
-              'job_code':fields.related('account_analytic_id','code',string='Job Code',type='char',size=16,store=True),
+                'job_code':fields.related('account_analytic_id','code',string='Job Code',type='char',size=16,store=True),
+                'total_amount_line': fields.function(_total_amount_line, string='Sub-Total', type="float", digits_compute=dp.get_precision('Amount'))
             }
     
     _order="job_code asc"
