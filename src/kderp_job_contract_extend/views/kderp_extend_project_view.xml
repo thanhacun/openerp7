@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Them control va support area va job-->
+        <record id="kderp_job_form_add_area" model="ir.ui.view">
+			<field name="name">kderp.job.form.add.area</field>
+			<field name="model">account.analytic.account</field>
+			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_form"/>
+			<field name="arch" type="xml">
+	        	<field name='manager_id' position='after'>
+                    <group col="3" colspan="4">
+                        <field name="control_area_id"/>
+                        <field name="control_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
+                        <field name="support_area_id"/>
+                        <field name="support_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
+                    </group>
+	        	</field>
+
+			</field>
+		</record>
+
+		
+	</data>
+</openerp>
