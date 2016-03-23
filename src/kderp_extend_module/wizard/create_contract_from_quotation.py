@@ -53,7 +53,7 @@ class kderp_quotation_contract(osv.osv_memory):
     def create_contract_and_update(self, cr, uid, id, context):
         if not context:
             context={}
-        new_form_data = self.read(cr,uid,id,['contract_code_new','contract_name_new','contract_code_exist','project_location_id'],context)
+        new_form_data = self.read(cr,uid,id,['contract_code_new','contract_name_new','contract_code_exist','project_location_id','city_province_id'],context)
         sale_obj = self.pool.get('sale.order')
         kderp_ctc_obj = self.pool.get('kderp.contract.client')
         if new_form_data[0]['contract_code_exist']:

@@ -819,7 +819,7 @@ class account_invoice_line(osv.osv):
         return result.keys()
     
     _columns={
-              'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
+              'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'VAT (Round)', domain=[('parent_id','=',False)]),
               'account_analytic_id':fields.many2one('account.analytic.account', 'Job',required=True),
               'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', required=True,select=True),
 
@@ -832,7 +832,7 @@ class account_invoice_line(osv.osv):
                                                 store={
                                                         'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids,['amount','price_unit','invoice_line_tax_id','quantity','discount','invoice_id','advanced','retention','price_subtotal'], 20),
                                                         'account.invoice': (_get_invoice, ['tax_base'], 20)}),
-              'amount_tax': fields.function(_price_amount_tax_line, string='Amount Tax', type="float",digits_compute= dp.get_precision('Amount'),
+              'amount_tax': fields.function(_price_amount_tax_line, string='VAT (Auto)', type="float",digits_compute= dp.get_precision('Amount'),
                                                 store={
                                                         'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids,['amount','price_unit','invoice_line_tax_id','quantity','discount','invoice_id','advanced','retention','price_subtotal'], 20),
                                                         'account.invoice': (_get_invoice, ['tax_base'], 20)}),
