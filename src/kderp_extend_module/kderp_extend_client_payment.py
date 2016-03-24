@@ -20,14 +20,55 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 
 class account_invoice_line(osv.osv):
 
     _name = "account.invoice.line"
     _inherit="account.invoice.line"    
-    
+
+    def _total_amount_line(self, cr, uid, ids, name, args, context):
+        context = context or {}
+        res = {}
+        for ail in self.browse(cr, uid, ids, context):
+            res[ail.id] = ail.price_unit + ail.amount_tax
+        return res
+
+
+    def _price_amount_taxes_auto(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+        res = {}
+        tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
+        for line in self.browse(cr, uid, ids):
+            if line.invoice_id.tax_base == 'p':
+                compute_amount = line.amount * (1 - (line.discount or 0.0) / 100.0)
+            elif line.invoice_id.tax_base == 'p_adv':
+                compute_amount = line.advanced
+            elif line.invoice_id.tax_base == 'p_retention':
+                compute_amount = line.retention
+            else:
+                compute_amount = line.price_unit
+            vat_per = 0
+            for kcr in line.invoice_id.contract_id.contract_summary_currency_ids:
+                vat_per = 100 * (kcr.tax_amount / kcr.amount) if kcr.amount else 0
+                break
+
+            vat_per = int(vat_per)
+            if vat_per in (4,6):
+                vat_per = 5
+            elif vat_per in (9,11):
+                vat_per = 10
+
+            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, compute_amount, 1, False,
+                                        partner=line.invoice_id.partner_id)
+            res[line.id] = compute_amount * vat_per / 100.0
+
+        return res
+
     _columns={
-              'job_code':fields.related('account_analytic_id','code',string='Job Code',type='char',size=16,store=True),
+                'amount_taxes_auto':fields.function(_price_amount_taxes_auto, string='VAT (Auto)', type="float", digits_compute=dp.get_precision('Amount')),
+                'job_code':fields.related('account_analytic_id','code',string='Job Code',type='char',size=16,store=True),
+                'total_amount_line':fields.function(_total_amount_line, string='Sub-Total', type="float", digits_compute=dp.get_precision('Amount'))
             }
     
     _order="job_code asc"

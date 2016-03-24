@@ -34,12 +34,26 @@ class kderp_quotation_contract(osv.osv_memory):
         
     _columns = {
                 'project_location_id':fields.many2one('kderp.location','Project Location',required=True),
+                'city_province_id': fields.many2one('kderp.city', 'City Province'),
                }
-    
+
+    def onchange_location_city(self, cr, uid, ids, project_location_id=False):
+        if not project_location_id:
+            return {'value': {
+                'city_province_id': False,
+            }}
+        location = self.pool.get('kderp.location').browse(cr, uid, project_location_id)
+        city_province_id = False
+        if location and location and location.city_id:
+            city_province_id = location.city_id.id
+        return {'value': {
+            'city_province_id': city_province_id
+        }}
+
     def create_contract_and_update(self, cr, uid, id, context):
         if not context:
             context={}
-        new_form_data = self.read(cr,uid,id,['contract_code_new','contract_name_new','contract_code_exist','project_location_id'],context)
+        new_form_data = self.read(cr,uid,id,['contract_code_new','contract_name_new','contract_code_exist','project_location_id','city_province_id'],context)
         sale_obj = self.pool.get('sale.order')
         kderp_ctc_obj = self.pool.get('kderp.contract.client')
         if new_form_data[0]['contract_code_exist']:
@@ -53,6 +67,7 @@ class kderp_quotation_contract(osv.osv_memory):
                 address_id = so.partner_address_id.id
                 invoice_address_id = so.partner_invoice_id.id
                 project_location_id = new_form_data[0]['project_location_id'][0]
+                city_province_id = new_form_data[0]['city_province_id'][0] if new_form_data[0]['city_province_id'] else False
                 tax_ids = []
                 curr_ids = []
                 
@@ -73,7 +88,8 @@ class kderp_quotation_contract(osv.osv_memory):
                             'owner_id':owner_id,
                             'client_id':client_id,'address_id':address_id,'invoice_address_id':invoice_address_id,
                             'project_name':project_name,'date':time.strftime("%Y-%m-%d"),
-                            'project_location_id': project_location_id}
+                            'project_location_id': project_location_id,
+                            'city_province_id': city_province_id}
                 
                 ctx={'curr_tax_ids':tax_ids if tax_ids else curr_ids}
                 

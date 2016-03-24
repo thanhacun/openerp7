@@ -55,10 +55,10 @@ class StockLocation(models.Model):
         return {'value':val}
 
     #Default function Area
-    # def _get_stock_manager_id(self, cr, uid, context={}):
-    #     res_ids = self.pool.get('hr.department').search(cr, uid, [('code','=','S1420')])
-    #     depts = res_ids and self.pool.get('hr.department').browse(cr, uid, res_ids)[0]
-    #     return depts and depts.manager_id and depts.manager_id.user_id and depts.manager_id.user_id.id
+    def _get_stock_manager_id(self, cr, uid, context={}):
+         res_ids = self.pool.get('hr.department').search(cr, uid, [('code','=','S1420')])
+         depts = res_ids and self.pool.get('hr.department').browse(cr, uid, res_ids)[0]
+         return depts and depts.manager_id and depts.manager_id.user_id and depts.manager_id.user_id.id
 
     #Get new code for Warehouser
     def get_newcode(self, cr, uid, context = {} ):
@@ -211,14 +211,15 @@ class StockLocation(models.Model):
                 'general_stock':fields.boolean("General Stock?",help="Warehouse using quantity with period", states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
                 
                 'stock_manager_id':fields.many2one('res.users', 'Warehouse Manager', ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
-                'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', 'Storekeepers', ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}),
+                'storekeeper_ids':fields.many2many('res.users', 'storekeeper_user_rel', 'stock_id', 'user_id', 'Storekeepers',
+                                                   ondelete='restrict', states={'locked':[('readonly', True)], 'closed':[('readonly',True)]}, context={'filter_storekeeper': True}),
                 #'job_related_ids':fields.many2many('account.analytic.account', 'jobs_stock_rel', 'stock_id', 'account_analytic_id', 'Job Related', ondelete='restrict',states={'locked':[('readonly', True)], 'closed':[('readonly',True)]})
                 'account_analytic_id':fields.many2one('account.analytic.account','Job', ondelete="restrict")
                 }
     _defaults = {
         'code':get_newcode,
         'location_id':_get_default_belong_location,
-        #'stock_manager_id': _get_stock_manager_id,
+        'stock_manager_id': _get_stock_manager_id,
         'state': 'open'
     }
     _sql_constraints = [("_unique_warehouse_code","unique(code)","KDERP Warning: Warehouse code must be unique")]
