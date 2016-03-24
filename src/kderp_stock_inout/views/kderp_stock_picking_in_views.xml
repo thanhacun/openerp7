@@ -80,7 +80,7 @@
 
     
 		<record id="act_kderp_stock_picking_in" model="ir.actions.act_window">
-            <field name="name">Packing In (With PO)</field>
+            <field name="name">Packing In</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,form</field>

@@ -30,4 +30,5 @@ import inherited_purchase_order
 
 import kderp_stock_base
 
+import inherited_res_users
 import inherited_account_analytic_account

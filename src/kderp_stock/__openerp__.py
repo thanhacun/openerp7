@@ -45,7 +45,8 @@
             'views/kderp_stock_workflow.xml',
             
             'views/kderp_stock_picking_views.xml',
-            'report.xml'
+            'report.xml',
+            'wizard/kderp_wizard_create_stock_view.xml'
             ],
     'demo':[],
     'installable':True
