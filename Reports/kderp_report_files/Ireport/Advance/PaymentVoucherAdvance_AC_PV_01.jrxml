@@ -13,6 +13,16 @@
 			<style fontSize="8"/>
 		</conditionalStyle>
 	</style>
+	<style name="style2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{InWordVnd}.length()<86]]></conditionExpression>
+			<style fontSize="10"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{InWordVnd}.length()>85]]></conditionExpression>
+			<style fontSize="9"/>
+		</conditionalStyle>
+	</style>
 	<queryString language="xPath">
 		<![CDATA[]]>
 	</queryString>
@@ -512,12 +522,12 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($F{Total}==null?0:$F{Total}):
 new DecimalFormat("#,##0;(#,##0)").format($F{Total}==null?0:$F{Total}))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="141" y="101" width="413" height="20"/>
+				<reportElement style="style2" stretchType="RelativeToTallestObject" x="141" y="101" width="413" height="20"/>
 				<box leftPadding="5">
 					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="false" isItalic="true"/>
+					<font fontName="Arial" isBold="false" isItalic="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordVnd}]]></textFieldExpression>
 			</textField>
