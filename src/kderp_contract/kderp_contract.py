@@ -167,7 +167,7 @@ class kderp_contract_client(Model):
             'title_id': fields.many2one('res.partner.title', 'Title',readonly=True,states={'uncompleted':[('readonly',False)]}),
             'client_representative_name':fields.char('Representative',size=32,readonly=True,states={'uncompleted':[('readonly',False)]}),
             
-            'project_location_id':fields.many2one('kderp.location','Project Location',ondelete='restrict',required=True,readonly=True,states={'uncompleted':[('readonly',False)]}),
+            'project_location_id':fields.many2one('kderp.location','IP Location',ondelete='restrict',required=True,readonly=True,states={'uncompleted':[('readonly',False)]}),
             
             'owner_id':fields.many2one('res.partner','Owner',ondelete='restrict', domain="[('customer','=',1)]",required=True,readonly=True,states={'uncompleted':[('readonly',False)]}),
             'client_id':fields.many2one('res.partner','Client',ondelete='restrict', domain="[('customer','=',1)]",required=True,readonly=True,states={'uncompleted':[('readonly',False)]}),
