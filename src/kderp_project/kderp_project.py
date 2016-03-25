@@ -450,7 +450,7 @@ class account_analytic_account(osv.osv):
                                                     'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['state'], 50),
                                                     }),                                
                                
-                'job_type':fields.selection([('E','Electrical'),('M','Mechanical')],"Job Type",select=1),
+                'job_type':fields.selection([('E','Electrical'),('M','Mechanical')],"E/M",select=1),
                 
                 'job_amount':fields.function(_get_summary_amount,string='Amount',method=True,type='float',
                                             digits_compute=dp.get_precision('Amount'),multi="_get_summary_job_amount",

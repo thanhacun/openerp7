@@ -16,7 +16,34 @@
                         <field name="support_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
                     </group>
 	        	</field>
+			</field>
+		</record>
 
+        <!-- Them Job Type vao Form View-->
+        <record id="kderp_job_form_add_job_scale" model="ir.ui.view">
+			<field name="name">kderp.job.form.add.job.scale</field>
+			<field name="model">account.analytic.account</field>
+			<field name="inherit_id" ref="kderp_extend_module.kderp_job_form_inherit_code"/>
+			<field name="arch" type="xml">
+                <field name="job_type" position="replace">
+                    <group col="4" colspan="2">
+                        <field name="job_type" required = "True" on_change="onchange_job_type(code, job_type)"/>
+                        <field name="job_scale"/>
+                    </group>
+                </field>
+			</field>
+		</record>
+
+        <!-- Doi ten Job Type thanh E/M va them Job Type-->
+        <record id="kderp_job_search_extend_inherit" model="ir.ui.view">
+			<field name="name">kderp.job.search.extend.inherit</field>
+			<field name="model">account.analytic.account</field>
+			<field name="inherit_id" ref="kderp_project.view_account_analytic_account_kderp_search"/>
+			<field name="arch" type="xml">
+                <filter string="Job Type" domain="[]" context="{'group_by':'job_type'}" position='replace'>
+                    <filter string="E/M" domain="[]" context="{'group_by':'job_type'}"/>
+                    <filter string="Job Type" domain="[]" context="{'group_by':'job_scale'}"/>
+                </filter>
 			</field>
 		</record>
 
