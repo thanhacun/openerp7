@@ -11,7 +11,7 @@
 				<form string="Control Area" version="7.0">
 					<field name="code"/>
 					<field name="name"/>
-                    <group colspan="2" col="4">
+                    <!--<group colspan="2" col="4">
                         <group string="Control Job(s)" colspan="2">
                             <field name="control_job_ids" nolabel="1" colspan="2">
                                 <tree>
@@ -32,7 +32,7 @@
                                 </tree>
                             </field>
                         </group>
-                    </group>
+                    </group>-->
 				</form>
 			</field>
 		</record>
