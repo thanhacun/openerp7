@@ -205,7 +205,7 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
         return res
 
-    def _create_poline(self, wizard_obj_line, wizard_obj):        
+    def _create_poline(self, wizard_obj_line, wizard_obj, seq):
         return (0, False, {
             'account_analytic_id': wizard_obj_line.account_analytic_id.id if wizard_obj_line.account_analytic_id else wizard_obj.account_analytic_id.id,
             'plan_qty': wizard_obj_line.product_qty,            
@@ -216,6 +216,7 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
             'move_code': wizard_obj_line.move_code,
             'location_id': wizard_obj.stock_location_id.id,
             'location_dest_id': wizard_obj_line.location_dest_id.id if wizard_obj_line.location_dest_id.id else wizard_obj.location_dest_id.id,
+            'sequence': seq
         })
 
     def create_po(self, cr, uid, ids, context=None):
@@ -249,7 +250,8 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
         })
         
         pols = []
-        for wizard_line in allocateJob.product_details:            
+        seq = 0
+        for wizard_line in allocateJob.product_details:
             #quantity must be Positive
             if wizard_line.available_qty - wizard_line.product_qty < 0:
                 raise osv.except_osv(_('Warning!'), _('Please check Quantity.'))
@@ -263,8 +265,8 @@ class kderp_stock_to_order_allocate_to_job(osv.osv_memory):
             #if line_uom.factor and line_uom.factor <> 0:
             #    if float_compare(qty_in_line_uom, wizard_line.quantity, precision_rounding=line_uom.rounding) != 0:
             #        raise osv.except_osv(_('Warning!'), _('The unit of measure rounding does not allow you to ship "%s %s", only rounding of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
-            
-            pols.append(self._create_poline(wizard_line, allocateJob))
+            seq += 1
+            pols.append(self._create_poline(wizard_line, allocateJob, seq))
         if not pols:
             return {'type': 'ir.actions.act_window_close'}
         po_data.update(order_line=pols)
