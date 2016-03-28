@@ -20,11 +20,34 @@
 #
 ##############################################################################
 
-import time
-
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp import netsvc
+
+CONTROL_TYPE_SELECTION = (('control_area', 'Control Area'), ('support_area', 'Support Area'))
+
+class kderp_job_control_area(osv.osv):
+    _name = "kderp.job.control.area"
+    _description = """Job and Control Area"""
+
+    _rec_name = 'area_id'
+    _order = 'control_support, area_id, area_per'
+
+    def _get_area(self, cr, uid, ids, name, args, context = {}):
+        res = {}
+        for kjca in self.browse(cr, uid, ids):
+            res[kjca.id] = kjca.area_per
+        return res
+
+    _columns = {
+                'control_support':fields.selection(CONTROL_TYPE_SELECTION, 'Type', required=True),
+                'area_id':fields.many2one('kderp.control.area',"Area", required=True, ondelete="restrict"),
+                'area_per':fields.float("%", required=True),
+                'area_progressbar':fields.function(_get_area, method =True, type='float', string=""),
+                'job_id':fields.many2one('account.analytic.account','Job', ondelete="restrict", required=True)
+    }
+    _sql_constraints = [("kderp_con_job_area_unique",'unique(job_id, area_id, support_type)', 'Type, Area must be unique')]
+    _defaults = {
+        'area_per': 0
+    }
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
@@ -45,15 +68,27 @@ class account_analytic_account(osv.osv):
             elif jobCode[4:6] in ('-1','-2'):
                 res[job.id] = 'small_maintenance'
         return res
-    
+
+    def _check_area_per(self, cr, uid, ids):
+        for job in self.browse(cr, uid, ids):
+            total = 0
+            for kjcas in job.control_area_ids:
+                total += kjcas.area_per
+            if total <> 100.0:
+                return False
+        return True
+
     _columns={
-                'control_area_id':fields.many2one('kderp.control.area','Control Area', ondelete='restrict'),
-                'control_area_percent': fields.float('%'),
-                'support_area_id': fields.many2one('kderp.control.area','Support Area', ondelete='restrict'),
-                'support_area_percent': fields.float('%'),
+                # 'control_area_id':fields.many2one('kderp.control.area','Control Area', ondelete='restrict'),
+                # 'control_area_percent': fields.float('%'),
+                # 'support_area_id': fields.many2one('kderp.control.area','Support Area', ondelete='restrict'),
+                # 'support_area_percent': fields.float('%'),
 
                 # FIXME Truong nay se co ten la Job Type, Job Type doi thanh E/M, phai hop nhat khi Upgrade len Odoo
                 'job_scale':fields.function(_get_job_scale, type = 'selection', string = 'Job Type', selection = JOB_SCALE_SELECTION, method = True, select = 1,
-                                            store = {'account.analytic.account':(lambda self, cr, uid, ids, context = {}: ids, ['code'], 50),})
+                                            store = {'account.analytic.account':(lambda self, cr, uid, ids, context = {}: ids, ['code'], 50),}),
+
+                'control_area_ids':fields.one2many('kderp.job.control.area', 'job_id', 'Control Area')
               }
+    _constraints = [(_check_area_per, "KDERP Warning, Total of percentage AREA must equal to 100%",['control_area_ids'])]
 account_analytic_account()

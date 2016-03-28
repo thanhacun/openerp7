@@ -8,14 +8,26 @@
 			<field name="model">account.analytic.account</field>
 			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_form"/>
 			<field name="arch" type="xml">
-	        	<field name='manager_id' position='after'>
+	        	<!--<field name='manager_id' position='after'>
                     <group col="3" colspan="4">
                         <field name="control_area_id"/>
                         <field name="control_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
                         <field name="support_area_id"/>
                         <field name="support_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
                     </group>
-	        	</field>
+	        	</field>-->
+                <page string='Viewer' position="after">
+                    <page string="Control Area">
+                        <field name="control_area_ids" nolabel="1" mode="tree">
+                            <tree string="Control Area" editable="top">
+                                <field name="control_support"/>
+                                <field name="area_id"/>
+                                <field name="area_per"/>
+                                <field name="area_progressbar" widget="progressbar"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
 			</field>
 		</record>
 
