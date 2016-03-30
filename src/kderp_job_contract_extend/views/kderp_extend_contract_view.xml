@@ -9,7 +9,7 @@
             <field name='inherit_id' ref='kderp_contract.kderp_view_contract_client_form'/>
             <field name="arch" type="xml">            	
                 <page string="Contract Summary" position="after">
-                    <page string="Control Area">
+                    <page string="Control Area" groups="kderp_job_contract_extend.group_kderp_control_area_contract_show_view">
                         <field name="contract_job_area_ids" nolabel="1">
                             <tree string="Control Area">
                                 <field name="job_id"/>

@@ -41,7 +41,6 @@ class kderp_contract_job_area(osv.osv):
                 'area_per':fields.float("%", required=True),
                 'amount':fields.float("Amount", required=True, digits_compute= dp.get_precision('Amount'))
               }
-    #_sql_constraints = [("kderp_con_job_contract_area_unique", 'unique(job_id, area_id, support_type, contract_id)', 'Type, Job, Contract and AREA must be unique')]
 
     def init(self, cr):
         vwName = self.__class__.__name__

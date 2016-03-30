@@ -34,7 +34,7 @@
              "security/kderp_extend_security.xml",
              "security/ir.model.access.csv",
              "kderp_supplier_payment_menu.xml",
-             "kderp_extend_project_view.xml",
+             #"kderp_extend_project_view.xml",
              "kderp_payment_view.xml",
              "kderp_extend_payment_only_attached_view.xml",
              "kderp_extend_project_location_view.xml",

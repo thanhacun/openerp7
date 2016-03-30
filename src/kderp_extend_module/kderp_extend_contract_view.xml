@@ -52,9 +52,12 @@
 	           	<filter name="state" position='replace'>
                     <filter name="state_working" string="Uncompleted" domain="[('state','=','uncompleted')]"/>
 	            </filter>
-				<!-- Add search Client ilike -->
+				<!-- Add search Client and Owner ilike -->
 				<field name="client_id" position="after">
 					<field name="client_id" string="Client(s)" widget="text"/>
+				</field>
+                <field name="owner_id" position="after">
+					<field name="owner_id" string="Owner(s)" widget="text"/>
 				</field>
             </field>
 		</record>

@@ -35,7 +35,8 @@
             "security/ir.model.access.csv",
             "views/kderp_control_area_view.xml",
             "views/kderp_extend_project_view.xml",
-            "views/kderp_extend_contract_view.xml"
+            "views/kderp_extend_contract_view.xml",
+            "views/res_config_view.xml"
             ],
     'demo':[],
     'installable':True
