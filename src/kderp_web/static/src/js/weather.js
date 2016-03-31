@@ -14,7 +14,7 @@ $(document).ready(function (){
             var desc = conditions.weather;
             html = "<div id='weather' class='weatherFeed'>" +
                         "<img class='weatherItem' src='" + conditions.icon_url + "'>" +
-                        "<div class='weatherCity text-right pull-right'>" + city + "(1" +  desc + ")</div>" +
+                        "<div class='weatherCity text-right pull-right'>" + city + "(" +  desc + ")</div>" +
                         "<div class='weatherTemp'>" + feellike + "&#8451;</div>" +
                     "</div>";
             setTimeout(function() {
