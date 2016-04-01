@@ -15,20 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     d
 #
 ##############################################################################
-import inherited_res_company
-
-import inherited_stock_move
-import inherited_stock_picking
-import inherited_stock_location
-
-import kderp_stock_period
-
-import inherited_purchase_order
-
-import kderp_stock_base
-
-import inherited_res_users
-import inherited_account_analytic_account
+{
+    'name':"KDERP Job & Contract Extend Module",
+    'version':"7.0.0",
+    'author':"KDERP IT-Dev. Team",
+    'images' : ['images/kinden.png'],
+    'summary':"Add new module Job & Contract Module",
+    'category':"KDERP Apps",
+    'depends':['kderp_extend_module'],
+    'description': """
+    - Customize Database structure and function
+    - Customize Procedure
+    - Customize Interface""",
+    'data':[
+            "security/kderp_extend_job_and_contract.xml",
+            "security/ir.model.access.csv",
+            "views/kderp_control_area_view.xml",
+            "views/kderp_extend_project_view.xml",
+            "views/kderp_extend_contract_view.xml"
+            ],
+    'demo':[],
+    'installable':True
+}

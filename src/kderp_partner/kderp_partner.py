@@ -290,6 +290,8 @@ class res_partner(Model):
         return False
        
     _columns={
+              'create_date': fields.datetime("Created on", select=True, readonly=True),
+        
               'trade_name':fields.char('Trade Name',size=25, select=True),
               
               'type': fields.selection( [('default','Default'),('location','Location'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type'),

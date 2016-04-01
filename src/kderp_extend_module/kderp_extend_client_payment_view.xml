@@ -14,6 +14,15 @@
 					<field name="pes_not_available"/>
 					<field name="pes_cannot_collect"/>
 	          	</field>
+                <field name="price_subtotal" position="after">
+                    <field name="total_amount_line" sum="Sub-Total"/>
+                </field>
+                <field name="invoice_line_tax_id" position="attributes">
+                    <attribute name="string">VAT (Round)</attribute>
+                </field>
+                <field name="invoice_line_tax_id" position="before">
+                    <field name="amount_taxes_auto"/>
+                </field>
 	        </field>
        	</record>  
     </data>

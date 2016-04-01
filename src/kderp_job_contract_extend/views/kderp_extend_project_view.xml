@@ -8,15 +8,54 @@
 			<field name="model">account.analytic.account</field>
 			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_form"/>
 			<field name="arch" type="xml">
-	        	<field name='manager_id' position='after'>
+	        	<!--<field name='manager_id' position='after'>
                     <group col="3" colspan="4">
                         <field name="control_area_id"/>
                         <field name="control_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
                         <field name="support_area_id"/>
                         <field name="support_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
                     </group>
-	        	</field>
+	        	</field>-->
+                <page string='Viewer' position="after">
+                    <page string="Control Area">
+                        <field name="control_area_ids" nolabel="1" mode="tree">
+                            <tree string="Control Area" editable="top">
+                                <field name="control_support"/>
+                                <field name="area_id"/>
+                                <field name="area_per"/>
+                                <field name="area_progressbar" widget="progressbar"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+			</field>
+		</record>
 
+        <!-- Them Job Type vao Form View-->
+        <record id="kderp_job_form_add_job_scale" model="ir.ui.view">
+			<field name="name">kderp.job.form.add.job.scale</field>
+			<field name="model">account.analytic.account</field>
+			<field name="inherit_id" ref="kderp_extend_module.kderp_job_form_inherit_code"/>
+			<field name="arch" type="xml">
+                <field name="job_type" position="replace">
+                    <group col="4" colspan="2">
+                        <field name="job_type" required = "True" on_change="onchange_job_type(code, job_type)"/>
+                        <field name="job_scale"/>
+                    </group>
+                </field>
+			</field>
+		</record>
+
+        <!-- Doi ten Job Type thanh E/M va them Job Type-->
+        <record id="kderp_job_search_extend_inherit" model="ir.ui.view">
+			<field name="name">kderp.job.search.extend.inherit</field>
+			<field name="model">account.analytic.account</field>
+			<field name="inherit_id" ref="kderp_project.view_account_analytic_account_kderp_search"/>
+			<field name="arch" type="xml">
+                <filter string="Job Type" domain="[]" context="{'group_by':'job_type'}" position='replace'>
+                    <filter string="E/M" domain="[]" context="{'group_by':'job_type'}"/>
+                    <filter string="Job Type" domain="[]" context="{'group_by':'job_scale'}"/>
+                </filter>
 			</field>
 		</record>
 

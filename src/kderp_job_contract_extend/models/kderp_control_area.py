@@ -62,8 +62,8 @@ class kderp_control_area(osv.osv):
         'code':fields.char('Code', size=4, required=True),
         'name':fields.char('Name', size=128, translate=True, required = True),
 
-        'control_job_ids':fields.one2many('account.analytic.account','control_area_id','Control Job(s)'),
-        'support_job_ids': fields.one2many('account.analytic.account', 'support_area_id', 'Support Job(s)'),
+        # 'control_job_ids':fields.one2many('account.analytic.account','control_area_id','Control Job(s)'),
+        # 'support_job_ids': fields.one2many('account.analytic.account', 'support_area_id', 'Support Job(s)'),
     }
 
     _sql_constraints=[('kderp_control_area_unique_code',"unique(code)",'Code must be unique!'),

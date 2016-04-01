@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,20 +15,25 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import inherited_res_company
 
-import inherited_stock_move
-import inherited_stock_picking
-import inherited_stock_location
 
-import kderp_stock_period
+from openerp.osv import fields, osv
 
-import inherited_purchase_order
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
 
-import kderp_stock_base
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        context = context or {}
 
-import inherited_res_users
-import inherited_account_analytic_account
+        if context.get('filter_storekeeper', False):
+            strSQL = """Select DISTINCT ru.id from res_users ru left join resource_resource rr on ru.id = rr.user_id left join hr_employee hr on rr.id=resource_id left join hr_department hd on department_id =  hd.id where hd.code='S1420'"""
+            cr.execute(strSQL)
+            user_ids = [ruids[0] for ruids in cr.fetchall()]
+            args.append((('id', 'in', user_ids)))
+        return super(res_users, self).search(cr, user, args, offset=0, limit=None, order=None, context=None, count=False)
+
+res_users()

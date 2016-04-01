@@ -204,9 +204,11 @@ class kderp_contract_client(osv.osv):
                 'city_province_id': False,
             }}
         location = self.pool.get('kderp.location').browse(cr, uid, project_location_id)
-
+        city_province_id = False
+        if location and location and location.city_id:
+            city_province_id = location.city_id.id
         return {'value': {
-            'city_province_id': location and location.city_id.id if location.city_id else False
+            'city_province_id': city_province_id
         }}
 kderp_contract_client()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
