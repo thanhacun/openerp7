@@ -46,14 +46,25 @@ class kderp_fixed_assets_report_wizard(osv.osv_memory):
             res.append((elmt.id,"Fixed Assets report %s ~ %s" % (from_date,to_date)))
         return res
     
-    def onchange_date(self, cr, uid, ids, date_start,date_stop, context={}):
+    def onchange_date(self, cr, uid, ids, date_start, date_stop, only_hanoi, only_hcm, context={}):
         result={'detail_ids':[]}
         import datetime
         if date_start:
             actual_start_date=datetime.datetime.strptime(date_start, "%Y-%m-%d")
         if date_stop:
             actual_stop_date=datetime.datetime.strptime(date_stop, "%Y-%m-%d")
-        
+
+        if only_hcm and only_hanoi:
+            new_condition = False
+        elif self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.name.find('HCM') >= 0:
+            new_condition = True
+        elif only_hcm:
+            new_condition = "coalesce(refcode,'') ilike '%%For%%HCM%%'"
+        elif only_hanoi:
+            new_condition = "coalesce(refcode,'') not ilike '%%For%%HCM%%'"
+        else:
+            new_condition = True
+
         if date_start:
             compare_date=datetime.datetime.strptime('2014-01-01', "%Y-%m-%d")
             if actual_start_date<compare_date:
@@ -62,7 +73,7 @@ class kderp_fixed_assets_report_wizard(osv.osv_memory):
         if date_start and date_stop:
             if actual_start_date>=actual_stop_date:
                 raise osv.except_osv("KDERP Warning",'You must input Start Date less than Stop Date, Thank you')
-            
+
             cr.execute("""Select 
                             kam.id
                         from
@@ -72,9 +83,10 @@ class kderp_fixed_assets_report_wizard(osv.osv_memory):
                         left join
                             kderp_type_of_asset ktoa on kaca.typeofasset_id=ktoa.id
                         where
-                            (state not in ('draft','liquidated')  or (state='liquidated' and dateofliquidated between '%s' and '%s') ) and 
-                            ktoa.name='FA' and length('HFA1-13-14-0001')=length(kam.code) and 
-                            dateofinvoice<='%s'""" % (date_start,date_stop,date_stop))
+                            (state not in ('draft','liquidated')  or (state='liquidated' and (dateofliquidated between '%s' and '%s' or dateofliquidated>'%s'))) and
+                            ktoa.name='FA' and length('HFA1-13-14-0001')=length(kam.code) and dateofinvoice<='%s' and %s""" % (
+                        date_start, date_stop, date_stop, date_stop, new_condition))
+
             detail_ids = [x[0] for x in cr.fetchall()]
             result={'detail_ids':detail_ids}            
         return {'value':result}

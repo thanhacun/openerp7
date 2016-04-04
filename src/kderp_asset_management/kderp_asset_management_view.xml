@@ -168,13 +168,17 @@
                     
                     <separator/>
                     <filter icon="terp-document-new" string="Processing &amp; In Used" name="asset_working" domain="[('state','in',('draft','inused'))]"/>
+                    <filter icon="terp-document-new" string="In Stock" name="asset_working" domain="[('state','=','instock')]"/>
                     <separator/>
 					<filter icon="terp-check" string="Liquidated" name="liquidated" domain="[('state','=','liquidated')]"/>
 					<filter icon="terp-check" string="Out of Date" name="outofdate" domain="[('state','=','outofdate')]"/>
 					<separator/>
-					<filter string="Fixed Asset" name="type_asset_acc_id.typeofasset_id" domain="[('type_asset_acc_id.typeofasset_id','=','FA')]"/>
+					<!--<filter string="Fixed Asset" name="type_asset_acc_id.typeofasset_id" domain="[('type_asset_acc_id.typeofasset_id','=','FA')]"/>-->
+					<filter string="Fixed Asset" name="type_asset_acc_id.typeofasset_id" domain="[('fixed_asset','=',True)]"/>
 					<filter string="Tools &amp; Equipment" name="type_asset_acc_id.typeofasset_id" domain="[('type_asset_acc_id.typeofasset_id','=','EQ'),('type_asset_acc_id.typeofasset_id.from_value','=','15000000')]"/>
-					<filter string="Small tools" name="type_asset_acc_id.typeofasset_id" domain="[('type_asset_acc_id.typeofasset_id','=','EQ'),('type_asset_acc_id.typeofasset_id.from_value','=','1000000')]"/>					 					
+					<filter string="Small tools" name="type_asset_acc_id.typeofasset_id" domain="[('type_asset_acc_id.typeofasset_id','=','EQ'),('type_asset_acc_id.typeofasset_id.from_value','=','1000000')]"/>
+                    <separator/>
+                    <filter string="Asset Hanoi"  name="refcode_inhanoi" domain="['|',('refcode','not ilike','hcm'),('refcode','=',False)]"/>
 
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'current_user_id'}"/>

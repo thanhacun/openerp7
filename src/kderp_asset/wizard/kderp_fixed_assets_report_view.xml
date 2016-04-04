@@ -30,8 +30,8 @@
 					</header>
 					<sheet>
 						<group colspan="4" col="4">
-							<field name='date_start' on_change="onchange_date(date_start,date_stop)" required="1"/>
-							<field name='date_stop' on_change="onchange_date(date_start,date_stop)" required="1"/>
+							<field name='date_start' on_change="onchange_date(date_start,date_stop, only_hanoi, only_hcm)" required="1"/>
+							<field name='date_stop' on_change="onchange_date(date_start,date_stop, only_hanoi, only_hcm)" required="1"/>
 							<field name='excel'/>
 							<field name='only_hanoi'/>
 							<field name='only_hcm'/>							
