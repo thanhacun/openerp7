@@ -11,6 +11,8 @@ control options.
 
 ** New: support many2manytags widget ! **
 
+** New: support odoo v8 (see odoo/8.0 branch) ! **
+
 Options provided includes possibility to remove "Create..." and/or "Create and
 Edit..." entries from many2one drop down. You can also change default number of
 proposition appearing in the drop-down. Or prevent the dialog box poping in
@@ -23,7 +25,7 @@ if the current user have no permission rights to create the related object.
 Requirements
 ------------
 
-Was tested on openerp v7.0
+Was tested on openerp v7.0, odoo v8.0
 
 
 New option

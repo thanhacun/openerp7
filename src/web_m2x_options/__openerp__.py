@@ -3,7 +3,8 @@
 {
     "name": 'web_m2x_options',
     "version": "0.1",
-    "description": """
+    "description":
+"""
 =====================================================
 Add new options for many2one and many2manytags field:
 =====================================================
@@ -16,14 +17,12 @@ Add new options for many2one and many2manytags field:
 Example:
 --------
 
-``<field name="partner_id" options="{'limit': 10, 'create': false,
-'create_edit': false}"/>``
+<field name="partner_id" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 
 Note:
 -----
 
-If one of those options are not set, many2one field uses default many2one
-field options.
+if one of those options are not set, many2one field use default many2one field options.
 
 Thanks to:
 ----------
@@ -34,12 +33,14 @@ Thanks to:
 """,
     "depends": [
         'base',
-        'web',
+	'web',
     ],
     "js": [
         'static/src/js/form.js',
     ],
-    "author": "Tuxservices,Odoo Community Association (OCA)",
-    "installable": True,
-    "active": False,
+    "author": "Tuxservices",
+    "installable" : True,
+    "active" : False,
 }
+
+
