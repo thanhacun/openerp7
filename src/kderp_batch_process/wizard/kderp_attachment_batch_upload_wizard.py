@@ -47,7 +47,8 @@ def _update_attach_common(self, cr, uid, folder,model,code='name',dup=False,dele
     #for path, subdirs, files in os.walk(root_path): #Include Subdir
     for name in os.listdir(root_path):
         #for name in files:
-        if name.upper() not in ['ATTACHED','OLD','ATTACHED (OLD)','ERROR']:
+        full_path = os.path.join(root_path, name)
+        if name.upper() not in ['ATTACHED','OLD','ATTACHED (OLD)','ERROR'] and os.path.isfile(full_path):
             chk_roa = False
             chk_contract = False
             tmp_name=name.strip()
@@ -74,8 +75,6 @@ def _update_attach_common(self, cr, uid, folder,model,code='name',dup=False,dele
                 if att_find:
                     document_obj.unlink(cr, uid, att_find)
             if res_id:
-                full_path = os.path.join(root_path,name)
-                
                 datas = base64.encodestring(file(full_path, 'rb').read())
                 
                 if model=='purchase.order':

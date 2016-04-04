@@ -150,7 +150,7 @@
 						<notebook colspan="4">
 							<page string="Job Info.">
 								<field name="contract_job_summary_ids" nolabel="1" mode='tree'>
-									<tree editable="top" min_rows="3" string="Job Info." colors="red:amount_currency==0">
+									<tree min_rows="3" string="Job Info." colors="red:amount_currency==0">
 										<field name="account_analytic_id"/>
 										<field name="currency_id"/>
 										<field name="amount_currency"/>

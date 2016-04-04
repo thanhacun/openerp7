@@ -50,9 +50,9 @@ class kderp_control_area(osv.osv):
             kca_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not kca_ids:
                 kca_ids = self.search(cr, uid, [('code', operator, name)] + args, limit=limit, context=context)
-            elif not kca_ids:
+            if not kca_ids:
                 kca_ids = self.search(cr, uid, [('name', '=', name)] + args, limit=limit, context=context)
-            elif not kca_ids:
+            if not kca_ids:
                 kca_ids = self.search(cr, uid,[('name', 'ilike', name)] + args, limit=limit, context=context)
         else:
             kca_ids = self.search(cr, uid, args, limit=limit, context=context)

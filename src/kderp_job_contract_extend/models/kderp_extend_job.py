@@ -37,11 +37,30 @@ class kderp_job_control_area(osv.osv):
             res[kjca.id] = kjca.area_per
         return res
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+
+        if name:
+            name = name.strip()
+            area_ids = self.search(cr, uid, [('area_id', '=', name)] + args, limit=limit, context=context)
+            if not area_ids:
+                area_ids = self.search(cr, uid, [('area_id', 'ilike', name)] + args, limit=limit, context=context)
+            if not area_ids:
+                area_ids = self.search(cr, uid, [('control_support', '=', name)] + args, limit=limit, context=context)
+            if not area_ids:
+                area_ids = self.search(cr, uid, [('control_support', 'ilike', name)] + args, limit=limit, context=context)
+        else:
+            area_ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, area_ids, context=context)
+
     _columns = {
                 'control_support':fields.selection(CONTROL_TYPE_SELECTION, 'Type', required=True),
                 'area_id':fields.many2one('kderp.control.area',"Area", required=True, ondelete="restrict"),
                 'area_per':fields.float("%", required=True),
-                'area_progressbar':fields.function(_get_area, method =True, type='float', string=""),
+                'area_progressbar':fields.function(_get_area, method =True, type='float', string=" "),
                 'job_id':fields.many2one('account.analytic.account','Job', ondelete="restrict", required=True)
     }
     _sql_constraints = [("kderp_con_job_area_unique",'unique(job_id, area_id, support_type)', 'Type, Area must be unique')]
@@ -74,7 +93,7 @@ class account_analytic_account(osv.osv):
             total = 0
             for kjcas in job.control_area_ids:
                 total += kjcas.area_per
-            if total <> 100.0:
+            if job.control_area_ids and total <> 100.0:
                 return False
         return True
 

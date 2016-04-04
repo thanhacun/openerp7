@@ -20,6 +20,8 @@
 ##############################################################################
 
 import kderp_control_area
-import kderp_extend_job
 
+import kderp_extend_job
 import kderp_contract_job_area
+
+import res_config
