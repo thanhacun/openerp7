@@ -138,4 +138,4 @@ class kderp_contract_job_area(osv.osv):
             else:
                 res = (var.id, "%s - %s" % (var.area_id.code, var.area_id.name))
             result.append(res)
-        return list(set(result))
+        return result

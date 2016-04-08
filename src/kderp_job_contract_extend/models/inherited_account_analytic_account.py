@@ -55,7 +55,8 @@ class account_analytic_account(osv.osv):
                 'job_scale':fields.function(_get_job_scale, type = 'selection', string = 'Job Type', selection = JOB_SCALE_SELECTION, method = True, select = 1,
                                             store = {'account.analytic.account':(lambda self, cr, uid, ids, context = {}: ids, ['code'], 50),}),
 
-                'control_area_ids':fields.one2many('kderp.job.control.area', 'job_id', 'Control Area', readonly=1)
+                'control_area_ids':fields.one2many('kderp.job.control.area', 'job_id', 'Control Area'),
+                'area_allotment_ids': fields.one2many('kderp.job.area.allotment', 'job_id', 'Area Allotment', readonly=1)
               }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
