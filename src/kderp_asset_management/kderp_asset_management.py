@@ -643,12 +643,12 @@ class kderp_asset_management_usage(Model):
               'asset_management_id':fields.many2one('kderp.asset.management','Asset',ondelete='restrict'),
               'job_id':fields.many2one('kderp.job','Job'),
               
-              'user_id':fields.many2one('hr.employee','User'),
-              'manager_id':fields.many2one('hr.employee','Manager'),
+              'user_id':fields.many2one('hr.employee','User',ondelete='restrict'),
+              'manager_id':fields.many2one('hr.employee','Manager', ondelete='restrict'),
               'usedtime':fields.date('Used Date'),
               'endtime':fields.date('End Date'),
               'remarks':fields.char('Remarks',size=256),
-              'physical_location_id':fields.many2one('kderp.asset.location','Physical Location')
+              'physical_location_id':fields.many2one('kderp.asset.location','Physical Location', ondelete='restrict')
               }
     _defaults={
                'usedtime': lambda *a: time.strftime('%Y-%m-%d'),

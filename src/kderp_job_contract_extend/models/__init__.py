@@ -21,7 +21,11 @@
 
 import kderp_control_area
 
-import kderp_extend_job
-import kderp_contract_job_area
-
 import res_config
+
+import inherited_res_currency
+import inherited_account_analytic_account
+import inherited_kderp_contract_client
+
+import kderp_contract_job_area
+import kderp_job_control_area

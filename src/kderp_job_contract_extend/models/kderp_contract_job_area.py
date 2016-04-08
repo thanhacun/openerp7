@@ -20,53 +20,89 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import tools
-from kderp_extend_job import CONTROL_TYPE_SELECTION
+
+CONTROL_TYPE_SELECTION = (('control_area', 'Control Area'), ('support_area', 'Support Area'))
 
 import openerp.addons.decimal_precision as dp
 
 class kderp_contract_job_area(osv.osv):
-    _auto = False
     _name = 'kderp.contract.job.area'
-    _description = 'KDERP Contract & Job Area Percentage'
-
+    _description = 'KDERP Contract & Job Control Area Percentage'
     _rec_name = "job_id"
+    _order = 'contract_id, job_id, control_support, currency_id, amount desc'
+
+    #Field Function Area
+    def _get_area_job_per(self, cr, uid, ids, name, args, context):
+        res = {}
+        for kca in self.browse(cr, uid, ids):
+            job_id = kca.job_id.id
+            curr_id = kca.currency_id.id
+            kca_amount = kca.amount
+            total_amount = 0
+            for kqcpl in kca.contract_id.contract_job_summary_ids:
+                if kqcpl.account_analytic_id.id == job_id and kqcpl.currency_id.id == curr_id:
+                    total_amount = kqcpl.amount_currency
+            res[kca.id] = (kca_amount/total_amount*100) if total_amount else 0
+        return res
+
+    #Area for Function get IDS
+    def _get_ids_from_contract(self, cr, uid, ids, context):
+        res = {}
+        for ctc in self.pool.get('kderp.contract.client').browse(cr, uid, ids):
+            for kca in ctc.contract_job_area_ids:
+                res[kca.id] = True
+        return res.keys()
+
+    def _get_ids_from_contract_job(self, cr, uid, ids, context):
+        res = {}
+        for kqcpl in self.pool.get('kderp.quotation.contract.project.line').browse(cr, uid, ids):
+            for kca in kqcpl.contract_id.contract_job_area_ids:
+                res[kca.id] = True
+        return res.keys()
+
+    #Default value Area - Function for get Default Value
+    def _get_job_id(self, cr, uid, context):
+        context = context or {}
+        ctc_id = context.get('contract_id', False)
+        if ctc_id:
+            job_ids = []
+            ctc = self.pool.get('kderp.contract.client').browse(cr, uid, ctc_id)
+            for jcl in ctc.contract_job_summary_ids:
+                job_ids.append(jcl.account_analytic_id.id)
+            job_ids = list(set(job_ids))
+            return False if len(job_ids)<>1 else job_ids[0]
+        else:
+            raise osv.except_osv("KDERP Warning", "You can't create Contract and Job Control Area, please create contract first")
+
+    def _get_curr_id(self, cr, uid, context):
+        context = context or {}
+        ctc_id = context.get('contract_id', False)
+        if ctc_id:
+            curr_ids = []
+            ctc = self.pool.get('kderp.contract.client').browse(cr, uid, ctc_id)
+            for jcl in ctc.contract_job_summary_ids:
+                curr_ids.append(jcl.currency_id.id)
+            curr_ids = list(set(curr_ids))
+            return False if len(curr_ids) <> 1 else curr_ids[0]
+        else:
+            raise osv.except_osv("KDERP Warning",
+                                 "You can't create Contract and Job Control Area, please create contract first")
 
     _columns={
                 'contract_id':fields.many2one('kderp.contract.client','Contract', required=True, ondelete="restrict"),
                 'job_id': fields.many2one('account.analytic.account', 'Job', required=True, ondelete="restrict"),
-                'area_id': fields.many2one('kderp.control.area', 'Area', required=True, ondelete="restrict"),
+                'area_id':fields.many2one('kderp.control.area',"Area", required=True, ondelete="restrict"),
                 'currency_id': fields.many2one('res.currency', 'Cur.', required=True, ondelete="restrict"),
-                'control_support':fields.selection(CONTROL_TYPE_SELECTION, 'Type', required=True),
-                'area_per':fields.float("%", required=True),
-                'amount':fields.float("Amount", required=True, digits_compute= dp.get_precision('Amount'))
+                'control_support':fields.selection(CONTROL_TYPE_SELECTION, 'Area Type', required=True),
+                'amount': fields.float("Amount", required=True, digits_compute=dp.get_precision('Amount')),
+                'area_per':fields.function(_get_area_job_per, type='float', method=True, string="%",digits_compute=dp.get_precision('Amount'),
+                                           store={
+                                               'kderp.contract.job.area': (lambda self, cr, uid, ids, context={}: ids, ['amount','job_id'], 10),
+                                               'kderp.contract.client': (_get_ids_from_contract, ['contract_job_summary_ids'], 10),
+                                               'kderp.quotation.contract.project.line':(_get_ids_from_contract_job, None, 10),
+                                           })
               }
-
-    def init(self, cr):
-        vwName = self.__class__.__name__
-        tools.drop_view_if_exists(cr, vwName)
-        cr.execute("""Create or replace view %s as Select
-                        row_number() Over (order by contract_id, account_analytic_id, currency_id, currency_id, area_id, control_support) as id,
-                        contract_id,
-                        account_analytic_id as job_id,
-                        area_id,
-                        currency_id,
-                        amount_currency*area_per/100.0 as amount,
-                        control_support,
-                        area_per
-                    from
-                        kderp_quotation_contract_project_line kcqpl
-                    left join
-                        kderp_job_control_area kjca on account_analytic_id = job_id
-                    where
-                        COALESCE(area_id,0)>0
-                    order by
-                      contract_id,account_analytic_id,control_support,area_id,area_per""" % vwName)
-
-class kderp_contract_client(osv.osv):
-    _inherit = 'kderp.contract.client'
-    _name = 'kderp.contract.client'
-
-    _columns = {
-                'contract_job_area_ids':fields.one2many('kderp.contract.job.area','contract_id','Job Area', readonly=True)
+    _defaults = {
+                'job_id':_get_job_id,
+                'currency_id':_get_curr_id,
     }

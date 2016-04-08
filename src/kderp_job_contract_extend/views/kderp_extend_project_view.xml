@@ -31,7 +31,6 @@
 	        	<field name='invoice_address_id' position='after'>
                     <field name='city_province_id'/>
 	        	</field>
-
 			</field>
 		</record>
 
@@ -42,6 +41,7 @@
             <field name="inherit_id" ref="kderp_project.view_account_analytic_account_kderp_search"/>
             <field name="arch" type="xml">
             	<field name='manager_id' position='after'>
+                    <field name="control_area_ids" filter_domain="[('control_area_ids','ilike',self)]" string="Area" widget="many2one"/>
             		<field name="user_related_ids" filter_domain="[('user_related_ids','ilike',self)]" string="Viewer"/>
             	</field>
             </field>
@@ -77,35 +77,6 @@
 					<field name="code"/>
 					<field name="name"/>
 				</field>
-			</field>
-		</record>
-
-        <!-- Them control va support area va job-->
-        <record id="kderp_job_form_add_area" model="ir.ui.view">
-			<field name="name">kderp.job.form.add.area</field>
-			<field name="model">account.analytic.account</field>
-			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_form"/>
-			<field name="arch" type="xml">
-	        	<!--<field name='manager_id' position='after'>
-                    <group col="3" colspan="4">
-                        <field name="control_area_id"/>
-                        <field name="control_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
-                        <field name="support_area_id"/>
-                        <field name="support_area_percent" widget="progressfloat" nolabel="1" colspan="1"/>
-                    </group>
-	        	</field>-->
-                <page string='Viewer' position="after">
-                    <page string="Control Area" groups="kderp_job_contract_extend.group_kderp_control_area_job_show_view">
-                        <field name="control_area_ids" nolabel="1" mode="tree">
-                            <tree string="Control Area" editable="top">
-                                <field name="control_support"/>
-                                <field name="area_id"/>
-                                <field name="area_per"/>
-                                <field name="area_progressbar" widget="progressbar"/>
-                            </tree>
-                        </field>
-                    </page>
-                </page>
 			</field>
 		</record>
 
