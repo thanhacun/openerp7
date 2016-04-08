@@ -15,7 +15,10 @@
                 <field name="code" class="oe_inline oe_edit_only" placeholder="Job Number" position='replace'>
 	        		<field name="code" on_change="onchange_job_code(code)" class="oe_inline oe_edit_only" placeholder="Job Number"/>
 	        	</field>
-
+                <field name='invoice_address_id' position='replace'>
+                    <field name='project_location_id' string="IP Location" on_change="onchange_location_city(project_location_id)"/>
+                    <field name='city_province_id'/>
+	        	</field>
                 <field name="job_type" position="replace">
                     <group col="4" colspan="2">
                         <field name="job_type" required = "True" on_change="onchange_job_type(code, job_type)"/>
@@ -23,7 +26,7 @@
                     </group>
                     <field name="owner_id" context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options='{"always_reload": True}'/>
                     <field name='partner_id' context="{'search_default_customer':1, 'show_address': 0,'default_customer':1,'hide_name':0}" options='{"always_reload": True}'/>
-                    <field name='project_location_id' string="IP Location" on_change="onchange_location_city(project_location_id)"/>
+                    <field name='invoice_address_id' domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" context="{'default_type':'invoice','show_address': 1,'hide_name': 1,'inline':1}" options='{"always_reload": True}'/>
 	        	</field>
 
                 <field name='address_id' position='replace'>
@@ -32,9 +35,7 @@
                     <field name="project_address_id" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options='{"always_reload": True}'/>
                 </field>
 
-                <field name='invoice_address_id' position='after'>
-                    <field name='city_province_id'/>
-	        	</field>
+
 
                 <field name='area_site_manager_id' position='after'>
 	        		<field name='remark'/>
