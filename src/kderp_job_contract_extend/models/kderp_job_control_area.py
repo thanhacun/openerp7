@@ -56,13 +56,13 @@ class kderp_job_control_area(osv.osv):
         context = context or {}
         result = []
         for var in self.browse(cr, uid, ids, context=context):
-            if context.get('code_only', False):
-                res = (var.id, var.area_id.code)
-            elif context.get('name_only', False):
-                res = (var.id, var.area_id.name)
-            else:
-                res = (var.id, "%s - %s" % (var.area_id.code, var.area_id.name))
-            result.append(res)
+                if context.get('code_only', False):
+                    res = (var.id, var.area_id.code)
+                elif context.get('name_only', False):
+                    res = (var.id, var.area_id.name)
+                else:
+                    res = (var.id, "%s - %s" % (var.area_id.code, var.area_id.name))
+                result.append(res)
         return list(set(result))
 
     _columns = {
@@ -84,7 +84,7 @@ class kderp_job_control_area(osv.osv):
                                     AND    c.relkind = 'r'""" % vwName
         cr.execute(sqlCheckTable)
         if cr.fetchall():
-            cr.execute("""DROP TABLE IF EXISTS %s where """ % vwName)
+            cr.execute("""DROP TABLE IF EXISTS %s""" % vwName)
 
         from openerp import tools
 
@@ -96,8 +96,10 @@ class kderp_job_control_area(osv.osv):
                         area_id,
                         currency_id,
                         sum(amount) as amount,
-                        case when coalesce(sum(sum(amount)) over (order by job_id, currency_id),0)=0 then 0 else
-                        sum(amount)/sum(sum(amount)) over (order by job_id, currency_id) end*100.0 as area_per,
+                        case when
+                          coalesce(sum(sum(amount)) over (PARTITION BY job_id,currency_id),0)=0 then 0
+                        else
+                          sum(amount)/(sum(sum(amount)) over (PARTITION BY job_id,currency_id))*100.0 end as area_per,
                         control_support
                     from
                        kderp_contract_job_area kjca

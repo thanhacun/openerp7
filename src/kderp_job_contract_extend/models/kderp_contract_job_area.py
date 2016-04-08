@@ -106,3 +106,36 @@ class kderp_contract_job_area(osv.osv):
                 'job_id':_get_job_id,
                 'currency_id':_get_curr_id,
     }
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+
+        if name:
+            name = name.strip()
+            area_ids = self.search(cr, uid, [('area_id', '=', name)] + args, limit=limit, context=context)
+            if not area_ids:
+                area_ids = self.search(cr, uid, [('area_id', 'ilike', name)] + args, limit=limit, context=context)
+            if not area_ids:
+                area_ids = self.search(cr, uid, [('control_support', '=', name)] + args, limit=limit, context=context)
+            if not area_ids:
+                area_ids = self.search(cr, uid, [('control_support', 'ilike', name)] + args, limit=limit,
+                                       context=context)
+        else:
+            area_ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, area_ids, context=context)
+
+    def name_get(self, cr, uid, ids, context=None):
+        context = context or {}
+        result = []
+        for var in self.browse(cr, uid, ids, context=context):
+            if context.get('code_only', False):
+                res = (var.id, var.area_id.code)
+            elif context.get('name_only', False):
+                res = (var.id, var.area_id.name)
+            else:
+                res = (var.id, "%s - %s" % (var.area_id.code, var.area_id.name))
+            result.append(res)
+        return list(set(result))

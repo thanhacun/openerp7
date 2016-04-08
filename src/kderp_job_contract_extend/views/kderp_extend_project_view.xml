@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-        <!-- Thay doi status cua Job theo tung group -->
         <record id="kderp_job_form_set_readonly_status" model="ir.ui.view">
 			<field name="name">kderp.job.form.set.readonly.status</field>
 			<field name="model">account.analytic.account</field>
@@ -12,6 +11,10 @@
 				<field name="state" position="replace"/>
                 <field name='owner_id' position='replace'/>
                 <field name='partner_id' position="replace"/>
+
+                <field name="code" class="oe_inline oe_edit_only" placeholder="Job Number" position='replace'>
+	        		<field name="code" on_change="onchange_job_code(code)" class="oe_inline oe_edit_only" placeholder="Job Number"/>
+	        	</field>
 
                 <field name="job_type" position="replace">
                     <group col="4" colspan="2">
@@ -28,41 +31,45 @@
                     <field name="state" readonly="1" />
                     <field name="project_address_id" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options='{"always_reload": True}'/>
                 </field>
-	        	<field name='invoice_address_id' position='after'>
+
+                <field name='invoice_address_id' position='after'>
                     <field name='city_province_id'/>
 	        	</field>
-			</field>
-		</record>
 
-		<!-- Them truong user view o Job vao phan search -->
-		<record id="view_account_analytic_account_kderp_extend_search" model="ir.ui.view">
-            <field name="name">account.analytic.account.search.extend</field>
-            <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="kderp_project.view_account_analytic_account_kderp_search"/>
-            <field name="arch" type="xml">
-            	<field name='manager_id' position='after'>
-                    <field name="control_area_ids" filter_domain="[('control_area_ids','ilike',self)]" string="Area" widget="many2one"/>
-            		<field name="user_related_ids" filter_domain="[('user_related_ids','ilike',self)]" string="Viewer"/>
-            	</field>
-            </field>
-         </record>
-
-        <!-- Thay doi job_type theo code-->
-        <record id="kderp_job_form_inherit_code" model="ir.ui.view">
-			<field name="name">kderp.job.form.inherit</field>
-			<field name="model">account.analytic.account</field>
-			<field name="inherit_id" ref="kderp_project.view_account_analytic_kderp_job_form"/>
-			<field name="arch" type="xml">
-	        	<field name="code" class="oe_inline oe_edit_only" placeholder="Job Number" position='replace'>
-	        		<field name="code" on_change="onchange_job_code(code)" class="oe_inline oe_edit_only" placeholder="Job Number"/>
-	        	</field>
-<!--	        	<field name="job_type" position="replace">
-	        		<field name="job_type" required = "True" on_change="onchange_job_type(code, job_type)"/>
-	        	</field>-->
-				<!-- Them truong remark vao trong form Project -->
-				<field name='area_site_manager_id' position='after'>
+                <field name='area_site_manager_id' position='after'>
 	        		<field name='remark'/>
 	        	</field>
+
+                <!--Them Control Area vao sau tab viewer-->
+                <page string='Viewer' position="after">
+                    <page string="Control Area" groups="kderp_job_contract_extend.group_kderp_control_area_job_show_view">
+                        <field name="control_area_ids" nolabel="1" mode="tree">
+                            <tree string="Control Area" editable="top">
+                                <field name="control_support"/>
+                                <field name="area_id"/>
+                                <field name="currency_id"/>
+                                <field name="amount"/>
+                                <field name="area_per"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+                <!-- Add kickoff and meeting date -->
+                <group colspan="2" col="2" class="kdvn_float_readonly" position="replace">
+                    <group colspan="2" col="4">
+							<group colspan="2" col="2" class="kdvn_float_readonly">
+								<field name='job_currency'/>
+								<field name='job_amount'/>
+								<field name='job_tax'/>
+								<field style="border-top-sytle:solid;border-width:1px" name='job_total'/>
+							</group>
+                            <group colspan="2" col="3">
+								<field name='target_profit'/>
+                                <label string="%%"/>
+								<field name='kickoff_meeting_date' colspan="3"/>
+							</group>
+                    </group>
+                </group>
 			</field>
 		</record>
 
@@ -90,6 +97,10 @@
                     <filter string="E/M" domain="[]" context="{'group_by':'job_type'}"/>
                     <filter string="Job Type" domain="[]" context="{'group_by':'job_scale'}"/>
                 </filter>
+                <field name='manager_id' position='after'>
+                    <field name="control_area_ids" filter_domain="[('control_area_ids','ilike',self)]" string="Area"/>
+            		<field name="user_related_ids" filter_domain="[('user_related_ids','ilike',self)]" string="Viewer"/>
+            	</field>
 			</field>
 		</record>
 
