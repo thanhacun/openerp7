@@ -10,14 +10,14 @@
             <field name="arch" type="xml">            	
                 <page string="Contract Summary" position="after">
                     <page string="Control Area" groups="kderp_job_contract_extend.group_kderp_control_area_contract_show_view">
-                        <field name="contract_job_area_ids" nolabel="1">
-                            <tree string="Control Area">
-                                <field name="job_id"/>
-                                <field name="area_id"/>
+                        <field name="contract_job_area_ids" nolabel="1" context="{'contract_id': active_id}">
+                            <tree string="Control Area" editable="bottom">
+                                <field name="job_id" context="{'filter_by_contract_id': parent.id}" options="{'create': false, 'create_edit': false}"/>
                                 <field name="control_support"/>
-                                <field name="area_per"/>
-                                <field name="currency_id"/>
+                                <field name="area_id"/>
+                                <field name="currency_id" context="{'filter_by_contract_id': parent.id}" options="{'create': false, 'create_edit': false}"/>
                                 <field name="amount"/>
+                                <field name="area_per"/>
                             </tree>
                         </field>
                     </page>
