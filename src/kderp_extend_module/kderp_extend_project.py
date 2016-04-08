@@ -37,8 +37,8 @@ class account_analytic_account(osv.osv):
                 #Them truong moi
                 'remark':fields.text('Remark'),
                 'project_location_id':fields.many2one('kderp.location','IP Location',ondelete='restrict'),
-                'city_province_id':fields.many2one('kderp.city','City Province'),
-                'project_address_id':fields.many2one('res.partner','Project Address',ondelete='restrict'),
+                'city_province_id':fields.many2one('kderp.city','City/Province'),
+                'project_address_id':fields.many2one('res.partner','Project Location',ondelete='restrict'),
               }
 
     def onchange_location_city(self, cr, uid, ids, project_location_id=False):
