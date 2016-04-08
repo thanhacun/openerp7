@@ -25,5 +25,16 @@
             </field>
 		</record>
 
+        <!--Contract Search View Inherit-->
+        <record id="kderp_contract_search_view_extend_nherit" model="ir.ui.view">
+            <field name="name">kderp.contract.search.view.extend.inherit</field>
+            <field name="model">kderp.contract.client</field>
+            <field name='inherit_id' ref='kderp_extend_module.view_kderp_contract_filter_inherit_extend'/>
+            <field name="arch" type="xml">
+                <field name="contract_job_summary_ids" string="Owner(s)" widget="text" position="after">
+                    <field name="contract_job_area_ids" string="Area"  filter_domain="[('contract_job_area_ids','ilike',self)]"/>
+                </field>
+            </field>
+        </record>
 	</data>
 </openerp>
