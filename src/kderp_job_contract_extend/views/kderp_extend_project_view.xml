@@ -43,14 +43,22 @@
 
                 <!--Them Control Area vao sau tab viewer-->
                 <page string='Viewer' position="after">
-                    <page string="Control Area" groups="kderp_job_contract_extend.group_kderp_control_area_job_show_view">
-                        <field name="control_area_ids" nolabel="1" mode="tree">
-                            <tree string="Control Area" editable="top">
+                    <page string="Area Allotment" groups="kderp_job_contract_extend.group_kderp_control_area_job_show_view">
+                        <field name="area_allotment_ids" nolabel="1" mode="tree">
+                            <tree string="Area Allotment">
                                 <field name="control_support"/>
                                 <field name="area_id"/>
                                 <field name="currency_id"/>
                                 <field name="amount"/>
                                 <field name="area_per"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Control Area" groups="kderp_job_contract_extend.group_kderp_control_area_job_show_view">
+                        <field name="control_area_ids" nolabel="1" mode="tree">
+                            <tree string="Control Area" editable="bottom">
+                                <field name="control_support"/>
+                                <field name="area_id"/>
                             </tree>
                         </field>
                     </page>
@@ -65,8 +73,8 @@
 								<field style="border-top-sytle:solid;border-width:1px" name='job_total'/>
 							</group>
                             <group colspan="2" col="3">
-								<field name='target_profit'/>
-                                <label string="%%"/>
+								<field name='target_profit' widget="progressfloat"/>
+                                <label string="%%" class="oe_edit_only"/>
 								<field name='kickoff_meeting_date' colspan="3"/>
 							</group>
                     </group>
@@ -99,7 +107,7 @@
                     <filter string="Job Type" domain="[]" context="{'group_by':'job_scale'}"/>
                 </filter>
                 <field name='manager_id' position='after'>
-                    <field name="control_area_ids" filter_domain="[('control_area_ids','ilike',self)]" string="Area"/>
+                    <field name="area_allotment_ids" filter_domain="[('area_allotment_ids','ilike',self)]" string="Area"/>
             		<field name="user_related_ids" filter_domain="[('user_related_ids','ilike',self)]" string="Viewer"/>
             	</field>
 			</field>
