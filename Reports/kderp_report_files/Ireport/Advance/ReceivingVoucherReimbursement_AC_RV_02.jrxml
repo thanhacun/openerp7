@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReceivingVoucher" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="2.4157650000000013"/>
-	<property name="ireport.x" value="267"/>
-	<property name="ireport.y" value="1222"/>
+	<property name="ireport.zoom" value="1.8150000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="330"/>
+	<style name="style2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{InWordVnd}.length()<86]]></conditionExpression>
+			<style fontSize="10"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{InWordVnd}.length()>85]]></conditionExpression>
+			<style fontSize="9"/>
+		</conditionalStyle>
+	</style>
 	<queryString language="xPath">
 		<![CDATA[]]>
 	</queryString>
@@ -509,12 +519,12 @@ new DecimalFormat("#,##0.00;(#,##0.00)").format($F{Total}==null?0:$F{Total}):
 new DecimalFormat("#,##0;(#,##0)").format($F{Total}==null?0:$F{Total}))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="141" y="97" width="413" height="20"/>
+				<reportElement style="style2" stretchType="RelativeToTallestObject" x="141" y="97" width="413" height="20"/>
 				<box leftPadding="5">
 					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="false" isItalic="true"/>
+					<font fontName="Arial" isBold="false" isItalic="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordVnd}]]></textFieldExpression>
 			</textField>
