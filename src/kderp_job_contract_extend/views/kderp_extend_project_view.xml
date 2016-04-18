@@ -73,7 +73,8 @@
 								<field style="border-top-sytle:solid;border-width:1px" name='job_total'/>
 							</group>
                             <group colspan="2" col="3">
-								<field name='target_profit' widget="progressfloat"/>
+								<!--<field name='target_profit' widget="progressfloat"/>-->
+                                <field name='target_profit'/>
                                 <label string="%%" class="oe_edit_only"/>
 								<field name='kickoff_meeting_date' colspan="3"/>
 							</group>
