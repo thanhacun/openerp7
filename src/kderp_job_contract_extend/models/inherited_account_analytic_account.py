@@ -48,7 +48,8 @@ class account_analytic_account(osv.osv):
 
                 # 'support_area_id': fields.many2one('kderp.control.area','Support Area', ondelete='restrict'),
 
-                'target_profit': fields.float('Target Profit', digits_compute=dp.get_precision('Amount')),
+                #'target_profit': fields.float('Target Profit', digits_compute=dp.get_precision('Amount')),
+                'target_profit': fields.char('Target Profit'),
                 'kickoff_meeting_date': fields.date('K.O.M. Date', help="Kick-off meeting Date"),
 
                 # FIXME Truong nay se co ten la Job Type, Job Type doi thanh E/M, phai hop nhat khi Upgrade len Odoo
