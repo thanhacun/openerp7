@@ -682,7 +682,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Type}=="big_job"?"Big Job": ($F{Job_Type}=="small_maintenance"?"Small/Maintenance Job": ($F{Job_Type}=="f-cost"?"F-Cost Job":""))]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Type}=="00-big_job"?"Big Job": ($F{Job_Type}=="01-small_maintenance"?"Small/Maintenance Job": ($F{Job_Type}=="02-f-cost"?"F-Cost Job":""))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToTallestObject" x="1096" y="0" width="45" height="20"/>
