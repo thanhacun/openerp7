@@ -148,11 +148,11 @@ class kderp_job_area_allotment(osv.osv):
                       Select
                           job_id,
                           area_id,
-                          currency_id,
-                          amount,
-                          area_per,
+                          null as currency_id,
+                          0 as amount,
+                          0 as area_per,
                           control_support
                       from
-                          kderp_contract_job_area
+                          kderp_job_control_area
                       where
                           job_id not in (Select DISTINCT job_id from kderp_contract_job_area)) vwcombine""" % vwName)

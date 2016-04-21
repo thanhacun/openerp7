@@ -35,8 +35,6 @@
                     <field name="project_address_id" domain="['|',('parent_id','=',owner_id),('id','=',owner_id)]" context="{'default_type':'default','show_address': 1,'hide_name': 1,'inline':1}" options='{"always_reload": True}'/>
                 </field>
 
-
-
                 <field name='area_site_manager_id' position='after'>
 	        		<field name='remark'/>
 	        	</field>
