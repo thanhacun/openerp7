@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListOfJobOnGoing" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.464100000000007"/>
+	<property name="ireport.zoom" value="1.2100000000000057"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="true"/>
-	<property name="OPENERP_RELATIONS" value="[&apos;control_area_ids&apos;]"/>
 	<queryString language="xPath">
 		<![CDATA[]]>
 	</queryString>
@@ -64,23 +63,11 @@
 	<field name="Project_Location" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Project_Location-project_address_id/Street-street]]></fieldDescription>
 	</field>
-	<field name="Area_Type" class="java.lang.String">
-		<fieldDescription><![CDATA[/data/record/area_allotment_ids/control_support]]></fieldDescription>
-	</field>
-	<field name="Area_Code" class="java.lang.String">
-		<fieldDescription><![CDATA[/data/record/area_allotment_ids/area_id/code]]></fieldDescription>
-	</field>
-	<field name="Area_Name" class="java.lang.String">
-		<fieldDescription><![CDATA[/data/record/area_allotment_ids/area_id/name]]></fieldDescription>
-	</field>
 	<field name="Job_Type-job_scale" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Job_Type-job_scale]]></fieldDescription>
 	</field>
 	<field name="E_M-job_type" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/E_M-job_type]]></fieldDescription>
-	</field>
-	<field name="id" class="java.lang.String">
-		<fieldDescription><![CDATA[/data/record/Control_Area-control_area_ids/id]]></fieldDescription>
 	</field>
 	<field name="Prj_Status" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Prj._Status-state]]></fieldDescription>
@@ -103,11 +90,8 @@
 	<field name="GSE_Budget_Amount" class="java.lang.Double">
 		<fieldDescription><![CDATA[/data/record/workinprogress_ids/gse_planned_amount]]></fieldDescription>
 	</field>
-	<sortField name="Area_Type"/>
-	<sortField name="Area_Code"/>
 	<sortField name="E_M-job_type"/>
 	<sortField name="Job_Type-job_scale"/>
-	<sortField name="Job_No"/>
 	<variable name="Total_Cost" class="java.lang.Double">
 		<variableExpression><![CDATA[($F{Site_Expense_Budget_Amount}==null?0:$F{Site_Expense_Budget_Amount})+
 ($F{Sub_Contractor_Budget_Amount}==null?0:$F{Sub_Contractor_Budget_Amount})+
@@ -125,61 +109,49 @@
 	<variable name="CA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
 		<variableExpression><![CDATA[$F{Contracted_Amount}==null?0:$F{Contracted_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="CA_BJ_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Contracted_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:$F{Contracted_Amount}]]></variableExpression>
+	<variable name="CA_SM_Total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?0:$F{Contracted_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Contracted_Amount}]]></variableExpression>
-	</variable>
-	<variable name="CA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="CA_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Contracted_Amount}]]></variableExpression>
 	</variable>
 	<variable name="BA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget})]]></variableExpression>
 	</variable>
-	<variable name="BA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="BA_BJ_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Total_Budget}]]></variableExpression>
 	</variable>
-	<variable name="BA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="BA_SM_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?0:($F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget}))]]></variableExpression>
 	</variable>
-	<variable name="BA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Total_Budget}]]></variableExpression>
-	</variable>
-	<variable name="BA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="BA_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget})]]></variableExpression>
 	</variable>
 	<variable name="CoA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
 		<variableExpression><![CDATA[$F{Issued_Amount}==null?0:$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CoA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="CoA_BJ_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CoA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:$F{Issued_Amount}]]></variableExpression>
+	<variable name="CoA_SM_Total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?0:$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CoA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Issued_Amount}]]></variableExpression>
-	</variable>
-	<variable name="CoA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="CoA_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Issued_Amount}]]></variableExpression>
 	</variable>
 	<variable name="BaA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
 		<variableExpression><![CDATA[($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></variableExpression>
 	</variable>
-	<variable name="BaA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="BaA_BJ_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
-	<variable name="BaA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+	<variable name="BaA_SM_Total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
-	<variable name="BaA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
-	</variable>
-	<variable name="BaA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="BaA_Total" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
 	<variable name="Rate_Jobtype_Total" class="java.lang.Double" resetType="None">
@@ -194,17 +166,12 @@
 		<variableExpression><![CDATA[$V{CA_SM_Total}==0 ||$V{CA_SM_Total}==null || $V{CoA_SM_Total}==0 ||$V{CoA_SM_Total}==null?0:
 ($V{CoA_SM_Total}/$V{CA_SM_Total})]]></variableExpression>
 	</variable>
-	<variable name="Rate_FC_Total" class="java.lang.Double" resetType="None">
-		<variableExpression><![CDATA[$V{CA_FC_Total}==0 ||$V{CA_FC_Total}==null || $V{CoA_FC_Total}==0 ||$V{CoA_FC_Total}==null?0:
-($V{CoA_FC_Total}/$V{CA_FC_Total})]]></variableExpression>
-	</variable>
 	<variable name="Rate_Total" class="java.lang.Double" resetType="None">
 		<variableExpression><![CDATA[$V{CA_Total}==0 ||$V{CA_Total}==null || $V{CoA_Total}==0 ||$V{CoA_Total}==null?0:
 ($V{CoA_Total}/$V{CA_Total})]]></variableExpression>
 	</variable>
-	<filterExpression><![CDATA[$F{Area_Type}=="control_area"]]></filterExpression>
-	<group name="Area_Type">
-		<groupExpression><![CDATA[$F{Area_Type}]]></groupExpression>
+	<filterExpression><![CDATA[$F{Job_Type-job_scale}!=null&&$F{Job_Type-job_scale}!=""]]></filterExpression>
+	<group name="Temp">
 		<groupFooter>
 			<band height="20">
 				<textField isStretchWithOverflow="true">
@@ -216,11 +183,10 @@
 						<bottomPen lineWidth="1.0"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
-					<textElement verticalAlignment="Middle" markup="none">
+					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[($F{Location}=="hanoi"?"HA NOI":($F{Location}=="hcm"?"HO CHI MINH":""))+
-" - BIG JOB TOTAL"]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["BIG JOB TOTAL"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="326" y="0" width="70" height="20" backcolor="#CCCCCC"/>
@@ -235,6 +201,34 @@
 						<font size="9" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{CA_BJ_Total}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="500" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="466" y="0" width="34" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="396" y="0" width="70" height="20" backcolor="#CCCCCC"/>
@@ -264,8 +258,8 @@
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{CoA_BJ_Total}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="675" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="35" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -276,63 +270,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{BaA_BJ_Total}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="466" y="0" width="34" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="500" y="0" width="70" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="745" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1045" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate_BJ_Total}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="995" y="0" width="50" height="20" backcolor="#CCCCCC"/>
@@ -349,35 +287,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="945" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="895" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="845" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1095" y="0" width="95" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -405,7 +315,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1095" y="0" width="95" height="20" backcolor="#CCCCCC"/>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1045" y="0" width="50" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -418,8 +328,64 @@
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="35" height="20" backcolor="#CCCCCC"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="845" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="745" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="895" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="945" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="675" y="0" width="70" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -430,7 +396,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate_BJ_Total}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{BaA_BJ_Total}]]></textFieldExpression>
 				</textField>
 			</band>
 			<band height="20">
@@ -443,11 +409,10 @@
 						<bottomPen lineWidth="1.0"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
-					<textElement verticalAlignment="Middle" markup="none">
+					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[($F{Location}=="hanoi"?"HA NOI":($F{Location}=="hcm"?"HO CHI MINH":""))+
-" - SMALL/MAINTENANCE JOB TOTAL"]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["SMALL/MAINTENANCE JOB TOTAL"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="326" y="0" width="70" height="20" backcolor="#CCCCCC"/>
@@ -462,6 +427,34 @@
 						<font size="9" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{CA_SM_Total}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="500" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="466" y="0" width="34" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="396" y="0" width="70" height="20" backcolor="#CCCCCC"/>
@@ -491,6 +484,20 @@
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{CoA_SM_Total}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="35" height="20" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate_SM_Total}]]></textFieldExpression>
+				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="675" y="0" width="70" height="20" backcolor="#CCCCCC"/>
 					<box>
@@ -506,105 +513,7 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{BaA_SM_Total}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="466" y="0" width="34" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="500" y="0" width="70" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="795" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="745" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="895" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="845" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1095" y="0" width="95" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="945" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="995" y="0" width="50" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -632,122 +541,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="995" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="35" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate_SM_Total}]]></textFieldExpression>
-				</textField>
-			</band>
-			<band height="20">
-				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="326" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[($F{Location}=="hanoi"?"HA NOI":($F{Location}=="hcm"?"HO CHI MINH":""))+
-" - TOTAL"]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="326" y="0" width="70" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{CA_Total}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="396" y="0" width="70" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{BA_Total}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="570" y="0" width="70" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{CoA_Total}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="675" y="0" width="70" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{BaA_Total}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="466" y="0" width="34" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="500" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="745" y="0" width="50" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -775,35 +569,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="745" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="895" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="845" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="945" y="0" width="50" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -831,7 +597,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="945" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="845" y="0" width="50" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -845,7 +611,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1045" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="895" y="0" width="50" height="20" backcolor="#CCCCCC"/>
 					<box>
 						<pen lineWidth="0.5"/>
 						<topPen lineWidth="1.0"/>
@@ -857,64 +623,15 @@
 						<font size="9" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="995" y="0" width="50" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle" markup="none">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="35" height="20" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate_Total}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
-	</group>
-	<group name="Area_Code">
-		<groupExpression><![CDATA[$F{Area_Code}]]></groupExpression>
-		<groupHeader>
-			<band height="20">
-				<textField>
-					<reportElement mode="Opaque" x="0" y="0" width="1190" height="20" backcolor="#ECECEC"/>
-					<box leftPadding="1">
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[($F{Area_Type}=="control_area"?"CONTROL AREA":($F{Area_Type}=="support_area"?"SUPPORT AREA":""))+" : "+$F{Area_Code}+" - "+$F{Area_Name}]]></textFieldExpression>
-				</textField>
-			</band>
-		</groupHeader>
 	</group>
 	<group name="E_M">
 		<groupExpression><![CDATA[$F{E_M-job_type}]]></groupExpression>
 	</group>
 	<group name="Job Scale">
-		<groupExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?1:2]]></groupExpression>
+		<groupExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?"1":"2"]]></groupExpression>
 		<groupHeader>
 			<band height="20">
 				<textField>
@@ -1808,4 +1525,232 @@
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="20">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="326" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["TOTAL"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="326" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{CA_Total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="945" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="995" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="466" y="0" width="34" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="745" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="795" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1095" y="0" width="95" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="570" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{CoA_Total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="845" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="500" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="895" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1045" y="0" width="50" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="396" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{BA_Total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="35" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate_Total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="675" y="0" width="70" height="20" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{BaA_Total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>

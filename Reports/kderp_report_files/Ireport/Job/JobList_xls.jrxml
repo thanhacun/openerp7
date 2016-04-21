@@ -121,7 +121,7 @@
 				<text><![CDATA[Project No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" x="210" y="60" width="80" height="30"/>
+				<reportElement stretchType="RelativeToTallestObject" x="377" y="60" width="80" height="30"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -163,7 +163,7 @@
 				<text><![CDATA[Contracted Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" x="445" y="60" width="82" height="30"/>
+				<reportElement stretchType="RelativeToTallestObject" x="295" y="60" width="82" height="30"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -191,7 +191,7 @@
 				<text><![CDATA[Registration Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" x="290" y="60" width="85" height="30"/>
+				<reportElement stretchType="RelativeToTallestObject" x="210" y="60" width="85" height="30"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -345,7 +345,7 @@
 				<text><![CDATA[Allotment Area]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" x="375" y="60" width="70" height="30"/>
+				<reportElement stretchType="RelativeToTallestObject" x="457" y="60" width="70" height="30"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -433,7 +433,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_No}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="290" y="0" width="85" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="210" y="0" width="85" height="20"/>
 				<box leftPadding="1">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -459,20 +459,6 @@
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Currency-name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="210" y="0" width="80" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToTallestObject" x="956" y="0" width="50" height="20"/>
@@ -545,7 +531,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{PM}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="445" y="0" width="82" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="295" y="0" width="82" height="20"/>
 				<box leftPadding="1">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -615,7 +601,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{CountJob}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="375" y="0" width="70" height="20"/>
+				<reportElement stretchType="RelativeToTallestObject" x="457" y="0" width="70" height="20"/>
 				<box leftPadding="1">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -696,7 +682,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Type}=="big_job"?"Big Job": ($F{Job_Type}=="small_maintenance"?"Small/Maintenance Job": ($F{Job_Type}=="f-cost"?"F-Cost Job":""))]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Type}=="00-big_job"?"Big Job": ($F{Job_Type}=="01-small_maintenance"?"Small/Maintenance Job": ($F{Job_Type}=="02-f-cost"?"F-Cost Job":""))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToTallestObject" x="1096" y="0" width="45" height="20"/>
@@ -725,6 +711,20 @@
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Remark-remark}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="377" y="0" width="80" height="20"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
