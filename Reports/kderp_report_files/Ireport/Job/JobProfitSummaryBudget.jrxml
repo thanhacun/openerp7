@@ -79,7 +79,10 @@
 	<title>
 		<band height="65">
 			<staticText>
-				<reportElement x="0" y="0" width="289" height="40"/>
+				<reportElement x="0" y="0" width="20" height="40">
+					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					<property name="net.sf.jasperreports.export.xls.wrap.text" value="false"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
