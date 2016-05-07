@@ -15,7 +15,7 @@ $(document).ready(function (){
             html = "<div id='weather' class='weatherFeed'>" +
                         "<img class='weatherItem' src='" + conditions.icon_url + "'>" +
                         "<div class='weatherCity text-right pull-right'>" + city + "(" +  desc + ")</div>" +
-                        "<div class='weatherTemp'>" + feellike + "&#8451;</div>" +
+                        "<div class='weatherTemp'>" + temp + "&#8451;</div>" +
                     "</div>";
             setTimeout(function() {
                 $("#weather").html(html);
@@ -36,7 +36,7 @@ $(document).ready(function (){
             //$("#location").text(city);
             //get current weather
             displayWeather(lat, lon, 500);
-            setInterval(function (){displayWeather(lat, lon, 0)}, 7200000);
+            //setInterval(function (){displayWeather(lat, lon, 0)}, 720);
         });
     };
     showWeather();
