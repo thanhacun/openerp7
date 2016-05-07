@@ -8,14 +8,14 @@
             <field name="model">kderp.budget.data</field>
             <field name="priority">5</field>
             <field name="arch" type="xml">
-                <tree string="Budget Data" fonts="bold:over=='Yes'" colors="red:over=='Yes'">
+                <tree string="Budget Data" fonts="bold:over_budget=='Yes'" colors="red:over_budget=='Yes'">
                     <field name="account_analytic_id"/>
                     <field name="budget_id"/>
 					<field name='planned_amount'/>
 					<field name='expense_amount'/>
 					<field name='paid_amount'/>
 					<field name='balance_per'/>
-					<field name='over'/>
+					<field name='over_budget'/>
 					<field name="detail_budget" colspan="4" nolabel="1"/>
                 </tree>
             </field>
@@ -33,7 +33,7 @@
 					<field name='expense_amount'/>
 					<field name='paid_amount'/>
 					<field name='balance_per'/>
-					<field name='over'/>
+					<field name='over_budget'/>
 					<field name='balance_amt'/>
 					<field name="detail_budget" colspan="4" nolabel="1">
 						<tree string='Expense Budget Line' editable='top'>
