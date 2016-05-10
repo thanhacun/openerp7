@@ -19,21 +19,34 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import re
 import time
 from openerp.osv import fields, osv
+
+
+class res_users(osv.osv):
+    _name = "res.users"
+    _description = "Users"
+    _inherit = "res.users"
+
+    _columns={
+          'general_director_id':fields.many2one('hr.employee', 'General Director', domain=[('user_id.partner_id.title','=','General Director')]),
+          }
+
+res_users()
 
 class res_company(osv.osv):
     _inherit = 'res.company'
     _name = 'res.company'
-    
     _columns={
              'payment_bycash_limit':fields.float("Payment ByCash Limit"),
              'cash_limit_active':fields.boolean("Cash Limit Active"),
-             'date_apply':fields.date("Date Apply")
+             'date_apply':fields.date("Date Apply"),
+             'general_director_id':fields.many2one('hr.employee', 'General Director', domain=[('user_id.partner_id.title','=','General Director')])
              }
-    
+
     _defaults={
-               'payment_bycash_limit':lambda *x:0.0
+             'payment_bycash_limit':lambda *x:0.0
                }
 
 class kderp_payment_bycash_config_settings(osv.osv_memory):
