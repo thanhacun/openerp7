@@ -13,7 +13,7 @@
 		<fieldDescription><![CDATA[code]]></fieldDescription>
 	</field>
 	<field name="Contracted_Amount" class="java.lang.Double">
-		<fieldDescription><![CDATA[contracted_amount]]></fieldDescription>
+		<fieldDescription><![CDATA[contracted_amount_custom]]></fieldDescription>
 	</field>
 	<field name="Owner_Name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Owner-owner_id/Name-name]]></fieldDescription>
