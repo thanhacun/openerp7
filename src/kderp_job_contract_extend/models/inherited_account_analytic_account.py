@@ -73,6 +73,83 @@ class account_analytic_account(osv.osv):
                 res[job.id] = job.vat_issued_subtotal
         return res
 
+    def _get_contracted_amount_custom(self, cr, uid, ids, name, arg, context=None):
+        context = context or {}
+        res = {}
+        from_date = context.get('from_date_contract', False)
+        to_date = context.get('to_date_contract', False)
+        if from_date and not to_date:
+            from datetime import date
+            to_date = date(date.today().year, 12, 31).strftime("%Y-%m-%d")
+        elif to_date and not from_date:
+            from datetime import date
+            from_date = date(1900, 1, 1).strftime("%Y-%m-%d")
+
+        if to_date and from_date:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            company_currency = user.company_id.currency_id
+            company_currency_id = user.company_id.currency_id.id
+
+            cur_obj = self.pool.get('res.currency')
+            kcc_obj = self.pool.get('kderp.contract.currency')
+            kqcpl_obj = self.pool.get('kderp.quotation.contract.project.line')
+
+            # Duyet JOB
+            for kp in self.browse(cr, uid, ids, context):
+                Contracted_amount = 0
+                Contracted_amount_USD = 0
+
+                Claimed_amount = 0
+                Claimed_amount_USD = 0
+
+                Collected_Amount = 0
+                Collected_Amount_USD = 0
+                # Duyet Contract
+                for kcc in filter(lambda ctc_obj: ctc_obj.registration_date and from_date <= ctc_obj.registration_date  <= to_date, kp.contract_ids):
+                    ctc_obj = {}
+                    if kcc.availability == 'inused':
+                        # Duyet Job Contract Currency, dua currency va amount vao ctc
+                        for kcpq_line in kcc.contract_job_summary_ids:
+                            if kcpq_line.account_analytic_id.id == kp.id:
+                                ctc_amount = (ctc_obj[kcpq_line.currency_id.id][
+                                                  'ctc_amount'] + kcpq_line.amount_currency) if kcpq_line.currency_id.id in ctc_obj else kcpq_line.amount_currency
+                                ctc_obj[kcpq_line.currency_id.id] = {'ctc_amount': ctc_amount,
+                                                                     'claimed_amount': 0}
+                                # Duyet Payment
+                        Claimed_amount_CTC_USD = 0
+                        Claimed_amount_CTC = 0
+                        for kcp in kcc.client_payment_ids:
+                            if kcp.state not in ('cancel', 'draft'):
+                                exrate = kcp.exrate
+                                for kpfc_line in kcp.invoice_line:
+                                    subtotal = kpfc_line.price_unit
+                                    if kpfc_line.account_analytic_id.id == kp.id:
+                                        if kcp.currency_id.id in ctc_obj:
+                                            ctc_obj[kcp.currency_id.id]['claimed_amount'] += subtotal
+                                        elif company_currency_id in ctc_obj:  # Neu Claim Currency ko co trong contract, quy doi sang company currency theo ti gia cua Contract
+                                            ctc_obj[company_currency_id]['claimed_amount'] += kcc_obj.compute(cr, uid,
+                                                                                                              kcp.currency_id.id,
+                                                                                                              company_currency_id,
+                                                                                                              kcc.id,
+                                                                                                              subtotal)
+
+                                        Claimed_amount_CTC += cur_obj.round(cr, uid, company_currency,
+                                                                            exrate * subtotal)  # Claimed Amount in Company Currency
+
+                        Claimed_amount += Claimed_amount_CTC
+                        Contracted_amount += Claimed_amount_CTC
+
+                        for curr_id in ctc_obj:
+                            contracted_remain = ctc_obj[curr_id]['ctc_amount'] - ctc_obj[curr_id]['claimed_amount']
+                            Contracted_amount += kcc_obj.compute(cr, uid, curr_id, company_currency_id, kcc.id,
+                                                                 contracted_remain) if abs(contracted_remain) >= 1 else 0
+
+                res[kp.id] = Contracted_amount
+        else:
+            for job in self.browse(cr, uid, ids, context):
+                res[job.id] = job.contracted_amount
+        return res
+
     _columns={
                 # 'control_area_id':fields.many2one('kderp.control.area','Control Area', ondelete='restrict'),
 
@@ -89,7 +166,10 @@ class account_analytic_account(osv.osv):
                 'control_area_ids':fields.one2many('kderp.job.control.area', 'job_id', 'Control Area'),
                 'area_allotment_ids': fields.one2many('kderp.job.area.allotment', 'job_id', 'Area Allotment', readonly=1),
 
-                'vat_issued_subtotal_custom':fields.function(_get_vat_issued_amount_custom, type='float', method=True, string='VAT Issued Amount', digits_compute=dp.get_precision('Amount'))
+                'vat_issued_subtotal_custom':fields.function(_get_vat_issued_amount_custom, type='float', method=True, string='VAT Issued Amount', digits_compute=dp.get_precision('Amount')),
+                'contracted_amount_custom': fields.function(_get_contracted_amount_custom, type='float', method=True, string='Contracted Amount',
+                                                      digits_compute=dp.get_precision('Amount'))
+
               }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):

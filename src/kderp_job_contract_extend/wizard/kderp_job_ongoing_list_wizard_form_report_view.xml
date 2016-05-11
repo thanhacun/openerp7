@@ -7,10 +7,14 @@
 			<field name="model">wizard.kderp.job.list.ongoing</field>
 			<field name="arch" type="xml">
 				<form string="Input a range Date" version="7.0" readonly="1" create="false" >
-					<group colspan="2" col="2">
+					<group colspan="2" col="4" string="for VAT Issued">
                         <field name="from_date"/>
                         <field name="to_date"/>
-					</group>						
+					</group>
+                    <group colspan="2" col="4" string="for Contracted Amount">
+                        <field name="from_date_contract"/>
+                        <field name="to_date_contract"/>
+					</group>
 					<footer>
 						<button string='Print' name="print_report" type="object" class="oe_highlight"/>
 						or
