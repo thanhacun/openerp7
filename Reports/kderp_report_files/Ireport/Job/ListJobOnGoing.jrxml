@@ -13,8 +13,8 @@
 	<field name="Job_No" class="java.lang.String">
 		<fieldDescription><![CDATA[code]]></fieldDescription>
 	</field>
-	<field name="Contracted_Amount" class="java.lang.Double">
-		<fieldDescription><![CDATA[contracted_amount]]></fieldDescription>
+	<field name="Contracted_Amount_Custom" class="java.lang.Double">
+		<fieldDescription><![CDATA[contracted_amount_custom]]></fieldDescription>
 	</field>
 	<field name="Owner_Name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Owner-owner_id/Name-name]]></fieldDescription>
@@ -119,23 +119,23 @@
 		<variableExpression><![CDATA[$F{Job_No}]]></variableExpression>
 	</variable>
 	<variable name="Rate" class="java.lang.Double">
-		<variableExpression><![CDATA[$F{Contracted_Amount}==0 ||$F{Contracted_Amount}==null || $F{Issued_Amount}==0 ||$F{Issued_Amount}==null?0:
-($F{Issued_Amount}/$F{Contracted_Amount})]]></variableExpression>
+		<variableExpression><![CDATA[$F{Contracted_Amount_Custom}==0 ||$F{Contracted_Amount_Custom}==null || $F{Issued_Amount}==0 ||$F{Issued_Amount}==null?0:
+($F{Issued_Amount}/$F{Contracted_Amount_Custom})]]></variableExpression>
 	</variable>
 	<variable name="CA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
-		<variableExpression><![CDATA[$F{Contracted_Amount}==null?0:$F{Contracted_Amount}]]></variableExpression>
+		<variableExpression><![CDATA[$F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
 	<variable name="CA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Contracted_Amount}]]></variableExpression>
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
 	<variable name="CA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:$F{Contracted_Amount}]]></variableExpression>
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
 	<variable name="CA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Contracted_Amount}]]></variableExpression>
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
 	<variable name="CA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Contracted_Amount}]]></variableExpression>
+		<variableExpression><![CDATA[$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
 	<variable name="BA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
 		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget})]]></variableExpression>
@@ -168,19 +168,19 @@
 		<variableExpression><![CDATA[$F{Issued_Amount}]]></variableExpression>
 	</variable>
 	<variable name="BaA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
-		<variableExpression><![CDATA[($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></variableExpression>
+		<variableExpression><![CDATA[($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></variableExpression>
 	</variable>
 	<variable name="BaA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
 	<variable name="BaA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
 	<variable name="BaA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
 	<variable name="BaA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+		<variableExpression><![CDATA[(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
 	<variable name="Rate_Jobtype_Total" class="java.lang.Double" resetType="None">
 		<variableExpression><![CDATA[$V{CA_Jobtype_Total}==0 ||$V{CA_Jobtype_Total}==null || $V{CoA_Jobtype_Total}==0 ||$V{CoA_Jobtype_Total}==null?0:
@@ -1574,7 +1574,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToTallestObject" x="745" y="0" width="50" height="20"/>
@@ -1672,7 +1672,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Contracted_Amount}==null?0:$F{Contracted_Amount}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="false">
 				<reportElement stretchType="RelativeToTallestObject" x="500" y="0" width="70" height="20">
