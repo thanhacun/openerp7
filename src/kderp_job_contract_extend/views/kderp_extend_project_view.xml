@@ -108,6 +108,15 @@
                     <field name="area_allotment_ids" filter_domain="[('area_allotment_ids','ilike',self)]" string="Area"/>
             		<field name="user_related_ids" filter_domain="[('user_related_ids','ilike',self)]" string="Viewer"/>
             	</field>
+                <field name="partner_id" position="after">
+                    <field name="partner_id" widget="text"/>
+                </field>
+                <field name="owner_id" position="after">
+                    <field name="owner_id" widget="text"/>
+               </field>
+               <field name="manager_id" position="after">
+                    <field widget='text' name="manager_id" filter_domain="['|','|','|', ('manager_id','=',self), ('user_id','=',self), ('general_project_manager_id','=',self),('area_site_manager_id','=',self)]" string="GPM/PM/ASM/SM"/>
+                </field>
 			</field>
 		</record>
 
