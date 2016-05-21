@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Request of Payment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="28" rightMargin="22" topMargin="117" bottomMargin="0">
-	<property name="ireport.zoom" value="1.5394743546921201"/>
+	<property name="ireport.zoom" value="1.693421790161335"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="449"/>
+	<property name="ireport.y" value="543"/>
 	<property name="ireport.callouts" value="##Fri Mar 25 10:42:30 ICT 2011"/>
 	<property name="ireport.layers" value="##Mon Nov 14 16:28:24 ICT 2011\nlayer.2.visible=true\nlayer.1.name=VND\nlayer.0.visible=true\nlayer.2.id=3\nlayer.1.printWhenExpression=$F{Currency}\=\=&quot;VND&quot;\nlayer.2.name=USD\nlayer.2.printWhenExpression=$F{Currency}\!\=&quot;VND&quot;\nlayer.1.id=2\nlayer.1.visible=true\nlayer.0.id=0\nlayer.0.name=Background"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;contract_id/contract_job_summary_ids&apos;]"/>
@@ -28,10 +28,10 @@
 	<field name="date" class="java.util.Date">
 		<fieldDescription><![CDATA[date_invoice]]></fieldDescription>
 	</field>
-	<field name="Project_Name" class="java.lang.Object">
+	<field name="Project_Name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/contract_id/project_name]]></fieldDescription>
 	</field>
-	<field name="Scope_of_Work" class="java.lang.Object">
+	<field name="Scope_of_Work" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/contract_id/name]]></fieldDescription>
 	</field>
 	<field name="Contract_No" class="java.lang.String">
@@ -43,7 +43,7 @@
 	<field name="Quotations" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/contract_id/quotations]]></fieldDescription>
 	</field>
-	<field name="name" class="java.lang.Object">
+	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/name]]></fieldDescription>
 	</field>
 	<field name="Contract_ref" class="java.lang.String">
@@ -82,10 +82,10 @@
 	<field name="amount_total" class="java.lang.Double">
 		<fieldDescription><![CDATA[/data/record/amount_total]]></fieldDescription>
 	</field>
-	<field name="Client_name" class="java.lang.Object">
+	<field name="Client_name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/partner_id/name]]></fieldDescription>
 	</field>
-	<field name="Client_add" class="java.lang.Object">
+	<field name="Client_add" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/partner_id/contact_address]]></fieldDescription>
 	</field>
 	<field name="general_director_company" class="java.lang.String">
@@ -131,49 +131,49 @@
 	<group name="ID">
 		<groupExpression><![CDATA[$F{ID}]]></groupExpression>
 		<groupFooter>
-			<band height="698">
+			<band height="696">
 				<staticText>
-					<reportElement x="338" y="477" width="199" height="13"/>
+					<reportElement x="338" y="452" width="199" height="15"/>
 					<textElement>
-						<font fontName="Arial" size="6" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="7" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Ngân hàng TMCP ngoại thương Việt Nam - CN HCM]]></text>
+					<text><![CDATA[Bank for Foreign Trade of Vietnam - HCMC Branch]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="338" y="490" width="52" height="13"/>
+					<reportElement x="338" y="467" width="52" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản USD]]></text>
+					<text><![CDATA[US Dollar]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="391" y="0" width="57" height="20"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
 						<font fontName="Arial" size="9" isBold="true" isItalic="false" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Ngày"+'<i>'+" (Date):"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Date : "]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="391" y="490" width="147" height="13"/>
+					<reportElement x="390" y="467" width="147" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    007.137.0862248]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="90" width="104" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="90" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Dự án"+'<br>'+'<i>'+"(Project)"+'</i>'+'</br>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Project Name"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="120" y="155" width="418" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="155" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -182,37 +182,30 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[": " +$F{Contract_No}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="16" y="477" width="52" height="13"/>
+					<reportElement x="15" y="452" width="53" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản VND]]></text>
+					<text><![CDATA[Vietnam Dong]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="177" width="104" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="177" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Báo giá số"+'<br>'+'<i>'+"(Quotation No.)"+'</i>'+'</br>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Quotation No."]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="15" y="269" width="522" height="15"/>
-					<textElement verticalAlignment="Top">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
-					</textElement>
-					<text><![CDATA[Theo điều kiện thanh toán của hợp đồng trên đây, đề nghị quý công ty thực hiện việc thanh toán sau:]]></text>
-				</staticText>
 				<textField>
-					<reportElement mode="Opaque" x="338" y="318" width="95" height="21" backcolor="#FFFFFF"/>
+					<reportElement mode="Opaque" x="338" y="296" width="95" height="21" backcolor="#FFFFFF"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -221,34 +214,34 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+						<font fontName="Arial" size="10" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Thuế GTGT"+'<i>'+" (VAT)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["VAT"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="17" y="503" width="283" height="13"/>
+					<reportElement x="15" y="483" width="285" height="15"/>
 					<textElement>
-						<font fontName="Arial" size="6" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="7" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<text><![CDATA[Ngân hàng Mizuho Bank, Ltd. - CN HCM]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="16" y="529" width="52" height="13"/>
+					<reportElement x="15" y="513" width="53" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản VND]]></text>
+					<text><![CDATA[Vietnam Dong]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="198" width="104" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="198" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Điều kiện thanh toán"+'<br>'+'<i>'+"(Payment Term)"+'</i>'+'</br>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["In Payment"]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement mode="Opaque" x="68" y="0" width="66" height="20" backcolor="#CCCCCC"/>
@@ -265,48 +258,41 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{No.}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="17" y="425" width="283" height="16"/>
-					<textElement verticalAlignment="Bottom">
+					<reportElement x="15" y="402" width="285" height="20"/>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
 					</textElement>
-					<text><![CDATA[Ghi chú (Note) : Thông tin tài khoản ngân hàng của chúng tôi:]]></text>
+					<text><![CDATA[Note: Our company bank account numbers are as follow:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="219" width="104" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="219" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Số tham chiếu"+'<br>'+'<i>'+"(Ref No.)"+'</i>'+'</br>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Your Ref No."]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="16" y="593" width="284" height="20"/>
-					<textElement>
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
-					</textElement>
-					<text><![CDATA[CHI NHÁNH CÔNG TY TNHH KINDEN VIỆT NAM]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="16" y="20" width="521" height="20"/>
+					<reportElement x="15" y="20" width="523" height="30"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="14" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[ĐỀ NGHỊ THANH TOÁN]]></text>
+					<text><![CDATA[REQUEST OF PAYMENT]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="401" y="299" width="100" height="15"/>
+					<reportElement x="433" y="280" width="68" height="15"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Đơn vị tính:"]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Unit: "]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="516" width="232" height="13"/>
+					<reportElement x="68" y="498" width="232" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    F15-796-503005]]></text>
 				</staticText>
@@ -320,18 +306,18 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
 						<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Số. "+'<i>'+"(No.):"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["(No.):"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="338" y="503" width="52" height="13"/>
+					<reportElement x="338" y="483" width="52" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản VND]]></text>
+					<text><![CDATA[Vietnam Dong]]></text>
 				</staticText>
 				<textField>
-					<reportElement mode="Opaque" x="16" y="381" width="173" height="21" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="15" y="359" width="174" height="21" backcolor="#CCCCCC"/>
 					<box leftPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -340,12 +326,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Số tiền đề nghị thanh toán lần này"+'<i>'+'<br>'+" (Request Amount for this time)"+'</br>'+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Request Amount for this time"]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
-					<reportElement x="448" y="0" width="89" height="20"/>
+					<reportElement x="449" y="0" width="89" height="20"/>
 					<box leftPadding="0">
 						<pen lineStyle="Dashed"/>
 						<topPen lineStyle="Dashed"/>
@@ -359,22 +345,15 @@
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{date}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="17" y="684" width="146" height="14"/>
-					<textElement>
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
-					</textElement>
-					<text><![CDATA[Tổng giám đốc]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="68" y="529" width="232" height="13"/>
+					<reportElement x="68" y="513" width="232" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    H15-796-502986]]></text>
 				</staticText>
 				<textField>
-					<reportElement mode="Opaque" x="16" y="318" width="173" height="21" backcolor="#FFFFFF"/>
+					<reportElement mode="Opaque" x="15" y="296" width="174" height="21" backcolor="#FFFFFF"/>
 					<box leftPadding="0">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -383,44 +362,44 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+						<font fontName="Arial" size="10" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Mô tả"+'<i>'+" (Description)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Description"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="477" width="232" height="13"/>
+					<reportElement x="68" y="452" width="232" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    141 194]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="390" y="503" width="147" height="13"/>
+					<reportElement x="390" y="483" width="147" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    007.100.0862238]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="16" y="516" width="52" height="13"/>
+					<reportElement x="15" y="498" width="53" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản USD]]></text>
+					<text><![CDATA[US Dollar]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="16" y="464" width="52" height="13"/>
+					<reportElement x="15" y="437" width="53" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản USD]]></text>
+					<text><![CDATA[US Dollar]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Opaque" x="189" y="318" width="49" height="21" backcolor="#FFFFFF"/>
+					<reportElement mode="Opaque" x="189" y="296" width="49" height="21" backcolor="#FFFFFF"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -429,12 +408,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica-BoldOblique"/>
+						<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
 					<text><![CDATA[%]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="402" width="173" height="21"/>
+					<reportElement x="15" y="380" width="174" height="21"/>
 					<box leftPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -443,12 +422,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Số tiền còn lại"+'<i>'+" (Balance)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Balance"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="433" y="318" width="104" height="21" backcolor="#FFFFFF"/>
+					<reportElement mode="Opaque" x="433" y="296" width="104" height="21" backcolor="#FFFFFF"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -457,15 +436,15 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+						<font fontName="Arial" size="10" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Tổng cộng"+'<i>'+" (Total)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Total"]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="17" y="660" width="146" height="1"/>
+					<reportElement x="17" y="662" width="146" height="1"/>
 				</line>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="120" y="133" width="418" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="133" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -474,35 +453,35 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[": " + $F{Scope_of_Work}['vi_VN']+'<i>'+" ("+$F{Scope_of_Work}['en_CA']+")"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[": " + $F{Scope_of_Work}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="490" width="232" height="13"/>
+					<reportElement x="68" y="467" width="232" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    145 041]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="16" y="454" width="284" height="10"/>
+					<reportElement x="15" y="422" width="285" height="15"/>
 					<textElement>
-						<font fontName="Arial" size="6" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="7" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Ngân hàng The Bank of Tokyo-Mitsubishi UFJ, Ltd. – CN TP.HCM]]></text>
+					<text><![CDATA[The Bank of Tokyo-Mitsubishi UFJ, Ltd. - HCMC Branch]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="16" y="490" width="52" height="13"/>
+					<reportElement x="15" y="467" width="53" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản JPY]]></text>
+					<text><![CDATA[JP Yen]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="339" width="173" height="21"/>
+					<reportElement x="15" y="317" width="174" height="21"/>
 					<box leftPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -511,27 +490,28 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Giá trị hợp đồng"+'<i>'+" (Contract Amount)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Contract Amount"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="464" width="232" height="13"/>
+					<reportElement x="68" y="437" width="232" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    236 632]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="252" width="521" height="17"/>
-					<textElement markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+					<reportElement x="15" y="240" width="523" height="20"/>
+					<box bottomPadding="0"/>
+					<textElement verticalAlignment="Bottom" markup="html">
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Kính gửi Quý công ty"+'<i>'+" (Dear Sirs/ Madams)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Dear Sirs/ Madams"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement mode="Opaque" x="238" y="318" width="100" height="21" backcolor="#FFFFFF"/>
+					<reportElement mode="Opaque" x="238" y="296" width="100" height="21" backcolor="#FFFFFF"/>
 					<box>
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -540,22 +520,22 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+						<font fontName="Arial" size="10" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Số tiền"+'<i>'+" (Amount)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Amount"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="133" width="104" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="133" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Nội dung công việc"+'<br>'+'<i>'+"(Scope of work)"+'</i>'+'</br>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Our Contract"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="360" width="173" height="21" backcolor="#E6E6E6"/>
+					<reportElement x="15" y="338" width="174" height="21" backcolor="#E6E6E6"/>
 					<box leftPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -564,19 +544,19 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement verticalAlignment="Middle" markup="html">
-						<font fontName="Arial" size="9" isBold="false" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" isBold="false" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Số tiền đã đề nghị thanh toán"+'<i>'+'<br>'+" (Accumulative Requested)"+'</br>'+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Accumulative Requested Amount"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="15" y="560" width="521" height="13"/>
+					<reportElement x="15" y="543" width="522" height="20"/>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Rất mong nhận được thanh toán sớm từ Quý công ty."+'<i>'+" (We look forward to receiving the payment from you soon.)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["We look forward to receiving the payment from you soon."]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="501" y="299" width="36" height="15"/>
+					<reportElement x="501" y="280" width="37" height="15"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
@@ -584,7 +564,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Currency}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="120" y="177" width="418" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="177" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -593,12 +573,12 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[": " +$F{Quotations}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="120" y="198" width="418" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="198" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -607,12 +587,12 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[": " +$F{name}['vi_VN']]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[": " +$F{name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="120" y="219" width="418" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="219" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -621,12 +601,12 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[": " +$F{Contract_ref}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="120" y="90" width="418" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="90" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -635,12 +615,12 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[": " + $F{Project_Name}['vi_VN']+'<i>'+" ("+$F{Project_Name}['en_CA']+")"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[": " + $F{Project_Name}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00 %">
-					<reportElement x="189" y="360" width="49" height="21"/>
+					<reportElement x="189" y="338" width="49" height="21"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -649,12 +629,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{pur_issued}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00 %">
-					<reportElement mode="Opaque" x="189" y="381" width="49" height="21" backcolor="#CCCCCC"/>
+					<reportElement mode="Opaque" x="189" y="359" width="49" height="21" backcolor="#CCCCCC"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -663,12 +643,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true"/>
+						<font fontName="Arial" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{pur_amt}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00 %">
-					<reportElement x="189" y="402" width="49" height="21"/>
+					<reportElement x="189" y="380" width="49" height="21"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -677,12 +657,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{pur_balance}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00 %">
-					<reportElement x="189" y="339" width="49" height="21"/>
+					<reportElement x="189" y="317" width="49" height="21"/>
 					<box rightPadding="1">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -691,26 +671,26 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[1]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="60" width="522" height="15"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="50" width="523" height="20"/>
 					<textElement>
-						<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_name}['vi_VN']]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="75" width="522" height="15"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="70" width="523" height="20"/>
 					<textElement>
-						<font fontName="Arial" size="9" isItalic="true" pdfFontName="Helvetica-Oblique"/>
+						<font fontName="Arial" size="10" isItalic="true" pdfFontName="Helvetica-Oblique"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_add}['vi_VN']]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_add}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="238" y="339" width="100" height="21"/>
+					<reportElement style="stule_pattern" x="238" y="317" width="100" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -719,12 +699,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{contract_amount}==null?0:$F{contract_amount}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="338" y="339" width="95" height="21"/>
+					<reportElement style="stule_pattern" x="338" y="317" width="95" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -733,12 +713,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{tax_amount}==null?0:$F{tax_amount}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="433" y="339" width="104" height="21"/>
+					<reportElement style="stule_pattern" x="433" y="317" width="104" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -747,12 +727,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{subtotal}==null?0:$F{subtotal}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="238" y="360" width="100" height="21"/>
+					<reportElement style="stule_pattern" x="238" y="338" width="100" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -761,12 +741,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{issued_amount}==null?0:$F{issued_amount}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="338" y="360" width="95" height="21"/>
+					<reportElement style="stule_pattern" x="338" y="338" width="95" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -775,12 +755,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{issued_vat}==null?0:$F{issued_vat}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="433" y="360" width="104" height="21"/>
+					<reportElement style="stule_pattern" x="433" y="338" width="104" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -789,12 +769,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{issued_total}==null?0:$F{issued_total}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" mode="Opaque" x="238" y="381" width="100" height="21" backcolor="#CCCCCC"/>
+					<reportElement style="stule_pattern" mode="Opaque" x="238" y="359" width="100" height="21" backcolor="#CCCCCC"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -803,12 +783,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true"/>
+						<font fontName="Arial" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{amount_untaxed}==null?0:$F{amount_untaxed}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" mode="Opaque" x="338" y="381" width="95" height="21" backcolor="#CCCCCC"/>
+					<reportElement style="stule_pattern" mode="Opaque" x="338" y="359" width="95" height="21" backcolor="#CCCCCC"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -817,12 +797,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true"/>
+						<font fontName="Arial" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{amount_tax}==null?0:$F{amount_tax}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" mode="Opaque" x="433" y="381" width="104" height="21" backcolor="#CCCCCC"/>
+					<reportElement style="stule_pattern" mode="Opaque" x="433" y="359" width="104" height="21" backcolor="#CCCCCC"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -831,12 +811,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true"/>
+						<font fontName="Arial" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$F{amount_total}==null?0:$F{amount_total}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="238" y="402" width="100" height="21"/>
+					<reportElement style="stule_pattern" x="238" y="380" width="100" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -845,12 +825,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{balance_amt}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="338" y="402" width="95" height="21"/>
+					<reportElement style="stule_pattern" x="338" y="380" width="95" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -859,12 +839,12 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{balance_vat}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="stule_pattern" x="433" y="402" width="104" height="21"/>
+					<reportElement style="stule_pattern" x="433" y="380" width="104" height="21"/>
 					<box leftPadding="0" rightPadding="2">
 						<pen lineWidth="0.75"/>
 						<topPen lineWidth="0.75"/>
@@ -873,134 +853,113 @@
 						<rightPen lineWidth="0.75"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
+						<font fontName="Arial" size="10"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{balance_total}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="154" width="104" height="22"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="154" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Hợp đồng số"+'<br>'+'<i>'+"(Contract No.)"+'</i>'+'</br>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Job No."]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="16" y="40" width="521" height="20"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-Bold"/>
-					</textElement>
-					<text><![CDATA[REQUEST OF PAYMENT]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="15" y="284" width="522" height="15"/>
-					<textElement verticalAlignment="Top">
-						<font fontName="Arial" size="9" isItalic="true" pdfFontName="Helvetica"/>
-					</textElement>
-					<text><![CDATA[(In accordance with the payment condition of aforesaid contract, we would like to request you to make the payment as follows:)]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="300" y="425" width="237" height="16"/>
-					<textElement verticalAlignment="Bottom">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
-					</textElement>
-					<text><![CDATA[Tên tài khoản: Chi Nhánh Công Ty TNHH Kinden Việt Nam]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="300" y="441" width="237" height="13"/>
+					<reportElement x="15" y="260" width="522" height="35"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isItalic="true" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" isItalic="false" pdfFontName="Helvetica"/>
 					</textElement>
-					<text><![CDATA[(Account name: Kinden Vietnam Co., Ltd - HCMC Branch)]]></text>
+					<text><![CDATA[In accordance with the payment condition of aforesaid contract, we would like to request you to make the payment as follows:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="17" y="441" width="283" height="13"/>
+					<reportElement x="300" y="402" width="237" height="20"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isItalic="true" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica"/>
 					</textElement>
-					<text><![CDATA[(Our company bank account numbers are as follow:)]]></text>
+					<text><![CDATA[Account name: Kinden Vietnam Co., Ltd - HCMC Branch]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="16" y="542" width="52" height="13"/>
+					<reportElement x="15" y="528" width="53" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản JPY]]></text>
+					<text><![CDATA[JP Yen]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="68" y="542" width="232" height="13"/>
+					<reportElement x="68" y="528" width="232" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    F15-796-502994]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="338" y="454" width="199" height="10"/>
+					<reportElement x="338" y="422" width="199" height="15"/>
 					<textElement>
-						<font fontName="Arial" size="6" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="7" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[CN TP.HCM – Ngân hàng Sumitomo Mitsui Banking Corporation]]></text>
+					<text><![CDATA[Sumitomo Mitsui Banking Corporation – HCMC Branch]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="338" y="464" width="199" height="13"/>
+					<reportElement x="338" y="437" width="199" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản USD, VND, JPY: 1000457 - 1]]></text>
+					<text><![CDATA[US Dollar, Vietnam Dong, JP Yen - Account No. 1000457 - 1]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="338" y="516" width="199" height="13"/>
+					<reportElement x="338" y="498" width="199" height="15"/>
 					<textElement>
-						<font fontName="Arial" size="6" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+						<font fontName="Arial" size="7" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Ngân hàng EXIMBANK - SGD / CN Quận 3]]></text>
+					<text><![CDATA[EXIMBANK - SGD / CN Quan 3]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="390" y="529" width="147" height="13"/>
+					<reportElement x="390" y="513" width="147" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    2104.1485.100.1939]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="390" y="542" width="147" height="13"/>
+					<reportElement x="390" y="528" width="147" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
 					<text><![CDATA[:    2104.1485.100.1925]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="338" y="542" width="52" height="13"/>
+					<reportElement x="338" y="528" width="52" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản VND]]></text>
+					<text><![CDATA[Vietnam Dong]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="338" y="529" width="52" height="13"/>
+					<reportElement x="338" y="513" width="52" height="15"/>
 					<box rightPadding="4"/>
 					<textElement>
-						<font fontName="Arial" size="6"/>
+						<font fontName="Arial" size="7"/>
 					</textElement>
-					<text><![CDATA[Tài khoản USD]]></text>
+					<text><![CDATA[US Dollar]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="16" y="573" width="521" height="13"/>
+					<reportElement x="15" y="563" width="522" height="20"/>
 					<textElement verticalAlignment="Top" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Xin trân trọng cảm ơn sự hỗ trợ và hợp tác của Quý công ty!"+'<i>'+" (Thank you for your valuable support and co-operation!)"+'</i>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Thank you for your valuable support and co-operation!"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="120" y="111" width="418" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="111" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -1009,26 +968,47 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[": " + $V{CombineJob}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="111" width="104" height="21"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="111" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Dự án số"+'<br>'+'<i>'+"(Project No.)"+'</i>'+'</br>']]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Scope of work"]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="15" y="598" width="285" height="15"/>
+					<textElement>
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<text><![CDATA[KINDEN VIETNAM CO., LTD. - HCMC BRANCH]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="583" width="285" height="15"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<text><![CDATA[Your faithfully,]]></text>
+				</staticText>
 				<textField>
-					<reportElement x="17" y="672" width="146" height="12"/>
+					<reportElement x="16" y="672" width="153" height="12"/>
 					<textElement markup="none">
 						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[($F{general_director_user}==""||$F{general_director_user}==null?$F{general_director_company}.toUpperCase():$F{general_director_user}.toUpperCase())]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="16" y="684" width="153" height="12"/>
+					<textElement markup="none">
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["General Director"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -1039,17 +1019,4 @@
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<pageFooter>
-		<band height="20">
-			<staticText>
-				<reportElement x="498" y="0" width="47" height="20">
-					<printWhenExpression><![CDATA[1==2]]></printWhenExpression>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="5"/>
-				</textElement>
-				<text><![CDATA[KDVN - DNTT - V01]]></text>
-			</staticText>
-		</band>
-	</pageFooter>
 </jasperReport>
