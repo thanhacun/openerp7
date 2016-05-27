@@ -79,14 +79,17 @@
 	<field name="Closed_Date-date" class="java.util.Date">
 		<fieldDescription><![CDATA[/data/record/Closed_Date-date]]></fieldDescription>
 	</field>
+	<field name="areas_ids" class="java.lang.Integer">
+		<fieldDescription><![CDATA[/data/record/Area_Allotment-area_allotment_ids/id]]></fieldDescription>
+	</field>
 	<variable name="CountJob" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{Job_No}]]></variableExpression>
 	</variable>
-	<filterExpression><![CDATA[$F{Area_Type}=="control_area"]]></filterExpression>
+	<filterExpression><![CDATA[$F{Area_Type}=="control_area"|| $F{areas_ids} == null]]></filterExpression>
 	<title>
 		<band height="90">
 			<staticText>
-				<reportElement x="0" y="0" width="290" height="40"/>
+				<reportElement x="0" y="0" width="295" height="40"/>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -289,7 +292,7 @@
 				<text><![CDATA[ASM]]></text>
 			</staticText>
 			<textField pattern="dd-MMM-yy">
-				<reportElement x="60" y="40" width="230" height="20"/>
+				<reportElement x="60" y="40" width="235" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
