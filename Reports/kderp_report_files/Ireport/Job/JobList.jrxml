@@ -79,10 +79,13 @@
 	<field name="Closed_Date-date" class="java.util.Date">
 		<fieldDescription><![CDATA[/data/record/Closed_Date-date]]></fieldDescription>
 	</field>
+	<field name="areas_ids" class="java.lang.Integer">
+		<fieldDescription><![CDATA[/data/record/Area_Allotment-area_allotment_ids/id]]></fieldDescription>
+	</field>
 	<variable name="CountJob" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{Job_No}]]></variableExpression>
 	</variable>
-	<filterExpression><![CDATA[$F{Area_Type}=="control_area"]]></filterExpression>
+	<filterExpression><![CDATA[$F{Area_Type}=="control_area" || $F{areas_ids} == null]]></filterExpression>
 	<title>
 		<band height="90">
 			<staticText>
