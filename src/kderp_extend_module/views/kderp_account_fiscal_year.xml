@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+         <!-- KDERP Fiscal Year -->
+        <record id="view_kderp_account_fiscalyear_form" model="ir.ui.view">
+            <field name="name">account.fiscalyear.kderp.form</field>
+            <field name="model">account.fiscalyear</field>
+            <field name="priority" eval="5"/>
+            <field name="arch" type="xml">
+                <form string="Fiscal year" version="7.0">
+                    <header>
+                        <button name="create_period6" states="draft" string="Create 6 Monthly Periods (KINDEN)" type="object" class="oe_highlight"/>
+                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object"/>
+                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object"/>
+                        <field name="state" widget="statusbar" nolabel="1" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="end_journal_period_id"/>
+                            </group>
+                            <group>
+                                <field name="date_start"/>
+                                <field name="date_stop"/>
+                            </group>
+                        </group>
+                        <field colspan="4" name="period_ids" nolabel="1" widget="one2many_list">
+                            <form string="Period" version="7.0">
+                                <group col="4">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                    <field name="special"/>
+                                    <field name="state" invisible="1"/>
+                                </group>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+	</data>
+</openerp>
