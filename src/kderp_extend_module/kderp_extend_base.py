@@ -19,19 +19,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import re
-import time
+
 from openerp.osv import fields, osv
 
 
-class res_users(osv.osv):
-    _name = "res.users"
-    _description = "Users"
-    _inherit = "res.users"
+class res_partner(osv.Model):
+    _inherit = "res.partner"
 
     _columns={
           'general_director_id':fields.many2one('hr.employee', 'General Director', domain=[('user_id.partner_id.title','=','General Director')]),
           }
+
+class res_users(osv.Model):
+    _inherit = "res.users"
+    def __init__(self, pool, cr):
+        init_res = super(res_users, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        self.SELF_WRITEABLE_FIELDS.extend(['general_director_id'])
+
+        self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        self.SELF_READABLE_FIELDS.extend(['general_director_id'])
+
 
 res_users()
 
