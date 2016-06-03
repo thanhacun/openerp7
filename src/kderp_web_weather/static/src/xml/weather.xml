@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="kderp_weather" >
+        <img t-att-src="weather.icon_url" class="weather_icon"><span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/></span></img>
+    </div>
+
+    <div t-name="kderp_weather_detail" class="kderp_weather_detail">
+        <p style="font-size: 18px; text-align: center">
+            <span><t t-esc="weather.display_location.city"/> (<t t-esc="weather.weather"/>)</span>
+            <br/>
+            <img t-att-src="weather.icon_url" class="weather_icon"><span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/></span></img>
+        </p>
+        <table style="width: 100%; font-size: 16px; text-align: center">
+            <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_string'}, {'des':'UV', 'name': 'UV'}]"/>
+            <t t-foreach="fieldList" t-as="item">
+                <tr>
+                    <td><span><t t-esc="item.des"/></span></td>
+                    <td><span><t t-esc="weather[item.name]"/></span></td>
+                </tr>
+            </t>
+        </table>
+        <span style="font-size: 10px; text-align: right; color:red">Click to refresh</span>
+    </div>
+</templates>
