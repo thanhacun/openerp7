@@ -25,7 +25,7 @@
     'images' : ['images/kinden.png'],
     'summary':"Add new module Extend Module for Suiteable Kinden Procedure",
     'category':"KDERP Apps",
-    'depends':['kderp_payment','kderp_job_summary','kderp_project_location',],
+    'depends':['kderp_payment','kderp_job_summary','kderp_project_location'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure
@@ -59,7 +59,8 @@
              'wizard/kderp_job_wizard_form_report_view.xml',
              'wizard/update_quotation_completion_date_view.xml',
              #'wizard/kderp_ge_wizard_form_report_view.xml',
-             'kderp_city_view.xml'
+             "kderp_city_view.xml",
+             "views/kderp_account_fiscal_year.xml"
             ],
     'demo':[],
     'installable':True

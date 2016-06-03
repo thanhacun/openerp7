@@ -19,22 +19,4 @@
 #
 ##############################################################################
 
-import kderp_extend_project
-import kderp_budget_history
-import kderp_other_expense_purchase
-import kderp_extend_purchase
-import kderp_extend_quotation
-import kderp_extend_attachment
-import kderp_extend_client_payment
-import wizard
-import kderp_invoice_ex_rate
-import kderp_extend_employee
-import kderp_extend_contract
-#import kderp_extend_job_budget
-import kderp_extend_base
-import kderp_extend_supplier_payment
-import kderp_budget
-import kderp_city
-#import kderp_extend_other_expense
-import models
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import kderp_job_list_on_going

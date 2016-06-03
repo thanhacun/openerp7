@@ -49,7 +49,7 @@ class kderp_budget_data(osv.osv):
                         
             for id, pl_amount, amount, paid_amount, exp_w, exp_wo in cr.fetchall():
                 res[id]={'balance_per':amount/pl_amount*100.0 if pl_amount else 0,
-                         'over': 'Yes' if (pl_amount-amount)<=balance_over_budget else 'No',
+                         'over_budget': 'Yes' if (pl_amount-amount)<=balance_over_budget else 'No',
                          'expense_amount':amount,
                          'paid_amount':paid_amount,
                          'expense_without_contract':exp_wo,
@@ -135,7 +135,7 @@ class kderp_budget_data(osv.osv):
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
                                                      'kderp.budget.data':(lambda self, cr, uid, ids, c={}: ids,None,50)
                                                       }),
-              'over':fields.function(_get_summaryofbudget,string='Over',method=True,type='char',size=8,multi='_get_info',
+              'over_budget':fields.function(_get_summaryofbudget,string='Over',method=True,type='char',size=8,multi='_get_info',
                                                store={
                                                      'kderp.expense.budget.line':(_get_budget_line_from_job_budget_line,None,50),
                                                      'kderp.budget.data':(lambda self, cr, uid, ids, c={}: ids,None,50),
@@ -166,7 +166,7 @@ class kderp_budget_data(osv.osv):
                'expense_amount': lambda *x: 0.0,
                'paid_amount': lambda *x: 0.0,
                'balance_per': lambda *x: 0.0,
-               'over': lambda *x:'No',
+               'over_budget': lambda *x:'No',
                'expense_without_contract':lambda *x:0.0,
                'expense_with_contract':lambda *x:0.0,
                'balance_amt':lambda *x:0.0

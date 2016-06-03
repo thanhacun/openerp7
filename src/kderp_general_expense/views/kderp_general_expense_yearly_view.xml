@@ -54,13 +54,13 @@
 							</page>
 							<page string='Budget'>
 		            			<field name='kderp_budget_data_line' limit="15">
-		            				<tree editable='top' string="Budget Data" fonts="bold:over=='Yes'" colors="red:over=='Yes'">
+		            				<tree editable='top' string="Budget Data" fonts="bold:over_budget=='Yes'" colors="red:over_budget=='Yes'">
 		           						<field name='budget_id' domain="[('general_expense','=',True)]"/>
 		           						<field name='planned_amount' sum='Sub-Total'/>
 										<field name='expense_amount' string='Expense' sum='Sub-Total'/>
 										<field name='paid_amount' string='Payment' sum='Sub-Total'/>
 										<field name='balance_per' sum='Sub-Total'/>
-										<field name='over'/>
+										<field name='over_budget'/>
 										<button name="open_budget_detail" icon="gtk-zoom-fit" type="object" context="{'general_expense':True}"/>
 		            				</tree>
 		            			</field>		            			

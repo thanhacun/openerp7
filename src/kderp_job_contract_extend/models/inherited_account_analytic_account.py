@@ -28,19 +28,126 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    JOB_SCALE_SELECTION = [('big_job','Big Job'), ('small_maintenance', 'Small/Maintenance Job'), ('f-cost','F-Cost Job')]
+    JOB_SCALE_SELECTION = [('00-big_job','Big Job'), ('01-small_maintenance', 'Small/Maintenance Job'), ('02-f-cost','F-Cost Job')]
     def _get_job_scale(self, cr, uid, ids, name, args, context = {}):
         res = {}
+        #Them 00, 01, 02 dung cho sap xep trong bao cao
         for job in self.browse(cr, uid, ids):
             jobCode = job.code.upper()
             if jobCode[1:2] == 'A' or len(jobCode)<9: #Trong truong hop Job la HA hoac Code ko dung dinh dang
                 res[job.id] = False
             elif len(jobCode)>10 and jobCode[10:11] == 'F':
-                res[job.id] = 'f-cost'
+                res[job.id] = '02-f-cost'
             elif jobCode[4:6] == '-0':
-                res[job.id] = 'big_job'
+                res[job.id] = '00-big_job'
             elif jobCode[4:6] in ('-1','-2'):
-                res[job.id] = 'small_maintenance'
+                res[job.id] = '01-small_maintenance'
+        return res
+
+    def _get_vat_issued_amount_custom(self, cr, uid, ids, name, args, context = {}):
+        context = context or {}
+        res = {}
+        from_date = context.get('from_date', False)
+        to_date = context.get('to_date', False)
+        if from_date and not to_date:
+            from datetime import date
+            to_date = date(date.today().year, 12, 31).strftime("%Y-%m-%d")
+        elif to_date and not from_date:
+            from datetime import date
+            from_date = date(1900, 1, 1).strftime("%Y-%m-%d")
+        if to_date and from_date:
+            sqlCommand = """Select
+                                  job_id,
+                                  coalesce(issued_amount,0)
+                            from
+                              account_analytic_account aaa
+                            left join
+                                funjobvatissued('%s', '%s', array %s) vwtemp on aaa.id = vwtemp.job_id
+                            WHERE
+                                aaa.id in (%s)""" % (from_date, to_date, ids, ",".join(map(str, ids)))
+            cr.execute(sqlCommand)
+            for id, amount in cr.fetchall():
+                res[id] = amount
+        else:
+            for job in self.browse(cr, uid, ids, context):
+                res[job.id] = job.vat_issued_subtotal
+        return res
+
+    def _get_contracted_amount_custom(self, cr, uid, ids, name, arg, context=None):
+        context = context or {}
+        res = {}
+        from_date = context.get('from_date_contract', False)
+        to_date = context.get('to_date_contract', False)
+        if from_date and not to_date:
+            from datetime import date
+            to_date = date(date.today().year, 12, 31).strftime("%Y-%m-%d")
+        elif to_date and not from_date:
+            from datetime import date
+            from_date = date(1900, 1, 1).strftime("%Y-%m-%d")
+
+        if to_date and from_date:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            company_currency = user.company_id.currency_id
+            company_currency_id = user.company_id.currency_id.id
+
+            cur_obj = self.pool.get('res.currency')
+            kcc_obj = self.pool.get('kderp.contract.currency')
+            kqcpl_obj = self.pool.get('kderp.quotation.contract.project.line')
+
+            # Duyet JOB
+            for kp in self.browse(cr, uid, ids, context):
+                Contracted_amount = 0
+                Contracted_amount_USD = 0
+
+                Claimed_amount = 0
+                Claimed_amount_USD = 0
+
+                Collected_Amount = 0
+                Collected_Amount_USD = 0
+                # Duyet Contract
+                for kcc in filter(lambda ctc_obj: ctc_obj.registration_date and from_date <= ctc_obj.registration_date  <= to_date, kp.contract_ids):
+                    ctc_obj = {}
+                    if kcc.availability == 'inused':
+                        # Duyet Job Contract Currency, dua currency va amount vao ctc
+                        for kcpq_line in kcc.contract_job_summary_ids:
+                            if kcpq_line.account_analytic_id.id == kp.id:
+                                ctc_amount = (ctc_obj[kcpq_line.currency_id.id][
+                                                  'ctc_amount'] + kcpq_line.amount_currency) if kcpq_line.currency_id.id in ctc_obj else kcpq_line.amount_currency
+                                ctc_obj[kcpq_line.currency_id.id] = {'ctc_amount': ctc_amount,
+                                                                     'claimed_amount': 0}
+                                # Duyet Payment
+                        Claimed_amount_CTC_USD = 0
+                        Claimed_amount_CTC = 0
+                        for kcp in kcc.client_payment_ids:
+                            if kcp.state not in ('cancel', 'draft'):
+                                exrate = kcp.exrate
+                                for kpfc_line in kcp.invoice_line:
+                                    subtotal = kpfc_line.price_unit
+                                    if kpfc_line.account_analytic_id.id == kp.id:
+                                        if kcp.currency_id.id in ctc_obj:
+                                            ctc_obj[kcp.currency_id.id]['claimed_amount'] += subtotal
+                                        elif company_currency_id in ctc_obj:  # Neu Claim Currency ko co trong contract, quy doi sang company currency theo ti gia cua Contract
+                                            ctc_obj[company_currency_id]['claimed_amount'] += kcc_obj.compute(cr, uid,
+                                                                                                              kcp.currency_id.id,
+                                                                                                              company_currency_id,
+                                                                                                              kcc.id,
+                                                                                                              subtotal)
+
+                                        Claimed_amount_CTC += cur_obj.round(cr, uid, company_currency,
+                                                                            exrate * subtotal)  # Claimed Amount in Company Currency
+
+                        Claimed_amount += Claimed_amount_CTC
+                        Contracted_amount += Claimed_amount_CTC
+
+                        for curr_id in ctc_obj:
+                            contracted_remain = ctc_obj[curr_id]['ctc_amount'] - ctc_obj[curr_id]['claimed_amount']
+                            Contracted_amount += kcc_obj.compute(cr, uid, curr_id, company_currency_id, kcc.id,
+                                                                 contracted_remain) if abs(contracted_remain) >= 1 else 0
+
+                res[kp.id] = Contracted_amount
+        else:
+            for job in self.browse(cr, uid, ids, context):
+                res[job.id] = job.contracted_amount
         return res
 
     _columns={
@@ -57,7 +164,12 @@ class account_analytic_account(osv.osv):
                                             store = {'account.analytic.account':(lambda self, cr, uid, ids, context = {}: ids, ['code'], 50),}),
 
                 'control_area_ids':fields.one2many('kderp.job.control.area', 'job_id', 'Control Area'),
-                'area_allotment_ids': fields.one2many('kderp.job.area.allotment', 'job_id', 'Area Allotment', readonly=1)
+                'area_allotment_ids': fields.one2many('kderp.job.area.allotment', 'job_id', 'Area Allotment', readonly=1),
+
+                'vat_issued_subtotal_custom':fields.function(_get_vat_issued_amount_custom, type='float', method=True, string='VAT Issued Amount', digits_compute=dp.get_precision('Amount')),
+                'contracted_amount_custom': fields.function(_get_contracted_amount_custom, type='float', method=True, string='Contracted Amount',
+                                                      digits_compute=dp.get_precision('Amount'))
+
               }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -69,4 +181,58 @@ class account_analytic_account(osv.osv):
             job_ids = [job_id[0] for job_id in cr.fetchall()]
             args.append(('id','in',job_ids))
         return super(account_analytic_account, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=False)
+
+    def init(self, cr):
+        #Function using for Get Issued VAT Amount (range date)
+        sqlCommand="""CREATE OR REPLACE FUNCTION funjobvatissued(
+                            IN fromdate date,
+                            IN todate date,
+                            IN ids integer[])
+                          RETURNS TABLE(job_id integer, issued_amount double precision) AS
+                        $BODY$
+                        BEGIN
+                            RETURN QUERY
+                            Select
+                                aaa.id as job_id,
+                                sum(coalesce(issued_subtotal,0)* case when coalesce(total,0)=0 then 0 else coalesce(amount_currency,0)/total end) as vat_issued_subtotal
+                            from
+                                account_analytic_account aaa
+                            left join
+                                kderp_quotation_contract_project_line kqcpl on aaa.id = account_analytic_id
+                            left join
+                                (select
+                                    contract_id,
+                                    sum(coalesce(amount_currency,0)) as total
+                                from
+                                    kderp_quotation_contract_project_line kqcpls
+                                where
+                                    contract_id in (select distinct contract_id from kderp_quotation_contract_project_line kqcpls where kqcpls.account_analytic_id = any(ids))
+                                group by
+                                    contract_id) astemp on  kqcpl.contract_id = astemp.contract_id
+                            left join
+                                account_invoice ai on kqcpl.contract_id = ai.contract_id
+                            left join
+                                (Select
+                                    payment_id,
+                                    sum(kpvi.amount/(1+coalesce(tax_percent,0)/100)) as issued_subtotal,
+                                    sum(case when coalesce(tax_percent,0)=0 then 0 else  kpvi.amount/(1+coalesce(tax_percent,0)/100)/tax_percent end) as issued_vat
+                                from
+                                    kderp_payment_vat_invoice kpvi
+                                left join
+                                    kderp_invoice ki on vat_invoice_id=ki.id
+                                where
+                                    ki.date BETWEEN fromDate
+                                        AND toDate
+                                group by
+                                    payment_id) vwpayment_vat on ai.id=vwpayment_vat.payment_id and coalesce(vwpayment_vat.payment_id,0)>0
+                                where
+                                    aaa.id =any(ids)
+                                group by
+                                    aaa.id;
+                            END;
+                            $BODY$
+                              LANGUAGE plpgsql VOLATILE
+                              COST 100
+                              ROWS 1000;"""
+        cr.execute(sqlCommand)
 account_analytic_account()

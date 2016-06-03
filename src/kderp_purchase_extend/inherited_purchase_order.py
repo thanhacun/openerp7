@@ -24,11 +24,52 @@ from openerp import netsvc
 
 from openerp.tools.translate import _
 
+warning_job_po = {'title': 'Purchase with Job Completed/Closed/Cancelled','message':"You're editing a Job already Completed/Closed/Cancelled"}
+warning_job_po_all = "This Order created after related Job were Closed !"
+
 class purchase_order(osv.osv):
     _name = 'purchase.order'
     _inherit = 'purchase.order'
     _description = 'Purchase Order'
-    
+
+    def check_date_closed(self, cr, uid, min_date):
+        res = {}
+        if min_date:
+            ap_obj = self.pool.get('account.period')
+            curr_period_ids = ap_obj.find(cr, uid)
+            if curr_period_ids:
+                curr_period_obj = ap_obj.browse(cr, uid, curr_period_ids[0])
+                if min_date <= curr_period_obj.date_start:
+                    res['title'] = 'Date Closed'
+                    res['message'] = "You're editing a record with some document have date already closed"
+        return res
+
+    def new_code(self, cr, uid, ids, job_id, order_type, name=False, jobChange = False):
+        res = super(purchase_order, self).new_code(cr, uid, ids, job_id, order_type, name)
+        if job_id and jobChange:
+            job_obj = self.pool.get('account.analytic.account').browse(cr, uid, job_id)
+            if job_obj.state!='doing':
+                warning = res.get('warning',{})
+                warning['title'] = warning.get('title','') + ("\n" if warning.get('title','') else "") +  warning_job_po['title']
+                warning['message'] = warning.get('message','') +  ("\n" if warning.get('message','') else "") +  warning_job_po['message']
+                res['warning'] = warning
+            if ids and self.pool.get('res.users').browse(cr, uid, uid).location_user=='hanoi':
+                min_date = False
+                for po in self.browse(cr, uid, ids):
+                    for vatinv in po.supplier_vat_ids:
+                        if not min_date or min_date > vatinv.date:
+                            min_date = vatinv.date
+                if min_date:
+                    new_warning = self.check_date_closed(cr, uid, min_date)
+                    if new_warning:
+                        warning = res.get('warning', {})
+                        warning['title'] = warning.get('title', '') + ("\n / " if warning.get('title', '') else "") + \
+                                           new_warning['title']
+                        warning['message'] = warning.get('message', '') + ("\n" if warning.get('message', '') else "") + \
+                                             new_warning['message']
+                        res['warning'] = warning
+        return res
+
     # Them truong hop khi thay doi Supplier thi neu co hop dong chung thi se thay doi hop dong chung va ngay hop dong chung
     def onchange_partner_id(self, cr, uid, ids, partner_id, date=False, order_ref = False, job_id = False, order_details = [], discount_amount = 0, taxes_id = False):
         # TODO
@@ -95,9 +136,22 @@ class purchase_order(osv.osv):
             po_no = [po['name'] for po in self.read(cr, uid, po_ids,['name'])]
             res['warning'] = {'title':'KDERP Warning','message': message + ", ".join(po_no)}
         return res
-                     
+
+    def _get_warning(self, cr, uid, ids, name, args, context):
+        res = {}
+        for po in self.browse(cr, uid, ids):
+            if po.account_analytic_id.state != 'doing' and po.account_analytic_id.date and po.date_order > po.account_analytic_id.date:
+                res[po.id] = warning_job_po_all
+            else:
+                res[po.id] = ""
+                for pol in po.order_line:
+                    if pol.account_analytic_id.state != 'doing' and pol.account_analytic_id.date and po.date_order > pol.account_analytic_id.date:
+                        res[po.id] = warning_job_po_all
+                        break
+        return res
     _columns={
-                'purchase_general_contract_id':fields.many2one('kderp.purchase.general.contract','G.C. No.',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),                
+                'purchase_general_contract_id':fields.many2one('kderp.purchase.general.contract','G.C. No.',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
+                'warning_message':fields.function(_get_warning, method=True, string='Warning', type='char', size = 256),
             }
 
     def _check_duplicate_po_id(self, cr, uid, ids, context=None):
@@ -188,3 +242,21 @@ class purchase_order(osv.osv):
         return True
     
 purchase_order()
+
+class purchase_order_line(osv.osv):
+    _name = 'purchase.order.line'
+    _inherit = 'purchase.order.line'
+
+    def onchange_job(self, cr, uid, ids, order_id):
+        res = {}
+        if order_id and self.pool.get('res.users').browse(cr, uid, uid).location_user=='hanoi':
+            min_date = False
+            po = self.pool.get('purchase.order').browse(cr, uid, order_id)
+            for vatinv in po.supplier_vat_ids:
+                if not min_date or min_date > vatinv.date:
+                    min_date = vatinv.date
+            if min_date:
+                warn = self.pool.get('purchase.order').check_date_closed(cr, uid, min_date)
+                if warn:
+                    res['warning']  = warn
+        return res

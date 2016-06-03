@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListOfJobOnGoing" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" columnWidth="1190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.464100000000007"/>
+	<property name="ireport.zoom" value="1.0000000000000047"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
@@ -13,8 +13,8 @@
 	<field name="Job_No" class="java.lang.String">
 		<fieldDescription><![CDATA[code]]></fieldDescription>
 	</field>
-	<field name="Contracted_Amount" class="java.lang.Double">
-		<fieldDescription><![CDATA[contracted_amount]]></fieldDescription>
+	<field name="Contracted_Amount_Custom" class="java.lang.Double">
+		<fieldDescription><![CDATA[contracted_amount_custom]]></fieldDescription>
 	</field>
 	<field name="Owner_Name" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/Owner-owner_id/Name-name]]></fieldDescription>
@@ -38,7 +38,7 @@
 		<fieldDescription><![CDATA[/data/record/K.O.M._Date-kickoff_meeting_date]]></fieldDescription>
 	</field>
 	<field name="Issued_Amount" class="java.lang.Double">
-		<fieldDescription><![CDATA[/data/record/Issued_Amount-vat_issued_subtotal]]></fieldDescription>
+		<fieldDescription><![CDATA[/data/record/vat_issued_subtotal_custom]]></fieldDescription>
 	</field>
 	<field name="Reg_Date" class="java.util.Date">
 		<fieldDescription><![CDATA[/data/record/Reg._Date-registration_date]]></fieldDescription>
@@ -88,99 +88,121 @@
 	<field name="Location" class="java.lang.String">
 		<fieldDescription><![CDATA[/data/record/User-User/Location-location_user]]></fieldDescription>
 	</field>
+	<field name="Site_Expense_Budget_Amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[/data/record/workinprogress_ids/site_expense_planned_amount]]></fieldDescription>
+	</field>
+	<field name="Sub_Contractor_Budget_Amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[/data/record/workinprogress_ids/sub_contractor_planned_amount]]></fieldDescription>
+	</field>
+	<field name="Material_Budget_Amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[/data/record/workinprogress_ids/material_planned_amount]]></fieldDescription>
+	</field>
+	<field name="KFP_Budget_Amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[/data/record/workinprogress_ids/kfp_planned_amount]]></fieldDescription>
+	</field>
+	<field name="GSE_Budget_Amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[/data/record/workinprogress_ids/gse_planned_amount]]></fieldDescription>
+	</field>
 	<sortField name="Area_Type"/>
 	<sortField name="Area_Code"/>
 	<sortField name="E_M-job_type"/>
 	<sortField name="Job_Type-job_scale"/>
 	<sortField name="Job_No"/>
-	<variable name="CountJob" class="java.lang.Integer" calculation="Count">
+	<variable name="Total_Cost" class="java.lang.Double">
+		<variableExpression><![CDATA[($F{Site_Expense_Budget_Amount}==null?0:$F{Site_Expense_Budget_Amount})+
+($F{Sub_Contractor_Budget_Amount}==null?0:$F{Sub_Contractor_Budget_Amount})+
+($F{Material_Budget_Amount}==null?0:$F{Material_Budget_Amount})+
+($F{KFP_Budget_Amount}==null?0:$F{KFP_Budget_Amount})+
+($F{GSE_Budget_Amount}==null?0:$F{GSE_Budget_Amount})]]></variableExpression>
+	</variable>
+	<variable name="CountJob" class="java.lang.Integer" incrementType="Group" incrementGroup="JobNo" calculation="Count">
 		<variableExpression><![CDATA[$F{Job_No}]]></variableExpression>
 	</variable>
 	<variable name="Rate" class="java.lang.Double">
-		<variableExpression><![CDATA[$F{Contracted_Amount}==0 ||$F{Contracted_Amount}==null || $F{Issued_Amount}==0 ||$F{Issued_Amount}==null?0:
-($F{Issued_Amount}/$F{Contracted_Amount})]]></variableExpression>
+		<variableExpression><![CDATA[$F{Contracted_Amount_Custom}==0 ||$F{Contracted_Amount_Custom}==null || $F{Issued_Amount}==0 ||$F{Issued_Amount}==null?0:
+($F{Issued_Amount}/$F{Contracted_Amount_Custom})]]></variableExpression>
 	</variable>
-	<variable name="CA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
-		<variableExpression><![CDATA[$F{Contracted_Amount}==null?0:$F{Contracted_Amount}]]></variableExpression>
+	<variable name="CA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
-	<variable name="CA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="big_job"?0:$F{Contracted_Amount}]]></variableExpression>
+	<variable name="CA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
-	<variable name="CA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="small_maintenance"?0:$F{Contracted_Amount}]]></variableExpression>
+	<variable name="CA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
-	<variable name="CA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="f-cost"?0:$F{Contracted_Amount}]]></variableExpression>
+	<variable name="CA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
-	<variable name="CA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Contracted_Amount}]]></variableExpression>
+	<variable name="CA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Contracted_Amount_Custom}]]></variableExpression>
 	</variable>
-	<variable name="BA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
-		<variableExpression><![CDATA[$F{Total_Budget}==null?0:$F{Total_Budget}]]></variableExpression>
+	<variable name="BA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget})]]></variableExpression>
 	</variable>
-	<variable name="BA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="big_job"?0:$F{Total_Budget}]]></variableExpression>
+	<variable name="BA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Total_Budget}]]></variableExpression>
 	</variable>
-	<variable name="BA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="small_maintenance"?0:$F{Total_Budget}]]></variableExpression>
+	<variable name="BA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?0:($F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget}))]]></variableExpression>
 	</variable>
-	<variable name="BA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="f-cost"?0:$F{Total_Budget}]]></variableExpression>
+	<variable name="BA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Total_Budget}]]></variableExpression>
 	</variable>
-	<variable name="BA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Total_Budget}]]></variableExpression>
+	<variable name="BA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget})]]></variableExpression>
 	</variable>
-	<variable name="CoA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
+	<variable name="CoA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
 		<variableExpression><![CDATA[$F{Issued_Amount}==null?0:$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CoA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="big_job"?0:$F{Issued_Amount}]]></variableExpression>
+	<variable name="CoA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CoA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="small_maintenance"?0:$F{Issued_Amount}]]></variableExpression>
+	<variable name="CoA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CoA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="f-cost"?0:$F{Issued_Amount}]]></variableExpression>
+	<variable name="CoA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="CoA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
+	<variable name="CoA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
 		<variableExpression><![CDATA[$F{Issued_Amount}]]></variableExpression>
 	</variable>
-	<variable name="BaA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" calculation="Sum">
-		<variableExpression><![CDATA[($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></variableExpression>
+	<variable name="BaA_Jobtype_Total" class="java.lang.Double" resetType="Group" resetGroup="Job Scale" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></variableExpression>
 	</variable>
-	<variable name="BaA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="big_job"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+	<variable name="BaA_BJ_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="00-big_job"?0:(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
-	<variable name="BaA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="small_maintenance"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+	<variable name="BaA_SM_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="01-small_maintenance"?0:(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
-	<variable name="BaA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="f-cost"?0:(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+	<variable name="BaA_FC_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[$F{Job_Type-job_scale}!="02-f-cost"?0:(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
-	<variable name="BaA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" calculation="Sum">
-		<variableExpression><![CDATA[(($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
+	<variable name="BaA_Total" class="java.lang.Double" resetType="Group" resetGroup="Area_Type" incrementType="Group" incrementGroup="JobNo" calculation="Sum">
+		<variableExpression><![CDATA[(($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount}))]]></variableExpression>
 	</variable>
-	<variable name="Rate_Jobtype_Total" class="java.lang.Double" resetType="None">
+	<variable name="Rate_Jobtype_Total" class="java.lang.Double" resetType="None" incrementType="Group" incrementGroup="JobNo">
 		<variableExpression><![CDATA[$V{CA_Jobtype_Total}==0 ||$V{CA_Jobtype_Total}==null || $V{CoA_Jobtype_Total}==0 ||$V{CoA_Jobtype_Total}==null?0:
 ($V{CoA_Jobtype_Total}/$V{CA_Jobtype_Total})]]></variableExpression>
 	</variable>
-	<variable name="Rate_BJ_Total" class="java.lang.Double" resetType="None">
+	<variable name="Rate_BJ_Total" class="java.lang.Double" resetType="None" incrementType="Group" incrementGroup="JobNo">
 		<variableExpression><![CDATA[$V{CA_BJ_Total}==0 ||$V{CA_BJ_Total}==null || $V{CoA_BJ_Total}==0 ||$V{CoA_BJ_Total}==null?0:
 ($V{CoA_BJ_Total}/$V{CA_BJ_Total})]]></variableExpression>
 	</variable>
-	<variable name="Rate_SM_Total" class="java.lang.Double" resetType="None">
+	<variable name="Rate_SM_Total" class="java.lang.Double" resetType="None" incrementType="Group" incrementGroup="JobNo">
 		<variableExpression><![CDATA[$V{CA_SM_Total}==0 ||$V{CA_SM_Total}==null || $V{CoA_SM_Total}==0 ||$V{CoA_SM_Total}==null?0:
 ($V{CoA_SM_Total}/$V{CA_SM_Total})]]></variableExpression>
 	</variable>
-	<variable name="Rate_FC_Total" class="java.lang.Double" resetType="None">
+	<variable name="Rate_FC_Total" class="java.lang.Double" resetType="None" incrementType="Group" incrementGroup="JobNo">
 		<variableExpression><![CDATA[$V{CA_FC_Total}==0 ||$V{CA_FC_Total}==null || $V{CoA_FC_Total}==0 ||$V{CoA_FC_Total}==null?0:
 ($V{CoA_FC_Total}/$V{CA_FC_Total})]]></variableExpression>
 	</variable>
-	<variable name="Rate_Total" class="java.lang.Double" resetType="None">
+	<variable name="Rate_Total" class="java.lang.Double" resetType="None" incrementType="Group" incrementGroup="JobNo">
 		<variableExpression><![CDATA[$V{CA_Total}==0 ||$V{CA_Total}==null || $V{CoA_Total}==0 ||$V{CoA_Total}==null?0:
 ($V{CoA_Total}/$V{CA_Total})]]></variableExpression>
 	</variable>
-	<filterExpression><![CDATA[$F{Area_Type}=="control_area"&&$F{Job_Type-job_scale}!="f-cost"]]></filterExpression>
+	<filterExpression><![CDATA[$F{Area_Type}=="control_area"]]></filterExpression>
 	<group name="Area_Type">
 		<groupExpression><![CDATA[$F{Area_Type}]]></groupExpression>
 		<groupFooter>
@@ -892,7 +914,7 @@
 		<groupExpression><![CDATA[$F{E_M-job_type}]]></groupExpression>
 	</group>
 	<group name="Job Scale">
-		<groupExpression><![CDATA[$F{Job_Type-job_scale}]]></groupExpression>
+		<groupExpression><![CDATA[$F{Job_Type-job_scale}=="00-big_job"?1:2]]></groupExpression>
 		<groupHeader>
 			<band height="20">
 				<textField>
@@ -907,7 +929,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{E_M-job_type}+"-"+($F{Job_Type-job_scale}=="big_job"?"BIG JOB":($F{Job_Type-job_scale}=="small_maintenance"?"SMALL/MAINTENANCE JOB":($F{Job_Type-job_scale}=="f-cost"?"F-CODE JOB":"")))]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{E_M-job_type}+"-"+($F{Job_Type-job_scale}=="00-big_job"?"BIG JOB":"SMALL/MAINTENANCE JOB")]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -925,7 +947,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{E_M-job_type}+" - "+($F{Job_Type-job_scale}=="big_job"?"BIG JOB":($F{Job_Type-job_scale}=="small_maintenance"?"SMALL/MAINTENANCE JOB":($F{Job_Type-job_scale}=="f-cost"?"F-CODE JOB":"")))+" TOTAL"]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{E_M-job_type}+"-"+($F{Job_Type-job_scale}=="00-big_job"?"BIG JOB":"SMALL/MAINTENANCE JOB")+" TOTAL"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement stretchType="RelativeToTallestObject" x="326" y="0" width="70" height="20"/>
@@ -1136,6 +1158,343 @@
 						<font size="9" isBold="true"/>
 					</textElement>
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate_Jobtype_Total}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="JobNo">
+		<groupExpression><![CDATA[$F{Job_No}]]></groupExpression>
+		<groupFooter>
+			<band height="20" splitType="Prevent">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="20" y="0" width="40" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_No}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="60" y="0" width="85" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Owner_Name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="307" y="0" width="19" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Currency-name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="227" y="0" width="80" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="false">
+					<reportElement stretchType="RelativeToTallestObject" x="466" y="0" width="34" height="20">
+						<printWhenExpression><![CDATA[($F{Target_Profit}!=null)&&($F{Target_Profit}!="")]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Target_Profit}+" %"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement stretchType="RelativeToTallestObject" x="570" y="0" width="70" height="20"/>
+					<box rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Issued_Amount}==null?0:$F{Issued_Amount}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement stretchType="RelativeToTallestObject" x="675" y="0" width="70" height="20"/>
+					<box rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[($F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="745" y="0" width="50" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{Reg_Date}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="895" y="0" width="50" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{GPM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="1045" y="0" width="50" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ASM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="995" y="0" width="50" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="945" y="0" width="50" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{PM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="145" y="0" width="82" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_Name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement stretchType="RelativeToTallestObject" x="326" y="0" width="70" height="20"/>
+					<box rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Contracted_Amount_Custom}==null?0:$F{Contracted_Amount_Custom}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="false">
+					<reportElement stretchType="RelativeToTallestObject" x="500" y="0" width="70" height="20">
+						<printWhenExpression><![CDATA[($F{K.O.M._Date}!="")&&($F{K.O.M._Date}!=null)]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{K.O.M._Date}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="795" y="0" width="50" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{Start_Date}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="845" y="0" width="50" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{Comp_Date}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement stretchType="RelativeToTallestObject" x="396" y="0" width="70" height="20"/>
+					<box rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{Job_Type-job_scale}=="02-f-cost"?$V{Total_Cost}:($F{Total_Budget}==null?0:$F{Total_Budget})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="1095" y="0" width="95" height="20"/>
+					<box leftPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Project_Location}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00 %">
+					<reportElement stretchType="RelativeToTallestObject" x="640" y="0" width="35" height="20"/>
+					<box rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="20" height="20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$V{CountJob}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="false">
+					<reportElement stretchType="RelativeToTallestObject" x="466" y="0" width="34" height="20">
+						<printWhenExpression><![CDATA[($F{Target_Profit}=="")||($F{Target_Profit}==null)]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="1">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["-"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="false">
+					<reportElement stretchType="RelativeToTallestObject" x="500" y="0" width="70" height="20">
+						<printWhenExpression><![CDATA[($F{K.O.M._Date}=="")||($F{K.O.M._Date}==null)]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["-"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -1452,338 +1811,4 @@
 			</textField>
 		</band>
 	</title>
-	<detail>
-		<band height="20" splitType="Prevent">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="20" y="0" width="40" height="20"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_No}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="60" y="0" width="85" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Owner_Name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="307" y="0" width="19" height="20"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Currency-name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="227" y="0" width="80" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Job_Name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="false">
-				<reportElement stretchType="RelativeToTallestObject" x="466" y="0" width="34" height="20">
-					<printWhenExpression><![CDATA[($F{Target_Profit}!=null)&&($F{Target_Profit}!="")]]></printWhenExpression>
-				</reportElement>
-				<box rightPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Target_Profit}+" %"]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0">
-				<reportElement stretchType="RelativeToTallestObject" x="570" y="0" width="70" height="20"/>
-				<box rightPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Issued_Amount}==null?0:$F{Issued_Amount}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0">
-				<reportElement stretchType="RelativeToTallestObject" x="675" y="0" width="70" height="20"/>
-				<box rightPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Contracted_Amount}==null?0:$F{Contracted_Amount})-($F{Issued_Amount}==null?0:$F{Issued_Amount})]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="745" y="0" width="50" height="20"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{Reg_Date}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="895" y="0" width="50" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{GPM}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="1045" y="0" width="50" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{ASM}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="995" y="0" width="50" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{SM}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="945" y="0" width="50" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{PM}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="145" y="0" width="82" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_Name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0">
-				<reportElement stretchType="RelativeToTallestObject" x="326" y="0" width="70" height="20"/>
-				<box rightPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Contracted_Amount}==null?0:$F{Contracted_Amount}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="false">
-				<reportElement stretchType="RelativeToTallestObject" x="500" y="0" width="70" height="20">
-					<printWhenExpression><![CDATA[($F{K.O.M._Date}!="")&&($F{K.O.M._Date}!=null)]]></printWhenExpression>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{K.O.M._Date}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="795" y="0" width="50" height="20"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{Start_Date}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="845" y="0" width="50" height="20"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.util.Date"><![CDATA[$F{Comp_Date}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0">
-				<reportElement stretchType="RelativeToTallestObject" x="396" y="0" width="70" height="20"/>
-				<box rightPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Total_Budget}==null?0:$F{Total_Budget}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="1095" y="0" width="95" height="20"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Project_Location}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 %">
-				<reportElement stretchType="RelativeToTallestObject" x="640" y="0" width="35" height="20"/>
-				<box rightPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Rate}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="20" height="20"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$V{CountJob}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="false">
-				<reportElement stretchType="RelativeToTallestObject" x="466" y="0" width="34" height="20">
-					<printWhenExpression><![CDATA[($F{Target_Profit}=="")||($F{Target_Profit}==null)]]></printWhenExpression>
-				</reportElement>
-				<box rightPadding="1">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["-"]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="false">
-				<reportElement stretchType="RelativeToTallestObject" x="500" y="0" width="70" height="20">
-					<printWhenExpression><![CDATA[($F{K.O.M._Date}=="")||($F{K.O.M._Date}==null)]]></printWhenExpression>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["-"]]></textFieldExpression>
-			</textField>
-		</band>
-	</detail>
 </jasperReport>

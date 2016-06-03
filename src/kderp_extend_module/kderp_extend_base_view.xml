@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>	
+    <data>
+
+        <record id="kderp_res_users_form_config_inherit" model="ir.ui.view">
+            <field name="name">res.users.form.config.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="kderp_base.kderp_res_users_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="menu_id" position="after">
+                    <field name='general_director_id'/>
+                </field>
+            </field>
+		</record>
+		<record id="kderp_res_users_preference_form_config_inherit" model="ir.ui.view">
+            <field name="name">res.users.preference.form.config.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="kderp_base.kderp_res_users_preference_form_inherit"/>
+            <field name="arch" type="xml">
+                 <field name="tz" position="after">
+                     <field name='general_director_id'/>
+                 </field>
+            </field>
+		</record>
+
+        <!--Partner Form -->
+ 		<record id="kderp_res_partner_form_config" model="ir.ui.view">
+            <field name="name">res.partner.form.config.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="kderp_partner.view_partner_kderp_inherit_form"/>
+            <field name="arch" type="xml">
+				 <xpath expr="//h1/field[@name='code']" position="replace">
+                      <field name="code" placeholder="Code" attrs="{'required': [('is_company','=',True)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+		<!-- Company Form View -->
+		<record id="kderp_view_config_company_form_inherit" model="ir.ui.view">
+            <field name="name">kderp.view.config.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name='inherit_id' ref='kderp_base.kderp_add_config_company_form'/>
+            <field name="arch" type="xml">
+            	<field name="company_registry" position='after'>
+                    <field name="general_director_id"/>
+                </field>
+            </field>
+        </record>
+
     	<record id="view_extend_kderp_payment_by_cash_form" model="ir.ui.view">
 			<field name="name">Payment ByCash</field>
 			<field name="model">kderp.payment.bycash.config.settings</field>
