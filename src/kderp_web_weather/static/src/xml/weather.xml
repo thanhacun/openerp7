@@ -14,11 +14,11 @@
             <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_string'}, {'des':'UV', 'name': 'UV'}]"/>
             <t t-foreach="fieldList" t-as="item">
                 <tr>
-                    <td><span><t t-esc="item.des"/></span></td>
+                    <td><span><t t-esc="item.des + ': '"/></span></td>
                     <td><span><t t-esc="weather[item.name]"/></span></td>
                 </tr>
             </t>
         </table>
-        <span style="font-size: 10px; text-align: right; color:red">Click to refresh</span>
+        <span style="font-size: 10px; text-align: right; color:yellow">Click to refresh</span>
     </div>
 </templates>
