@@ -45,9 +45,12 @@ openerp.kderp_web_weather = function(instance) {
       //bind events considering the widget will act alone or inside another widget
       var self = this;
       this.curWeather(function(res) {
+          //console.log(res.local_time_rfc822);
           var $curWeather = $(QWeb.render('kderp_weather', {weather: res}));
           //Check widget exist or not to keep DOM tidy
-          isRefresh ? self.$(".kderp_weather div").replaceWith($curWeather): self.$el.append($curWeather);
+          //isRefresh ? self.$(".kderp_weather div").replaceWith($curWeather): self.$el.append($curWeather);
+          isRefresh ? self.$el.html($curWeather): self.$el.append($curWeather);
+          //console.log($(".kderp_weather div"), console.log($curWeather));
           var bindWidget = self.parent ? self.getParent().$(".kderp_weather"): self.$(".kderp_weather");
           //bind event one time only
           bindWidget.unbind("click");
