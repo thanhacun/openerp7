@@ -11,7 +11,7 @@
             <img t-att-src="weather.icon_url" class="weather_icon"><span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/></span></img>
         </p>
         <table style="width: 100%; font-size: 16px; text-align: center">
-            <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_string'}, {'des':'UV', 'name': 'UV'}]"/>
+            <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_c'}, {'des':'UV', 'name': 'UV'}]"/>
             <t t-foreach="fieldList" t-as="item">
                 <tr>
                     <td><span><t t-esc="item.des + ': '"/></span></td>
