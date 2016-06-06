@@ -20,12 +20,11 @@ openerp.kderp_web_weather = function(instance) {
     init: function(parent){
       this._super(parent);
       this.parent = parent ? true: false;
-      this.interval = 3600000;
+      this.interval = 60 * 60 * 1000;
     },
     className: 'kderp_weather',
     start: function(){
       var self = this;
-      //var tick = 0
       this._super.apply(this, arguments);
       this.bindEvents(false);
       setInterval(function(){
@@ -47,15 +46,16 @@ openerp.kderp_web_weather = function(instance) {
       var self = this;
       this.curWeather(function(res) {
           var $curWeather = $(QWeb.render('kderp_weather', {weather: res}));
-          //Check widget exist or not too keep DOM tidy
-          isRefresh ? self.$el.html($curWeather): self.$el.append($curWeather);
+          //Check widget exist or not to keep DOM tidy
+          isRefresh ? self.$(".kderp_weather div").replaceWith($curWeather): self.$el.append($curWeather);
           var bindWidget = self.parent ? self.getParent().$(".kderp_weather"): self.$(".kderp_weather");
           //bind event one time only
-          bindWidget.one('click', function(ev) {
+          bindWidget.unbind("click");
+          bindWidget.on('click', function(ev) {
               ev.stopPropagation();
               console.log('Updating weather data...', res);
               self.bindEvents(true);
-          })
+          });
           //prepare for tipsy content
           var onHoverContent = $(QWeb.render('kderp_weather_detail', {weather: res})).html();
           bindWidget.find("div")
