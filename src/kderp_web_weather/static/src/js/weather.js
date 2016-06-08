@@ -48,22 +48,26 @@ openerp.kderp_web_weather = function(instance) {
           //console.log(res.local_time_rfc822);
           var $curWeather = $(QWeb.render('kderp_weather', {weather: res}));
           //Check widget exist or not to keep DOM tidy
-          //isRefresh ? self.$(".kderp_weather div").replaceWith($curWeather): self.$el.append($curWeather);
+          //isRefresh ? console.log(self.$el.find(".kderp_weather div").replaceWith("Hello")): self.$el.append($curWeather);
           isRefresh ? self.$el.html($curWeather): self.$el.append($curWeather);
-          //console.log($(".kderp_weather div"), console.log($curWeather));
           var bindWidget = self.parent ? self.getParent().$(".kderp_weather"): self.$(".kderp_weather");
-          //bind event one time only
-          bindWidget.unbind("click");
-          bindWidget.on('click', function(ev) {
-              ev.stopPropagation();
-              console.log('Updating weather data...', res);
-              self.bindEvents(true);
-          });
           //prepare for tipsy content
           var onHoverContent = $(QWeb.render('kderp_weather_detail', {weather: res})).html();
           bindWidget.find("div")
               .tipsy({html: true, fade: true, gravity: "n", offset: 10, className: "tipsy_weather"})
               .attr("original-title", onHoverContent);
+
+          //bind event once
+          bindWidget.unbind("click");
+          bindWidget.on('click', function(ev) {
+              ev.stopPropagation();
+              console.log('Updating weather data...', res);
+              //empty tipsy content
+              bindWidget.find("div").attr("original-title", "");
+              self.bindEvents(true);
+          });
+
+
       });
     },
   })
