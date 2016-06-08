@@ -1038,15 +1038,14 @@ Xin trân trọng cảm ơn sự hỗ trợ và hợp tác của Quý công ty!
 					<textElement markup="none">
 						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[($F{general_director_user}==""||$F{general_director_user}==null?$F{general_director_company}.toUpperCase():$F{general_director_user}.toUpperCase())
-]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{general_director_user}==""||$F{general_director_user}==null?$F{general_director_company}.toUpperCase():$F{general_director_user}.toUpperCase())]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="10" y="664" width="153" height="12"/>
 					<textElement markup="none">
 						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["General Director"]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA["Tổng giám đốc"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>

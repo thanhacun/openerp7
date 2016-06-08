@@ -483,6 +483,12 @@
             		<separator/>
             		<filter string="VAT Amount" name="quotation_submit_line.tax_amount" domain="[('quotation_submit_line.tax_amount','!=','0')]"/>
             	</filter>
+                <field name="partner_id" position="after">
+                    <field name="partner_id" widget="text" string="Client(s)"/>
+                </field>
+                <field name="owner_id" position="after">
+                    <field name="owner_id" widget="text" string="Owner(s)"/>
+               </field>
             </field>
         </record>
         
