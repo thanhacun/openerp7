@@ -77,6 +77,24 @@
 							</group>
                     </group>
                 </group>
+
+                <!-- Sua lai giao dien Quotation bo Client Name, Project Name -->
+                <field name="quotation_lists" position="replace">
+                    <field colspan="4" mode="tree" name="quotation_lists" nolabel="1" readonly="0">
+                        <tree string="Quotation" colors="blue:state in ('draft');red:state in ('cancel')">
+                            <field name="name" string="No."/>
+                            <field name="state"/>
+                            <field name="dateofregistration" string="Date of Reg." invisible="'dateofregistration' in context.get('group_by',[])"/>
+                            <field name="description"/>
+                            <field name='currencies'/>
+                            <field name="job_e_id" select="1"/>
+                            <field name='approved_amount_e'/>
+                            <field name="job_m_id" select="1"/>
+                            <field name='approved_amount_m'/>
+                            <field name='total_approved_amount'/>
+                        </tree>
+                    </field>
+                </field>
 			</field>
 		</record>
 
