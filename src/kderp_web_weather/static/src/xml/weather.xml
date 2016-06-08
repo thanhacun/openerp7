@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <div t-name="kderp_weather" >
-        <img t-att-src="weather.icon_url" class="weather_icon"><span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/></span></img>
+        <img t-att-src="weather.svg_icon_url" t-att-alt="weather.weather" class="weather_icon">
+            <span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/>
+                <!--<t t-esc="weather.local_time_rfc822"/>-->
+            </span>
+        </img>
     </div>
 
     <div t-name="kderp_weather_detail" class="kderp_weather_detail">
-        <p style="font-size: 18px; text-align: center">
+        <p>
             <span><t t-esc="weather.display_location.city"/> (<t t-esc="weather.weather"/>)</span>
             <br/>
-            <img t-att-src="weather.icon_url" class="weather_icon"><span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/></span></img>
+            <img t-att-src="weather.svg_icon_url" class="weather_icon" t-att-alt="weather.weather"><span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/></span></img>
         </p>
-        <table style="width: 100%; font-size: 16px; text-align: center">
-            <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_c'}, {'des':'UV', 'name': 'UV'}]"/>
+        <table>
+            <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_c'}, {'des': 'Humidity', 'name': 'relative_humidity'}, {'des':'UV', 'name': 'UV'}]"/>
             <t t-foreach="fieldList" t-as="item">
                 <tr>
                     <td><span><t t-esc="item.des + ': '"/></span></td>
@@ -20,5 +24,6 @@
             </t>
         </table>
         <span style="font-size: 10px; text-align: right; color:yellow">Click to refresh</span>
+        <br/><span style="font-size: 10px; text-align: right">Observed : <t t-esc="new Date(weather.local_time_rfc822).toLocaleString()"/></span>
     </div>
 </templates>

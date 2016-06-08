@@ -30,6 +30,8 @@
     Helper functions for enrich web interface
     """,
     'css': ['static/src/css/*.css'],
-    'js':['static/src/js/*.js'],
+    'js':[
+        'static/src/js/*.js'
+    ],
     'installable':True
 }

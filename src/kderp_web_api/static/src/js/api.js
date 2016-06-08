@@ -12,7 +12,10 @@ openerp.kderp_web_api = function(instance) {
     },
     weather: function(lat, lon, cb) {
       $.getJSON(apiURL.weather + lat + ',' + lon, function(res) {
-        return cb(res.current_observation);
+        var result = res.current_observation;
+        var svg_url = 'https://icons.wxug.com/i/c/v4/';
+        result.svg_icon_url = svg_url + result.icon + '.svg';
+        return cb(result);
       });
     }
   };
