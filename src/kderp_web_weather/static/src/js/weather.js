@@ -35,6 +35,7 @@ openerp.kderp_web_weather = function(instance) {
     },
     curWeather: function(cb) {
       //return weather object for use with widget
+      //getting hourly weather for
       API.curLoc(function(location) {
         API.weather(location.lat, location.lon, function(weather){
           return cb(weather);
