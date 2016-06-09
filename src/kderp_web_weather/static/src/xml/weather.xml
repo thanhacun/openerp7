@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <div t-name="kderp_weather" >
-        <img t-att-src="weather.svg_icon_url" t-att-alt="weather.weather" class="weather_icon">
-            <span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/>
+        <img t-att-src="weather.now.svg_icon_url" t-att-alt="weather.now.weather" class="weather_icon">
+            <span class="weather_text"><t t-esc="weather.now.temp_c + ' °C' || 'N/A'"/>
                 <!--<t t-esc="weather.local_time_rfc822"/>-->
             </span>
         </img>
@@ -10,20 +10,21 @@
 
     <div t-name="kderp_weather_detail" class="kderp_weather_detail">
         <p>
-            <span><t t-esc="weather.display_location.city"/> (<t t-esc="weather.weather"/>)</span>
+            <span><t t-esc="weather.now.display_location.city"/> (<t t-esc="weather.now.weather"/>)</span>
             <br/>
-            <img t-att-src="weather.svg_icon_url" class="weather_icon" t-att-alt="weather.weather"><span class="weather_text"><t t-esc="weather.temp_c + ' °C' || 'N/A'"/></span></img>
+            <img t-att-src="weather.now.svg_icon_url" class="weather_icon" t-att-alt="weather.now.weather"><span class="weather_text"><t t-esc="weather.now.temp_c + ' °C' || 'N/A'"/></span></img>
         </p>
         <table>
-            <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_c'}, {'des': 'Humidity', 'name': 'relative_humidity'}, {'des':'UV', 'name': 'UV'}]"/>
+            <t t-set="fieldList" t-value="[{'des': 'Feelslike', 'name':'feelslike_c', 'tail': '°C'}, {'des': 'Humidity', 'name': 'humidity'}, {'des':'UV', 'name': 'uvi'}, {'des': 'Chance of rain', 'name': 'pop', 'tail': '%'}]"/>
             <t t-foreach="fieldList" t-as="item">
                 <tr>
-                    <td><span><t t-esc="item.des + ': '"/></span></td>
-                    <td><span><t t-esc="weather[item.name]"/></span></td>
+                    <td><span><t t-esc="item.des + ' : '"/></span></td>
+                    <td><span><t t-esc="weather.forecast[item.name]"/></span></td>
+                    <td><span><t t-esc="item.tail"/></span></td>
                 </tr>
             </t>
         </table>
         <span style="font-size: 10px; text-align: right; color:yellow">Click to refresh</span>
-        <br/><span style="font-size: 10px; text-align: right">Observed : <t t-esc="new Date(weather.local_time_rfc822).toLocaleString()"/></span>
+        <br/><span style="font-size: 10px; text-align: right">Observed : <t t-esc="new Date(weather.now.local_time_rfc822).toLocaleString()"/></span>
     </div>
 </templates>
