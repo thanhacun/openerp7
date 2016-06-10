@@ -28,21 +28,21 @@ openerp.kderp_web_weather = function(instance) {
       this._super.apply(this, arguments);
       this.bindEvents(false);
       setInterval(function(){
-          console.log("Auto refresh every", self.interval / 1000 / 60, "minutes");
+          console.log(new Date().toLocaleString(), "Auto refresh every", self.interval / 1000 / 60, "minutes");
           self.bindEvents(true);
       }, self.interval);
       return this._super();
     },
     curWeather: function(cb) {
       //return weather object for use with widget
-      //getting hourly weather for
+      //getting forecast for chance of rain...
       API.curLoc(function(location) {
         API.weather(location.lat, location.lon, function(weather){
           return cb(weather);
         });
       });
     },
-    bindEvents: function(isRefresh) {
+    bindEvents: function(isRefresh, isClick) {
       //bind events considering the widget will act alone or inside another widget
       var self = this;
       this.curWeather(function(res) {
@@ -57,18 +57,18 @@ openerp.kderp_web_weather = function(instance) {
           bindWidget.find("div")
               .tipsy({html: true, fade: true, gravity: "n", offset: 10, className: "tipsy_weather"})
               .attr("original-title", onHoverContent);
+          //show tipsy if click to update
+          if (isClick){bindWidget.find("div").tipsy("show");}
 
           //bind event once
           bindWidget.unbind("click");
           bindWidget.on('click', function(ev) {
               ev.stopPropagation();
-              console.log('Updating weather data...', res);
-              //empty tipsy content
-              bindWidget.find("div").attr("original-title", "");
-              self.bindEvents(true);
+              console.log('Force updating weather', res);
+              //hide tipsy, will show again when update finished. TODO: consider using referral
+              bindWidget.find("div").tipsy("hide");
+              self.bindEvents(true, true);
           });
-
-
       });
     },
   })
