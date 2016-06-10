@@ -3,7 +3,8 @@ openerp.kderp_web_api = function(instance) {
   var apiURL = {
     location: 'http://ip-api.com/json',
     weather_now: 'http://thcn-api.herokuapp.com/api/weathers/now/',
-    weather_hourly: 'http://thcn-api.herokuapp.com/api/weathers/hourly/'
+    weather_hourly: 'http://thcn-api.herokuapp.com/api/weathers/hourly/',
+    weather_forecast: 'http://thcn-api.herokuapp.com/api/weathers/forecast/'
   }
   instance.web.api = {
     curLoc: function(cb) {
@@ -19,12 +20,11 @@ openerp.kderp_web_api = function(instance) {
         res.now = weatherNow.current_observation;
         res.now.svg_icon_url = svg_url + res.now.icon + '.svg';
         //get hourly forcast, only today part, flatten the return object for easily handling QWeb
-        $.getJSON(apiURL.weather_hourly + lat + ',' + lon, function(weatherHourly) {
-          var hourForecast = weatherHourly.hourly_forecast[0];
+        $.getJSON(apiURL.weather_forecast + lat + ',' + lon, function(weatherForecast) {
+          var hourForecast = weatherForecast.forecast.simpleforecast.forecastday[0];
           res.forecast = {
-            feelslike_c: hourForecast.feelslike.metric,
-            humidity: hourForecast.humidity,
-            uvi: hourForecast.uvi,
+            high_low: hourForecast.high.celsius + '/' + hourForecast.low.celsius,
+            humidity: hourForecast.avehumidity,
             pop: hourForecast.pop
           };
           return cb(res);
