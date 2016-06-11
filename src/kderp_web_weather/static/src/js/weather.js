@@ -46,18 +46,21 @@ openerp.kderp_web_weather = function(instance) {
       //bind events considering the widget will act alone or inside another widget
       var self = this;
       this.curWeather(function(res) {
-          //console.log(res.local_time_rfc822);
           var $curWeather = $(QWeb.render('kderp_weather', {weather: res}));
+
           //Check widget exist or not to keep DOM tidy
           //isRefresh ? console.log(self.$el.find(".kderp_weather div").replaceWith("Hello")): self.$el.append($curWeather);
           isRefresh ? self.$el.html($curWeather): self.$el.append($curWeather);
           var bindWidget = self.parent ? self.getParent().$(".kderp_weather"): self.$(".kderp_weather");
+
           //prepare for tipsy content
           var onHoverContent = $(QWeb.render('kderp_weather_detail', {weather: res})).html();
           bindWidget.find("div")
               .tipsy({html: true, fade: true, gravity: "n", offset: 10, className: "tipsy_weather"})
               .attr("original-title", onHoverContent);
+
           //show tipsy if click to update by check hover event and isRefresh
+          //using $("#element:hover").length to determine hover event happen
           if (isRefresh && bindWidget.parent().find(".kderp_weather:hover").length != 0)  {
               console.log('Mouse is on, show updated tipsy!');
               bindWidget.find("div").tipsy("show");
@@ -68,7 +71,7 @@ openerp.kderp_web_weather = function(instance) {
           bindWidget.on('click', function(ev) {
               ev.stopPropagation();
               console.log('Force updating weather', res);
-              //hide tipsy, will show again when update finished. TODO: consider using referral
+              //hide tipsy, will show again when update finished
               bindWidget.find("div").tipsy("hide");
               self.bindEvents(true);
           });
