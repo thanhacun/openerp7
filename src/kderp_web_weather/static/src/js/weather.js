@@ -42,7 +42,7 @@ openerp.kderp_web_weather = function(instance) {
         });
       });
     },
-    bindEvents: function(isRefresh, isClick) {
+    bindEvents: function(isRefresh) {
       //bind events considering the widget will act alone or inside another widget
       var self = this;
       this.curWeather(function(res) {
@@ -57,8 +57,11 @@ openerp.kderp_web_weather = function(instance) {
           bindWidget.find("div")
               .tipsy({html: true, fade: true, gravity: "n", offset: 10, className: "tipsy_weather"})
               .attr("original-title", onHoverContent);
-          //show tipsy if click to update
-          if (isClick){bindWidget.find("div").tipsy("show");}
+          //show tipsy if click to update by check hover event and isRefresh
+          if (isRefresh && bindWidget.parent().find(".kderp_weather:hover").length != 0)  {
+              console.log('Mouse is on, show updated tipsy!');
+              bindWidget.find("div").tipsy("show");
+          };
 
           //bind event once
           bindWidget.unbind("click");
@@ -67,7 +70,7 @@ openerp.kderp_web_weather = function(instance) {
               console.log('Force updating weather', res);
               //hide tipsy, will show again when update finished. TODO: consider using referral
               bindWidget.find("div").tipsy("hide");
-              self.bindEvents(true, true);
+              self.bindEvents(true);
           });
       });
     },
