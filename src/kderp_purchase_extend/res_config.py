@@ -53,5 +53,5 @@ class res_company(osv.osv):
     
     _columns = {
                 'other_expense_payment_voucher_prepared_user_id': fields.many2one('hr.employee','Prepared User',required=True, help='User appear in payment voucher in Supplier Payment Expense'),
-                'po_payment_voucher_prepared_user_id': fields.many2one('hr.employee','Prepared User',required=True, help='User appear in payment voucher in Supplier Payment'),       
+                'po_payment_voucher_prepared_user_id': fields.many2one('hr.employee','Prepared User',required=True, help='User appear in payment voucher in Supplier Payment'),
                 }

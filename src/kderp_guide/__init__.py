@@ -1,2 +1,2 @@
 
-import kderp_guide
+#import kderp_guide

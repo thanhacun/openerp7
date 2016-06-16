@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="kderp_weather" >
+        <img t-att-src="weather.now.svg_icon_url" t-att-alt="weather.now.weather" class="weather_icon">
+            <span class="weather_text"><t t-esc="weather.now.temp_c + ' °C' || 'N/A'"/>
+                <!--<t t-esc="weather.local_time_rfc822"/>-->
+            </span>
+        </img>
+    </div>
+
+    <div t-name="kderp_weather_detail" class="kderp_weather_detail">
+        <p>
+            <span class="big"><t t-esc="weather.now.display_location.city"/></span>
+            <br/>
+            <img t-att-src="weather.now.svg_icon_url" class="weather_icon" t-att-alt="weather.now.weather"><span class="medium"> <t t-esc="weather.now.temp_c + ' °C' || 'N/A'"/></span></img>
+            <span class="medium"> (<t t-esc="weather.now.weather"/>)</span>
+            <br/>
+            <span class="medium">Feels like <span style="color:yellow"><t t-esc="weather.now.feelslike_c + ' °C' || 'N/A'"/></span></span>
+            <br/>
+            <hr/>
+            <span class="big">FORECAST</span>
+        </p>
+        <table>
+            <t t-set="fieldList" t-value="[{'des': 'High/Low', 'name':'high_low', 'tail': '°C', 'style': 'color: yellow'}, {'des': 'Humidity', 'name': 'humidity', 'tail': '%'}, {'des': 'Chance of rain', 'name': 'pop', 'tail': '%'}]"/>
+            <t t-foreach="fieldList" t-as="item">
+                <tr>
+                    <td><span><t t-esc="item.des + ' : '"/></span></td>
+                    <td><span t-att-style="item.style"><t t-esc="weather.forecast[item.name]"/> <t t-esc="item.tail"/></span></td>
+                </tr>
+            </t>
+        </table>
+        <span style="font-size: 10px; text-align: right; color:yellow">Update every hour (click to force)</span>
+        <br/>
+        <span style="font-size: 10px; text-align: right">Observed : <t t-esc="new Date(weather.now.local_time_rfc822).toLocaleString()"/></span>
+    </div>
+</templates>

@@ -125,9 +125,9 @@
 
 <!-- Ke thua UserMenu -->
 <t t-extend="UserMenu">
-	<t t-jquery="img.oe_topbar_avatar" t-operation="before">
+	<!--<t t-jquery="img.oe_topbar_avatar" t-operation="before">
 		<div id='weather'></div>
-	</t>
+	</t>-->
 	<t t-jquery="ul.oe_dropdown_menu" t-operation="replace">		
         <ul class="oe_dropdown_menu">        	
             <li><a href="#" data-menu="settings">Preferences</a></li>

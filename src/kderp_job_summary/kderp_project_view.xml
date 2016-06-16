@@ -39,15 +39,19 @@
 	               		<field name="claimed_amount_usd"/>
 	               		<field name="collected_amount_usd"/>
                		</group>
-				</field>				
-				<field name='planned_amount' position='after'>
-					<field name='expense_amount' sum='Sub-Total'/>
-					<field name='paid_amount' sum='Sub-Total'/>
-					<field name='balance_amt' sum='Sub-Total'/>
-					<field name='balance_per'/>
-					<field name='over'/>
-					<button name="open_budget_detail" icon="gtk-zoom-fit" type="object"/>
 				</field>
+                <tree editable='top' string="Budget Data" position="replace">
+                    <tree editable='top' string="Budget Data" fonts="bold:over_budget=='Yes'" colors="red:over_budget=='Yes'">
+                        <field name='budget_id'/>
+                        <field name='planned_amount' sum='Sub-Total'/>
+                        <field name='expense_amount' sum='Sub-Total'/>
+                        <field name='paid_amount' sum='Sub-Total'/>
+                        <field name='balance_amt' sum='Sub-Total'/>
+                        <field name='balance_per'/>
+                        <field name='over_budget'/>
+                        <button name="open_budget_detail" icon="gtk-zoom-fit" type="object"/>
+                    </tree>
+				</tree>
 <!-- 				<field name="quotation_lists" position='replace'>
 					<field colspan="4" mode="tree" name="quotation_lists" nolabel="1" readonly="0">
 						<tree>

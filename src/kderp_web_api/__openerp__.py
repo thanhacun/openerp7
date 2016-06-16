@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,26 +15,23 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     d
 #
 ##############################################################################
-
-import kderp_extend_project
-import kderp_budget_history
-import kderp_other_expense_purchase
-import kderp_extend_purchase
-import kderp_extend_quotation
-import kderp_extend_attachment
-import kderp_extend_client_payment
-import wizard
-import kderp_invoice_ex_rate
-import kderp_extend_employee
-import kderp_extend_contract
-#import kderp_extend_job_budget
-import kderp_extend_base
-import kderp_extend_supplier_payment
-import kderp_budget
-import kderp_city
-#import kderp_extend_other_expense
-import models
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+{
+    'name':"KDERP Web helper api",
+    'version':"7.0.0",
+    'author':"KDERP IT-Dev. Team",
+    'images' : [''],
+    'summary':"API functions for web tasks",
+    'category':"KDERP Apps",
+    'depends':['web'],
+    'description': """
+    Helper functions for enrich web interface
+    """,
+    'css': ['static/src/css/*.css'],
+    'js':[
+        'static/src/js/*.js'
+    ],
+    'installable':True
+}

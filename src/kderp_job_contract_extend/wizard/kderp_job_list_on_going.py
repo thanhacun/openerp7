@@ -36,6 +36,9 @@ class wizard_kderp_job_list_ongoing(osv.osv_memory):
         context['from_date'] = jwbs.from_date
         context['to_date'] = jwbs.to_date
 
+        context['from_date_contract'] = jwbs.from_date_contract
+        context['to_date_contract'] = jwbs.to_date_contract
+
         datas['model'] = 'account.analytic.account'
         datas['title'] = '10.2 List of Job On-Going (Filter by date)'
         
@@ -50,6 +53,9 @@ class wizard_kderp_job_list_ongoing(osv.osv_memory):
 
     _columns = {                
                 'from_date':fields.date('From Date'),
-                'to_date': fields.date('To Date')
+                'to_date': fields.date('To Date'),
+
+                'from_date_contract': fields.date('From Date'),
+                'to_date_contract': fields.date('To Date')
                 }
 wizard_kderp_job_list_ongoing()

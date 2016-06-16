@@ -1,0 +1,29 @@
+.openerp .kderp_topbar_weather {
+  display: inline-block; }
+
+.openerp .kderp_weather {
+  overflow: hidden;
+  display: inline-block;
+  max-height: 100%; }
+  .openerp .kderp_weather .weather_icon {
+    height: 24px; }
+  .openerp .kderp_weather .weather_text {
+    font-size: 15px; }
+  .openerp .kderp_weather .hide {
+    display: none; }
+
+.tipsy.tipsy_weather p {
+  margin-top: 0em;
+  text-align: center; }
+  .tipsy.tipsy_weather p .big {
+    font-size: 18px; }
+  .tipsy.tipsy_weather p .medium {
+    font-size: 16px; }
+  .tipsy.tipsy_weather p .weather_icon {
+    height: 48px; }
+.tipsy.tipsy_weather table {
+  width: 100%;
+  font-size: 14px;
+  text-align: center; }
+
+/*# sourceMappingURL=weather.css.map */
