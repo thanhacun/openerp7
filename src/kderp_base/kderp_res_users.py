@@ -13,4 +13,12 @@ class res_users(osv.osv):
     _columns={
               "location_user":fields.selection([('all','Global'),('hanoi','Ha Noi Office'),('hcm','Ho Chi Minh Office'),('haiphong','Hai Phong Office')],'Location',select=1)
               }
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        if not fields:
+            fields = self.fields_get(cr, uid, context=context).keys()
+            if 'password' in fields:
+                fields.remove('password')
+        res = super(res_users, self).read(cr, uid, ids, fields, context=context, load=load)
+        return res
 res_users()
