@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Request of Payment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="28" rightMargin="22" topMargin="117" bottomMargin="0">
 	<property name="ireport.zoom" value="1.693421790161335"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="543"/>
+	<property name="ireport.y" value="571"/>
 	<property name="ireport.callouts" value="##Fri Mar 25 10:42:30 ICT 2011"/>
 	<property name="ireport.layers" value="##Mon Nov 14 16:28:24 ICT 2011\nlayer.2.visible=true\nlayer.1.name=VND\nlayer.0.visible=true\nlayer.2.id=3\nlayer.1.printWhenExpression=$F{Currency}\=\=&quot;VND&quot;\nlayer.2.name=USD\nlayer.2.printWhenExpression=$F{Currency}\!\=&quot;VND&quot;\nlayer.1.id=2\nlayer.1.visible=true\nlayer.0.id=0\nlayer.0.name=Background"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;contract_id/contract_job_summary_ids&apos;]"/>
@@ -219,7 +219,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["VAT"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="15" y="483" width="285" height="15"/>
+					<reportElement x="15" y="483" width="263" height="15"/>
 					<textElement>
 						<font fontName="Arial" size="7" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
@@ -258,7 +258,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{No.}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="15" y="402" width="285" height="20"/>
+					<reportElement x="15" y="402" width="263" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
 					</textElement>
@@ -289,7 +289,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Unit: "]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="498" width="232" height="15"/>
+					<reportElement x="68" y="498" width="210" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
 						<font fontName="Arial" size="7"/>
@@ -345,7 +345,7 @@
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{date}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="513" width="232" height="15"/>
+					<reportElement x="68" y="513" width="210" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
 						<font fontName="Arial" size="7"/>
@@ -367,7 +367,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Description"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="452" width="232" height="15"/>
+					<reportElement x="68" y="452" width="210" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
 						<font fontName="Arial" size="7"/>
@@ -458,7 +458,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[": " + $F{Scope_of_Work}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="467" width="232" height="15"/>
+					<reportElement x="68" y="467" width="210" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
 						<font fontName="Arial" size="7"/>
@@ -466,7 +466,7 @@
 					<text><![CDATA[:    145 041]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="15" y="422" width="285" height="15"/>
+					<reportElement x="15" y="422" width="263" height="15"/>
 					<textElement>
 						<font fontName="Arial" size="7" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
@@ -495,7 +495,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Contract Amount"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="68" y="437" width="232" height="15"/>
+					<reportElement x="68" y="437" width="210" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
 						<font fontName="Arial" size="7"/>
@@ -875,7 +875,7 @@
 					<text><![CDATA[In accordance with the payment condition of aforesaid contract, we would like to request you to make the payment as follows:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="300" y="402" width="237" height="20"/>
+					<reportElement x="278" y="402" width="259" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true" pdfFontName="Helvetica"/>
 					</textElement>
@@ -890,7 +890,7 @@
 					<text><![CDATA[JP Yen]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="68" y="528" width="232" height="15"/>
+					<reportElement x="68" y="528" width="210" height="15"/>
 					<box leftPadding="4"/>
 					<textElement>
 						<font fontName="Arial" size="7"/>
@@ -983,14 +983,14 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Scope of work"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="15" y="598" width="285" height="15"/>
+					<reportElement x="15" y="598" width="263" height="15"/>
 					<textElement>
 						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
 					<text><![CDATA[KINDEN VIETNAM CO., LTD. - HCMC BRANCH]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="15" y="583" width="285" height="15"/>
+					<reportElement x="15" y="583" width="263" height="15"/>
 					<textElement verticalAlignment="Bottom">
 						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
 					</textElement>
