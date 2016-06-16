@@ -70,7 +70,6 @@ openerp.kderp_web_weather = function(instance) {
           bindWidget.unbind("click");
           bindWidget.on('click', function(ev) {
               ev.stopPropagation();
-              console.log('Force updating weather', res);
               //hide tipsy, will show again when update finished
               bindWidget.find("div").tipsy("hide");
               self.bindEvents(true);
