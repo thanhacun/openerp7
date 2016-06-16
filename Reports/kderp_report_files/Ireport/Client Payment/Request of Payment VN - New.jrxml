@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Request of Payment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="28" rightMargin="22" topMargin="117" bottomMargin="0">
 	<property name="ireport.zoom" value="2.0000000000000018"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="160"/>
+	<property name="ireport.y" value="816"/>
 	<property name="ireport.callouts" value="##Fri Mar 25 10:42:30 ICT 2011"/>
 	<property name="ireport.layers" value="##Mon Nov 14 16:28:24 ICT 2011\nlayer.2.visible=true\nlayer.1.name=VND\nlayer.0.visible=true\nlayer.2.id=3\nlayer.1.printWhenExpression=$F{Currency}\=\=&quot;VND&quot;\nlayer.2.name=USD\nlayer.2.printWhenExpression=$F{Currency}\!\=&quot;VND&quot;\nlayer.1.id=2\nlayer.1.visible=true\nlayer.0.id=0\nlayer.0.name=Background"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;contract_id/contract_job_summary_ids&apos;]"/>
@@ -87,6 +87,12 @@
 	</field>
 	<field name="Client_add" class="java.lang.Object">
 		<fieldDescription><![CDATA[/data/record/partner_id/contact_address]]></fieldDescription>
+	</field>
+	<field name="general_director_company" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Company-company_id/General_Director-general_director_id/name]]></fieldDescription>
+	</field>
+	<field name="general_director_user" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/General_Director-general_director_id/name]]></fieldDescription>
 	</field>
 	<variable name="balance_amt" class="java.lang.Double">
 		<variableExpression><![CDATA[($F{contract_amount}==null?0:$F{contract_amount})-
@@ -426,14 +432,6 @@
 					</textElement>
 					<textFieldExpression class="java.util.Date"><![CDATA[$F{date}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="10" y="650" width="153" height="26"/>
-					<textElement>
-						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
-					</textElement>
-					<text><![CDATA[YOSHITAKA KISHI
-Tổng giám đốc]]></text>
-				</staticText>
 				<staticText>
 					<reportElement x="243" y="484" width="119" height="13"/>
 					<box leftPadding="4"/>
@@ -1035,6 +1033,20 @@ Xin trân trọng cảm ơn sự hỗ trợ và hợp tác của Quý công ty!
 					</textElement>
 					<text><![CDATA[Mã số công việc (KDVN)]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="10" y="652" width="153" height="12"/>
+					<textElement markup="none">
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{general_director_user}==""||$F{general_director_user}==null?$F{general_director_company}.toUpperCase():$F{general_director_user}.toUpperCase())]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="664" width="153" height="12"/>
+					<textElement markup="none">
+						<font fontName="Arial" size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Tổng giám đốc"]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>

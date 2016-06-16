@@ -25,7 +25,7 @@
     'images' : ['images/kinden.png'],
     'summary':"Add new module Extend Module for Suiteable Kinden Procedure",
     'category':"KDERP Apps",
-    'depends':['kderp_payment','kderp_job_summary','kderp_project_location',],
+    'depends':['kderp_payment','kderp_job_summary','kderp_project_location'],
     'description': """
     - Customize Database structure and function
     - Customize Procedure

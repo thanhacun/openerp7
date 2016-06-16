@@ -22,7 +22,7 @@
             <field name="key">action</field>
             <field name="model">purchase.order</field>
         </record>
-    
+
      	<record model="ir.actions.report.xml" id="report_job_material_sub_contract_ex">
      		<field name="model">account.analytic.account</field>
      		<field name="jasper_model_id" ref="analytic.model_account_analytic_account"/>
