@@ -23,6 +23,7 @@ _logger = logging.getLogger(__name__)
 SERVICE_NAME_PREFIX = 'report.'
 VALID_OUTPUT_TYPES = [('pdf', 'Portable Document (pdf)'),
                       ('xls', 'Excel Spreadsheet (xls)'),
+                      ('xlsx', 'Excel 2007 Spreadsheet (xlsx)'),
                       ('csv', 'Comma Separated Values (csv)'),
                       ('rtf', 'Rich Text (rtf)'),
                       ('html', 'HyperText (html)'),
@@ -135,13 +136,15 @@ def get_proxy_args(instance, cr, uid, prpt_content, context_vars={}):
     xml_interface = config_obj.get_param(cr, uid, 'pentaho.openerp.xml.interface', default='').strip() or config['xmlrpc_interface'] or 'localhost'
     xml_port = config_obj.get_param(cr, uid, 'pentaho.openerp.xml.port', default='').strip() or str(config['xmlrpc_port'])
 
+    password_to_use = pool.get('res.users').pentaho_pass_token(cr, uid, uid)
+
     proxy_argument = {
                       'prpt_file_content': xmlrpclib.Binary(prpt_content),
                       'connection_settings': {'openerp': {'host': xml_interface,
                                                           'port': xml_port,
                                                           'db': cr.dbname,
                                                           'login': current_user.login,
-                                                          'password': current_user.password,
+                                                          'password': password_to_use,
                                                           }},
                       'report_parameters': dict([(param_name, param_formula(instance, cr, uid, context_vars)) for (param_name, param_formula) in RESERVED_PARAMS.iteritems() if param_formula(instance, cr, uid, context_vars)]),
                       }
@@ -250,11 +253,10 @@ class PentahoReportOpenERPInterface(report.interface.report_int):
         rendered_report, output_type = report_instance.execute()
         if report_xml_ids:
             report_xml = ir_pool.browse(cr, uid, report_xml_ids[0], context=context)
-            model = context.get('active_model')
-            if report_xml.attachment and model:
+            if report_xml.attachment:
                 crtemp = pooler.get_db(cr.dbname).cursor()  # Creating new cursor to prevent TransactionRollbackError
                                                             # when creating attachments, concurrency update have place otherwise
-                self.create_attachment(crtemp, uid, ids, report_xml.attachment, rendered_report, output_type, model, context=context)
+                self.create_attachment(crtemp, uid, ids, report_xml.attachment, rendered_report, output_type, report_xml.pentaho_report_model_id.model, context=context)
 
                 # TODO: Will remodel bellow functionality as its causes a lot of bugs, it returns previous filename
                 # Error in report registration
