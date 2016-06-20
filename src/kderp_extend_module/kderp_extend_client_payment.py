@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from lxml import etree
 
 class account_invoice_line(osv.osv):
 
@@ -96,5 +97,16 @@ class account_invoice(osv.osv):
                                                                 (coalesce(pes_cannot_collect,false) and coalesce(attached_progress_received,False))
                                                             )
                                                             )""",'Please check your input data P.E.S. !')]
-    
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        res = super(account_invoice, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type,
+                                                           context=context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'tree':
+            doc = etree.XML(res['arch'])
+            partner_string = 'Client'
+            for node in doc.xpath("//field[@name='partner_id']"):
+                node.set('string', partner_string)
+            res['arch'] = etree.tostring(doc)
+        return res
+
 account_invoice()
