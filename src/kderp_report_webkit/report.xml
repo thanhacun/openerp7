@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="simple_report_header" model="ir.header_webkit">
+            <field name="name">Example Report Header</field>
+            <field name="orientation">Landscape</field>
+            <field name="format">A4</field>
+            <field eval="55.0" name="margin_top"/>
+            <field eval="0.0" name="margin_bottom"/>
+            <field name="footer_html"><![CDATA[]]></field>
+            <field name="html"><![CDATA[<body></body>]]></field>
+            <field name="css"><![CDATA[(css)]]></field>
+        </record>
+
+        <report
+			id="report_simplae_webkit"
+			model="purchase.order"
+			name="purchase_order.report_simple"
+			file="kderp_report_webkit/report_simple.mako"
+			string="Demo Report simple"
+			report_type="webkit"
+            webkit_header="kderp_report_webkit.simple_report_header"/>
+    </data>
+</openerp>
