@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Banktransfer Payment" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Banktransfer Payment" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5" isFloatColumnFooter="true">
 	<property name="ireport.zoom" value="1.3636363636363638"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -105,8 +105,8 @@
 	<group name="BudgetCode">
 		<groupExpression><![CDATA[$F{BudgetCode}]]></groupExpression>
 	</group>
-	<pageFooter>
-		<band height="568">
+	<summary>
+		<band height="572">
 			<rectangle>
 				<reportElement x="0" y="53" width="445" height="494"/>
 			</rectangle>
@@ -964,5 +964,5 @@ new DecimalFormat("#,##0;(#,##0)").format($F{vat}==null?0:$F{vat})]]></textField
 				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "transfer2_sub.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-	</pageFooter>
+	</summary>
 </jasperReport>

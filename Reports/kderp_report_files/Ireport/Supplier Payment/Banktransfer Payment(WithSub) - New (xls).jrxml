@@ -131,42 +131,6 @@
 				</textElement>
 				<text><![CDATA[No. :]]></text>
 			</staticText>
-			<line>
-				<reportElement x="0" y="34" width="820" height="1" forecolor="#000000"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="0" y="31" width="820" height="1" forecolor="#000000"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="0" y="40" width="820" height="1" forecolor="#000000"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="0" y="37" width="820" height="1" forecolor="#000000"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="0" y="28" width="820" height="1" forecolor="#000000"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="0" y="25" width="820" height="1" forecolor="#000000"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
 			<staticText>
 				<reportElement mode="Opaque" x="642" y="0" width="178" height="20" forecolor="#000000" backcolor="#CCCCCC"/>
 				<textElement verticalAlignment="Bottom">
@@ -1132,6 +1096,121 @@ new DecimalFormat("#,##0;(#,##0)").format($F{vat}==null?0:$F{vat})]]></textField
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="820" height="3" forecolor="#000000"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="33" width="820" height="3" forecolor="#000000"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="27" width="820" height="3" forecolor="#000000"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="39" width="820" height="17" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="21" width="820" height="3" forecolor="#000000"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="36" width="820" height="3" forecolor="#000000"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="24" width="820" height="3" forecolor="#000000"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="5" y="95" width="436" height="1">
+					<printWhenExpression><![CDATA[$F{base_on_line}==true]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="CountBudget"/>
+				<subreportParameter name="DATA_Source">
+					<subreportParameterExpression><![CDATA[$P{SR_DATA_SOURCE_1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REWIND">
+					<subreportParameterExpression><![CDATA[$P{REWIND}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ParentID">
+					<subreportParameterExpression><![CDATA[$F{ParentID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{SR_DATA_SOURCE_1}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "transfer2_sub.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="5" y="95" width="436" height="1">
+					<printWhenExpression><![CDATA[($V{NumberOfBudget}>1)&&($F{base_on_line}!=true)]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="DATA_Source">
+					<subreportParameterExpression><![CDATA[$P{SR_DATA_SOURCE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REWIND">
+					<subreportParameterExpression><![CDATA[$P{REWIND}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ParentID">
+					<subreportParameterExpression><![CDATA[$F{ParentID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{SR_DATA_SOURCE}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "transfer1_sub.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="5" y="100" width="436" height="1"/>
+				<subreportParameter name="ParentID">
+					<subreportParameterExpression><![CDATA[$F{ParentID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CountBudget"/>
+				<subreportParameter name="DATA_Source">
+					<subreportParameterExpression><![CDATA[$P{DATA_SOURCE_ADD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REWIND">
+					<subreportParameterExpression><![CDATA[$P{REWIND}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{DATA_SOURCE_ADD}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "previous_group.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageFooter>
 </jasperReport>
