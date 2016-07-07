@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Banktransfer Payment" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5" isFloatColumnFooter="true">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Banktransfer Payment" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="56"/>
+	<property name="ireport.y" value="0"/>
 	<property name="ireport.layers" value="##Thu Aug 04 15:48:37 ICT 2011\nlayer.1.name=Layer 1\nlayer.1.visible=true\nlayer.1.id=1\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;order_id/order_line&apos;]"/>
 	<parameter name="SUBREPORT_DS" class="java.lang.Object"/>
@@ -106,8 +106,8 @@
 	<group name="BudgetCode">
 		<groupExpression><![CDATA[$F{BudgetCode}]]></groupExpression>
 	</group>
-	<summary>
-		<band height="572">
+	<pageFooter>
+		<band height="568">
 			<rectangle>
 				<reportElement x="0" y="53" width="445" height="494"/>
 			</rectangle>
@@ -961,8 +961,8 @@ new DecimalFormat("#,##0;(#,##0)").format($F{vat}==null?0:$F{vat})]]></textField
 					<subreportParameterExpression><![CDATA[$F{ParentID}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[$P{DATA_SOURCE_ADD_1}]]></dataSourceExpression>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "previous_invoice1.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "previous_group.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-	</summary>
+	</pageFooter>
 </jasperReport>

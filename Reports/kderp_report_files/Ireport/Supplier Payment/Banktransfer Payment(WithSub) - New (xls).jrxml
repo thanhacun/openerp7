@@ -1127,7 +1127,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{vat}==null?0:$F{vat})]]></textField
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="39" width="820" height="17" forecolor="#000000"/>
+				<reportElement x="0" y="39" width="820" height="16" forecolor="#000000"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
