@@ -4,6 +4,7 @@ KINDEN VIETNAM Customize & Deploy OpenERP 7
 ### General information about KDVN OpenERP 7
 
 KINDEN VIETNAM OpenERP 7 customization modules.
+
 1. Project & Contract
 
 2. Purchase Orders
