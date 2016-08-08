@@ -29,15 +29,13 @@ class kderp_advance_wizard_cash_form(osv.osv_memory):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids',[]),
-                 'parameters':{'pVAT':self.browse(cr, uid, ids[0]).pVAT,
-                               'pEXRATE':self.browse(cr, uid, ids[0]).pEXRATE,
-                               'pCUR':self.browse(cr, uid, ids[0]).currency_id.name,}                
+                 'parameters':{'pVAT':self.browse(cr, uid, ids[0]).pVAT}
                  }
         
         datas['model'] = 'kderp.advance.payment'
         datas['title'] = 'Advance Cash Payment Form'
         
-        report_name='kderp.report.cash.payment.advance.pdf'
+        report_name='report.kderp.cash.advance.pdf'
          
         return {
             'type': 'ir.actions.report.xml',
@@ -45,14 +43,10 @@ class kderp_advance_wizard_cash_form(osv.osv_memory):
             'datas': datas}
      
     _columns = {                
-                'pVAT':fields.float('VAT Amount',required=1),
-                'pEXRATE':fields.float('Exchange Rate',required=1),
-                'currency_id': fields.many2one("res.currency", string="Currency", required=True)
+                'pVAT':fields.float('VAT Amount',required=1)
                 }
     
     _defaults = {
-                'pVAT':0.0,
-                'currency_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id,
-                'pEXRATE':lambda self, cr, uid, context={}: 1.0 if 'currency_id' not in context else None
+                'pVAT':0.0
                 }
 kderp_advance_wizard_cash_form()

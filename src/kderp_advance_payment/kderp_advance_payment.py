@@ -735,14 +735,13 @@ class kderp_advance_payment_reimbursement_line(osv.osv):
                 'voucher_no':fields.char('Voucher No.',size=16),
                 'other_user':fields.char('Other User',size=32),
                 'actual_amt': fields.float('Actual Amt.'),
-                'actual_vat': fields.float('Actual VAT'),
                 'actual_rate': fields.float('Actual Rate'),
                 'actual_currency_id': fields.many2one('res.currency', 'Actual Cur.')
               }
-    def onchange_amount(self, cr, uid, ids, actual_amt, actual_rate, actual_vat):
+    def onchange_amount(self, cr, uid, ids, actual_amt, actual_rate):
         value = {}
         if actual_amt and actual_rate !=0:
-            amount = actual_amt/actual_rate + actual_vat
+            amount = actual_amt/actual_rate
             value = {'amount': amount}
         return {'value':value}
 
