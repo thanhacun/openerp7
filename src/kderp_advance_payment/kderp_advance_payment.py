@@ -741,7 +741,7 @@ class kderp_advance_payment_reimbursement_line(osv.osv):
     def onchange_amount(self, cr, uid, ids, actual_amt, actual_rate):
         value = {}
         if actual_amt and actual_rate !=0:
-            amount = actual_amt/actual_rate
+            amount = round(actual_amt/actual_rate, 0)
             value = {'amount': amount}
         return {'value':value}
 
