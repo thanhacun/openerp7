@@ -544,7 +544,7 @@ class kderp_asset_management(Model):
                                                   'kderp.asset.management.usage':(_get_asset_from_asset_usage,None,10),
                                                   'kderp.asset.management':(lambda self, cr, uid, ids, c={}: ids, ['asset_usage_ids'], 10)
                                                   }),
-              'current_user_id':fields.function(_get_current,method=True,type='many2one',relation='hr.employee',string='Current User',multi='_get_current',
+              'current_user_id':fields.function(_get_current,method=True,type='many2one',relation='hr.employee',string='Current User',multi='_get_current',ondelete='restrict',
                                            store={
                                                   'kderp.asset.management.usage':(_get_asset_from_asset_usage,None,10),
                                                   'kderp.asset.management':(lambda self, cr, uid, ids, c={}: ids, ['asset_usage_ids'], 10)
