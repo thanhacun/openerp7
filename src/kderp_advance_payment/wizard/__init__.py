@@ -22,7 +22,7 @@
 import kderp_advance_report
 import kderp_cashonhand_report
 
-import kderp_advance_wizard_form_report
+#import kderp_advance_wizard_form_report
 import kderp_cash_payment_supplier
 import kderp_wizard_cash_advance
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
