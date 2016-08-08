@@ -6,15 +6,15 @@
 			<field name="name">view.kderp.advance.wizard.cash.form.form</field>
 			<field name="model">kderp.advance.wizard.cash.form</field>
 			<field name="arch" type="xml">
-				<form string="Input Value for Advance Cash Payment form" version="7.0" create="false" readonly="1">
-					<sheet>
-						<button string='Print' name="print_report" type="object" class="oe_highlight"/>
-						<group>
-							<field name='pVAT'/>
-							<field name='pEXRATE'/>
-						 	<field name='currency_id'/>										
-						</group>
-					</sheet>					
+				<form string="Input Value for Advance Cash Payment form" version="7.0" readonly="1" create="false">
+                    <group>
+                        <field name='pVAT'/>
+                    </group>
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
 				</form>
 			</field>
 		</record>
@@ -26,7 +26,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_kderp_advance_wizard_cash_form_form"/>
-            <field name="target">new_popup</field>
+            <field name="target">new</field>
         </record>
         
  		<record model="ir.values" id="action_print_advance_cash_payment_form_values">

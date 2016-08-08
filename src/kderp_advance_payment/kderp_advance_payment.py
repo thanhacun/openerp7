@@ -649,7 +649,7 @@ class kderp_advance_payment_line(osv.osv):
 kderp_advance_payment_line()
 
 class kderp_advance_payment_reimbursement_line(osv.osv):
-    _name='kderp.advance.payment.reimbursement.line'    
+    _name='kderp.advance.payment.reimbursement.line'
     _description='Detail of Reimbursement for Advance Payment Kinden'
 
     def create(self, cr, uid, vals, context=None):
@@ -734,7 +734,17 @@ class kderp_advance_payment_reimbursement_line(osv.osv):
                 'advance_id':fields.many2one('kderp.advance.payment','Advance',required=True,ondelete='cascade'),
                 'voucher_no':fields.char('Voucher No.',size=16),
                 'other_user':fields.char('Other User',size=32),
+                'actual_amt': fields.float('Actual Amt.'),
+                'actual_rate': fields.float('Actual Rate'),
+                'actual_currency_id': fields.many2one('res.currency', 'Actual Cur.')
               }
+    def onchange_amount(self, cr, uid, ids, actual_amt, actual_rate):
+        value = {}
+        if actual_amt and actual_rate !=0:
+            amount = actual_amt/actual_rate
+            value = {'amount': amount}
+        return {'value':value}
+
     _defaults = {
                  'user_id': lambda obj,cr,uid,context:context.get('user_id',False)
                  }

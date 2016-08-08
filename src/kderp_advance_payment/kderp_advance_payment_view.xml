@@ -119,6 +119,9 @@
 			                                    <field name="name"/>
 			                                    <field name="amount" sum='Sub-total'/>
 			                                    <field name="voucher_no"/>
+                                                <field name="actual_currency_id"/>
+                                                <field name="actual_amt" />
+                                                <field name="actual_rate" on_change="onchange_amount(actual_amt, actual_rate)"/>
 			                                </tree>
 			                            </field>
 		                            	<group class="oe_subtotal_footer oe_right">
@@ -144,6 +147,9 @@
 			                                    <field name="name"/>
 			                                    <field name="amount" sum='Sub-total'/>
 			                                    <field name="voucher_no"/>
+                                                <field name="actual_currency_id"/>
+                                                <field name="actual_amt" />
+                                                <field name="actual_rate" on_change="onchange_amount(actual_amt, actual_rate)"/>
 			                                </tree>
 			                            </field>	                            	
 		                            </group>
