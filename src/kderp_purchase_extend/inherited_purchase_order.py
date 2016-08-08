@@ -159,36 +159,39 @@ class purchase_order(osv.osv):
             Kiem tra xem po co bi nhap trung hay khong
         """
         for po in self.browse(cr, uid, ids, context=context):
-            jobID = po.account_analytic_id.id
-            orderRef = po.origin
-            PartnerID = po.partner_id.id
-            flds = ['amount_tax','amount_untaxed','discount_percent','final_price','amount_total']
-            def getAmount():
-                #FIXME If using currency for rounding
-                res = {}
-                AmountTotal = 0
-                for line in po.order_line:
-                   AmountTotal += line.price_unit * line.plan_qty
-                for tax in po.taxes_id:
-                    if tax.type=='percent':
-                        AmountTotal += (AmountTotal - po.discount_amount)*tax.amount
-                    elif tax.type=='fixed':
-                        AmountTotal += tax.amount
-                AmountTotal = AmountTotal - po.discount_amount
-                return AmountTotal
-            AmountTotal = getAmount()
+            if po.state not in ('draft','cancel'):
+                return True
+            else:
+                jobID = po.account_analytic_id.id
+                orderRef = po.origin
+                PartnerID = po.partner_id.id
+                flds = ['amount_tax','amount_untaxed','discount_percent','final_price','amount_total']
+                def getAmount():
+                    #FIXME If using currency for rounding
+                    res = {}
+                    AmountTotal = 0
+                    for line in po.order_line:
+                       AmountTotal += line.price_unit * line.plan_qty
+                    for tax in po.taxes_id:
+                        if tax.type=='percent':
+                            AmountTotal += (AmountTotal - po.discount_amount)*tax.amount
+                        elif tax.type=='fixed':
+                            AmountTotal += tax.amount
+                    AmountTotal = AmountTotal - po.discount_amount
+                    return AmountTotal
+                AmountTotal = getAmount()
 
-            filterAll = [('state','!=','cancel'),('origin','ilike',orderRef)]
-            filterAll += [('id','not in', ids)] if ids else []
-            poDomain = [('account_analytic_id','=',jobID),('amount_total','=',AmountTotal)] + filterAll
-            po_ids = self.search(cr, uid, poDomain)
-            if po.name.upper().find('PO')>=0 and len(po_ids)>=1:
-                poDomain = [('account_analytic_id','=',jobID),('amount_total','=',AmountTotal),('name','ilike','PO%'),('id','in',po_ids)] + filterAll
+                filterAll = [('state','!=','cancel'),('origin','ilike',orderRef)]
+                filterAll += [('id','not in', ids)] if ids else []
+                poDomain = [('account_analytic_id','=',jobID),('amount_total','=',AmountTotal)] + filterAll
                 po_ids = self.search(cr, uid, poDomain)
-                if len(po_ids)>=1:
+                if po.name.upper().find('PO')>=0 and len(po_ids)>=1:
+                    poDomain = [('account_analytic_id','=',jobID),('amount_total','=',AmountTotal),('name','ilike','PO%'),('id','in',po_ids)] + filterAll
+                    po_ids = self.search(cr, uid, poDomain)
+                    if len(po_ids)>=1:
+                        return False
+                elif len(po_ids)>=1:
                     return False
-            elif len(po_ids)>=1:
-                return False
         return True
     _constraints = [(_check_duplicate_po_id, "KDERP Warning, Can't input this PO please check Quotation, Job", ['origin','account_analytic_id','discount_amount','taxes_id','order_line','state'])]
 
