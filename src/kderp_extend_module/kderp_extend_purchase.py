@@ -53,7 +53,15 @@ class purchase_order(osv.osv):
                     date_order = po.date_order
             value = {'date_order':date_order}
         return {'value':value}
-    
+
+    #Cap nhap lai tong tien
+    def action_compute(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for po in self.browse(cr, uid, ids, context):
+            po.write({'discount_amount': po.discount_amount})
+        return True
+
     _columns={
                 'revision_no':fields.integer('Revision No.',states={'done':[('readonly',True)], 'cancel':[('readonly',True)]}),
                 'receiver_id': fields.many2one('hr.employee', 'Receiver', select=1,ondelete='restrict'),
