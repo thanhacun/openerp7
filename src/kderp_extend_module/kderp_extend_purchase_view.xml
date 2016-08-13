@@ -23,10 +23,16 @@
                 <field name="account_analytic_id" position='replace'>
                     <field name="account_analytic_id" on_change="new_code(account_analytic_id, typeoforder, name, True)" default_focus="1"/>
                 </field>
+
+                <button name="button_dummy" states="draft" string="(update)" type="object" class="oe_edit_only oe_link" position="replace">
+                    <button type="object" class="oe_link oe_edit_only" name="action_compute" string="(update)"/>
+                </button>>
+                <!--
                 <label for="amount_total" class="oe_clear" string="TOTAL" style="font-size:15px" position="replace">
                         <label for="amount_total" class="oe_clear" string="TOTAL" style="font-size:15px"/>
                         <button type="object" class="oe_link oe_edit_only" name="action_compute" string="(update)"/>
                 </label>
+                -->
                     <!-- 				<field name="notes" position='after'>
 					<field name="general_contract_no"/>
 					<field name="general_contract_date"/>
