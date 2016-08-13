@@ -199,7 +199,7 @@ class purchase_order(osv.osv):
     def check_done(self, cr, uid, ids, *args):
         res = True
         for po in self.browse(cr, uid, ids):
-            if not(po.total_request_amount==po.total_vat_amount and po.total_vat_amount==po.total_payment_amount and po.total_payment_amount==po.amount_total):
+            if not(po.total_request_amount==po.total_vat_amount and po.total_vat_amount==po.total_payment_amount and po.total_payment_amount==po.amount_total and po.supplier_payment_ids and po.supplier_vat_ids):
                 return False
         return res
     
