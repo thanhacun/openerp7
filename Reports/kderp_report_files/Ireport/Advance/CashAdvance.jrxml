@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CashPayment_Advance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="11" rightMargin="11" topMargin="18" bottomMargin="5">
 	<property name="ireport.zoom" value="1.6528925619834718"/>
-	<property name="ireport.x" value="417"/>
+	<property name="ireport.x" value="330"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.layers" value="##Thu Aug 04 15:48:37 ICT 2011\nlayer.1.name=Layer 1\nlayer.1.visible=true\nlayer.1.id=1\nlayer.0.name=Background\nlayer.0.visible=true\nlayer.0.id=0"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;reimbursement_line&apos;]"/>
@@ -65,7 +65,8 @@ $F{reimbursement_total_amount} - $F{reimbursement_total_amount}.intValue() == 0?
 	</variable>
 	<variable name="varNumberToString_total" class="java.lang.String">
 		<variableExpression><![CDATA[($F{reimbursement_total_amount}!=null)?
-$F{reimbursement_total_amount} - $F{reimbursement_total_amount}.intValue() == 0?((new DecimalFormat("###0").format($V{TotalAmount}))):((new DecimalFormat("###0.00").format($V{TotalAmount})))
+$F{reimbursement_total_amount} - $F{reimbursement_total_amount}.intValue() == 0?((new DecimalFormat("###0").format($V{TotalAmount}))):
+((new DecimalFormat("###0.00").format($V{TotalAmount}))).replace( ".", "" )
 :""]]></variableExpression>
 	</variable>
 	<variable name="variable9" class="java.lang.String">
