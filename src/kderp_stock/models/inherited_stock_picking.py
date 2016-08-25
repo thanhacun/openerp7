@@ -244,6 +244,7 @@ class stock_picking(osv.osv):
             ('done', 'Received'),
             ('cancel', 'Cancelled'),]
     DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
+
     _columns = {
                 'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True, help=EXPLAIN_PACKING_NO),
                 'origin':fields.char('Ref. No.', size=32),
