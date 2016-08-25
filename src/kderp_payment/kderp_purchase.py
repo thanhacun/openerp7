@@ -102,7 +102,7 @@ class purchase_order(osv.osv):
             po_list_mark_done = []
             for po in self.browse(cr, uid, ids, context):
                 if po.state=='waiting_for_payment':
-                    if po.total_request_amount==po.total_vat_amount and po.total_vat_amount==po.total_payment_amount and po.total_payment_amount==po.amount_total:
+                    if po.total_request_amount==po.total_vat_amount and po.total_vat_amount==po.total_payment_amount and po.total_payment_amount==po.amount_total and po.supplier_payment_ids and po.supplier_vat_ids:
                         po_list_mark_done.append(po.id)
                 else:
                     continue
@@ -139,13 +139,15 @@ class purchase_order(osv.osv):
             
             po_final_price = po.final_price
             total_request_amount_company_cur=0 #Without Tax
+            haveVAT = False
             
             for ksp in po.supplier_payment_ids:
                 if ksp.state not in ('draft','cancel'):
                     request_amount=ksp.total
                     total_request_amount+=cur_obj.compute(cr, uid, ksp.currency_id.id, po_currency_id, request_amount, round=True, context=context)
                     #Cal total VAT Amount
-                    for kspvi in ksp.kderp_vat_invoice_ids:                                               
+                    for kspvi in ksp.kderp_vat_invoice_ids:
+                        haveVAT = True
                         total_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.total_amount, round=True, context=context)
                         subtotal_vat_amount += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.subtotal, round=True, context=context)
                         amount_vat += cur_obj.compute(cr, uid, kspvi.currency_id.id, po_currency_id, kspvi.amount_tax, round=True, context=context)
@@ -166,7 +168,7 @@ class purchase_order(osv.osv):
             #Percentage of payment TotalRequestAmountINVND/(TotalRequstAMOUNT+TotalReamainAmountInVND)
             payment_percentage=total_request_amount_company_cur/total_po_amount_company_curr if total_po_amount_company_curr else 0
             #Check if payment DONE ==> Mark PO Done
-            if total_request_amount==total_vat_amount and total_vat_amount==total_payment_amount and total_payment_amount==po.amount_total and po.state=='waiting_for_payment':
+            if haveVAT and total_request_amount==total_vat_amount and total_vat_amount==total_payment_amount and total_payment_amount==po.amount_total and po.state=='waiting_for_payment':
                 result = self.write(cr, uid, [po.id], {'state':'done'})
                 
             res[po.id]={'total_request_amount':total_request_amount,

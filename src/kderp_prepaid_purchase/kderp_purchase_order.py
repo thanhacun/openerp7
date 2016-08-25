@@ -76,7 +76,8 @@ class purchase_order(osv.osv):
                 
                 po_final_price = po.final_price
                 total_request_amount_company_cur=0 #Without Tax
-                
+                haveVAT = False
+
                 for ksp in po.supplier_payment_ids:
                     if ksp.state not in ('draft','cancel'):
                         request_amount=ksp.total
@@ -91,6 +92,7 @@ class purchase_order(osv.osv):
                         exrate = ksp.exrate
                         for kp in ksp.payment_ids:
                             #if kp.state<>'draft':
+                                haveVAT = True
                                 cal=False
                                 payment_amount = kp.amount
                                 total_payment_amount+=cur_obj.compute(cr, uid, kp.currency_id.id, po_currency_id, payment_amount, round=True, context=context)
@@ -103,7 +105,7 @@ class purchase_order(osv.osv):
                 #Percentage of payment TotalRequestAmountINVND/(TotalRequstAMOUNT+TotalReamainAmountInVND)
                 payment_percentage=total_request_amount_company_cur/total_po_amount_company_curr if total_po_amount_company_curr else 0
                 #Check if payment DONE ==> Mark PO Done
-                if total_request_amount==total_vat_amount and total_vat_amount==total_payment_amount and total_payment_amount==po.amount_total and po.state=='waiting_for_payment':
+                if haveVAT and total_request_amount==total_vat_amount and total_vat_amount==total_payment_amount and total_payment_amount==po.amount_total and po.state=='waiting_for_payment':
                     result = self.write(cr, uid, [po.id], {'state':'done'})
                 
             res[po.id]={'total_request_amount':total_request_amount,
