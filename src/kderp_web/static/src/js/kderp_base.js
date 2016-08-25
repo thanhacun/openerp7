@@ -1,13 +1,3 @@
-//For Learning
-//on_menu_settings: function() {
-//    var self = this;
-//    if (!this.getParent().has_uncommitted_changes()) {
-//        self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }).done(function(result) {
-//            result.res_id = instance.session.uid;
-//            self.getParent().action_manager.do_action(result);
-//        });
-//    }
-//},
 openerp.kderp_web = function(session) {
     var _t = session.web._t;
     var QWeb = session.web.qweb;
@@ -50,7 +40,7 @@ openerp.kderp_web = function(session) {
     		};
 
 //Function Attach Input mask
-	var attach_mask_editable= function (obj,record) {
+	var attach_mask_editable= function (obj, record) {
     			var normalize_format = function (format) {
     			    return Date.normalizeFormat(session.web.strip_raw_chars(format));
     			};
@@ -177,13 +167,6 @@ openerp.kderp_web = function(session) {
 
     			});
     		};
-
-//    var old_func=session.web.fields_view_get;
-//    session.web.fields_view_get = function (args) {
-//    	console.log(args);
-//    	console.log("ARGS");
-//    	return old_func(args);
-//    };
 
     session.web.DataSetSearch = session.web.DataSetSearch.extend({
     	read_slice: function (fields, options) {
@@ -409,33 +392,6 @@ session.web.DateWidget = session.web.DateWidget.extend ({
         return date_value;
     },
 });
-
-////Add InputMask for tree editable
-//session.web.list.Editor= session.web.list.Editor.extend({
-//    _focus_setup: function (focus_field) {
-//    	 _super = this._super(focus_field);
-//    	 var self=this;
-//		return _super;
-//    	// return $.when(_super,attach_mask_editable(self.$el.find('input'),this.record));
-//    },
-//
-//});
-
-//session.web.ViewManagerAction = session.web.ViewManagerAction.extend({
-//
-//    do_create_view: function(view_type) {
-//        var self = this;
-//        return this.alive(this._super.apply(this, arguments)).done(function() {
-//        	if (view_type==='form')
-//        		{
-//					return true;
-//        		setTimeout(function (){
-//        				attach_mask_editable($(self.$el.find('div.oe_form')[0]).find('input[type=text]'));
-//        				},500);
-//        		}
-//        });
-//    },
-//});
 
 session.web.FormView =  session.web.FormView.extend({
 
@@ -2174,7 +2130,7 @@ openerp.kderp_web = function(session) {
     		};
 
 //Function Attach Input mask
-	var attach_mask_editable= function (obj,record) {
+	var attach_mask_editable= function (obj, record) {
     			var normalize_format = function (format) {
     			    return Date.normalizeFormat(session.web.strip_raw_chars(format));
     			};
