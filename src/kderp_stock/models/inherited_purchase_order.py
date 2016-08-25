@@ -360,6 +360,6 @@ class purchase_order_line(osv.osv):
             ids = [ids]
         res = []
         for record in self.browse(cr, uid, ids, context=context):
-            full_name = (record.product_id.default_code + " - " + record.name) if context.get('show_productCode', False) else record.name
+            full_name = record.product_id.default_code if context.get('show_productCode', False) else record.name
             res.append((record.id, full_name))
         return res
