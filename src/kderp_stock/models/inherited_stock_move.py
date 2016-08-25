@@ -102,10 +102,22 @@ class stock_move(osv.osv):
                 res[sm.id] = True
         return res.keys()
 
+    def _get_sm_from_product(self, cr, uid, ids, context):
+        result = []
+        strSQL = """Select distinct sm.id from stock_move sm left join product_product pp on sm.product_id = pp.id where pp.id in (%s)""" % ",".join(map(str, ids))
+        cr.execute(strSQL)
+        for sm_id in cr.fetchall():
+            result.append(sm_id[0])
+        return result
+
+        return list(set(template_ids))
+
     #DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
     _columns = {
         #'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
         #Sequence field must be largest compare with amount in Purchase Order line
+        'picking_id': fields.many2one('stock.picking', 'Picking ID', select=True, states={'done': [('readonly', True)]},
+                                      required=1),
         'final_price_unit':fields.function(_get_finalprice_unit, method=True, type="float", string='Final Price Unit',
                                            store={
                                                     'stock.move':(lambda self, cr, uid, ids, context={}: ids, ['price_unit','purchase_line_id'],50),
@@ -114,21 +126,24 @@ class stock_move(osv.osv):
                                             }),
         'purchase_line_id': fields.many2one('purchase.order.line',
             'Purchase Order Line', ondelete='restrict', select=True, states={'done': [('readonly', True)]}),
-        'name': fields.char('Description', select=True),
+        #'name': fields.char('Description', select=True),
+        'name':fields.related('product_id','name',type='char', size=256,string = 'Description',
+                              store={
+                                'product.product': (_get_sm_from_product, ['name'], 10),
+                                'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id'], 10),
+                            }, select=True, readonly=True),
         'date': fields.date('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.date('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
 
         'location_id': fields.function(_get_location_id,relation='stock.location', type='many2one', string='Source Warehouse', select=True, multi="get_location_id",
                                       store = {
-                                          'stock.move': (lambda self, cr, uid, ids, contexts={}: ids,['picking_id'], 5),
-                                          'stock.picking': (_get_stock_move_from_picking, ['location_id'], 10)}),
+                                              'stock.move': (lambda self, cr, uid, ids, contexts={}: ids,['picking_id'], 5),
+                                              'stock.picking': (_get_stock_move_from_picking, ['location_id'], 10)}),
         'location_dest_id': fields.function(_get_location_id,'location_dest_id',relation='stock.location', type='many2one', string='Destination Warehouse', select=True, multi="get_location_id",
                                            store = {
                                                     'stock.move': (lambda self, cr, uid, ids, contexts={}: ids,['picking_id'], 5),
                                                     'stock.picking': (_get_stock_move_from_picking, ['location_dest_id'], 10)}),
         #'': fields.related('stock.location', 'Destination Warehouse',states={'done': [('readonly', True)]}, required=True, domain = DOMAIN_LOCATION),, domain = DOMAIN_LOCATION),
-
-        'picking_id': fields.many2one('stock.picking', 'Picking ID', select=True, states={'done': [('readonly', True)]}, required=1),
 
         'state': fields.selection([('draft', 'Waiting for Confirmation'),
                                    ('confirmed','Confirmed'),
@@ -153,7 +168,7 @@ class stock_move(osv.osv):
                     return False
         return True
 
-    _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id'])]
+    _constraints = [(_check_product_id, 'KDERP Warning, Please Product and Purchase Line', ['purchase_line_id','product_id']),]
     
     def purchase_order_line_change(self, cr, uid, ids, order_line_id):        
         if not order_line_id:
@@ -175,17 +190,18 @@ class stock_move(osv.osv):
         return result        
     
     def write(self, cr, uid, ids, vals, context = {}):
+        res = super(stock_move, self).write(cr, uid, ids, vals, context)
         list_check_ids = self.search(cr, uid, [('state','=','done'),('id','in', tuple(ids))])
-
         if 'state' in vals and vals['state']<>'done' and list_check_ids:
             for sm in self.browse(cr, uid, list_check_ids):
-                check_period = self.pool.get('kderp.stock.period').check_period(cr, uid, sm.date, context)            
-        return super(stock_move, self).write(cr, uid, ids, vals, context)
+                check_period = self.pool.get('kderp.stock.period').check_period(cr, uid, sm.date, context)
+        return res
     
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
         """
+
         picking_ids = []
         move_ids = []
         wf_service = netsvc.LocalService("workflow")

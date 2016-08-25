@@ -47,18 +47,21 @@
 			<field name="inherit_id" ref="kderp_stock.kderp_view_picking_form"/>
 			<field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field name="purchase_id" on_change="onchange_po_id(purchase_id)"/>
+                    <field name="purchase_id" on_change="onchange_po_id(purchase_id)" required="1"/>
                     <field name="partner_id" string="Supplier" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
                 </field>
                 <field name="date_done" position="attributes">
                     <attribute name="string">Received Date</attribute>
                 </field>
-                <field name="location_id" position="attributes">
-                    <attribute name="context">{'stock_usage':'!!internal'}</attribute>
-                </field>
-                <field name="location_dest_id" position="attributes">
-                    <attribute name="context">{'stock_usage':'internal'}</attribute>
-                </field>
+                <group string="Deliver Info." col="4" position="replace">
+                    <group string="Deliver Info." col="4">
+                        <field name="location_id" context="{'stock_usage':'!!internal'}" domain="[('code','=','WPS')]"
+                                options="{'create': false, 'create_edit': false}"/>
+                        <field name="location_dest_id" context="{'stock_usage':'internal'}" options="{'create': false, 'create_edit': false}"/>
+                        <field name="storekeeper_incharge_id" domain="[('department_id','=','S1420')]" options="{'create': false, 'create_edit': false}"/>
+                    </group>
+                </group>
+
                 <field name="move_lines" position="replace">
                      <field name="move_lines" string="Detail Packing"
                             context="{'address_in_id': partner_id,'location_id': location_id,'location_dest_id': location_dest_id,

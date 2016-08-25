@@ -72,6 +72,7 @@ class stock_picking(osv.osv):
         else:
             val = {'partner_id': False}
         return {'value': val}
+
     def action_transfer(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
