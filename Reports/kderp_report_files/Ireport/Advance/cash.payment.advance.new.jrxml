@@ -70,10 +70,10 @@ $F{reimbursement_total_amount} - $F{reimbursement_total_amount}.intValue() == 0?
 		<variableExpression><![CDATA[$V{varCheckDecimal}==false?((new DecimalFormat("###0").format($V{TotalAmount}))):((new DecimalFormat("###0.00").format($V{TotalAmount})))]]></variableExpression>
 	</variable>
 	<variable name="varNumberToString_total" class="java.lang.String">
-		<variableExpression><![CDATA[$V{varCheckDecimal}?$V{varNumberToString_totalall}.substring(0, $V{varNumberToString_totalall}.length()-3):$V{varNumberToString_totalall}]]></variableExpression>
+		<variableExpression><![CDATA[new DecimalFormat("###0").format($V{TotalAmount}.intValue())]]></variableExpression>
 	</variable>
 	<variable name="varNumberToString_decimal" class="java.lang.String">
-		<variableExpression><![CDATA[$V{varCheckDecimal}?$V{varNumberToString_totalall}.substring($V{varNumberToString_totalall}.length()-2, $V{varNumberToString_totalall}.length()):""]]></variableExpression>
+		<variableExpression><![CDATA[new DecimalFormat("0.00").format($V{TotalAmount}-$V{TotalAmount}.intValue()).replace("0.","")]]></variableExpression>
 	</variable>
 	<variable name="variable9" class="java.lang.String">
 		<variableExpression><![CDATA[$V{varNumberToString}.length()>0?$V{varNumberToString}.substring($V{varNumberToString}.length()-1,$V{varNumberToString}.length()):""]]></variableExpression>
@@ -164,7 +164,9 @@ $F{reimbursement_total_amount} - $F{reimbursement_total_amount}.intValue() == 0?
 		<groupFooter>
 			<band height="568">
 				<textField>
-					<reportElement x="650" y="204" width="13" height="12" forecolor="#339966"/>
+					<reportElement x="650" y="204" width="13" height="12" forecolor="#339966">
+						<printWhenExpression><![CDATA[$V{varCheckDecimal}]]></printWhenExpression>
+					</reportElement>
 					<box bottomPadding="0" rightPadding="0">
 						<pen lineStyle="Dotted"/>
 						<topPen lineStyle="Dotted"/>
