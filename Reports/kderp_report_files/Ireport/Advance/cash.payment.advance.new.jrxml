@@ -175,7 +175,7 @@ $F{reimbursement_total_amount} - $F{reimbursement_total_amount}.intValue() == 0?
 						<rightPen lineStyle="Dotted"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
-						<font size="8" pdfFontName="Helvetica-Bold"/>
+						<font size="8" isItalic="false" isUnderline="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$V{varNumberToString_decimal}]]></textFieldExpression>
 				</textField>
