@@ -81,35 +81,35 @@ class kderp_expense_budget_line(osv.osv):
         return res
     
     
-    def _get_curr_period_date1(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        list_cal = []
-        for kebl in self.browse(cr,uid,ids):
-            list_cal.append([kebl.id,str(kebl.expense_obj),[kebl.expense_id]])
-            res[kebl.id]={'exrate':False,
-                     'currency_id':False,
-                     'period_id':False,
-                     'date':False,
-                     'partner_id':False,
-                     'description':False,
-                     'name':False}
-
-        for lst in list_cal:
-            for obj in self.pool.get(lst[1]).browse(cr, uid,lst[2]):
-                res[lst[0]]['exrate']=obj.exrate
-                res[lst[0]]['currency_id']=obj.currency_id.id
-                res[lst[0]]['period_id']=obj.period_id.id if obj.period_id else False
-                res[lst[0]]['exrate']=obj.exrate
-                res[lst[0]]['name']=obj.name
-                res[lst[0]]['partner_id']=obj.partner_id.id
-                if lst[1]=='purchase.order':
-                    res[lst[0]]['date']=obj.date_order
-                    res[lst[0]]['description']=obj.notes
-                else:
-                    res[lst[0]]['description']=obj.description                
-                    res[lst[0]]['date']=obj.date
-        return res
-    
+    # def _get_curr_period_date1(self, cr, uid, ids, name, args, context=None):
+    #     res = {}
+    #     list_cal = []
+    #     for kebl in self.browse(cr,uid,ids):
+    #         list_cal.append([kebl.id,str(kebl.expense_obj),[kebl.expense_id]])
+    #         res[kebl.id]={'exrate':False,
+    #                  'currency_id':False,
+    #                  'period_id':False,
+    #                  'date':False,
+    #                  'partner_id':False,
+    #                  'description':False,
+    #                  'name':False}
+    #
+    #     for lst in list_cal:
+    #         for obj in self.pool.get(lst[1]).browse(cr, uid,lst[2]):
+    #             res[lst[0]]['exrate']=obj.exrate
+    #             res[lst[0]]['currency_id']=obj.currency_id.id
+    #             res[lst[0]]['period_id']=obj.period_id.id if obj.period_id else False
+    #             res[lst[0]]['exrate']=obj.exrate
+    #             res[lst[0]]['name']=obj.name
+    #             res[lst[0]]['partner_id']=obj.partner_id.id
+    #             if lst[1]=='purchase.order':
+    #                 res[lst[0]]['date']=obj.date_order
+    #                 res[lst[0]]['description']=obj.notes
+    #             else:
+    #                 res[lst[0]]['description']=obj.description
+    #                 res[lst[0]]['date']=obj.date
+    #     return res
+    #
     def _get_purchase_order(self, cr, uid, ids, context=None):
         result = []
         for po in self.pool.get('purchase.order').browse(cr, uid, ids, context=context):
