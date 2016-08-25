@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="view_kderp_moving_expense_filter" model="ir.ui.view">
+            <field name="name">view.kderp.moving.expense.filter</field>
+            <field name="model">kderp.moving.expense</field>
+            <field name="arch" type="xml">
+                <search string="Search Moving Expense">
+					<field name="code" string="Moving Number/Description" filter_domain="['|',('code','ilike',self)('name','ilike',self)]"/>
+					<field name="date" string="Moving Date" filter_domain="[('date','=',self)]"/>
+                    <field name="from_job_id" string="From Job" widget='text'  filter_domain="[('from_job_id','ilike',self)]"/>
+					<field name="from_job_id" string="From Job(s)" filter_domain="[('from_job_id','ilike',self)]"/>
+                    <field name="to_job_id" string="To Job" widget='text' filter_domain="[('to_job_id','ilike',self)]"/>
+                    <field name="to_job_id" string="To Job(s)" filter_domain="[('to_job_id','ilike',self)]"/>
+                    <field name="state" string="Status"/>
+
+                    <filter help="Working Moving Expense" name='working' domain="[('state','in',('draft','waiting'))]"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="view_kderp_moving_expense_tree" model="ir.ui.view">
+            <field name="name">view.kderp.moving.expense.tree</field>
+            <field name="model">kderp.moving.expense</field>
+            <field name="arch" type="xml">
+				<tree string="Moving Expense" colors="blue:state == 'draft';red:state == 'cancel';green:state == 'waiting'"> <!--create="false"-->
+	            	<field name="code"/>
+                    <field name="date"/>
+                    <field name="from_job_id" domain="[('general_expense','=',False)]"/>
+                    <field name="to_job_id" domain="[('general_expense','=',False)]"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+		<record id="view_kderp_moving_expense_form" model="ir.ui.view">
+            <field name="name">view.kderp.moving.expense.form</field>
+            <field name="model">kderp.moving.expense</field>
+            <field name="arch" type="xml">
+				<form string="Moving Expense" version="7.0" create="false">
+                    <header>
+                        <button string="Submit" states="draft" type="object" name="action_submit" class="oe_highlight" icon="gtk-apply" groups="kderp_stock_expense.kderp_group_kderp_moving_expense_control"/>
+                        <button string="Approved" states="waiting" type="object" name="action_approved" class="oe_highlight" icon="gtk-apply" groups="kderp_stock_expense.kderp_group_kderp_moving_expense_control"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,waiting,done" readonly="1"/>
+	            	</header>
+                    <sheet>
+                        <div class="oe_title">
+	                        <h1>
+	                            <label for="code" string="Moving Number" class="oe_inline oe_edit_only"/>
+	                            <field name="code"/>
+	                        </h1>
+	                    </div>
+                        <group colspan="4" col="4">
+                            <field name="date"/>
+                            <label string="" colspan="2"/>
+                            <field name="from_job_id" domain="[('general_expense','=',False)]"/>
+                            <field name="to_job_id" domain="[('general_expense','=',False)]"/>
+                        </group>
+                        <notebook>
+	                        <page string="Moving Info.">
+	                        	<group colspan="4" col="4">
+                                    <field name="name" widget="text" colspan="4"/>
+                                    <group string="Moving Details" colspan="4" col="2">
+                                        <field name="detail_ids" nolabel="1">
+                                            <tree string="Moving Expense Lines" editable="bottom">
+                                                <field name='budget_id'/>
+                                                <field name="amount" sum="Sub-total"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button string="Cancel" states="draft,waiting,revising" type="object" name="action_cancel" icon="gtk-cancel" groups="kderp_stock_expense.kderp_group_kderp_moving_expense_control"/>
+                        <button string="Open" states="done" type="object" name="action_open" icon="gtk-convert" groups="kderp_stock_expense.kderp_group_kderp_moving_expense_control"/>
+                        <button string="Revise" states="cancel" type="object" name="action_revise" icon="gtk-convert" groups="kderp_stock_expense.kderp_group_kderp_moving_expense_control"/>
+                        <button string="Close" states="revising" type="object" name="action_close" icon="gtk-apply" groups="kderp_stock_expense.kderp_group_kderp_moving_expense_control"/>
+                    </footer>
+                </form>
+			</field>
+		</record>
+
+        <record id="action_kderp_moving_expense" model="ir.actions.act_window">
+            <field name="name">Moving Expense</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kderp.moving.expense</field>
+            <field name="view_type">form</field>
+            <field name="context">{'search_default_working':1}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_kderp_moving_expense" id="menu_kderp_moving_expense" parent="kderp_other_expense.kderp_exepense_other_expense"/>
+
+	</data>
+</openerp>

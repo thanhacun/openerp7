@@ -32,13 +32,16 @@
     - Customize Interface""",
     'css': ['static/src/css/*.css'],
     'data':[
+            "data/kderp_moving_expense_sequence.xml",
             "security/kderp_stock_expense_security.xml",
+            "security/kderp_moving_expense_security.xml",
             "security/ir.model.access.csv",
-            "views/kderp_stock_expense_views.xml",
-            "views/inherited_kderp_job_view.xml",
-            "views/kderp_stock_move_views.xml",
+            #"views/kderp_stock_expense_views.xml",
+            #"views/inherited_kderp_job_view.xml",
+            #"views/kderp_stock_move_views.xml",
             "views/res_config_view.xml",
-            'wizard/stock_return_picking_view.xml'
+            "wizard/stock_return_picking_view.xml",
+            "views/kderp_moving_expense_view.xml"
             ],
     'demo':[],
     'installable':True

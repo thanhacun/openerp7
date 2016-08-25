@@ -27,6 +27,34 @@ class StockMove(osv.osv):
     _inherit = 'stock.move'
     _name="stock.move"
 
+    def _get_subtotal(self, cr, uid, ids, name, args, context):
+        res = {}
+        for sm in self.browse(cr, uid, ids):
+            res[sm.id] = sm.price_unit * sm.product_qty
+        return res
+
+    def _get_moving_expense(self, cr, uid, ids, name, args, context):
+        context = context or {}
+        res = {}
+        if ids:
+            for id in ids:
+                res[id] = []
+            sm_ids = ",".join(map(str, ids))
+            cr.execute("""Select
+                                DISTINCT
+                                sm.id,
+                                moving_expense_id
+                          from
+                              stock_move sm
+                          left join
+                              move_line_stock_move_rel mlsm on sm.id = mlsm.move_id
+                          left join
+                              kderp_moving_expense_line kmel on mlsm.moving_expense_line_id = kmel.id
+                          where coalesce(moving_expense_id,0)>0  and sm.id in (%s)""" % (sm_ids))
+            for sm_id, moving_expense_id in cr.fetchall():
+                res[sm_id].append(moving_expense_id)
+        return res
+
     def _check_job_stock(self, cr, uid, ids, context=None):
         for sm in self.browse(cr, uid, ids):
             if sm.from_analytic_id and sm.location_id:
@@ -39,104 +67,95 @@ class StockMove(osv.osv):
                     return False
         return True
 
-    def _update_to_pol(self, cr, uid, ids, context=None):
+    def _check_update_to_sme(self, cr, uid, ids, context=None):
         for sm in self.browse(cr, uid, ids):
-            po_nos = []
-            for pol in sm.pol_ids:
-                if pol.order_id.state!='cancel':
-                    po_nos.append(pol.order_id.name)
-            if po_nos:
-                raise osv.except_osv("KDERP Warning"," Can't change this Stock move, please check expense with number %s already confirm." % pol.order_id.name)
+            sme_nos = []
+            for sme in sm.moving_expense_ids:
+                if sme.state not in ('cancel'):
+                    sme_nos.append(sme.code)
+            if sme_nos:
+                #raise osv.except_osv("KDERP Warning","Can't change this Stock move, please check expense with number %s already confirm." % list(sme_nos))
                 return False
         return True
 
-    def _get_subtotal(self, cr, uid, ids, name, args, context):
-        res = {}
-        for sm in self.browse(cr, uid, ids):
-            res[sm.id] = sm.price_unit * sm.product_qty
-        return res
 
     EXPENSE_STATES = (('pending','Pending'),
                      ('adjusted','Adjusted'))
     _columns ={
-                'from_analytic_id':fields.many2one('account.analytic.account',"From Job", ondelete="restrict",help='Use for moving expense'),
-                'to_analytic_id':fields.many2one('account.analytic.account',"To Job", ondelete="restrict", help='Use for moving expense'),
-                'expense_state_in':fields.selection(EXPENSE_STATES,'Expense Status', readonly= 1, help='Pending: Expense not yet adjusted expense, Adjusted: Expenes already ajusted'),
-                'expense_state_out':fields.selection(EXPENSE_STATES,'Expense Status', readonly= 1, help='Pending: Expense not yet adjusted expense, Adjusted: Expenes already ajusted'),
+    #            'from_analytic_id':fields.many2one('account.analytic.account',"From Job", ondelete="restrict",help='Use for moving expense'),
+    #            'to_analytic_id':fields.many2one('account.analytic.account',"To Job", ondelete="restrict", help='Use for moving expense'),
+    #           'expense_state_in':fields.selection(EXPENSE_STATES,'Expense Status', readonly= 1, help='Pending: Expense not yet adjusted expense, Adjusted: Expenes already ajusted'),
+    #            'expense_state_out':fields.selection(EXPENSE_STATES,'Expense Status', readonly= 1, help='Pending: Expense not yet adjusted expense, Adjusted: Expenes already ajusted'),
                 'budget_id':fields.related('product_id','budget_id', string='Budget', type='many2one',relation='account.budget.post'),
                 'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Product Price'), readonly=True, states = {'draft': [('readonly', False)]}),
                 'subtotal':fields.function(_get_subtotal, string='Sub-Total', type='float', digits_compute=dp.get_precision('Amount')),
-                'pol_ids':fields.one2many('purchase.order.line','stock_move_id',"POL IDS",readonly=1)
+
+                'moving_expense_ids':fields.function(_get_moving_expense, relation='kderp.moving.expense', string = 'Moving Expense',method = True, type='one2many')
                 }
-    _constraints = [(_check_job_stock, "KDERP Warning, Please check Warehouse and Job, job and warehouse must be related", ['from_analytic_id','to_analytic_id','location_id','location_dest_id']),
-                    (_update_to_pol, "",['price_unit','product_id','product_qty','product_uom','from_analytic_id','to_analytic_id'])]
-    _defaults = {
-        'expense_state_out': 'pending',
-        'expense_state_in': 'pending'
-    }
+    _constraints = [(_check_update_to_sme,"Can't change this Stock move, please check expense with number",['product_qty']),]
 
-    def move_expense(self, cr, uid, ids, context):
-        context = context or {}
-        job_id = context.get('job_id_move', False)
-        exp_type = context.get('expense_type', False)
-        po_obj = self.pool.get('purchase.order')
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id
-        new_po_id = False
-        if job_id and exp_type:
-            for sm in self.browse(cr, uid, ids, context):
-                po_dict = {'date_order': sm.date}
-                newCode = po_obj.new_code(cr, uid, [], job_id, 'I')
-                po_dict['allocate_order'] = True
-                po_dict['account_analytic_id'] = job_id
-                po_dict['name'] = (newCode and newCode['value']['name'])
-                po_dict['partner_id'] = partner_id
-                po_dict['address_id'] = partner_id
-                po_dict['taxes_id'] = []
-                po_dict['notes'] = _("Moving expense from stock")
-                po_dict['state'] = 'draft'
-                pols = [(0, False, {'account_analytic_id':job_id,
-                                        'product_id': sm.product_id.id,
-                                        'product_uom': sm.product_uom.id,
-                                        'plan_qty': sm.product_qty if exp_type=='in' else -sm.product_qty,
-                                        'price_unit': sm.price_unit,
-                                        'name': sm.name or sm.product_id.name,
-                                        'stock_move_id': sm.id
-                                        })]
-                po_dict['order_line'] = pols
-                new_po_id = po_obj.create(cr,uid, po_dict)
-                po_obj.write(cr, uid, [new_po_id], {'state':'done'})
-                #Remove workflow (don't use workflow in this case
-                from openerp import netsvc
-                wf_service = netsvc.LocalService("workflow")
-                try:
-                    wf_service.trg_delete(uid, 'purchase.order', new_po_id, cr)
-                except:
-                    continue
-                expense_state = "expense_state_%s='adjusted'" % exp_type
-                cr.execute("""Update stock_move set %s  where id=%d""" %(expense_state, sm.id))
-        return new_po_id
-
-    def revoke_expense(self, cr, uid, ids, context):
-        context = context or {}
-        pol_obj = self.pool.get('purchase.order.line')
-        po_obj = self.pool.get('purchase.order')
-        job_id = context.get('job_id_move', False)
-        exp_type = context.get('expense_type', False)
-        if job_id and exp_type:
-            for sm in self.browse(cr, uid, ids, context):
-                pol_ids = pol_obj.search(cr, uid, [('stock_move_id','=', sm.id),('product_id','=',sm.product_id.id),('account_analytic_id','=',job_id)])
-                for pol in pol_obj.browse(cr, uid, pol_ids):
-                    if pol.order_id.state!='cancel':
-                        pol.order_id.write({'state':'cancel'})
-                        from openerp import netsvc
-                        wf_service = netsvc.LocalService("workflow")
-                        try:
-                            wf_service.trg_delete(uid, 'purchase.order', pol.order_id.id, cr)
-                        except:
-                            continue
-                expense_state = "expense_state_%s='pending'" % exp_type
-                cr.execute("""Update stock_move set %s where id=%d""" %(expense_state, sm.id))
-        return True
+    # def move_expense1(self, cr, uid, ids, context):
+    #     context = context or {}
+    #     job_id = context.get('job_id_move', False)
+    #     exp_type = context.get('expense_type', False)
+    #     po_obj = self.pool.get('purchase.order')
+    #     partner_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.partner_id.id
+    #     new_po_id = False
+    #     if job_id and exp_type:
+    #         for sm in self.browse(cr, uid, ids, context):
+    #             po_dict = {'date_order': sm.date}
+    #             newCode = po_obj.new_code(cr, uid, [], job_id, 'I')
+    #             po_dict['allocate_order'] = True
+    #             po_dict['account_analytic_id'] = job_id
+    #             po_dict['name'] = (newCode and newCode['value']['name'])
+    #             po_dict['partner_id'] = partner_id
+    #             po_dict['address_id'] = partner_id
+    #             po_dict['taxes_id'] = []
+    #             po_dict['notes'] = _("Moving expense from stock")
+    #             po_dict['state'] = 'draft'
+    #             pols = [(0, False, {'account_analytic_id':job_id,
+    #                                     'product_id': sm.product_id.id,
+    #                                     'product_uom': sm.product_uom.id,
+    #                                     'plan_qty': sm.product_qty if exp_type=='in' else -sm.product_qty,
+    #                                     'price_unit': sm.price_unit,
+    #                                     'name': sm.name or sm.product_id.name,
+    #                                     'stock_move_id': sm.id
+    #                                     })]
+    #             po_dict['order_line'] = pols
+    #             new_po_id = po_obj.create(cr,uid, po_dict)
+    #             po_obj.write(cr, uid, [new_po_id], {'state':'done'})
+    #             #Remove workflow (don't use workflow in this case
+    #             from openerp import netsvc
+    #             wf_service = netsvc.LocalService("workflow")
+    #             try:
+    #                 wf_service.trg_delete(uid, 'purchase.order', new_po_id, cr)
+    #             except:
+    #                 continue
+    #             expense_state = "expense_state_%s='adjusted'" % exp_type
+    #             cr.execute("""Update stock_move set %s  where id=%d""" %(expense_state, sm.id))
+    #     return new_po_id
+    #
+    # def revoke_expense1(self, cr, uid, ids, context):
+    #     context = context or {}
+    #     pol_obj = self.pool.get('purchase.order.line')
+    #     po_obj = self.pool.get('purchase.order')
+    #     job_id = context.get('job_id_move', False)
+    #     exp_type = context.get('expense_type', False)
+    #     if job_id and exp_type:
+    #         for sm in self.browse(cr, uid, ids, context):
+    #             pol_ids = pol_obj.search(cr, uid, [('stock_move_id','=', sm.id),('product_id','=',sm.product_id.id),('account_analytic_id','=',job_id)])
+    #             for pol in pol_obj.browse(cr, uid, pol_ids):
+    #                 if pol.order_id.state!='cancel':
+    #                     pol.order_id.write({'state':'cancel'})
+    #                     from openerp import netsvc
+    #                     wf_service = netsvc.LocalService("workflow")
+    #                     try:
+    #                         wf_service.trg_delete(uid, 'purchase.order', pol.order_id.id, cr)
+    #                     except:
+    #                         continue
+    #             expense_state = "expense_state_%s='pending'" % exp_type
+    #             cr.execute("""Update stock_move set %s where id=%d""" %(expense_state, sm.id))
+    #     return True
 
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
                             loc_dest_id=False, partner_id=False, context = {}):

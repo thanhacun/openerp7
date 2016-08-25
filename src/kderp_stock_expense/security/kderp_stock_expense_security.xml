@@ -2,10 +2,48 @@
 <openerp>
     <data>
 
-		<record id="kderp_group_show_pending_expense" model="res.groups">
-	       	<field name="name">KDERP - Show Pending Expense in Job</field>
-	      	<field name="category_id" ref="kderp_stock.module_category_kderp_stock"/>
+        <record model="ir.module.category" id="module_category_kderp_moving_expense">
+	      	<field name="name">KDERP Moving Expense</field>
+	       	<field name="sequence">50</field>
+		</record>
+
+		<record id="kderp_group_kderp_moving_expense_read" model="res.groups">
+	       	<field name="name">KDERP - KDERP Moving Expense Read</field>
+	      	<field name="category_id" ref="module_category_kderp_moving_expense"/>
 	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+        <record id="kderp_group_kderp_moving_expense_write" model="res.groups">
+	       	<field name="name">KDERP - KDERP Moving Expense Write</field>
+	      	<field name="category_id" ref="module_category_kderp_moving_expense"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+        <record id="kderp_group_kderp_moving_expense_create" model="res.groups">
+	       	<field name="name">KDERP - KDERP Moving Expense Create</field>
+	      	<field name="category_id" ref="module_category_kderp_moving_expense"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+        <record id="kderp_group_kderp_moving_expense_unlink" model="res.groups">
+	       	<field name="name">KDERP - KDERP Moving Expense Delete</field>
+	      	<field name="category_id" ref="module_category_kderp_moving_expense"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+		</record>
+
+        <record id="kderp_group_kderp_moving_expense_edit" model="res.groups">
+	       	<field name="name">KDERP - KDERP Moving Expense Edit</field>
+	      	<field name="category_id" ref="module_category_kderp_moving_expense"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('kderp_group_kderp_moving_expense_read')),
+                                             (4, ref('kderp_group_kderp_moving_expense_create')),
+                                             (4, ref('kderp_group_kderp_moving_expense_unlink')),
+                                             (4, ref('kderp_group_kderp_moving_expense_write'))]"/>
+		</record>
+
+        <record id="kderp_group_kderp_moving_expense_control" model="res.groups">
+	       	<field name="name">KDERP - KDERP Moving Expense Control Submit / Approve</field>
+	      	<field name="category_id" ref="module_category_kderp_moving_expense"/>
+	       	<field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('kderp_group_kderp_moving_expense_read')),
+                                             (4, ref('kderp_group_kderp_moving_expense_write'))]"/>
 		</record>
 
     </data>
