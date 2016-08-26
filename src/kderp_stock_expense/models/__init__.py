@@ -19,8 +19,13 @@
 #
 ##############################################################################
 
+
+import inherited_stock_picking
 import inherited_stock_move
 import inherited_purchase_order_line
-import inherited_account_analytic_account
+#import inherited_account_analytic_account
 
 import inherited_res_config
+import kderp_moving_expense
+
+import kderp_expense_budget_line

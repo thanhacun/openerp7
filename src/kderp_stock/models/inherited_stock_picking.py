@@ -216,7 +216,7 @@ class stock_picking(osv.osv):
                 res.add(move.picking_id.id)
         return list(res)
 
-    def _check_picking_type_and_location(self, cr, uid, ids, context):
+    def _check_picking_type_and_location(self, cr, uid, ids, context = {}):
         context = {} and context
         picking_dict = {'customer-internal':'in',
                         'supplier-internal':'in',
@@ -226,6 +226,8 @@ class stock_picking(osv.osv):
         for sp in self.browse(cr, uid, ids):
             if picking_dict[sp.location_id.usage + "-" + sp.location_dest_id.usage] != sp.type or sp.location_id.usage=='view' or sp.location_dest_id.usage=='view':
                 return False
+            if sp.location_id.id == sp.location_dest_id.id:
+                raise osv.except_osv(_("KDERP Warning"), _("Can't move same Stock"))
             for sm in sp.move_lines:
                 if sp.type != picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]:
                     move_type = picking_dict[sm.location_id.usage + "-" + sm.location_dest_id.usage]
@@ -242,6 +244,7 @@ class stock_picking(osv.osv):
             ('done', 'Received'),
             ('cancel', 'Cancelled'),]
     DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
+
     _columns = {
                 'name': fields.char('Packing No.', size=16, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},required=True, help=EXPLAIN_PACKING_NO),
                 'origin':fields.char('Ref. No.', size=32),
@@ -259,7 +262,6 @@ class stock_picking(osv.osv):
                 'location_dest_id': fields.many2one('stock.location', 'Dest. Warehouse', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]},domain = DOMAIN_LOCATION,
                                                     help="Select a destination warehouse", select=True, required=True),
 
-
                 'storekeeper_incharge_id':fields.many2one('hr.employee','Storekeeper', required=True, states={'done':[('readonly', True)]}),
 
                 'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
@@ -275,7 +277,7 @@ class stock_picking(osv.osv):
                 'name': lambda self, cr, uid, context ={}: self.pool.get('stock.picking').get_newcode(cr, uid, False, context),
                 'type': lambda self, cr, uid, context ={}: 'internal' if not context else context.get('picking_type','internal')
                 }
-    _constraint = [(_check_picking_type_and_location,'Please check picking type and Source Warehouse and Destination Warehouse',['type','location_id','location_dest_id'])]
+    _constraints = [(_check_picking_type_and_location,'Please check picking type and Source Warehouse and Destination Warehouse',['type','location_id','location_dest_id'])]
 
     def update_stock_received(self,cr, uid, ids, *args):
         self.write(cr,uid,ids,{'state':'done'})

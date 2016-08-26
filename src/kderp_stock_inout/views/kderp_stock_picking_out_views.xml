@@ -53,7 +53,7 @@
                             </group>
                             <group string="Deliver Info." colspan="4" col="4">
                                 <field name="location_id" context="{'stock_usage':'internal'}"/>
-                                <field name="location_dest_id"/>
+                                <field name="location_dest_id" context="{'stock_usage':'!!internal'}"/>
                                 <field name="storekeeper_incharge_id" domain="[('department_id','=','S1420')]"/>
                                 <field name="approved_by_uid"/>
                                 <field name="request_by_uid"/>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data >
+        <!-- Sequences for kderp.hanoi.general.expense.code --> 
+        <record id="seq_type_kderp_moving_expense_code" model="ir.sequence.type">
+            <field name="name">KDERP Moving Expense Code</field>
+            <field name="code">kderp.moving.expense.code</field>
+        </record>
+
+        <record id="seq_kderp_moving_expense_code" model="ir.sequence">
+            <field name="name">KDERP Moving Expense</field>
+            <field name="code">kderp.moving.expense.code</field>
+            <field eval="4" name="padding"/>
+            <field name="prefix">MV</field>
+            <field name="suffix">YY-</field>
+            <field name="example">MV11-0000</field>
+            <field name="padding">4</field>
+        </record>
+
+    </data>
+</openerp>
