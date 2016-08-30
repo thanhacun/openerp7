@@ -107,7 +107,29 @@ class kderp_advance_payment(osv.osv):
             res[x.id] = {'total_voucher_amount_to_word_vn':amount_to_word_vn,
                          'total_voucher_amount_to_word_en':amount_to_word_en}
         return res
-                
+
+    def _receiving_voucher_amount_to_word(self, cr, uid, ids, name, args, context={}):
+        res = {}
+        for x in self.browse(cr, uid, ids, context=context):
+            receiving_voucher_amount = x.receiving_voucher_amount if x.receiving_voucher_amount >= 0 else 0
+            if x.currency_id.name == 'USD':
+                amount_to_word_vn = amount_to_text(receiving_voucher_amount, 'vn', u" \u0111\xf4la",
+                                                   decimal="cents").capitalize()
+                amount_to_word_en = amount_to_text(receiving_voucher_amount, 'en', " dollar").capitalize()
+            elif x.currency_id.name == 'VND':
+                amount_to_word_vn = amount_to_text(receiving_voucher_amount, 'vn',
+                                                   u' \u0111\u1ed3ng').capitalize()  # + x.currency_id.name
+                amount_to_word_en = amount_to_text(receiving_voucher_amount, "en", "dongs").capitalize()
+            else:
+                amount_to_word_vn = amount_to_text(receiving_voucher_amount, 'vn',
+                                                   " " + x.currency_id.name).capitalize()
+                amount_to_word_en = amount_to_text(receiving_voucher_amount, 'en',
+                                                   " " + x.currency_id.name).capitalize()
+            res[x.id] = {'receiving_voucher_amount_to_word_vn': amount_to_word_vn,
+                         'receiving_voucher_amount_to_word_en': amount_to_word_en}
+        return res
+
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         #cur_obj=self.pool.get('res.currency')
@@ -119,24 +141,32 @@ class kderp_advance_payment(osv.osv):
             for line in adv.advance_line:
                 val += line.amount
             
-            rb=False
-            reimbursement_amount=0.0
-            if adv.type_cash=='cash':
-                rb=True
-            else:
-                if adv.state not in ('draft','approved'):
-                    rb=True
-                    
+
+            reimbursement_amount = 0.0
+            other_amount = 0
+            # rb=False
+            # if adv.type_cash=='cash':
+            #     rb=True
+            # else:
+            #     if adv.state not in ('draft','approved'):
+            #         rb=True
+
+            rb = True if (adv.reimbursement_line or adv.other_reimbursement_line or adv.state not in ('draft','approved') or adv.type_cash=='cash') else False
+
+            for liner_other in adv.other_reimbursement_line:
+                other_amount += liner_other.amount
+
             for liner in adv.reimbursement_line:
-                reimbursement_amount+=liner.amount
-                rb=True
+                reimbursement_amount += liner.amount
+
             if rb:
-                request_amount=val            
-                cash_return=request_amount-reimbursement_amount if request_amount-reimbursement_amount>0 else 0
-                cash_payment=reimbursement_amount-request_amount if request_amount-reimbursement_amount<0 else 0
-                balance=request_amount - (reimbursement_amount + cash_return - cash_payment)
+                request_amount = val
+                cash_return = request_amount - reimbursement_amount - other_amount if request_amount - reimbursement_amount - other_amount >0 else 0
+                cash_payment = reimbursement_amount + other_amount - request_amount if request_amount - reimbursement_amount - other_amount < 0 else 0
+                balance = request_amount - (other_amount + reimbursement_amount + cash_return - cash_payment)
             else:
-                request_amount = val            
+                request_amount = val
+                other_amount = 0
                 cash_return = 0
                 cash_payment = 0
                 balance = request_amount
@@ -145,7 +175,9 @@ class kderp_advance_payment(osv.osv):
                          'cash_return':cash_return,
                          'cash_payment':cash_payment,
                          'balance':balance,
-                         'reimbursement_amount':reimbursement_amount
+                         'reimbursement_amount':reimbursement_amount,
+                         'other_amount': other_amount,
+                         'receiving_voucher_amount': request_amount - other_amount if (request_amount - other_amount)>0 else request_amount
                          } 
         return res
 
@@ -356,7 +388,13 @@ class kderp_advance_payment(osv.osv):
         result = {}
         for liner in self.pool.get('kderp.advance.payment.reimbursement.line').browse(cr, uid, ids, context=context):
             result[liner.advance_id.id] = True
-        return result.keys()    
+        return result.keys()
+
+    def _get_adv_from_other_reimbursement_detail(self, cr, uid, ids, context=None):
+        result = {}
+        for liner in self.pool.get('kderp.advance.payment.other.reimbursement.line').browse(cr, uid, ids, context=context):
+            result[liner.advance_id.id] = True
+        return result.keys()
     
     def on_changevalue(self, cr, uid, ids, amount, taxes_id, currency_id):
         amount_tax = 0.0
@@ -405,7 +443,25 @@ class kderp_advance_payment(osv.osv):
                                                                 store={
                                                                         'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','state'], 10),
                                                                         'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 10),
+                                                                        'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 10),
                                                                        }),
+                'other_amount': fields.function(_amount_all, digits_compute=dp.get_precision('Amount'),
+                                                string='Other Amount', type='float', method=True,
+                                                multi="kderp_advance_total",
+                                                store={
+                                                        'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['currency_id', 'state'], 10),
+                                                        'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 10),
+                                                        'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 10),
+                                                    }),
+                'receiving_voucher_amount': fields.function(_amount_all, digits_compute=dp.get_precision('Amount'),
+                                                string='Receiving Amount', type='float', method=True,
+                                                multi="kderp_advance_total",
+                                                store={
+                                                    'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['currency_id', 'state'], 10),
+                                                    'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 10),
+                                                    'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 10),
+                                                }),
+
 
                 #'vourcher_total_amount':fields.float("voucher_"),
                 
@@ -422,6 +478,7 @@ class kderp_advance_payment(osv.osv):
                                                         'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['date','currency_id','state'], 10),
                                                         'kderp.advance.payment.line': (_get_adv_from_detail, None, 10),
                                                         'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 10),
+                                                        'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 10),
                                                        }),
                 'cash_payment':fields.function(_amount_all,type='float',string='Cash Payment',method=True,
                                               digits_compute= dp.get_precision('Amount'),multi="kderp_advance_total",
@@ -429,6 +486,7 @@ class kderp_advance_payment(osv.osv):
                                                         'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['date','currency_id','state'], 10),
                                                         'kderp.advance.payment.line': (_get_adv_from_detail, None, 10),
                                                         'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 10),
+                                                        'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 10),
                                                        }),
                 'balance':fields.function(_amount_all,type='float',string='Balance',method=True,
                                               digits_compute= dp.get_precision('Amount'),multi="kderp_advance_total",
@@ -436,6 +494,7 @@ class kderp_advance_payment(osv.osv):
                                                         'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['date','currency_id','state'], 10),
                                                         'kderp.advance.payment.line': (_get_adv_from_detail, None, 10),
                                                         'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 10),
+                                                        'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 10),
                                                        }),
               
                 'request_amount_to_word_vn':fields.function(_amount_to_word,string='Amount to Word',method=True,type='char',size=1000,multi="_amount_to_word",
@@ -452,13 +511,29 @@ class kderp_advance_payment(osv.osv):
                 'total_voucher_amount_to_word_vn':fields.function(_voucher_amount_to_word,string='Amount to Word',method=True,type='char',size=1000,multi="_vourcher_amount_to_word",
                                                           store={
                                                                 'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','state'], 15),
-                                                                'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 15)
+                                                                'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 15),
+                                                                'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 15),
                                                                }),
                 'total_voucher_amount_to_word_en':fields.function(_voucher_amount_to_word,string='Amount to Word',method=True,type='char',size=1000,multi="_vourcher_amount_to_word",
                                                           store={
                                                                 'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids, ['currency_id','state'], 15),
                                                                 'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 15),
+                                                                'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 15),
                                                                }),
+
+                'receiving_voucher_amount_to_word_en': fields.function(_receiving_voucher_amount_to_word, string='Amount to Word',method=True, type='char', size=1000, multi="_receiving_vourcher_amount_to_word",
+                                                                   store={
+                                                                       'kderp.advance.payment': ( lambda self, cr, uid, ids, c={}: ids, ['currency_id', 'state'], 15),
+                                                                       'kderp.advance.payment.reimbursement.line': (_get_adv_from_reimbursement_detail, None, 15),
+                                                                       'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 15),
+                                                                   }),
+                'receiving_voucher_amount_to_word_vn': fields.function(_receiving_voucher_amount_to_word, string='Amount to Word', method=True, type='char', size=1000,
+                                                                       multi="_receiving_vourcher_amount_to_word",
+                                                                       store={
+                                                                           'kderp.advance.payment': (lambda self, cr, uid, ids, c={}: ids,['currency_id', 'state'], 15),
+                                                                           'kderp.advance.payment.reimbursement.line': ( _get_adv_from_reimbursement_detail, None, 15),
+                                                                           'kderp.advance.payment.other.reimbursement.line': (_get_adv_from_other_reimbursement_detail, None, 15),
+                                                                       }),
                 #Relation Fields
                 'advance_buying':fields.selection([('material','Material'),('others','Others'),('cash','Cash')],'Type',required=True, readonly = True, states={'draft':[('readonly',False)]}),
                 'type_cash':fields.selection([('payment','Payment'),('receive','Receive')],'Cash type'),
@@ -468,7 +543,14 @@ class kderp_advance_payment(osv.osv):
                 
                 'advance_line': fields.one2many('kderp.advance.payment.line', 'advance_id', 'Expense Details',states={'done':[('readonly',True)], 'cancel':[('readonly',True)],'cash_received':[('readonly',True)],'waiting_for_complete':[('readonly',True)]},track_visibility='onchange'),
                 'reimbursement_line': fields.one2many('kderp.advance.payment.reimbursement.line', 'advance_id', 'Reimbursement Details',states={'done':[('readonly',True)], 'cancel':[('readonly',True)],'cash_received':[('readonly',True)],'waiting_for_complete':[('readonly',True)]},track_visibility='onchange'),
-                
+
+                'other_reimbursement_line': fields.one2many('kderp.advance.payment.other.reimbursement.line', 'advance_id',
+                                              'Other Reimbursement Details',
+                                              states={'done': [('readonly', True)], 'cancel': [('readonly', True)],
+                                                      'cash_received': [('readonly', True)],
+                                                      'waiting_for_complete': [('readonly', True)]},
+                                              track_visibility='onchange'),
+                'combine_reimbursement_line': fields.one2many('kderp.advance.payment.combine.reimbursement.line', 'advance_id','Combine Reimbursement Details', readonly = True),
                 'cash_line': fields.one2many('kderp.advance.payment.reimbursement.line', 'advance_id', 'Cash Details',states={'done':[('readonly',True)], 'cancel':[('readonly',True)],'cash_received':[('readonly',True)],'waiting_for_complete':[('readonly',True)]},track_visibility='onchange'),
                 
                 'state':fields.selection(STATE_SELECTION,'Adv. Status',readonly=True,select=1),
@@ -476,8 +558,7 @@ class kderp_advance_payment(osv.osv):
                                             type='selection',method=True,string='State',
                                              store={
                                                     'kderp.advance.payment':(lambda self, cr, uid, ids, c={}: ids, ['state'], 50),
-                                                    }),                                
-                               
+                                                    }),
                                
                 'account_analytic_id':fields.many2one('account.analytic.account','Job',ondelete="restrict",
                                                       states={'done':[('readonly',True)], 'cancel':[('readonly',True)],'cash_received':[('readonly',True)],'waiting_for_complete':[('readonly',True)]}),
@@ -749,3 +830,177 @@ class kderp_advance_payment_reimbursement_line(osv.osv):
                  'user_id': lambda obj,cr,uid,context:context.get('user_id',False)
                  }
 kderp_advance_payment_reimbursement_line()
+
+#New Model Other Reimbursment (Using in case User not return by cash ...)
+class kderp_advance_payment_other_reimbursement_line(osv.osv):
+    _name = 'kderp.advance.payment.other.reimbursement.line'
+    _description = 'Detail of Other Reimbursement for Advance Payment Kinden'
+
+    # def create(self, cr, uid, vals, context=None):
+    #     new_radv_id = super(kderp_advance_payment_reimbursement_line, self).create(cr, uid, vals, context=context)
+    #     kcp_obj = self.pool.get('kderp.cash.period')
+    #     kcp_obj.write(cr, uid, kcp_obj.find(cr, uid, vals['date']), {}, context)
+    # #     return new_radv_id
+    #
+    # def write(self, cr, uid, ids, vals, context=None):
+    #     kcp_ids = []
+    #     kcp_obj = self.pool.get('kderp.cash.period')
+    #     if 'amount' in vals:  # 'date' in vals or
+    #         #             if vals.get('date',False):
+    #         #                 kcp_ids.extend(kcp_obj.find(cr, uid, vals['date'], context))
+    #         #             for kapl in self.read(cr, uid, ids, ['date']):
+    #         #                 kcp_ids.extend(kcp_obj.find(cr, uid, kapl['date'], context))
+    #         for kaprl_obj in self.browse(cr, uid, ids):
+    #             if kaprl_obj.advance_id.date_of_received_reimbursement:
+    #                 kcp_ids.extend(kcp_obj.find(cr, uid, kaprl_obj.advance_id.date_of_received_reimbursement, context))
+    #             if kaprl_obj.advance_id.date_received_money:
+    #                 kcp_ids.extend(kcp_obj.find(cr, uid, kaprl_obj.advance_id.date_received_money, context))
+    #
+    #     new_obj = super(kderp_advance_payment_reimbursement_line, self).write(cr, uid, ids, vals, context=context)
+    #
+    #     if len(list(set(kcp_ids))) > 0:
+    #         kcp_obj.write(cr, uid, list(set(kcp_ids)), {}, context)
+    #     return new_obj
+    #
+    # def _amount_to_word(self, cr, uid, ids, name, args, context={}):
+    #     res = {}
+    #     for x in self.browse(cr, uid, ids, context=context):
+    #         request_amount = x.amount if x.amount >= 0 else 0
+    #         if x.advance_id.currency_id.name == 'USD':
+    #             amount_to_word_vn = amount_to_text(request_amount, 'vn', u" \u0111\xf4la", decimal='cents').capitalize()
+    #             amount_to_word_en = amount_to_text(request_amount, 'en', " dollar").capitalize()
+    #         elif x.advance_id.currency_id.name == 'VND':
+    #             amount_to_word_vn = amount_to_text(request_amount, 'vn',
+    #                                                u' \u0111\u1ed3ng').capitalize()  # + x.currency_id.name
+    #             amount_to_word_en = amount_to_text(request_amount, "en", "dongs").capitalize()
+    #         else:
+    #             amount_to_word_vn = amount_to_text(request_amount, 'vn',
+    #                                                " " + x.advance_id.currency_id.name).capitalize()
+    #             amount_to_word_en = amount_to_text(request_amount, 'en',
+    #                                                " " + x.advance_id.currency_id.name).capitalize()
+    #         res[x.id] = {'amount_to_word_vn': amount_to_word_vn,
+    #                      'amount_to_word_en': amount_to_word_en}
+    #     return res
+    #
+    # def get_new_voucher_code(self, cr, uid, ids, date, voucher_no, currency, type_cash='payment'):
+    #     result = {}
+    #     result = self.pool.get('kderp.advance.payment').get_new_voucher(cr, uid, ids, date, voucher_no, False, False,
+    #                                                                     currency, 'typeCash', type_cash)
+    #     if 'payment_voucher_no' in result['value']:
+    #         result['value'].update({'voucher_no': result['value'].pop('payment_voucher_no')})
+    #     return result
+    #
+    # def _get_adv_from_rbl_line(self, cr, uid, ids, context=None):
+    #     res = []
+    #     for adv in self.pool.get('kderp.advance.payment').browse(cr, uid, ids, context=context):
+    #         for rbl in adv.reimbursement_line:
+    #             res.append(rbl.id)
+    #         for rbl in adv.cash_line:
+    #             res.append(rbl.id)
+    #     return list(set(res))
+
+    _order = "date"
+    _order = "voucher_no"
+    _columns = {
+        'date': fields.date('Date', required=True),
+        'supplier_id': fields.many2one('res.partner', 'Payer', ondelete='restrict'),
+        'user_id': fields.many2one('hr.employee', 'User', ondelete='restrict'),
+        'name': fields.char('Description', size=256, required=True),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Amount'), required=True),
+        'advance_id': fields.many2one('kderp.advance.payment', 'Advance', required=True, ondelete='cascade'),
+        'voucher_no': fields.char('Voucher No.', size=16),
+        'other_user': fields.char('Other User', size=32),
+
+        # 'amount_to_word_vn': fields.function(_amount_to_word, string='Amount to Word', method=True, type='char',
+        #                                      size=1000, multi="_amount_to_word_rbl",
+        #                                      store={
+        #                                          'kderp.advance.payment.reimbursement.line': (
+        #                                          lambda self, cr, uid, ids, c={}: ids, ['amount'], 15),
+        #                                          'kderp.advance.payment': (_get_adv_from_rbl_line, ['currency_id'], 15)
+        #                                      }),
+        # 'amount_to_word_en': fields.function(_amount_to_word, string='Amount to Word', method=True, type='char',
+        #                                      size=1000, multi="_amount_to_word_rbl",
+        #                                      store={
+        #                                          'kderp.advance.payment.reimbursement.line': (
+        #                                          lambda self, cr, uid, ids, c={}: ids, ['amount'], 15),
+        #                                          'kderp.advance.payment': (_get_adv_from_rbl_line, ['currency_id'], 15)
+        #                                      }),
+        # 'actual_amt': fields.float('Actual Amt.'),
+        # 'actual_rate': fields.float('Actual Rate'),
+        # 'actual_currency_id': fields.many2one('res.currency', 'Actual Cur.')
+    }
+
+    def onchange_amount(self, cr, uid, ids, actual_amt, actual_rate):
+        value = {}
+        if actual_amt and actual_rate != 0:
+            amount = round(actual_amt / actual_rate, 0)
+            value = {'amount': amount}
+        return {'value': value}
+
+    _defaults = {
+        'user_id': lambda obj, cr, uid, context: context.get('user_id', False)
+    }
+
+
+kderp_advance_payment_other_reimbursement_line()
+
+#New Model Other Reimbursment (Using in case User not return by cash ...)
+class kderp_advance_payment_combine_reimbursement_line(osv.osv):
+    _name = 'kderp.advance.payment.combine.reimbursement.line'
+    _description = 'Detail of Combine Reimbursement for Advance Payment Kinden'
+
+    _auto = False
+    _order = "date"
+    _order = "voucher_no"
+
+    _columns = {
+        'date': fields.date('Date', required=True),
+        'supplier_id': fields.many2one('res.partner', 'Payer', ondelete='restrict'),
+        'user_id': fields.many2one('hr.employee', 'User', ondelete='restrict'),
+        'name': fields.char('Description', size=256, required=True),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Amount'), required=True),
+        'advance_id': fields.many2one('kderp.advance.payment', 'Advance', required=True, ondelete='cascade'),
+        'voucher_no': fields.char('Voucher No.', size=16),
+        'other_user': fields.char('Other User', size=32),
+        'type':fields.char("Type", size=8)
+    }
+
+    def init(self, cr):
+        vwName = self.__class__.__name__
+        from openerp import tools
+
+        tools.drop_view_if_exists(cr, vwName)
+        cr.execute("""Create or replace view %s as
+                   Select
+                        row_number() over (order by date,voucher_no,user)::integer as id,
+                        *
+                    from
+                        (
+                        Select
+                            id as rb_id,
+                            date,
+                            supplier_id,
+                            user_id,
+                            name,
+                            amount,
+                            advance_id,
+                            voucher_no,
+                            other_user,
+		                    'normal' as type
+                        from
+                            kderp_advance_payment_reimbursement_line
+                        union all
+                        Select
+                            id as rb_id,
+                            date,
+                            supplier_id,
+                            user_id,
+                            name,
+                            amount,
+                            advance_id,
+                            voucher_no,
+                            other_user,
+		                    'other' as type
+                        from
+                            kderp_advance_payment_other_reimbursement_line) vwcombine""" % vwName)
+

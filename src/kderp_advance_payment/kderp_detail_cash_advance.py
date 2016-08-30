@@ -142,6 +142,6 @@ class kderp_detail_cash_advance(osv.osv):
                                 left join
                                     resource_resource rr on he.resource_id = rr.id
                                 where 
-                                    advance_buying<>'cash' and kap.state not in ('draft','cancel','approved') and date_of_received_reimbursement is not null
+                                    advance_buying<>'cash' and kap.state not in ('draft','cancel','approved') and date_of_received_reimbursement is not null and (krl.voucher_no ilike 'PT%' or krl.voucher_no ilike 'PC%')
                                 ) vwcashadvancecombine order by date,sort,voucher_no,staffno""")
 kderp_detail_cash_advance()
