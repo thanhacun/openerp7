@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReceivingVoucher" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.8150000000000008"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="330"/>
+	<property name="ireport.y" value="474"/>
 	<style name="style2">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{InWordVnd}.length()<86]]></conditionExpression>
@@ -60,6 +60,15 @@
 	</field>
 	<field name="date_received" class="java.util.Date">
 		<fieldDescription><![CDATA[date_of_received_reimbursement]]></fieldDescription>
+	</field>
+	<field name="Total_Receiving" class="java.lang.Double">
+		<fieldDescription><![CDATA[receiving_voucher_amount]]></fieldDescription>
+	</field>
+	<field name="InWordVnd_rec" class="java.lang.String">
+		<fieldDescription><![CDATA[receiving_voucher_amount_to_word_vn]]></fieldDescription>
+	</field>
+	<field name="InWordUsd_rec" class="java.lang.String">
+		<fieldDescription><![CDATA[receiving_voucher_amount_to_word_en]]></fieldDescription>
 	</field>
 	<variable name="Cur" class="java.lang.String">
 		<variableExpression><![CDATA[$F{Cur}=="VND"?"USD":"VND"]]></variableExpression>
@@ -437,7 +446,7 @@
 				<textElement verticalAlignment="Bottom" markup="none">
 					<font fontName="Arial" size="10" isItalic="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordVnd}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordVnd_rec}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="214" y="575" width="340" height="20"/>
@@ -515,8 +524,8 @@
 					<font fontName="Arial" isBold="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{Cur}+" "+($F{Cur}!="VND"?
-new DecimalFormat("#,##0.00;(#,##0.00)").format($F{Total}==null?0:$F{Total}):
-new DecimalFormat("#,##0;(#,##0)").format($F{Total}==null?0:$F{Total}))]]></textFieldExpression>
+new DecimalFormat("#,##0.00;(#,##0.00)").format($F{Total_Receiving}==null?0:$F{Total_Receiving}):
+new DecimalFormat("#,##0;(#,##0)").format($F{Total_Receiving}==null?0:$F{Total_Receiving}))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="style2" stretchType="RelativeToTallestObject" x="141" y="97" width="413" height="20"/>
@@ -526,7 +535,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{Total}==null?0:$F{Total}))]]></text
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Arial" isBold="false" isItalic="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordVnd}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordVnd_rec}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="349" y="321" width="206" height="20"/>
@@ -546,7 +555,7 @@ new DecimalFormat("#,##0;(#,##0)").format($F{Total}==null?0:$F{Total}))]]></text
 				<textElement verticalAlignment="Bottom" markup="none">
 					<font fontName="Arial" size="10" isItalic="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordUsd}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{InWordUsd_rec}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="461" y="0" width="95" height="15"/>
