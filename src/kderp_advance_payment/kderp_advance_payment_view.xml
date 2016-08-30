@@ -91,7 +91,8 @@
 	                        	<field name="user_input" widget="many2oneimage" options="{'model':'hr.employee','preview_image':'image_small'}"/>
 	                        </group>                            
 	                    </group>
-	                    <notebook>
+                        <group col="2" colspan="4">
+	                    <notebook colspan="2">
 	                        <page string="Detail" default_focus="1">
 	                        	<group attrs="{'invisible':[('advance_buying','=','cash')]}" col="4" colspan="4">
 		                        	<group string="Request Info." colspan="4">
@@ -124,16 +125,6 @@
                                                 <field name="actual_rate" on_change="onchange_amount(actual_amt, actual_rate)"/>
 			                                </tree>
 			                            </field>
-		                            	<group class="oe_subtotal_footer oe_right">
-		                            		<field name="date_of_settlement" string="Settlement Date"/>
-				                            <field name="reimbursement_amount"  string="Reimbursement Amt." widget="monetary" options="{'currency_field': 'currency_id'}"/>
-				                            <field name="cash_return" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-				                            <field name="cash_payment" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-			                                <div class="oe_subtotal_footer_separator oe_inline">
-			                                    <label for="balance"/>
-			                                </div>
-			                                <field name="balance" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
-										</group>
 		                            </group>
 								</group>
 								<group attrs="{'invisible':[('advance_buying','!=','cash')]}" default_focus="1"  col="4" colspan="4">
@@ -155,6 +146,21 @@
 		                            </group>
 	                        	</group>
 	                        </page>
+                            <page string='Other Reibursement' attrs="{'invisible':[('advance_buying','=','cash')]}">
+                                <group string='Other of Reimburse' colspan="4">
+                                    <field name="other_reimbursement_line" context="{'id':active_id,'user_id':user_id}" colspan="4" nolabel="1">
+                                        <tree string="Reimbursement Details" editable="bottom">
+                                            <field name="date"/>
+                                            <field name="user_id"/>
+                                            <field name="other_user"/>
+                                            <field name="supplier_id" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
+                                            <field name="name"/>
+                                            <field name="amount" sum='Sub-total'/>
+                                            <field name="voucher_no"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
 	                        <page string='Voucher Related'>
 	                        	<separator string="Purchase Orders"/>
 	                        	<field name='purchase_ids'>
@@ -191,7 +197,19 @@
 	                        <page string='Notes'>
 	                        	<field name='description' colspan="4" nolabel="1"/>
 	                        </page>
-	                    </notebook>	                    
+	                    </notebook>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="date_of_settlement" string="Settlement Date"/>
+                            <field name="reimbursement_amount"  string="Reimbursement Amt." widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="other_amount"  string="Other Amt." widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="cash_return" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="cash_payment" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <label for="balance"/>
+                            </div>
+                            <field name="balance" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                        </group>
+                        </group>
 	            	</sheet>
 	            	<footer>
 	            		<button icon="gtk-cancel" name="btn_cancel" type='workflow' states="approved" string="Reject"/>						
