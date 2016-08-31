@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Request of Payment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="28" rightMargin="22" topMargin="117" bottomMargin="0">
-	<property name="ireport.zoom" value="1.693421790161335"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="571"/>
+	<property name="ireport.zoom" value="1.8627639691774687"/>
+	<property name="ireport.x" value="5"/>
+	<property name="ireport.y" value="185"/>
 	<property name="ireport.callouts" value="##Fri Mar 25 10:42:30 ICT 2011"/>
 	<property name="ireport.layers" value="##Mon Nov 14 16:28:24 ICT 2011\nlayer.2.visible=true\nlayer.1.name=VND\nlayer.0.visible=true\nlayer.2.id=3\nlayer.1.printWhenExpression=$F{Currency}\=\=&quot;VND&quot;\nlayer.2.name=USD\nlayer.2.printWhenExpression=$F{Currency}\!\=&quot;VND&quot;\nlayer.1.id=2\nlayer.1.visible=true\nlayer.0.id=0\nlayer.0.name=Background"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;contract_id/contract_job_summary_ids&apos;]"/>
@@ -163,7 +163,7 @@
 					<text><![CDATA[:    007.137.0862248]]></text>
 				</staticText>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" x="15" y="90" width="105" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="91" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
@@ -173,7 +173,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Project Name"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" x="120" y="155" width="418" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="134" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -444,7 +444,7 @@
 					<reportElement x="17" y="662" width="146" height="1"/>
 				</line>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" x="120" y="133" width="418" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="113" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -525,7 +525,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Amount"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" x="15" y="133" width="105" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="134" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
@@ -606,7 +606,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[": " +$F{Contract_ref}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" x="120" y="90" width="418" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="91" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -683,7 +683,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{Client_name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" x="15" y="70" width="523" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="70" width="523" height="21"/>
 					<textElement>
 						<font fontName="Arial" size="10" isItalic="true" pdfFontName="Helvetica-Oblique"/>
 					</textElement>
@@ -858,7 +858,7 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{balance_total}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" x="15" y="154" width="105" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="155" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
@@ -959,7 +959,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Thank you for your valuable support and co-operation!"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" x="120" y="111" width="418" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="120" y="155" width="418" height="20"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -973,7 +973,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[": " + $V{CombineJob}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" x="15" y="111" width="105" height="20"/>
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="113" width="105" height="20"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>

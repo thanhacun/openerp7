@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Request of Payment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="28" rightMargin="22" topMargin="117" bottomMargin="0">
-	<property name="ireport.zoom" value="1.5394743546921201"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="449"/>
+	<property name="ireport.zoom" value="2.7272727272727284"/>
+	<property name="ireport.x" value="228"/>
+	<property name="ireport.y" value="134"/>
 	<property name="ireport.callouts" value="##Fri Mar 25 10:42:30 ICT 2011"/>
 	<property name="ireport.layers" value="##Mon Nov 14 16:28:24 ICT 2011\nlayer.2.visible=true\nlayer.1.name=VND\nlayer.0.visible=true\nlayer.2.id=3\nlayer.1.printWhenExpression=$F{Currency}\=\=&quot;VND&quot;\nlayer.2.name=USD\nlayer.2.printWhenExpression=$F{Currency}\!\=&quot;VND&quot;\nlayer.1.id=2\nlayer.1.visible=true\nlayer.0.id=0\nlayer.0.name=Background"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;contract_id/contract_job_summary_ids&apos;]"/>
@@ -14,6 +14,16 @@
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{Currency}!="VND"]]></conditionExpression>
 			<style pattern="#,##0.00"/>
+		</conditionalStyle>
+	</style>
+	<style name="cut_string">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Project_Name}.toString().length() > 149]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Project_Name}.toString().length() < 150]]></conditionExpression>
+			<style fontSize="9"/>
 		</conditionalStyle>
 	</style>
 	<queryString language="xPath">
@@ -173,7 +183,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Dự án"+'<br>'+'<i>'+"(Project)"+'</i>'+'</br>']]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="120" y="155" width="418" height="21"/>
+					<reportElement x="120" y="133" width="418" height="21"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -465,7 +475,7 @@
 					<reportElement x="17" y="660" width="146" height="1"/>
 				</line>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="120" y="133" width="418" height="21"/>
+					<reportElement x="120" y="111" width="418" height="21"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -545,7 +555,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Số tiền"+'<i>'+" (Amount)"+'</i>']]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="133" width="104" height="21"/>
+					<reportElement x="16" y="111" width="104" height="21"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
@@ -626,7 +636,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[": " +$F{Contract_ref}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="120" y="90" width="418" height="21"/>
+					<reportElement style="cut_string" x="120" y="90" width="418" height="21"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -635,7 +645,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 					</box>
 					<textElement verticalAlignment="Bottom" markup="html">
-						<font fontName="Arial" size="9" pdfFontName="Helvetica"/>
+						<font fontName="Arial" pdfFontName="Helvetica"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[": " + $F{Project_Name}['vi_VN']+'<i>'+" ("+$F{Project_Name}['en_CA']+")"+'</i>']]></textFieldExpression>
 				</textField>
@@ -878,7 +888,7 @@
 					<textFieldExpression class="java.lang.Double"><![CDATA[$V{balance_total}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="154" width="104" height="22"/>
+					<reportElement x="16" y="133" width="104" height="21"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
@@ -1000,7 +1010,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA["Xin trân trọng cảm ơn sự hỗ trợ và hợp tác của Quý công ty!"+'<i>'+" (Thank you for your valuable support and co-operation!)"+'</i>']]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="120" y="111" width="418" height="21"/>
+					<reportElement x="120" y="155" width="418" height="21"/>
 					<box rightPadding="0">
 						<pen lineWidth="0.55" lineStyle="Dashed"/>
 						<topPen lineWidth="0.0" lineStyle="Dashed"/>
@@ -1014,7 +1024,7 @@
 					<textFieldExpression class="java.lang.String"><![CDATA[": " + $V{CombineJob}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="16" y="111" width="104" height="21"/>
+					<reportElement x="16" y="155" width="104" height="21"/>
 					<box>
 						<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
 					</box>
