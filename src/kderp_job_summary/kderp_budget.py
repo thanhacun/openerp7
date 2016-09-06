@@ -106,7 +106,8 @@ class kderp_budget_data(osv.osv):
         unlink_ids = []
         for kbd in self.browse(cr, uid, ids, context=context):
             if kbd.detail_budget:
-                raise osv.except_osv("KDERP Warning",'Can not DELETE budget having expenses.')
+                raise osv.except_osv("KDERP Warning",
+                                     "Can not DELETE budget having expenses.\n %s - %s" % (str(kbd.account_analytic_id.code), str(kbd.budget_id.code)))
             unlink_ids.append(kbd.id)
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True

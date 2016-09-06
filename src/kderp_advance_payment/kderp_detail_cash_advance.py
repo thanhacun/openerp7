@@ -95,7 +95,7 @@ class kderp_detail_cash_advance(osv.osv):
                                     receive_voucher_no as voucher_no,
                                     staffno,    
                                     rr.name as user,
-                                    request_amount as debit,
+                                    request_amount - coalesce(other_amount,0) as debit,
                                     0 as credit,
                                     currency_id,
                                     kcp.id as cash_period_id,
