@@ -92,7 +92,7 @@ class StockMove(osv.osv):
 
                 'moving_expense_ids':fields.function(_get_moving_expense, relation='kderp.moving.expense', string = 'Moving Expense',method = True, type='one2many')
                 }
-    _constraints = [(_check_update_to_sme,"Can't change this Stock move, please check expense with number",['product_qty']),]
+    _constraints = [(_check_update_to_sme,"Can't change this Stock move, please check expense with number",['product_qty','price_unit']),]
 
     # def move_expense1(self, cr, uid, ids, context):
     #     context = context or {}
@@ -161,6 +161,8 @@ class StockMove(osv.osv):
                             loc_dest_id=False, partner_id=False, context = {}):
         res = super(StockMove, self).onchange_product_id(cr, uid, ids, prod_id=prod_id, loc_id=loc_id,
                             loc_dest_id=loc_dest_id, partner_id=partner_id)
+        # import pdb
+        # pdb.set_trace()
         context = context or {}
         if 'value' in res and prod_id and context.get('get_price', False):
             company_obj = self.pool.get('res.users').browse(cr, uid, uid).company_id
