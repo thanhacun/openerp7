@@ -51,9 +51,9 @@
 		<fieldDescription><![CDATA[/data/record/opening_balance]]></fieldDescription>
 	</field>
 	<sortField name="Date-date"/>
+	<sortField name="staff"/>
 	<sortField name="sort"/>
 	<sortField name="Voucher_No.-voucher_no"/>
-	<sortField name="staff"/>
 	<variable name="Date" class="java.lang.String">
 		<variableExpression><![CDATA[new SimpleDateFormat("dd-MMM").format($F{Date-date})]]></variableExpression>
 	</variable>
@@ -81,20 +81,6 @@
 		<groupExpression><![CDATA[new SimpleDateFormat("MMMMM").format($F{Date-date})]]></groupExpression>
 		<groupHeader>
 			<band height="101">
-				<staticText>
-					<reportElement mode="Opaque" x="0" y="50" width="31" height="15" backcolor="#CCCCCC"/>
-					<box>
-						<pen lineWidth="0.5"/>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.0"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Bottom">
-						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
-					</textElement>
-					<text><![CDATA[Date		]]></text>
-				</staticText>
 				<staticText>
 					<reportElement mode="Opaque" x="31" y="50" width="64" height="15" backcolor="#CCCCCC"/>
 					<box>
@@ -456,6 +442,20 @@
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[""]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="50" width="31" height="15" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
