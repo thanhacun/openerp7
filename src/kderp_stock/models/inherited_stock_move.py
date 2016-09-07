@@ -114,6 +114,9 @@ class stock_move(osv.osv):
 
     #DOMAIN_LOCATION = [('usage','in',('supplier','internal','customer'))]
     _columns = {
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True, readonly = True,
+                                      domain=[('type', '<>', 'service')], states={'draft': [('readonly', False)]}),
+
         #'product_id': fields.related('purchase_line_id','product_id', select=True, type="many2one", relation="product.product", string="Product",store=True),
         #Sequence field must be largest compare with amount in Purchase Order line
         'picking_id': fields.many2one('stock.picking', 'Picking ID', select=True, states={'done': [('readonly', True)]},

@@ -37,12 +37,12 @@ class kderp_get_price_from_history_stock(osv.osv_memory):
     }
 
     #Write value to res company when click save in config
-    def set_price_different(self, cr, uid, ids, context=None):
+    def set_stock_price_different(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context)
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         user.company_id.write({'stock_price_different':config.stock_price_different})
 
-    def set_baseon_typeprice(self, cr, uid, ids, context=None):
+    def set_stock_baseon_typeprice(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context)
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         user.company_id.write({'stock_baseon_typeprice': config.stock_baseon_typeprice})
