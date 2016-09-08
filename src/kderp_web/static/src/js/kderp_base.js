@@ -535,9 +535,10 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
         time_to_leave = 2500;
         var timer;
         this.$el.find('.oe_searchview_drawer').on('mouseleave', function(){
-        	timer = setTimeout(function(){
-        		self.$el.toggleClass('oe_searchview_open_drawer', false);
-        	},1000)
+            if (!$("#ui-datepicker-div").is(':visible'))
+                timer = setTimeout(function(){
+                    self.$el.toggleClass('oe_searchview_open_drawer', false);
+                },1000)
         });
         this.$el.find('.oe_searchview_drawer').on('mouseenter', function(){
         	clearTimeout(timer);
@@ -2655,13 +2656,14 @@ session.web.SearchView = session.web.SearchView.extend(/** @lends instance.web.S
         var self = this;
         this._super(this);
 		this.$el.draggable({containment: this.$el.parents('.oe_header_row')});
-
         time_to_leave = 2500;
+
         var timer;
         this.$el.find('.oe_searchview_drawer').on('mouseleave', function(){
-        	timer = setTimeout(function(){
-        		self.$el.toggleClass('oe_searchview_open_drawer', false);
-        	},1000)
+            if (!$("#ui-datepicker-div").is(':visible'))
+                timer = setTimeout(function(){
+                    self.$el.toggleClass('oe_searchview_open_drawer', false);
+                },1000)
         });
         this.$el.find('.oe_searchview_drawer').on('mouseenter', function(){
         	clearTimeout(timer);
