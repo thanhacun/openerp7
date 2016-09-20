@@ -17,7 +17,8 @@ class gdt_companies_wizard(osv.TransientModel):
         Ham lay du lieu tu web mst
         """
         import requests
-        url = 'http://mst-kdvn.herokuapp.com/mst/'
+        #url = 'http://mst-kdvn.herokuapp.com/mst/'
+        url = 'http://mst-thanhacun-1.c9.io/mst/'
         #url = 'http://192.168.0.38:3880/mst/'
         result = {'tax_code':'', 'name':'', 'address':'', 'status':''}
         try:
