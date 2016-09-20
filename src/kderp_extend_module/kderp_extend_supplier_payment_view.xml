@@ -27,6 +27,9 @@
  				<xpath expr="//field[@name='payment_line']/tree/field[@name='amount']" position='replace'>
  					<field name="amount" sum="Sub-Total"/>
  				</xpath>
+                <field name="bc_to_accounting_date" position='after'>
+ 					<field name="payment_date" attrs="{'invisible':[('payment_type','!=','cash')]}"/>
+ 				</field>
  			</field>
  		</record> 
  		
