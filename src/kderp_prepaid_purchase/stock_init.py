@@ -39,7 +39,8 @@ class stock_init(osv.osv):
                             global_state varchar(16),
                             move_code integer,
                             source_move_code integer,
-                            state varchar(16)"""
+                            state varchar(16),
+                            date_order date"""
     sqlRemoteQuery = """Select 
                             sm.id,
                             sm.origin,
@@ -55,7 +56,8 @@ class stock_init(osv.osv):
                                 sm.global_state,
                             sm.move_code,
                             sm.source_move_code,
-                            sm.state
+                            sm.state,
+                            po.date_order
                         from 
                             stock_move sm
                         left join
@@ -68,6 +70,8 @@ class stock_init(osv.osv):
                             stock_location sld on sm.location_dest_id = sld.id
                         left join
                             purchase_order_line pol on purchase_line_id = pol.id
+                        left JOIN
+                            purchase_order po on pol.order_id = po.id
                         left join
                             account_analytic_account aaa on pol.account_analytic_id = aaa.id
                         where

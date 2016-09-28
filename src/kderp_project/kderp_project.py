@@ -483,13 +483,13 @@ class account_analytic_account(osv.osv):
                                                store={
                                                       'kderp.job.currency':(_get_job_from_job_currency, None, 10),
                                                     }),
-                'total_budget_amount':fields.function(_get_total_budget,string='Total Budget',method=True,type='float',
+                'total_budget_amount':fields.function(_get_total_budget,string='Working Budget',method=True,type='float',
                                                       digits_compute=dp.get_precision('Budget'),multi='_multi_get_total_budget',
                                                       store={
                                                              'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['kderp_budget_data_line'], 20),
                                                              'kderp.budget.data':(_get_job_budget_line, ['planned_amount','budget_id','account_analytic_id'], 20)}),
               
-                'total_budget_amount_usd':fields.function(_get_total_budget,string='Total Budget USD',method=True,type='float',
+                'total_budget_amount_usd':fields.function(_get_total_budget,string='Working Budget USD',method=True,type='float',
                                                       digits_compute=dp.get_precision('Amount'),multi='_multi_get_total_budget',
                                                       store={
                                                              'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['kderp_budget_data_line'], 20),

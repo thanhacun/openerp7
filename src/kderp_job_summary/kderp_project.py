@@ -550,7 +550,7 @@ class account_analytic_account(Model):
                                                  'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['need_update'], 50),                    
                                                  }),
                 
-                'vat_issued_amount':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Issued',multi='_get_issued_vat',
+                'vat_issued_amount':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Inv. Issued Total',multi='_get_issued_vat',
                                                  store={
                                                         'account.invoice':(_get_job_issued_from_from_client_payment,None,35),
                                                         'account.invoice.line':(_get_job_issued_from_client_payment_line,None,35),
@@ -558,7 +558,7 @@ class account_analytic_account(Model):
                                                         'kderp.invoice':(__get_job_issued_from_vat_invoice,None,35),
                                                       }),
                 
-                'vat_issued_subtotal':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='Issued Amount',multi='_get_issued_vat',
+                'vat_issued_subtotal':fields.function(_get_job_issued_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Inv. Issued',multi='_get_issued_vat',
                                                  store={
                                                         'account.invoice':(_get_job_issued_from_from_client_payment,None,35),
                                                         'account.invoice.line':(_get_job_issued_from_client_payment_line,None,35),
@@ -566,7 +566,7 @@ class account_analytic_account(Model):
                                                         'kderp.invoice':(__get_job_issued_from_vat_invoice,None,35),
                                                       }),
                 
-                'vat_received_amount':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Received',multi='_get_received_vat',
+                'vat_received_amount':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Inv. Received Total',multi='_get_received_vat',
                                                  store={
                                                         'kderp.supplier.payment':(_get_job_received_from_supplier_payment,['state','tax_base','taxes_id','currency_id','order_id','state','amount','advanced_amount','retention_amount'],35),
                                                         'kderp.supplier.payment.line':(_get_job_received_from_supplier_payment_line,None,35),
@@ -577,7 +577,7 @@ class account_analytic_account(Model):
                                                         'account.analytic.account':(lambda self, cr, uid, ids, c={}: ids, ['need_update'], 50),
                                                       }),
                 
-                'vat_received_subtotal':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Subtotal',multi='_get_received_vat',
+                'vat_received_subtotal':fields.function(_get_job_received_info,type='float',digits_compute=dp.get_precision('Budget'), method=True,string='VAT Inv. Received',multi='_get_received_vat',
                                                  store={
                                                         'kderp.supplier.payment':(_get_job_received_from_supplier_payment,['state','tax_base','taxes_id','currency_id','order_id','state','amount','advanced_amount','retention_amount'],35),
                                                         'kderp.supplier.payment.line':(_get_job_received_from_supplier_payment_line,None,35),
