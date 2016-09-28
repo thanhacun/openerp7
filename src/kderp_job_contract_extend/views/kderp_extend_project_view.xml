@@ -154,6 +154,39 @@
 	    	</field>
 		</record>
 
+        <!-- Account Analytic Account Form Inherit Add Summary Amount Info. View -->
+		<record id="view_account_job_summary_amount_inherit_form" model="ir.ui.view">
+			<field name="name">view.account.job.summary.amount.inherit.form</field>
+			<field name="model">account.analytic.account</field>
+			<field name='inherit_id' ref='kderp_job_summary.view_account_job_add_summary_amount_info_inherit_form'/>
+			<field name="arch" type="xml">
+                <group col="2" string="VND" class="kdvn_float_readonly" position="replace">
+                    <group col="2" string="VND" class="kdvn_float_readonly">
+                        <field name="contracted_amount"/>
+                        <field name="total_budget_amount" string="Working Budget"/>
+                        <field name="claimed_amount"/>
+                        <field name="collected_amount"/>
+                        <field name="vat_issued_subtotal"/>
+                        <field name="cost_vnd"/>
+                        <field name="paid_vnd"/>
+                        <field name="vat_received_subtotal"/>
+                    </group>
+                </group>
+                <group col="2" string="USD" class="kdvn_float_readonly" position="replace">
+					<group col="2" string="USD" class="kdvn_float_readonly">
+						<field name="contracted_amount_usd" string="Contracted Amount"/>
+						<field name="total_budget_amount_usd" string="Working Budget"/>
+                        <field name="claimed_amount_usd"/>
+	               		<field name="collected_amount_usd"/>
+                        <group colspan="2" col="1">
+                            <newline/>
+                        </group>
+						<field name="cost_usd"/>
+						<field name="paid_usd"/>
+               		</group>
+                </group>
+			</field>
+		</record>
 		
 	</data>
 </openerp>
