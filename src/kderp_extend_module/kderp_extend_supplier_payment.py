@@ -42,9 +42,12 @@ class kderp_supplier_payment(osv.osv):
             return True
      
     _columns = {
-                'state_budget' : fields.boolean("State Budget")
-                 }   
-     
+                'state_budget':fields.boolean("State Budget"),
+                'payment_date': fields.date('Date of Payment',
+                                             states={'cancel': [('readonly', True)], 'paid': [('readonly', True)],
+                                                     'completed': [('readonly', True)], 'done': [('readonly', True)]},
+                                             help='This date using in cash only'),
+                 }
     _constraints = [ 
                     (_check_cash, 'Error Input', ['payment_type', 'kderp_vat_invoice_ids', 'date_apply', 'cash_limit_active']),
                     (_onchange_banktransfer, 'Error Input',['payment_type'])

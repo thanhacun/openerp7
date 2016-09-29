@@ -98,17 +98,18 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
         return res
     
     _columns={
-              'prepaid_order_line_id':fields.many2one('kderp.prepaid.purchase.order.line','Desc.', required = True),
-              'prepaid_order_id':fields.related('prepaid_order_line_id', 'prepaid_order_id', string='Prepaid Order', type='many2one', relation='kderp.prepaid.purchase.order'),
-              'product_id':fields.related('prepaid_order_line_id', 'product_id', string='Product', type='many2one', relation='product.product'),
-              'po_number':fields.char('Order No.', size  = 16),
-              'move_description':fields.char('Note', size = 256),
-              'allocated_qty':fields.float('Allocated Qty', digit=(16,2)),
-              'requesting_qty':fields.float('Requesting Qty', digit=(16,2)),
-              'product_uom':fields.char('Unit', size = 6),              
-              'date':fields.date('Date'),
-              
-              'details_info_ids':fields.function(_get_details_ids,type='one2many',relation='kderp.purchase.job.allocated.combine')
+            'prepaid_order_line_id':fields.many2one('kderp.prepaid.purchase.order.line','Desc.', required = True),
+            'prepaid_order_id':fields.related('prepaid_order_line_id', 'prepaid_order_id', string='Prepaid Order', type='many2one', relation='kderp.prepaid.purchase.order'),
+            'product_id':fields.related('prepaid_order_line_id', 'product_id', string='Product', type='many2one', relation='product.product'),
+            'po_number':fields.char('Order No.', size  = 16),
+            'date_order':fields.date("Date Order"),
+            'move_description':fields.char('Note', size = 256),
+            'allocated_qty':fields.float('Allocated Qty', digit=(16,2)),
+            'requesting_qty':fields.float('Requesting Qty', digit=(16,2)),
+            'product_uom':fields.char('Unit', size = 6),
+            'date':fields.date('Date'),
+
+            'details_info_ids':fields.function(_get_details_ids,type='one2many',relation='kderp.purchase.job.allocated.combine')
               }
         
     def init(self, cr):
@@ -127,7 +128,8 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
                                     case when smo.state = 'confirmed' then 0 else smo.product_qty end as allocated_qty,
                                     case when smo.state = 'confirmed' then smo.product_qty else 0 end as requesting_qty,
                                     pu.name as product_uom,
-                                    smo.date
+                                    smo.date,
+                                    po.date_order
                                 from 
                                     kderp_prepaid_purchase_order_line kppol
                                 left join
@@ -138,6 +140,8 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
                                     stock_move smo on sm.move_code = smo.source_move_code and smo.state in ('confirmed','done','assigned')
                                 left join
                                     purchase_order_line pol on smo.purchase_line_id = pol.id
+                                left JOIN
+                                    purchase_order po on pol.order_id = po.id
                                 left join
                                     product_uom pu on smo.product_uom = pu.id
                                 left join
@@ -153,7 +157,8 @@ class kderp_prepaid_purchase_order_line_detail(osv.osv):
                                     case when vsmo.state = 'confirmed' then 0 else vsmo.product_qty end as allocated_qty,
                                     case when vsmo.state = 'confirmed' then vsmo.product_qty else 0 end as requesting_qty,
                                     vsmo.product_uom,
-                                    vsmo.date
+                                    vsmo.date,
+                                    vsmo.date_order
                                 from 
                                     kderp_prepaid_purchase_order_line kppol
                                 left join
