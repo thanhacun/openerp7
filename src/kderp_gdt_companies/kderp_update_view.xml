@@ -1,25 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-		<!-- Action update khong hien thi thong bao de update hay cancel -->
-		<!-- <record id="action_server_module_gdt_company_update" model="ir.actions.server">
-           <field name="name">Gdt Company Update</field>
-           <field name="condition">True</field>
-           <field name="type">ir.actions.server</field>
-           <field name="model_id" ref="model_gdt_companies" />
-           <field name="state">code</field>
-           <field name="code">self.action_update(cr, uid, context.get('active_ids', []), context=context)</field>
-       </record>
-
-       <record model="ir.values" id="action_module_gdt_company_update">
-           <field name="name">action_module_gdt_company_update</field>
-           <field name="action_id" ref="action_server_module_gdt_company_update" />
-           <field name="value" eval="'ir.actions.server,' + str(ref('action_server_module_gdt_company_update'))" />
-           <field name="key">action</field>
-           <field name="model_id" ref="model_gdt_companies" />
-           <field name="model">gdt.companies</field>
-           <field name="key2">client_action_multi</field>
-       </record> -->
        <!-- Winzard Update hien thi bang thong bao chon update hay cancel-->
        <record id="view_update_to_gdt_companies" model="ir.ui.view">
             <field name="name">Gdt Company Update</field>
@@ -43,5 +24,57 @@
             target="new"
             key2="client_action_multi"
             id="action_view_update_to_gdt_companies"/>
+
+        <!--========Hien thi cac ma so thue chua update========-->
+        <record id="view_wizard_check_gdt_companies" model="ir.ui.view">
+             <field name="name">Check Gdt Companies</field>
+             <field name="model">wizard.check.gdt.companies</field>
+             <field name="arch" type="xml">
+                <form string="Check Gdt Companies" version="7.0">
+                    <p>
+                		<b>Do you want to check Gdt Companies ?</b>
+                	</p>
+                    <footer>
+                        <button name="action_check_gdt_companies" string="OK" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+             </field>
+         </record>
+
+        <record id="action_view_wizard_check_gdt_companies" model="ir.actions.act_window">
+             <field name="name">Check Gdt Companies</field>
+             <field name="res_model">wizard.check.gdt.companies</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="view_wizard_check_gdt_companies"/>
+             <field name="context">{}</field>
+             <field name="target">new</field>
+       </record>
+
+        <menuitem
+            name="Check Gdt Companies"
+            action="action_view_wizard_check_gdt_companies"
+            id="menu_view_wizard_check_gdt_companies"
+            parent="kderp_gdt_companies_data"/>
+
+        <record id="check_gdt_companies" model="ir.ui.view">
+             <field name="name">Check Gdt Companies</field>
+             <field name="model">wizard.check.gdt.companies</field>
+             <field name="arch" type="xml">
+                <form string="Check Gdt Companies" version="7.0">
+                    <group>
+                        <separator string="Tax codes not Updated" colspan="4"/>
+                        <field name="error_codes" colspan="4" nolabel="1" readonly="1"/>
+                    </group>
+                    <footer>
+                        <button string="Close" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+             </field>
+         </record>
+
    	</data>
 </openerp>
