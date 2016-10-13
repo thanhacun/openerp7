@@ -48,8 +48,10 @@ class gdt_companies_wizard(osv.TransientModel):
                 raise osv.except_osv("KDERP Warning",'Please try again')
         except:
             if self.raise_error and popup:
-                
-                raise osv.except_osv("KDERP Warning",'Contact Administrator')
+                if response.status_code == 300:
+                    raise osv.except_osv("KDERP Warning", 'Input Captcha as link http://mst-thanhacun-1.c9.io/mst/0100112846')
+                else:
+                    raise osv.except_osv("KDERP Warning",'Contact Administrator [Server c9.io can sleeping]')
         return result
         
     def _get_tax_code_ids(self, cr, uid, ids, context):
@@ -301,9 +303,51 @@ class wizard_gdt_companies(osv.osv_memory):
 
 wizard_gdt_companies()
 
+class wizard_check_gdt_companies(osv.osv_memory):
+    _name='wizard.check.gdt.companies'
 
-                                     
-        
+    def _get_warning(self, cr, uid, context):
+        var = ""
+        res = []
+        res1 = []
+        sql_str = """
+            SELECT tax_code FROM gdt_companies
+            WHERE Now()::date <> write_date::date
+          """
+        cr.execute(sql_str)
+        for tax_code in cr.fetchall():
+            res.append(tax_code[0])
+        mst = "\n".join(str(x) for x in res)
 
+        sql_str1 = """SELECT tax_code FROM gdt_companies"""
+        cr.execute(sql_str1)
+        for tax_code in cr.fetchall():
+            res1.append(tax_code[0])
+        if len(res1) == len(res):
+            var = "Please update one tax code to show detail"
+            return var
+        else:
+            var = mst
+            return var
 
+    _columns = {
+        'error_codes': fields.text(string='Warning')
+    }
+    _defaults = {
+        'error_codes': _get_warning,
+    }
+
+    def action_check_gdt_companies(self, cr, uid, ids, context):
+        obj_model = self.pool.get('ir.model.data')
+        model_data_ids = obj_model.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'check_gdt_companies')])
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'wizard.check.gdt.companies',
+            'views': [(resource_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context,
+        }
     
