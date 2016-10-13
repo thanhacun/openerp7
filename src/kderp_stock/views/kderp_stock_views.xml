@@ -85,10 +85,11 @@
        	<record id="view_kderp_stock_location_search" model="ir.ui.view">
             <field name="name">kderp.stock.location.search</field>
             <field name="model">stock.location</field>
-           <field eval="5" name="priority"/>
+            <field eval="5" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Warehouse(s)">
-                    <field name="name" string="Stock Locations" />
+                    <field name="code" filter_domain="[('code','ilike',self)]"/>
+                    <field name="name" string="Stock Locations" filter_domain="[('name','ilike',self)]"/>
                     <field name="location_id" string="Belong to Location"/>
                     <field name="partner_id"/>
             		
