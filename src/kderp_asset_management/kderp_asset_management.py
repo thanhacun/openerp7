@@ -572,7 +572,9 @@ class kderp_asset_management(Model):
               'active': fields.boolean('Active'),
               'asset_state':fields.selection([('usable','Usable'),('unstable','Unstable'),('broken','Broken')],'Asset State')              
               }
-    
+    _constraints = [
+        (osv.osv._check_recursion, 'Error ! You can not create recursive Parent Asset.', ['parent_id'])
+    ]
     _defaults={
                'active':True,
                'state':lambda *x:'draft',
