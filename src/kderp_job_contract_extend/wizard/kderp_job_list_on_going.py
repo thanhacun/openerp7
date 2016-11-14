@@ -48,7 +48,8 @@ class wizard_kderp_job_list_ongoing(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': report_name,
             'datas': datas,
-            'context': context
+            'context': context,
+            'name':'10.2 List of Job On-Going (Filter by date)'
             }
 
     _columns = {                
