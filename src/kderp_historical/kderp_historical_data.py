@@ -52,7 +52,7 @@ class purchase_order_line(osv.osv):
                 'currency_id': fields.related('order_id', 'currency_id', type="many2one", relation="res.currency", string="Currency",readonly=True, required=True),
                 'po_state': fields.related('order_id', 'state', type="char", string="PO State",size=32,readonly=True),
                 
-                'partner_id':fields.related('order_id','partner_id',relation='res.partner',type='many2one',string='Link to Partner',store=True,select=1),
+                'partner_id':fields.related('order_id','partner_id',relation='res.partner',type='many2one',string='Link to Partner',store={'purchase.order':(_get_line_from_order, ['partner_id'],20)},select=1),
                 
                 'after_negotiation':fields.function(_get_price_final,string='After Negotiation',digits_compute=dp.get_precision('Amount'),type='float',
                                                  method=True,
