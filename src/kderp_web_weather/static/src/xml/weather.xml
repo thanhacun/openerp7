@@ -10,7 +10,7 @@
 
     <div t-name="kderp_weather_detail" class="kderp_weather_detail">
         <p>
-            <span class="big"><t t-esc="weather.now.display_location.city"/></span>
+            <span class="big"><t t-esc="weather.now.observation_location.state"/></span>
             <br/>
             <img t-att-src="weather.now.svg_icon_url" class="weather_icon" t-att-alt="weather.now.weather"><span class="medium"> <t t-esc="weather.now.temp_c + ' °C' || 'N/A'"/></span></img>
             <span class="medium"> (<t t-esc="weather.now.weather"/>)</span>

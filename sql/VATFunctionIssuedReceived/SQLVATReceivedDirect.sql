@@ -18,16 +18,15 @@ BEGIN
 			left join (Select
 					--Rate * amount
 					KSP.ORDER_ID,
-					SUM(
-					case when coalesce(vwrate.ksp_id,0)=0 THEN 1 else coalesce(vwrate.rate,0) end * 
-					case when coalesce(tax_base,'p')='p' then coalesce(amount,0) else 
-					case when coalesce(tax_base,'p')='all' then coalesce(amount,0) + coalesce(advanced_amount,0) + coalesce(retention_amount,0) else 
-					case when coalesce(tax_base,'p')='p_adv' then abs(coalesce(advanced_amount,0)) else abs(coalesce(retention_amount,0)) end end end) as subtotal_vat_amount
-				FROM kderp_supplier_payment ksp		
-				LEFT JOIN kderp_payment_supplier_rate vwrate ON ksp.id = vwrate.ksp_id
+					SUM(coalesce(ksvi.subtotal* ksvi.rate, 0)) as subtotal_vat_amount
+				FROM 
+					kderp_supplier_payment ksp		
+				LEFT JOIN
+					kderp_supplier_payment_vat_invoice_rel kspvir ON ksp.id = kspvir.payment_id
+				LEFT JOIN  
+					kderp_supplier_vat_invoice ksvi on kspvir.vat_invoice_id = ksvi.id
 				WHERE
-					EXISTS(select ksvi.id from  kderp_supplier_payment_vat_invoice_rel kspvir LEFT JOIN  kderp_supplier_vat_invoice ksvi on kspvir.vat_invoice_id=ksvi.id where
-						kspvir.payment_id=ksp.id  and ksvi.date between fromDate and toDate) and
+					ksvi.date between fromDate and toDate and
 					ksp.state not in ('draft','cancel')
 				GROUP BY
 					KSP.ORDER_ID) vwvat on po.id = vwvat.order_id 
@@ -70,11 +69,15 @@ BEGIN
 			left join (Select
 					--Rate * amount
 					KSPe.expense_id,
-					SUM(coalesce(amount,0)) as subtotal_vat_amount
-				FROM kderp_supplier_payment_expense kspe		
-				LEFT JOIN kderp_payment_supplier_expense_rate vwrate ON kspe.id = vwrate.kspe_id
+					SUM(coalesce(ksvi.subtotal* ksvi.rate, 0)) as subtotal_vat_amount
+				FROM 
+					kderp_supplier_payment_expense kspe		
+				left join
+					kderp_supplier_payment_expense_vat_invoice_rel kspevir on kspe.id = kspevir.payment_expense_id
+				LEFT JOIN 
+					kderp_supplier_vat_invoice ksvi on kspevir.vat_invoice_id=ksvi.id
 				WHERE
-					EXISTS(select ksvi.id from kderp_supplier_payment_expense_vat_invoice_rel kspevir LEFT JOIN kderp_supplier_vat_invoice ksvi on kspevir.vat_invoice_id=ksvi.id where kspe.id = kspevir.payment_expense_id  and ksvi.date between fromDate and toDate) and
+					ksvi.date between fromDate and toDate and
 					kspe.state not in ('draft','cancel')
 				GROUP BY
 					KSPe.expense_id) vwvat on koe.id = vwvat.expense_id

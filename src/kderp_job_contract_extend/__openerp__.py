@@ -37,9 +37,11 @@
             "views/kderp_extend_project_view.xml",
             "views/kderp_extend_contract_view.xml",
             "views/res_config_view.xml",
+            "views/kderp_job_contract_menu.xml",
 
             "wizard/kderp_job_ongoing_list_wizard_form_report_view.xml",
-            "wizard/kderp_for_import_budget_data_view.xml"
+            "wizard/kderp_for_import_budget_data_view.xml",
+            "wizard/kderp_job_contract_area_summary_view.xml"
             ],
     'demo':[],
     'installable':True

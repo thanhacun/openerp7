@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+            <menuitem id='kderp_menu_job_contract_report_menu' parent='kderp_base.menu_kderp_budget_control_root' name='Report' sequence="25" groups="kderp_base.group_kderp_global_view,kderp_job_contract_extend.group_kderp_advance_report_jobcontrol"/>
+
+    </data>
+</openerp>
