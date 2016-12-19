@@ -25,6 +25,9 @@ class kderp_contract_client(osv.osv):
     _inherit = 'kderp.contract.client'
     _name = 'kderp.contract.client'
 
+    def update_contract_history(self, cr, uid, ids, context):
+        return self.pool.get('kderp.contract.history').create_history(cr, uid, ids[0])
+
     def _check_area_per(self, cr, uid, ids):
         for ctc in self.browse(cr, uid, ids):
             job_amount_dict = {}
@@ -47,7 +50,8 @@ class kderp_contract_client(osv.osv):
         return True
 
     _columns = {
-                'contract_job_area_ids':fields.one2many('kderp.contract.job.area', 'contract_id', 'Job Control Area', readonly=True,states={'uncompleted':[('readonly',False)]}),
+                'contract_job_area_ids':fields.one2many('kderp.contract.job.area', 'contract_id', 'Job Control Area', readonly=True, states={'uncompleted':[('readonly',False)]}),
+                'contract_history_ids':fields.one2many('kderp.contract.history','contract_id','Contract History', readonly=True, states={'uncompleted':[('readonly',False)]})
     }
     _constraints = [
         (_check_area_per, "KDERP Warning, Total of percentage AREA must equal to 100%", ['contract_job_area_ids'])]

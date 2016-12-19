@@ -21,7 +21,7 @@
 
 from openerp.osv import fields, osv
 
-listofreport = [('accpeted.orders','Accepted Orders'),('working.process','Working Process')]
+listofreport = [('accepted.orders','Accepted Orders'),('working.process','Working Process')]
 class wizard_kderp_job_contract_area_summary(osv.osv_memory):
     _name = 'wizard.kderp.job.contract.area.summary'
     _description = 'Job Contract Area Summary Wizard'
@@ -48,7 +48,9 @@ class wizard_kderp_job_contract_area_summary(osv.osv_memory):
             'report_name': report_name,
             'datas': datas,
             'context': context,
-            'name': titleofreport
+            'name': titleofreport,
+            'nodestroy': True,
+            'target': 'new'
             }
 
     def _get_month_list(self, cr, uid, context):

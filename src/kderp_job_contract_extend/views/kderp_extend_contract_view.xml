@@ -7,7 +7,20 @@
             <field name="name">kderp.view.contract.extend.form.inherit.form02</field>
             <field name="model">kderp.contract.client</field>
             <field name='inherit_id' ref='kderp_contract.kderp_view_contract_client_form'/>
-            <field name="arch" type="xml">            	
+            <field name="arch" type="xml">
+                <field name="contract_summary_currency_ids" position="after">
+                    <group string='Contract History' colspan="4">
+                        <field name="contract_history_ids" nolabel="1" mode='tree' colspan="4" min_rows="3" editable="top">
+                            <tree string="Contract History">
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="amount"/>
+                                <field name="tax_amount"/>
+                                <field name="subtotal"/>
+                            </tree>
+                        </field>
+                    </group>
+                </field>
                 <page string="Contract Summary" position="after">
                     <page string="Control Area" groups="kderp_job_contract_extend.group_kderp_control_area_contract_show_view">
                         <field name="contract_job_area_ids" nolabel="1" context="{'contract_id': active_id}">

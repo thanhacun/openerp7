@@ -29,3 +29,5 @@ import inherited_kderp_contract_client
 
 import kderp_contract_job_area
 import kderp_job_control_allotment_area
+
+import kderp_contract_history

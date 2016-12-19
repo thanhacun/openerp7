@@ -30,16 +30,14 @@ from
 		kderp_contract_job_area kcja on aaa.id = kcja.job_id
 	left join
 		(select 
-		    contract_id,
-		    kcja.area_id as sarea_id,
-		    job_id,
+		    contract_id,		   
 		    sum(coalesce(amount,0)) as total
 		from 
 		    kderp_contract_job_area kcja	
 		group by
 		    contract_id,
 		    kcja.area_id,
-		    job_id) astemp on  kcja.contract_id = astemp.contract_id and kcja.area_id = sarea_id and kcja.job_id = astemp.job_id
+		    job_id) astemp on  kcja.contract_id = astemp.contract_id
 	left join
 		account_invoice ai on kcja.contract_id = ai.contract_id and ai.state not in ('draft','cancel')
 	left join
@@ -75,15 +73,13 @@ from
 	left join
 		(select 
 		    contract_id,
-		    kcja.area_id as sarea_id,
-		    job_id,
 		    sum(coalesce(amount,0)) as total
 		from 
 		    kderp_contract_job_area kcja	
 		group by
 		    contract_id,
 		    kcja.area_id,
-		    job_id) astemp on  kcja.contract_id = astemp.contract_id and kcja.area_id = sarea_id and kcja.job_id = astemp.job_id
+		    job_id) astemp on  kcja.contract_id = astemp.contract_id
 	left join
 		account_invoice ai on kcja.contract_id = ai.contract_id and ai.state not in ('draft','cancel')
 	left join

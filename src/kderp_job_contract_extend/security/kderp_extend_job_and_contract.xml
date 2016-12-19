@@ -32,5 +32,11 @@
 			<field name="category_id" ref="kderp_extend_module.module_kderp_other_group_category"/>
 		</record>
 
+        <record id="kderp_group_contract_history_admin" model="res.groups">
+			<field name="name">KDERP Group Contract History / Full </field>
+			<field name="users" eval="[(4, ref('base.user_root'))]"/>
+			<field name="category_id" ref="kderp_extend_module.module_kderp_other_group_category"/>
+		</record>
+
 	</data>
 </openerp>

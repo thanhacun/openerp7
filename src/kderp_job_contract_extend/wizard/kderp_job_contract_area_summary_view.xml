@@ -7,7 +7,7 @@
 			<field name="model">wizard.kderp.job.contract.area.summary</field>
 			<field name="arch" type="xml">
 				<form string="Select a month" version="7.0" readonly="1" create="false" >
-					<group colspan="2" col="4">
+					<group colspan="2" col="2">
                         <field name="month"/>
                         <field name="nameofreport"/>
 					</group>
@@ -32,7 +32,7 @@
 
          <menuitem
                 icon="STOCK_PRINT"
-                name="Summary of Accepted Orders"
+                name="Summary Report - Area Separated"
                 parent="kderp_menu_job_contract_report_menu"
                 action="action_print_job_contract_area_report_form"
                 id="menu_summary_of_accepted_order"
