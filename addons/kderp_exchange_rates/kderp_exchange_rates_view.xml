@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	        <!-- Top menu item -->
+        <menuitem name="Exchange Rates"
+            id="base.menu_kderp_exchange_rates_root"
+            sequence="20"/>
+       <menuitem id="menu_kderp_exchange_rates" name="Exchange Rates"
+            parent="base.menu_kderp_exchange_rates_root"
+            sequence="1"/>
+      	<menuitem id="menu_kderp_exchange_rates_configuration" name="Configuration "
+            parent="base.menu_kderp_exchange_rates_root"
+            sequence="1"/>	
+            
+         <record model="ir.ui.view" id="kderp_currency_tree">
+			<field name="name">kderp_currency_tree</field>
+			<field name="model">kderp.currency</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Currency">
+					<field name="cur_code"/>
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>  
+		<record model="ir.ui.view" id="kderp_currency_form">
+			<field name="name">kderp_currency_form</field>
+			<field name="model">kderp.currency</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Currency">
+					<field name="cur_code"/>
+					<field name="name"/>
+				</form>
+			</field>
+		</record>  
+        <!-- view exchange rate -->          
+		<record model="ir.ui.view" id="kderp_exchange_rates_tree">
+			<field name="name">kderp.exchange.rates.tree</field>
+			<field name="model">kderp.exchange.rates</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Exchange Rates">
+					<field name="cur_id"/>
+					<field name="buy"/>
+					<field name="sell"/>
+					<field name="tranfer"/>
+					<field name="date"/>
+				</tree>
+		</field>
+		</record>
+		<record model="ir.ui.view" id="kderp_exchange_rates_form">
+			<field name="name">kderp.exchange.rates.form</field>
+			<field name="model">kderp.exchange.rates</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Exchange Rates">
+					<field name="cur_id"/>
+					<field name="buy"/>
+					<field name="sell"/>
+					<field name="tranfer"/>
+					<field name="date"/>
+				</form>
+		</field>
+		</record>			
+		<record model="ir.actions.act_window" id="action_kderp_exchange_rates">
+			<field name="name">Exchange Rates</field>
+			<field name="res_model">kderp.exchange.rates</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="action_kderp_currency">
+			<field name="name">Currency</field>
+			<field name="res_model">kderp.currency</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		  
+		<record id="action_server_kderp_update_rates" model="ir.actions.server">
+            <field name="name">Update Rates</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_kderp_exchange_rates"/>
+            <field name="state">code</field>
+            <field name="code">self.UJE_exrate(cr,uid,[],context)</field>
+        </record>
+            
+		<menuitem name="Exchange Rates" id="kderp_exchange_rates_menu_mainform" parent="menu_kderp_exchange_rates" sequence="10" action="action_kderp_exchange_rates"/>
+		<menuitem name="Update Rates" id="kderp_update_rates_menu_mainform" parent="menu_kderp_exchange_rates" sequence="20" action="action_server_kderp_update_rates"/>
+		<menuitem name="Currency" id="kderp_currency_menu_mainform" parent="menu_kderp_exchange_rates_configuration" sequence="30" action="action_kderp_currency"/>
+	</data>
+</openerp>
