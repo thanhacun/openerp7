@@ -1,0 +1,22 @@
+OpenERP:
+  image: kdvn/openerp-c9
+  container_name: openerp-c9
+  ports:
+   - "8180:8069"
+   - "88:3000"
+  volumes:
+   - ./addons:/mnt/extra-addons
+   - ./filestore:/mnt/oefilestore
+  links:
+   - openerp_db:db
+  environment:
+   - PGHOST=openerp_db
+   - PGUSER=openerp
+   - PGPASSWORD=openerp
+   - AUTH=admin:admin
+openerp_db:
+  image: postgres:latest
+  container_name: openerp_db
+  environment:
+   - POSTGRES_USER=openerp
+   - POSTGRES_PASSWORD=openerp
