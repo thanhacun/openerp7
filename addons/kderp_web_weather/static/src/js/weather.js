@@ -38,6 +38,7 @@ openerp.kderp_web_weather = function(instance) {
       //getting forecast for chance of rain...
       API.curLoc(function(location) {
         API.weather(location.lat, location.lon, function(weather){
+          //console.log(weather);
           return cb(weather);
         });
       });
