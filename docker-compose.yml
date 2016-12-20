@@ -1,22 +1,22 @@
-kdvn_website:
-  image: kdvn/openerp
-  container_name: kdvn_oe7
+OpenERP:
+  image: kdvn/openerp-c9
+  container_name: openerp-c9
   ports:
-    - "8069:8069"
+   - "8180:8069"
+   - "88:3000"
   volumes:
-    - ./src:/mnt/extra-addons
-    - ./filestore:/mnt/oe7filestore
+   - ./addons:/mnt/extra-addons
+   - ./filestore:/mnt/oefilestore
   links:
-    - oe7_db:db
+   - openerp_db:db
   environment:
-    - PGHOST=oe7_db
-    - PGUSER=openerp
-    - PGPASSWORD=openerpdemo
-oe7_db:
+   - PGHOST=openerp_db
+   - PGUSER=openerp
+   - PGPASSWORD=openerp
+   - AUTH=admin:admin
+openerp_db:
   image: postgres:latest
-  container_name: oe7_db
+  container_name: openerp_db
   environment:
-    - POSTGRES_USER=openerp
-    - POSTGRES_PASSWORD=openerpdemo
-
-
+   - POSTGRES_USER=openerp
+   - POSTGRES_PASSWORD=openerp
