@@ -42,4 +42,6 @@ This repository included a docker-compose.yml file that already to used with the
         * git merge upstream/oe7-develop (Note: Must working on your branch you want to get latest code)
         * git push
 * Using pgtool.bash to dump or restore a database (on real machine running docker)
+    * Restore a database
+        * pgtools.bash -C=NameOfContainer -F=PathToFileDatabse -D=NameOfDatabase create
 * Passwords showing in the docker-compose.yml file are for demonstration purpose only. They can be changed and **should _NOT_ upload** to github.
