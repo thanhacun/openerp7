@@ -31,6 +31,6 @@
         </table>
         <span style="font-size: 10px; text-align: right; color:yellow">Update every hour (click to force)</span>
         <br/>
-        <span style="font-size: 10px; text-align: right">Observed : <t t-esc="new Date(weather.now.local_time_rfc822).toLocaleString()"/></span>
+        <span style="font-size: 10px; text-align: right">Observed in <span style="font-size: 10px; text-align: right; color:yellow" ><t t-esc="weather.now.observation_location.city"/></span> @ <t t-esc="new Date(weather.now.local_time_rfc822).toLocaleTimeString()"/></span>
     </div>
 </templates>
