@@ -54,4 +54,15 @@ This repository included a docker-compose.yml file that already to used with the
 * Using pgtool.bash to dump or restore a database (**on real machine running docker**)
     * Restore a database
         * pgtools.bash -C=NameOfDatabaseContainer -F=PathToFileDatabse -D=NameOfDatabase create
-* Passwords showing in the docker-compose.yml file are for demonstration purpose only. They can be changed and **should _NOT_ upload** to github.
+
+* Please note when using docker-compose
+    * Port opening (in container) (Already exposed)
+        * Port 3000 using for Cloud9 IDE
+        * Port 8069 using for OpenERP Web
+    * 3 folder can mount (volumes)
+        * /mnt/oefilestore: Using filestore for OpenERP
+        * /mnt/extra-addons: Other addons using for OpenERP System
+        * /opt/workspace: Your workspace
+    * *Please change or remove LOCAL_USER_ID, this variable using for change user id in container*
+    * Passwords showing in the docker-compose.yml file are for demonstration purpose only. They can be changed and **should _NOT_ upload** to github.
+
