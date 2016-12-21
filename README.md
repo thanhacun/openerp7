@@ -66,6 +66,6 @@ This repository included a docker-compose.yml file that already to used with the
         * /mnt/oefilestore: Using filestore for OpenERP
         * /mnt/extra-addons: Other addons using for OpenERP System
         * /opt/workspace: Your workspace
-    * *Please change or remove LOCAL_USER_ID, this variable using for change user id in container*
+    * *Please change or remove LOCAL_USER_ID, this variable is used to change user id in the container*. Command to get user id `id -u $USER` 
     * Passwords showing in the docker-compose.yml file are for demonstration purpose only. They can be changed and **should _NOT_ upload** to github.
 
