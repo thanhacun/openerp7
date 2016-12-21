@@ -36,7 +36,7 @@ This repository included a docker-compose.yml file that already to used with the
 * If cloning the repository, the customized addons, follow instruction below
     * goto github.com to common repository, fork repository
     * git init
-    * git remote add origin your forked repository url
+    * git remote add origin *your forked repository url*
     * git fetch
     * git branch oe7-develop origin/oe7-develop
     * git checkout oe7-develop

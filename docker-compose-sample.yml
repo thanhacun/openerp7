@@ -7,6 +7,7 @@ OpenERP:
   volumes:
    - ./addons:/mnt/extra-addons
    - ./filestore:/mnt/oefilestore
+   - ./workspace:/opt/workspace
   links:
    - openerp_db:db
   environment:
