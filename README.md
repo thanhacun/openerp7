@@ -51,10 +51,13 @@ This repository included a docker-compose.yml file that already to used with the
         * git merge upstream/oe7-develop (Note: Must working on your branch you want to get latest code)
         * git push
 
-* Using pgtool.bash to dump or restore a database (**on real machine running docker**)
+* Using pgtool.bash to dump or restore a database (**on real machine running docker**) (This tool only running on linux)
     * Restore a database
-        * pgtools.bash -C=NameOfDatabaseContainer -F=PathToFileDatabse -D=NameOfDatabase create
-
+        * ./pgtools.bash -C=NameOfDatabaseContainer -F=PathToFileDatabse -D=NameOfDatabase create
+        * Before to use pgtools please follow introduction:
+            * Download file pgtools from this repository.
+            * Make file can excuateble chmod +x pgtools.bash
+        
 * Please note when using docker-compose
     * Port opening (in container) (Already exposed)
         * Port 3000 using for Cloud9 IDE
