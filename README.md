@@ -23,7 +23,7 @@ KINDEN VIETNAM OpenERP 7 customization modules.
 
 ### Already to use docker-compose file
 
-This repository included a docker-compose.yml file that already to used with the command `docker-compose up`..  
+This repository included a docker-compose.yml file that already to used with the command **`docker-compose up`**
 *Some notes:*
 
 * General ways to commit code
@@ -55,8 +55,8 @@ This repository included a docker-compose.yml file that already to used with the
     * Restore a database
         * ./pgtools.bash -C=NameOfDatabaseContainer -F=PathToFileDatabse -D=NameOfDatabase create
         * Before to use pgtools please follow introduction:
-            * Download file *pgtools.bash* from this repository.
-            * Make file can excuateble *`chmod +x1 pgtools.bash`*
+            * Download file **pgtools.bash** from this repository.
+            * Make file can excuateble **`chmod +x1 pgtools.bash`**
         
 * Please note when using docker-compose
     * Port opening (in container) (Already exposed)
