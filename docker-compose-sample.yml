@@ -15,7 +15,7 @@ OpenERP:
    - PGUSER=openerp
    - PGPASSWORD=openerp
    - AUTH=admin:admin
-   - LOCAL_USER_ID=#Please change USER ID 1007 to ??? (id -u $USER)
+   - LOCAL_USER_ID=#uid (Using this command "id -u $USER" to get uid)
 openerp_db:
   image: postgres:latest
   container_name: openerp_db

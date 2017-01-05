@@ -64,11 +64,11 @@
 	                    </group>
 	                    <group colspan="4" col="4">
 	                    	<group string='Information' colspan="2">
-								<field name="date" string="Request Date" on_change="new_code(user_id,name,advance_buying)"/>
-                    			<field name="advance_buying" on_change="new_code(user_id,name,advance_buying)"/>
+								<field name="date" string="Request Date" on_change="new_code(user_id,date,name,advance_buying)"/>
+                    			<field name="advance_buying" on_change="new_code(user_id,date,name,advance_buying)"/>
                     			<field name="type_cash" string="Cash flow" attrs="{'invisible':[('advance_buying','!=','cash')]}" required="1"/>
 	                        	<field name="account_analytic_id"/>
-	                        	<field name="user_id" on_change="new_code(user_id,name,advance_buying)" widget="many2oneimage" options="{'model':'hr.employee','preview_image':'image_small'}"/>
+	                        	<field name="user_id" on_change="new_code(user_id,date,name,advance_buying)" widget="many2oneimage" options="{'model':'hr.employee','preview_image':'image_small'}"/>
 		                        <field name='currency_id' on_change="get_new_voucher(date_received_money,payment_voucher_no,date_of_received_reimbursement,receive_voucher_no,currency_id,advance_buying)"/>		                        
 		                        <field name='period_id' invisible="1"/>
 	                        </group>

@@ -23,7 +23,7 @@ KINDEN VIETNAM OpenERP 7 customization modules.
 
 ### Already to use docker-compose file
 
-This repository included a docker-compose.yml file that already to used with the command `docker-compose up`..  
+This repository included a docker-compose.yml file that already to used with the command **`docker-compose up`**
 *Some notes:*
 
 * General ways to commit code
@@ -51,10 +51,13 @@ This repository included a docker-compose.yml file that already to used with the
         * git merge upstream/oe7-develop (Note: Must working on your branch you want to get latest code)
         * git push
 
-* Using pgtool.bash to dump or restore a database (**on real machine running docker**)
+* Using pgtool.bash to dump or restore a database (**on real machine running docker**) (This tool only running on linux)
     * Restore a database
-        * pgtools.bash -C=NameOfDatabaseContainer -F=PathToFileDatabse -D=NameOfDatabase create
-
+        * **`./pgtools.bash -C=NameOfDatabaseContainer -F=PathToFileDatabse -D=NameOfDatabase create`**
+        * Before to use pgtools please follow introduction:
+            * Download file **pgtools.bash** from this repository.
+            * Make file can excuateble **`chmod +x1 pgtools.bash`**
+        
 * Please note when using docker-compose
     * Port opening (in container) (Already exposed)
         * Port 3000 using for Cloud9 IDE
@@ -63,6 +66,6 @@ This repository included a docker-compose.yml file that already to used with the
         * /mnt/oefilestore: Using filestore for OpenERP
         * /mnt/extra-addons: Other addons using for OpenERP System
         * /opt/workspace: Your workspace
-    * *Please change or remove LOCAL_USER_ID, this variable using for change user id in container*
+    * *Please change or remove LOCAL_USER_ID, this variable is used to change user id in the container*. Command to get user id **`id -u $USER`** 
     * Passwords showing in the docker-compose.yml file are for demonstration purpose only. They can be changed and **should _NOT_ upload** to github.
 

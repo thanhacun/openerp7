@@ -270,7 +270,7 @@ class kderp_advance_payment(osv.osv):
                     result.update({'receive_voucher_no':new_pc_pt})
         return {'value':result}
     
-    def new_code(self,cr,uid,ids,staff_id,name=False,type='material'):
+    def new_code(self,cr,uid,ids,staff_id,date,name=False,type='material'):
         if ids:
             try:
                 ids=ids[0]
@@ -318,7 +318,7 @@ class kderp_advance_payment(osv.osv):
                                     max(substring(name from "+str(prefix)+" for length(name)-"+str(prefix-1)+"))::integer \
                                 from \
                                     kderp_advance_payment \
-                                where name ilike 'C" + location_code + time.strftime('%y')+"-"+staff_code+"-"+"%%' and id!="+str(ids))
+                                where name ilike 'C" + location_code + date[:4][2:]+"-"+staff_code+"-"+"%%' and id!="+str(ids))
                     if cr.rowcount:
                         next_code=str(cr.fetchone()[0])
                         #raise osv.except_osv("E",next_code)
@@ -328,7 +328,7 @@ class kderp_advance_payment(osv.osv):
                             next_code='1'
                     else:
                         next_code='1'
-                    val={'value':{'outstanding':False,'name':'C%s%s-%s-%s' %(location_code,time.strftime('%y'),staff_code,next_code.rjust(2,'0'))}}
+                    val={'value':{'outstanding':False,'name':'C%s%s-%s-%s' %(location_code,date[:4][2:],staff_code,next_code.rjust(2,'0'))}}
                 else:
                     staff_code = staff_code_list['staffno'][1:]
                     if name:
@@ -341,7 +341,7 @@ class kderp_advance_payment(osv.osv):
                                     max(substring(name from "+str(prefix)+" for length(name)-"+str(prefix-1)+"))::integer \
                                 from \
                                     kderp_advance_payment \
-                                where name ilike 'AD" +  location_code +time.strftime('%y')+"-"+staff_code+"-"+"%%' and id!="+str(ids))
+                                where name ilike 'AD" +  location_code +date[:4][2:]+"-"+staff_code+"-"+"%%' and id!="+str(ids))
                     if cr.rowcount:
                         next_code=str(cr.fetchone()[0])
                         #raise osv.except_osv("E",next_code)
@@ -351,7 +351,7 @@ class kderp_advance_payment(osv.osv):
                             next_code='1'
                     else:
                         next_code='1'
-                    val={'value':{'outstanding':outstanding,'name':'AD%s%s-%s-%s' % (location_code,time.strftime('%y'),staff_code,next_code.rjust(2,'0'))}}
+                    val={'value':{'outstanding':outstanding,'name':'AD%s%s-%s-%s' % (location_code,date[:4][2:],staff_code,next_code.rjust(2,'0'))}}
                             
         return val
         
