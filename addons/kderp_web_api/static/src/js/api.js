@@ -3,9 +3,9 @@ openerp.kderp_web_api = function(instance) {
   var apiURL = {
     //location: 'http://ip-api.com/json',
     location: 'https://ip.nf/me.json',
-    weather_now: 'http://thcn-api.herokuapp.com/api/weathers/now/',
-    weather_hourly: 'http://thcn-api.herokuapp.com/api/weathers/hourly/',
-    weather_forecast: 'http://thcn-api.herokuapp.com/api/weathers/forecast/'
+    weather_now: 'https://thcn-api.herokuapp.com/api/weathers/now/',
+    weather_hourly: 'https://thcn-api.herokuapp.com/api/weathers/hourly/',
+    weather_forecast: 'https://thcn-api.herokuapp.com/api/weathers/forecast/'
   }
   instance.web.api = {
     curLoc: function(cb) {
