@@ -29,6 +29,13 @@
 		                    <field name="name"/>
 		                    <field name="import_type" required="1"/>
 		                    <field name="remarks"/>
+		                    <field name='detail_date_invoice_ids' nolabel="1" colspan="4" mode="tree" view_type='tree' attrs="{'invisible':[('import_type','!=','date_invoice')]}">
+		                    	<tree string='Details' editable='top' colors="blue:state=='draft'">
+		                    		<field name="asset_id"/>		                    		
+		                    		<field name="date" string='Date Invoice'/>
+		                    		<field name="state"/>
+		                    	</tree>
+		                    </field>
 		                    <field name='detail_spec_ids' nolabel="1" colspan="4" mode="tree" view_type='tree' attrs="{'invisible':[('import_type','!=','spec')]}">
 		                    	<tree string='Details' editable='top' colors="blue:state=='draft'">
 		                    		<field name="asset_id"/>		                    		

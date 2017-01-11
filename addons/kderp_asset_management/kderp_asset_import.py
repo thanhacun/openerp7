@@ -47,6 +47,11 @@ class kderp_asset_import(Model):
                     write_data = {'name':kail.remarks}                    
                     kail.asset_id.write(write_data)
                     kail.write({'state':'done'})
+                    
+                elif kai.import_type=='date_invoice':
+                    write_data = {'dateofinvoice':kail.date}                    
+                    kail.asset_id.write(write_data)
+                    kail.write({'state':'done'})
 
                 elif kai.import_type=='usage':                    
                         if not kail.user_id or not kail.date:
@@ -70,7 +75,7 @@ class kderp_asset_import(Model):
                 kai.write({'state':'done'})
         pass
         
-    IMPORT_TYPE = (('state','State'),('usage','Usage'),('spec','Specification'))
+    IMPORT_TYPE = (('state','State'),('usage','Usage'),('spec','Specification'), ('date_invoice','Date Invoice'))
     _columns={
               'name':fields.date("Import Date", 
                                     states={'done':[('readonly',True)]}, required=True),              
@@ -82,6 +87,7 @@ class kderp_asset_import(Model):
               'detail_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_spec_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_usage_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
+              'detail_date_invoice_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'import_type':fields.selection(IMPORT_TYPE,'Import type',states={'done':[('readonly',True)]}),
 
               }
