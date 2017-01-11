@@ -1,7 +1,8 @@
 openerp.kderp_web_api = function(instance) {
   //console.log("Helper functions loaded!");
   var apiURL = {
-    location: 'http://ip-api.com/json',
+    //location: 'http://ip-api.com/json',
+    location: 'https://ip.nf/me.json',
     weather_now: 'http://thcn-api.herokuapp.com/api/weathers/now/',
     weather_hourly: 'http://thcn-api.herokuapp.com/api/weathers/hourly/',
     weather_forecast: 'http://thcn-api.herokuapp.com/api/weathers/forecast/'
