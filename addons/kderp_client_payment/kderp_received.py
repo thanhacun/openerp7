@@ -34,9 +34,10 @@ class kderp_received(osv.osv):
     _rec_name='client_payment_id'
 
     #SYSTEM METHOD    
-    def create(self, cr, uid, vals, context={}):
+    def create1(self, cr, uid, vals, context={}):
         new_payment_id = super(kderp_received, self).create(cr, uid, vals, context=context)
         new_payment_ids=new_payment_id
+        # import pdb; pdb.set_trace()
         if type(new_payment_ids).__name__<>'list':
             new_payment_ids=[new_payment_ids]
         
@@ -133,21 +134,26 @@ class kderp_received(osv.osv):
         obj_move = self.pool.get('account.move')
         kcp_obj = self.pool.get('account.invoice')
         kp_ids=[]
-        move_ids =[]
+        move_ids ={}
+        kr_ids = []
+        move_line_ids = {}
         for kr in self.browse(cr, uid, ids, context):
-            move_line_ids =[]
+            kr_ids.append(kr.id)
+            client_payment_id = kr.client_payment_id.id
             if kr.move_id:
+                move_ids[kr.move_id.id]  = True
                 for move_line in kr.move_id.line_id:
-                    move_line_ids.append(move_line.id)
+                    move_line_ids[move_line.id] = True
+        move_ids = move_ids.keys(); move_line_ids = move_line_ids.keys()
+        
+        if move_line_ids:
+            obj_move_line._remove_move_reconcile(cr, uid, move_line_ids, context=context)                    
+        obj_move.button_cancel(cr, uid, move_ids, context)
+        
+        self.write(cr, uid, kr_ids, {'move_id':False, 'state':'draft'}, context)
+        obj_move.unlink(cr, uid, move_ids, context)
 
-            if move_line_ids:
-                obj_move_line._remove_move_reconcile(cr, uid, move_line_ids, context=context)                    
-            obj_move.button_cancel(cr, uid, [kr.move_id.id], context)
-            
-            self.write(cr, uid, [kr.id],{'move_id':False, 'state':'draft'}, context)
-            obj_move.unlink(cr, uid, [kr.move_id.id], context)
-
-            kcp_obj.action_cancel_draft(cr, uid, [kr.client_payment_id.id], context)
+        kcp_obj.action_cancel_draft(cr, uid, [client_payment_id], context)
             
         return {'type': 'ir.actions.client',
                 'tag': 'reload'}
@@ -166,74 +172,90 @@ class kderp_received(osv.osv):
         #Value will be write to Payment
         kr_vals={}
         kcp_obj=self.pool.get('account.invoice')
+        payment_amount = 0
+        payment_currency = False
+        check_writeoff = False
+        journal_obj = False
+        kr_ids = []
+        context['amount_currency'] = 0
+        payment_currency = False
+        exrate = 0
+        client_payment_exrate = False
+        kr_period_id = False
+        
         for kr in self.browse(cr, uid, ids, context):
-            if kr.currency_id.id<>company_currency.id:
-                context['currency_id']=kr.currency_id.id
-                context['amount_currency']=kr.amount
-                if not kr.exrate:
-                    exrate = kr.client_payment_id.exrate
-                else:
-                    exrate = kr.exrate
-                    
-                #Put Period later will write to Payment
-                #kr_vals['exrate']=exrate
-            elif kr.currency_id.id<>kr.client_payment_id.currency_id:
-                exrate=(kr.amount/kr.client_payment_id.amount_total) if kr.client_payment_id.amount_total else 0 
-                #kr_vals['exrate']=exrate
-            else:
-                exrate=1
+            kr_ids.append(kr.id)
+            journal_obj = kr.journal_id
+            payment_currency = kr.currency_id.id
+            payment_amount += kr.amount
+            check_writeoff = kr.writeoff
+            client_payment_exrate = kr.exrate if kr.exrate else kr.client_payment_id.exrate
+            client_payment_obj = kr.client_payment_id
+            kr_period_id = kr.period_id.id
+            
+        if payment_currency <> company_currency.id:
+            context['currency_id']= payment_currency
+            context['amount_currency'] = payment_amount
+            
+        #Put Period later will write to Payment
+        #kr_vals['exrate']=exrate
+        elif payment_currency<>client_payment_obj.currency_id.id:
+            exrate=(payment_amount/client_payment_obj.amount_total) if client_payment_obj.amount_total else 0 
+            #kr_vals['exrate']=exrate
+        else:
+            exrate=1
                 #kr_vals['exrate']=1
-            #Check write off or not
+        #Check write off or not
+        
+        acc_writeoff = False
+            
+        if check_writeoff:
+            acc_writeoff = company.income_currency_exchange_account_id.id
+            context['comment']='Write-Off for %s' % client_payment_obj.number
+        if exrate<>client_payment_obj.exrate:
+            context['new_exrate'] = exrate                                    
+        else:                
+            context['new_exrate'] = 0
 
-            check_writeoff = kr.writeoff             
-            acc_writeoff = False
-            if check_writeoff:
-                    acc_writeoff = company.income_currency_exchange_account_id.id
-                    context['comment']='Write-Off for %s' % kr.client_payment_id.number
-            if exrate<>kr.client_payment_id.exrate:
-                context['new_exrate'] = exrate                                    
-            else:                
-                context['new_exrate'] = 0
-
-            #Check balance or not balance
-            
-            #if  :
-             #   kcp_obj.write(cr, uid, kr.client_payment_id.id, {'exrate':context.get('new_exrate',0)})
-            
-            if not check_writeoff and context.get('new_exrate',0) and kr.client_payment_id.currency_id.id<>company_currency.id:
-                #kcp_obj.write(cr, uid, kr.client_payment_id.id, {'exrate':context['new_exrate']},context)
-                context['exrate']=context['new_exrate']
-                kcp_obj.action_cancel(cr, uid, [kr.client_payment_id.id], context)
-                context['ignore_check_reconcile']=True
-                kcp_obj.btn_action_revising_completed(cr, uid, [kr.client_payment_id.id], context)
-            
-            if kr.currency_id.id<>company_currency.id:
-                new_amount = res_obj.round(cr, uid, company_currency, kr.amount*exrate)
-            else:#Con lai neu la VND
-                new_amount = res_obj.round(cr, uid, company_currency, kr.amount)
-            #raise osv.except_osv("E",new_amount)
-            #Put Period later will write to Payment
-            if kr.period_id:
-                receive_period_id = kr.period_id.id
-            else:
-                periods = self.pool.get('account.period').find(cr, uid, kr.date, context=context)
-                receive_period_id = periods and periods[0] or False
-                kr_vals['period_id'] = receive_period_id
-            
-            if kr_vals:
-                context['kr_vals']=kr_vals
-            
-            if check_writeoff:
-                move_ids = self.pay_and_reconcile(cr, uid, [kr.id], new_amount, kr.journal_id.default_credit_account_id.id, receive_period_id, kr.journal_id.id, acc_writeoff, receive_period_id, journal_write_off_id, context)
-            else:
-                move_ids = self.pay_and_reconcile(cr, uid, [kr.id], new_amount, kr.journal_id.default_credit_account_id.id, receive_period_id, kr.journal_id.id, False, False, False, context)
-            
-            #Post
-            mark_as_paid = kcp_obj.write(cr, uid, [kr.client_payment_id.id], {'state':'paid'})
-            ctx=context.copy()
-            ctx['invoice'] = kr.client_payment_id
-            
-            result = self.validate_and_post(cr, uid,move_ids,context=ctx)
+        #Check balance or not balance
+        
+        #if  :
+         #   kcp_obj.write(cr, uid, kr.client_payment_id.id, {'exrate':context.get('new_exrate',0)})
+        
+        if not check_writeoff and context.get('new_exrate',0) and client_payment_obj.currency_id.id<>company_currency.id:
+            #kcp_obj.write(cr, uid, kr.client_payment_id.id, {'exrate':context['new_exrate']},context)
+            context['exrate']=context['new_exrate']
+            kcp_obj.action_cancel(cr, uid, [client_payment_obj.id], context)
+            context['ignore_check_reconcile']=True
+            kcp_obj.btn_action_revising_completed(cr, uid, [client_payment_obj.id], context)
+        
+        if kr.currency_id.id<>company_currency.id:
+            new_amount = res_obj.round(cr, uid, company_currency, payment_amount*exrate)
+        else:#Con lai neu la VND
+            new_amount = res_obj.round(cr, uid, company_currency, payment_amount)
+        #raise osv.except_osv("E",new_amount)
+        #Put Period later will write to Payment
+        if kr_period_id:
+            receive_period_id = kr_period_id
+        else:
+            periods = self.pool.get('account.period').find(cr, uid, kr.date, context=context)
+            receive_period_id = periods and periods[0] or False
+            kr_vals['period_id'] = receive_period_id
+        
+        if kr_vals:
+            context['kr_vals']=kr_vals
+        
+        if check_writeoff:
+            move_ids = self.pay_and_reconcile(cr, uid, kr_ids, new_amount, journal_obj.default_credit_account_id.id, receive_period_id, journal_obj.id, acc_writeoff, receive_period_id, journal_write_off_id, context)
+        else:
+            move_ids = self.pay_and_reconcile(cr, uid, kr_ids, new_amount, journal_obj.default_credit_account_id.id, receive_period_id, journal_obj.id, False, False, False, context)
+        
+        #Post
+        mark_as_paid = kcp_obj.write(cr, uid, [kr.client_payment_id.id], {'state':'paid'})
+        ctx=context.copy()
+        ctx['invoice'] = kr.client_payment_id
+        
+        result = self.validate_and_post(cr, uid,move_ids,context=ctx)
  
 #             wf_service = netsvc.LocalService("workflow")
 #             try:
@@ -268,7 +290,7 @@ class kderp_received(osv.osv):
         if context is None:
             context = {}
         #TODO check if we can use different period for payment and the writeoff line
-        assert len(ids)==1, "Can only pay one invoice at a time."
+        #assert len(ids)==1, "Can only pay one invoice at a time."
         kr = self.browse(cr, uid, ids[0], context=context)
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         src_account_id = kr.client_payment_id.account_id.id

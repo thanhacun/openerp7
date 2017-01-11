@@ -15,10 +15,14 @@ OpenERP:
    - PGUSER=openerp
    - PGPASSWORD=openerp
    - AUTH=admin:admin
-   - LOCAL_USER_ID=#uid (Using this command "id -u $USER" to get uid)
+   - LOCAL_USER_ID=#Please change USER ID 1007 to ??? (id -u $USER)
 openerp_db:
   image: postgres:latest
   container_name: openerp_db
+  volumes:
+    - ./db:/var/lib/postgresql/data
+  ports:
+   - "5432:5432"
   environment:
    - POSTGRES_USER=openerp
    - POSTGRES_PASSWORD=openerp

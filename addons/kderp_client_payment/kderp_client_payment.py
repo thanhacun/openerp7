@@ -100,6 +100,7 @@ class account_invoice_tax(osv.osv):
         cur = inv.currency_id
         inv_cur=inv.currency_id
         company_currency = inv.company_id.currency_id.id
+        
         if not context:
             context={}
             
@@ -140,7 +141,22 @@ class account_invoice_tax(osv.osv):
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
                     val['account_analytic_id'] = tax['account_analytic_paid_id']
 
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
+                #FIXME: If error Please revert to Key 1
+                ## Add new Key error when upgrade account module ###
+                ## Remove Key 1 when complete upgrade account module HCM & HANOI
+                #### Key 1 Area ##########
+                # key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
+                # if not key in tax_grouped:
+                #     tax_grouped[key] = val
+                # else:
+                #     tax_grouped[key]['amount'] += val['amount']
+                #     tax_grouped[key]['base'] += val['base']
+                #     tax_grouped[key]['base_amount'] += val['base_amount']
+                #     tax_grouped[key]['tax_amount'] += val['tax_amount']
+                #### End of Key 1 ##########
+                
+                #Key 2
+                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
                 if not key in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -154,8 +170,8 @@ class account_invoice_tax(osv.osv):
             t['amount'] = cur_obj.round(cr, uid, inv_cur, t['amount'])
             t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
             t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
-        return tax_grouped       
-       
+        return tax_grouped
+        
     def _get_acc(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -623,8 +639,10 @@ class account_invoice(osv.osv):
     def btn_action_unpaid(self, cr, uid, ids, context={}):
         kr_obj=self.pool.get('kderp.received')
         for inv in self.browse(cr, uid, ids, context):
+            kr_ids = []
             for kr in inv.received_ids:
-                kr_obj.action_unreconcile(cr, uid, [kr.id],context)
+                kr_ids.append(kr.id)
+            kr_obj.action_unreconcile(cr, uid, kr_ids, context)
         return True
     
     def action_cancel(self, cr, uid, ids, context=None):

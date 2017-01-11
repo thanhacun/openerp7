@@ -67,5 +67,5 @@ class kderp_control_area(osv.osv):
     }
 
     _sql_constraints=[('kderp_control_area_unique_code',"unique(code)",'Code must be unique!'),
-                      ("kderp_control_area_code_template","check(code ~ 'CA[0-9][0-9]')","Code like CA##")]
+                      ("kderp_control_area_code_template","check(code ~ 'CA[0-9][0-9]' or code ~ 'S[0-9][0-9]')","Code like CA##, S##")]
 kderp_control_area()
