@@ -71,11 +71,29 @@ class kderp_asset_import(Model):
                         except Exception, e:
                             kail.write({'reason':e})
                             done = False
+                            
+                elif kai.import_type=='full':
+                    write_data = {}
+                    write_data_aui = {}
+                    if kail.date :
+                        write_data['dateofinvoice']=kail.date
+                    elif kail.description:
+                        write_data['name']=kail.description
+                    elif kail.price:
+                        write_data['price']=kail.price
+                    elif kail.usedtime:
+                        write_data_aui['usedtime']=kail.usedtime
+                    elif kail.remarks:
+                        write_data_aui['remarks']=kail.remarks
+                    kail.asset_id.write(write_data)
+                    for aui in kail.asset_id.asset_usage_ids:
+                        aui.write(write_data_aui)
+                    kail.write({'state':'done'})
             if done: 
                 kai.write({'state':'done'})
         pass
         
-    IMPORT_TYPE = (('state','State'),('usage','Usage'),('spec','Specification'), ('date_invoice','Date Invoice'))
+    IMPORT_TYPE = (('state','State'),('usage','Usage'),('spec','Specification'), ('date_invoice','Date Invoice'), ('full','Full'))
     _columns={
               'name':fields.date("Import Date", 
                                     states={'done':[('readonly',True)]}, required=True),              
@@ -88,6 +106,7 @@ class kderp_asset_import(Model):
               'detail_spec_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_usage_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'detail_date_invoice_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
+              'detail_full_ids':fields.one2many('kderp.import.asset.detail','import_id','Details',states={'done':[('readonly',True)]}),
               'import_type':fields.selection(IMPORT_TYPE,'Import type',states={'done':[('readonly',True)]}),
 
               }
@@ -118,7 +137,10 @@ class kderp_import_asset_detail(Model):
               'location_id':fields.many2one('kderp.asset.location','Location', states={'done':[('readonly',True)]}),
               'remarks':fields.char('Remark',size=256, states={'done':[('readonly',True)]}),
               'job_id':fields.many2one('kderp.job','Job', states={'done':[('readonly',True)]}),
-              'state_asset':fields.selection(_get_state_asset, string='State Asset')
+              'state_asset':fields.selection(_get_state_asset, string='State Asset'),
+              'price':fields.float('Price', states={'done':[('readonly',True)]}),
+              'usedtime':fields.date('Used Date', states={'done':[('readonly',True)]}),
+              'description':fields.char('Description', states={'done':[('readonly',True)]}),
               }
     _defaults = {
                  'state':lambda *x: 'draft',
