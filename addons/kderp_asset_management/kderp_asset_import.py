@@ -77,13 +77,13 @@ class kderp_asset_import(Model):
                     write_data_aui = {}
                     if kail.date :
                         write_data['dateofinvoice']=kail.date
-                    elif kail.description:
+                    if kail.description:
                         write_data['name']=kail.description
-                    elif kail.price:
+                    if kail.price:
                         write_data['price']=kail.price
-                    elif kail.usedtime:
+                    if kail.usedtime:
                         write_data_aui['usedtime']=kail.usedtime
-                    elif kail.remarks:
+                    if kail.remarks:
                         write_data_aui['remarks']=kail.remarks
                     kail.asset_id.write(write_data)
                     for aui in kail.asset_id.asset_usage_ids:
